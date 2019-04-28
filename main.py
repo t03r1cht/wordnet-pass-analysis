@@ -21,21 +21,6 @@ words = [
     "apple",
     "bacon",
     "ham",
-    "ham",
-    "meatballs",
-    "apple",
-    "bacon",
-    "ham",
-    "ham",
-    "meatballs",
-    "apple",
-    "bacon",
-    "ham",
-    "ham",
-    "meatballs",
-    "apple",
-    "bacon",
-    "ham",
 ]
 
 
@@ -57,17 +42,29 @@ def sigint_handler(sig, frame):
     sys.exit(0)
 
 
-def refresh_stats():
+def get_shell_width():
+    cols, _ = shutil.get_terminal_size((80, 20))
+    return cols
+
+
+def get_curr_time():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+def refresh_stats(total, current_syn, finished):
     os.system("clear") if platform.system() == "Linux" else os.system("cls")
-    print("************************************************************")
-    print("**************************  %s  *****************************" %
-          datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    print("************************************************************")
     print()
-    print("Processing: %s" % words[random.randint(0, len(words)-1)])
-    print("Successful: %f" % random.random())
-    print("Failed: %f" % random.random())
-    print("Total: %f" % random.random())
+    print()
+    print(int(get_shell_width() / 2) * "+=")
+    c_t = get_curr_time()
+    print("%s".center(get_shell_width() - len(c_t)) % c_t)
+    print(int(get_shell_width() / 2) * "+=")
+    print()
+    print("  Current: \t%s" % current_syn)
+    print("  Progress: \t%d / %d" % (finished, total))
+    print("  Finished: \t%d" % finished)
+    print("  Total: \t%d" % total)
+    print()
 
 
 if __name__ == "__main__":
@@ -91,6 +88,8 @@ if __name__ == "__main__":
     #     time.sleep(random.random())
     # sys.stdout.write("%s... Done!\n" % new_str)
 
-    for w in words:
-        refresh_stats()
-        time.sleep(random.random())
+    cnt = 0
+    total_len = len(list(wn.all_synsets("n")))
+    for synset in list(wn.all_synsets("n"))[:100]:
+        refresh_stats(total=total_len, current_syn=synset.name(), finished=cnt)
+        cnt += 1
