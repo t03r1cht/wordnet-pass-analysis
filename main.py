@@ -127,6 +127,7 @@ if __name__ == "__main__":
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
+    nltk.download("wordnet")
     print()
     started_time = get_curr_time()
 
