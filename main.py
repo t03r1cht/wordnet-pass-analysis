@@ -75,7 +75,8 @@ def lookup_pass(hash):
 def _lookup_in_hash_file(hash):
     try:
         result = subprocess.check_output(["look", "-f", hash, args.pass_db_path])
-    except CalledProcessError:
+    except CalledProcessError as e:
+        print(e)
         return None
     return result.decode("utf-8").strip("\n").strip("\r")
         
