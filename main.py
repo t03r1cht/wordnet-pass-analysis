@@ -71,7 +71,8 @@ def lookup_pass(hash):
     occurrences = _lookup_in_hash_file(hash)
     if occurrences is None:
         return 0
-    else return int(occurrences.split(":")[1])
+    else: 
+        return int(occurrences.split(":")[1])
 
 
 def _lookup_in_hash_file(hash):
