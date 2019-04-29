@@ -6,6 +6,8 @@ https://wordnet.princeton.edu/documentation/wngloss7wn
 
 https://wordnet.princeton.edu/documentation/grind1wn
 
+https://wordnet.princeton.edu/documentation/21-wnstats7wn
+
 https://medium.com/parrot-prediction/dive-into-wordnet-with-nltk-b313c480e788
 
 https://likegeeks.com/nlp-tutorial-using-python-nltk/
@@ -23,3 +25,9 @@ http://www.nltk.org/nltk_data/
 https://wordnet.princeton.edu/
 
 https://www.cs.princeton.edu/courses/archive/spring19/cos226/assignments/wordnet/specification.php
+
+# problem mit der verb hierarchy in wordnet (es gibt kein root synset für verbs)
+
+https://www.aclweb.org/anthology/C08-1092
+
+https://plato.stanford.edu/entries/aristotle-metaphysics/

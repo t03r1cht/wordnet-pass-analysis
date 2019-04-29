@@ -6,7 +6,8 @@ import nltk
 # n = noun
 # v = verb
 # a = adjectives
-# ?? = adverbs
+# r = adverbs
+# s = adverb satellites
 
 
 if __name__ == "__main__":
