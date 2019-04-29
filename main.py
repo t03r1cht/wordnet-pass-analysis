@@ -68,8 +68,10 @@ def update_stats(current, finished):
 def lookup_pass(hash):
     """Wrapper for _lookup_in_hash_file
     """
-    print(_lookup_in_hash_file(hash))
-    return random.randint(0, 100000)
+    occurrences = _lookup_in_hash_file(hash)
+    if occurrences is None:
+        return 0
+    else return int(occurrences.split(":")[1])
 
 
 def _lookup_in_hash_file(hash):
