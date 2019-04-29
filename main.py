@@ -20,6 +20,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Password hash anaylsis using WordNet and the HaveIBeenPwned database")
 parser.add_argument("-p", "--pass-database", type=str, required=True, help="Path to the HIBP password database", dest="pass_db_path")
+parser.add_argument("-d", "--depth", type=int, required=True, help="Depth in the DAG", dest="dag_depth")
 args = parser.parse_args()
 
 total_processed = 0
@@ -140,7 +141,7 @@ if __name__ == "__main__":
         _write_result_to_results_file(root_lemma, root_syn.min_depth(), lookup_pass(hash_sha1(root_lemma)))
         total_processed += 1
     
-    recurse_nouns_from_root(root_syn=root_syn, max_depth=2)
+    recurse_nouns_from_root(root_syn=root_syn, max_depth=args.dag_depth)
     print()
     _write_to_results_file("")
     _write_to_results_file(40 * "=")
