@@ -30,13 +30,7 @@ outfile_f = open(outfile_name, "w+")
 def lookup_password():
     pwned_pass_list = "E:\\HIBP Passwords\\pwned-passwords-sha1-ordered-by-count-v4.txt"
     hashed_pw = hashlib.sha1("test".encode("utf-8")).hexdigest()
-    try:
-        result = subprocess.check_output(
-            ["look", "-f", hashed_pw, pwned_pass_list])
-    except CalledProcessError:
-        return
-    str_result = result.decode("utf-8").strip("\n").strip("\r")
-    print(str_result.split(":"))
+    
 
 
 def sigint_handler(sig, frame):
@@ -72,8 +66,19 @@ def update_stats(current, finished):
 
 
 def lookup_pass(hash):
-    # simulate lookup for now
+    """Wrapper for _lookup_in_hash_file
+    """
+    print(_lookup_in_hash_file(hash))
     return random.randint(0, 100000)
+
+
+def _lookup_in_hash_file(hash):
+    try:
+        result = subprocess.check_output(["look", "-f", hash, args.pass_db_path])
+    except CalledProcessError:
+        return None
+    return result.decode("utf-8").strip("\n").strip("\r")
+        
 
 
 def analyze_root_hypernyms(loops=100):
@@ -87,6 +92,13 @@ def hash_sha1(s):
 
 
 def recurse_nouns_from_root(root_syn, max_depth=0):
+    """Iterates over each hyponym synset until the desired depth in the DAG is reached. 
+
+    For each level of hyponyms in the DAG, this function will unpack each lemma of each 
+    synset of said depth level, which can be confusing when looking at results.txt.
+
+    Each indented set of lemmas is the sum of all unpacked lemmas of each synset of the current graph level.
+    """
     if root_syn.min_depth() == max_depth:
             return
     curr_root_syn = root_syn
@@ -118,8 +130,15 @@ if __name__ == "__main__":
     print()
     started_time = get_curr_time()
 
-    recurse_nouns_from_root(root_syn=wn.synset("entity.n.01"), max_depth=4)
-
+    root_syn = wn.synset("entity.n.01")
+    for root_lemma in root_syn.lemma_names():
+        _write_result_to_results_file(root_lemma, root_syn.min_depth(), lookup_pass(hash_sha1(root_lemma)))
+        total_processed += 1
+    
+    recurse_nouns_from_root(root_syn=root_syn, max_depth=2)
+    print()
+    _write_to_results_file("")
+    _write_to_results_file(40 * "=")
     _write_to_results_file("Starting Time: %s" % started_time)
     _write_to_results_file("Total lemmas processed: %d" % total_processed)
     finished_time = get_curr_time()
