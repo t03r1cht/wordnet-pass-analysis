@@ -48,7 +48,7 @@ def get_curr_time():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def clear_terminal():
-    os.system("clear") if platform.system() == "Linux" else os.system("cls")
+    os.system("clear") if platform.system() == "Linux" or platform.system() == "Darwin" else os.system("cls")
 
 def update_stats(current, finished):
     clear_terminal()
