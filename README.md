@@ -1,1 +1,2 @@
-- [ ] Permutations of each lemma
+- [X] Permutations of each lemma
+- [ ] Make results.txt results.json

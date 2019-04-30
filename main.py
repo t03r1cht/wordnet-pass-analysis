@@ -15,6 +15,7 @@ import os
 import datetime
 import sys
 import argparse
+from permutators import permut_registrar, permutator
 
 # pip installation über py binary: py -m pip install nltk
 
@@ -36,7 +37,7 @@ permut_handler = None
 def sigint_handler(sig, frame):
     """Register the handler for the SIGINT signal.
 
-    This is absolutely necessary to exit the program with Ctrl+C because a user easily misconfigure the 
+    This is absolutely necessary to exit the program with Ctrl+C because a user easily misconfigure the
     programe (i.e. -d > 4) for it to result in a combinatorial explosion because of its recursion.
     """
     print()
@@ -81,7 +82,7 @@ def update_stats(current, finished):
 
 
 def lookup_pass(hash):
-    """Wrapper for _lookup_in_hash_file. Returns the occurrences of the 
+    """Wrapper for _lookup_in_hash_file. Returns the occurrences of the
     searched hash/password in the HIBP password file.
     """
     occurrences = _lookup_in_hash_file(hash)
@@ -109,9 +110,9 @@ def hash_sha1(s):
 
 
 def recurse_nouns_from_root(root_syn, max_depth=0):
-    """Iterates over each hyponym synset until the desired depth in the DAG is reached. 
+    """Iterates over each hyponym synset until the desired depth in the DAG is reached.
 
-    For each level of hyponyms in the DAG, this function will unpack each lemma of each 
+    For each level of hyponyms in the DAG, this function will unpack each lemma of each
     synset of said depth level, which can be confusing when looking at results.txt.
 
     Each indented set of lemmas is the sum of all unpacked lemmas of each synset of the current graph level.
@@ -124,7 +125,7 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
     for hypo in curr_root_syn.hyponyms():
         for lemma in hypo.lemma_names():
             # Apply a set of permutators to each lemma
-            permutations_for_lemma(lemma)
+            permutations_for_lemma(lemma, hypo.min_depth())
             # hashed_lemma = hash_sha1(lemma)
             # occurrences = lookup_pass(hashed_lemma)
             # global total_processed
@@ -136,35 +137,29 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
         recurse_nouns_from_root(root_syn=hypo, max_depth=max_depth)
 
 
-def permutations_for_lemma(lemma):
+def permutations_for_lemma(lemma, depth):
     """Compute all permutations by using the registered permutators.
     """
     for permut_handler in permutator.all:
         # The permutator returns the permutated lemma.
         permut = permut_handler(lemma)
-        # Print the permutations to the result file.
-        print("    ", permut)
-        pass
+        # In some cases, permutators may return a variable list of permutations.
+        if type(permut) == list:
+            for p in permut:
+                lookup(p, depth)
+        else:
+            lookup(permut, depth)
 
 
-def _permut_registrar():
-    """Decorator to register permutation handlers
-    """
-    permut_registry = []
-
-    def registrar(func):
-        permut_registry.append(func)
-        return func
-    registrar.all = permut_registry
-    return registrar
-
-
-permutator = _permut_registrar()
-
-
-@permutator
-def casing_handler(lemma):
-    return "PERMUTATOR_CASING_HANDLER %s" % lemma
+def lookup(permut, depth):
+    # Hash and lookup permutated lemma
+    hashed_lemma = hash_sha1(permut)
+    occurrences = lookup_pass(hashed_lemma)
+    # Increment "total" counter
+    global total_processed
+    total_processed += 1
+    # Print the permutations to the result file.
+    _write_result_to_results_file(permut, depth, occurrences)
 
 
 def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
@@ -186,14 +181,9 @@ if __name__ == "__main__":
     print()
     started_time = get_curr_time()
 
-    # print("handler: %s" % permutator.all)
-    # for h in permutator.all:
-    #     h("testString")
-
     root_syn = wn.synset("entity.n.01")
     for root_lemma in root_syn.lemma_names():
-        _write_result_to_results_file(
-            root_lemma, root_syn.min_depth(), lookup_pass(hash_sha1(root_lemma)))
+        permutations_for_lemma(root_lemma, root_syn.min_depth())
         total_processed += 1
 
     recurse_nouns_from_root(root_syn=root_syn, max_depth=args.dag_depth)

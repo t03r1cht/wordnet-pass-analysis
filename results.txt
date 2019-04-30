@@ -1,6 +1,116 @@
 entity 1092
+ENTITY 46
+3nt1ty 18
+  abstraction 163
+  ABSTRACTION 2
+  48str4ct10n 0
+  abstract_entity 0
+  ABSTRACT_ENTITY 0
+  48str4ct_3nt1ty 0
+    attribute 228
+    ATTRIBUTE 0
+    4ttr18ut3 0
+    communication 6188
+    COMMUNICATION 137
+    c0mmun1c4t10n 10
+    group 3770
+    GROUP 66
+    gr0up 15
+    grouping 52
+    GROUPING 0
+    gr0up1ng 0
+    measure 635
+    MEASURE 5
+    m34sur3 0
+    quantity 671
+    QUANTITY 3
+    qu4nt1ty 10
+    amount 477
+    AMOUNT 14
+    4m0unt 0
+    otherworld 358
+    OTHERWORLD 0
+    0th3rw0rld 7
+    psychological_feature 0
+    PSYCHOLOGICAL_FEATURE 0
+    psych0l0g1c4l_f34tur3 0
+    relation 2292
+    RELATION 32
+    r3l4t10n 2
+    set 1530
+    SET 48
+    s3t 40
+  physical_entity 0
+  PHYSICAL_ENTITY 0
+  phys1c4l_3nt1ty 0
+    causal_agent 0
+    CAUSAL_AGENT 0
+    c4us4l_4g3nt 0
+    cause 254
+    CAUSE 14
+    c4us3 0
+    causal_agency 0
+    CAUSAL_AGENCY 0
+    c4us4l_4g3ncy 0
+    matter 5369
+    MATTER 155
+    m4tt3r 5
+    object 838
+    OBJECT 5
+    08j3ct 0
+    physical_object 0
+    PHYSICAL_OBJECT 0
+    phys1c4l_08j3ct 0
+    process 3817
+    PROCESS 58
+    pr0c3ss 32
+    physical_process 0
+    PHYSICAL_PROCESS 0
+    phys1c4l_pr0c3ss 0
+    substance 1283
+    SUBSTANCE 22
+    su8st4nc3 0
+    thing 1992
+    THING 27
+    th1ng 36
+  thing 1992
+  THING 27
+  th1ng 36
+    change 40405
+    CHANGE 698
+    ch4ng3 137
+    freshener 30
+    FRESHENER 0
+    fr3sh3n3r 1
+    horror 7196
+    HORROR 138
+    h0rr0r 629
+    jimdandy 682
+    JIMDANDY 9
+    j1md4ndy 0
+    jimhickey 4
+    JIMHICKEY 0
+    j1mh1ck3y 0
+    crackerjack 2253
+    CRACKERJACK 90
+    cr4ck3rj4ck 26
+    pacifier 915
+    PACIFIER 33
+    p4c1f13r 0
+    security_blanket 0
+    SECURITY_BLANKET 0
+    s3cur1ty_8l4nk3t 0
+    stinker 11707
+    STINKER 204
+    st1nk3r 89
+    whacker 346
+    WHACKER 2
+    wh4ck3r 0
+    whopper 3427
+    WHOPPER 60
+    wh0pp3r 20
 
 ========================================
-Starting Time: 2019-04-30 11:31:13
-Total lemmas processed: 1
-Finishing Time: 2019-04-30 11:31:15
+Starting Time: 2019-04-30 13:10:58
+Total lemmas processed: 112
+Finishing Time: 2019-04-30 13:11:01
