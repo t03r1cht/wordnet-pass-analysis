@@ -116,22 +116,40 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
 
     Each indented set of lemmas is the sum of all unpacked lemmas of each synset of the current graph level.
     """
+
+    # If the current depth in the DAG is reached, do not continue to iterate this path.
     if root_syn.min_depth() == max_depth:
         return
     curr_root_syn = root_syn
     for hypo in curr_root_syn.hyponyms():
         for lemma in hypo.lemma_names():
-            hashed_lemma = hash_sha1(lemma)
-            occurrences = lookup_pass(hashed_lemma)
-            global total_processed
-            total_processed += 1
-            _write_result_to_results_file(lemma, hypo.min_depth(), occurrences)
-            update_stats(current="%s / %d" %
-                         (lemma, occurrences), finished=total_processed)
+            # Apply a set of permutators to each lemma
+            permutations_for_lemma(lemma)
+            # hashed_lemma = hash_sha1(lemma)
+            # occurrences = lookup_pass(hashed_lemma)
+            # global total_processed
+            # total_processed += 1
+            # _write_result_to_results_file(lemma, hypo.min_depth(), occurrences)
+            # update_stats(current="%s / %d" %
+            #              (lemma, occurrences), finished=total_processed)
+        # Execute the function again with the new root synset being each hyponym we just found.
         recurse_nouns_from_root(root_syn=hypo, max_depth=max_depth)
 
 
+def permutations_for_lemma(lemma):
+    """Compute all permutations by using the registered permutators.
+    """
+    for permut_handler in permutator.all:
+        # The permutator returns the permutated lemma.
+        permut = permut_handler(lemma)
+        # Print the permutations to the result file.
+        print("    ", permut)
+        pass
+
+
 def _permut_registrar():
+    """Decorator to register permutation handlers
+    """
     permut_registry = []
 
     def registrar(func):
@@ -141,12 +159,12 @@ def _permut_registrar():
     return registrar
 
 
-permut_handler = _permut_registrar()
+permutator = _permut_registrar()
 
 
-@permut_handler
-def some_permut_handler1(s):
-    print("!! permut_handler1 exec !! %s" % s)
+@permutator
+def casing_handler(lemma):
+    return "PERMUTATOR_CASING_HANDLER %s" % lemma
 
 
 def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
@@ -168,8 +186,8 @@ if __name__ == "__main__":
     print()
     started_time = get_curr_time()
 
-    # print("handler: %s" % permut_handler.all)
-    # for h in permut_handler.all:
+    # print("handler: %s" % permutator.all)
+    # for h in permutator.all:
     #     h("testString")
 
     root_syn = wn.synset("entity.n.01")
