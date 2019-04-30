@@ -7,39 +7,39 @@ LEET_TRANS_TABLE_SIMPLE = str.maketrans(
     LEET_TRANSLATION_SIMPLE_FROM, LEET_TRANSLATION_SIMPLE_TO)
 
 
-def permut_registrar():
-    """Decorator to register permutation handlers
+def translator_registrar():
+    """Decorator to register translation handlers
     """
-    permut_registry = []
+    translation_registry = []
 
     def registrar(func):
-        permut_registry.append(func)
+        translation_registry.append(func)
         return func
-    registrar.all = permut_registry
+    registrar.all = translation_registry
     return registrar
 
 
-permutator = permut_registrar()
+translator = translator_registrar()
 
 
-@permutator
-def no_permutator_permutator(lemma):
+@translator
+def no_translator_translator(lemma):
     """Return the lemma as is. Required because we want to also 
     search for occurences of the original lemma.
     """
     return lemma
 
 
-@permutator
-def casing_permutator(lemma):
+@translator
+def casing_translator(lemma):
     """Return the lemma in uppercase.
     """
     return lemma.upper()
 
 
-@permutator
-def leet_permutator(lemma):
-    """Returns a list of leet permutations of the lemma.
+@translator
+def leet_translator(lemma):
+    """Returns a list of leet translations of the lemma.
     """
 
     return lemma.translate(LEET_TRANS_TABLE_SIMPLE)

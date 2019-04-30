@@ -15,7 +15,7 @@ import os
 import datetime
 import sys
 import argparse
-from permutators import permut_registrar, permutator
+from translators import translator_registrar, translator
 
 # pip installation über py binary: py -m pip install nltk
 
@@ -31,7 +31,7 @@ total_processed = 0
 started = ""
 outfile_name = "results.txt"
 outfile_f = open(outfile_name, "w+")
-permut_handler = None
+translation_handler = None
 
 
 def sigint_handler(sig, frame):
@@ -124,8 +124,8 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
     curr_root_syn = root_syn
     for hypo in curr_root_syn.hyponyms():
         for lemma in hypo.lemma_names():
-            # Apply a set of permutators to each lemma
-            permutations_for_lemma(lemma, hypo.min_depth())
+            # Apply a set of translators to each lemma
+            translations_for_lemma(lemma, hypo.min_depth())
             # hashed_lemma = hash_sha1(lemma)
             # occurrences = lookup_pass(hashed_lemma)
             # global total_processed
@@ -137,29 +137,29 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
         recurse_nouns_from_root(root_syn=hypo, max_depth=max_depth)
 
 
-def permutations_for_lemma(lemma, depth):
-    """Compute all permutations by using the registered permutators.
+def translations_for_lemma(lemma, depth):
+    """Compute all translations by using the registered translator.
     """
-    for permut_handler in permutator.all:
-        # The permutator returns the permutated lemma.
-        permut = permut_handler(lemma)
-        # In some cases, permutators may return a variable list of permutations.
-        if type(permut) == list:
-            for p in permut:
+    for translation_handler in translator.all:
+        # The translator returns the translated lemma.
+        trans = translation_handler(lemma)
+        # In some cases, translator may return a variable list of translations.
+        if type(trans) == list:
+            for p in trans:
                 lookup(p, depth)
         else:
-            lookup(permut, depth)
+            lookup(trans, depth)
 
 
-def lookup(permut, depth):
-    # Hash and lookup permutated lemma
-    hashed_lemma = hash_sha1(permut)
+def lookup(translation, depth):
+    # Hash and lookup translated lemma
+    hashed_lemma = hash_sha1(translation)
     occurrences = lookup_pass(hashed_lemma)
     # Increment "total" counter
     global total_processed
     total_processed += 1
-    # Print the permutations to the result file.
-    _write_result_to_results_file(permut, depth, occurrences)
+    # Print the translations to the result file.
+    _write_result_to_results_file(translation, depth, occurrences)
 
 
 def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     root_syn = wn.synset("entity.n.01")
     for root_lemma in root_syn.lemma_names():
-        permutations_for_lemma(root_lemma, root_syn.min_depth())
+        translations_for_lemma(root_lemma, root_syn.min_depth())
         total_processed += 1
 
     recurse_nouns_from_root(root_syn=root_syn, max_depth=args.dag_depth)
