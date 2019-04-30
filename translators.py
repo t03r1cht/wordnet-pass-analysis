@@ -43,3 +43,9 @@ def leet_translator(lemma):
     """
 
     return lemma.translate(LEET_TRANS_TABLE_SIMPLE)
+
+@translator
+def yob_translator(lemma):
+    """Returns a list of lemmas with years of birth appended (1950-2019).
+    """
+    return ["%s%d" % (lemma, yob) for yob in range(1950, 2019+1)]

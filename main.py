@@ -25,6 +25,8 @@ parser.add_argument("-p", "--pass-database", type=str, required=True,
                     help="Path to the HIBP password database", dest="pass_db_path")
 parser.add_argument("-d", "--depth", type=int, required=True,
                     help="Depth in the DAG", dest="dag_depth")
+parser.add_argument("-t", "--total", type=int,
+                    help="Set the maximum number of lemmas that should be processed.", dest="max_lemmas_processed")
 args = parser.parse_args()
 
 total_processed = 0
@@ -42,7 +44,12 @@ def sigint_handler(sig, frame):
     """
     print()
     print("Caught Ctrl+C, shutting down...")
+    cleanup()
     sys.exit(0)
+
+
+def cleanup():
+    outfile_f.close()
 
 
 def get_shell_width():
@@ -126,13 +133,6 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
         for lemma in hypo.lemma_names():
             # Apply a set of translators to each lemma
             translations_for_lemma(lemma, hypo.min_depth())
-            # hashed_lemma = hash_sha1(lemma)
-            # occurrences = lookup_pass(hashed_lemma)
-            # global total_processed
-            # total_processed += 1
-            # _write_result_to_results_file(lemma, hypo.min_depth(), occurrences)
-            # update_stats(current="%s / %d" %
-            #              (lemma, occurrences), finished=total_processed)
         # Execute the function again with the new root synset being each hyponym we just found.
         recurse_nouns_from_root(root_syn=hypo, max_depth=max_depth)
 
@@ -152,25 +152,60 @@ def translations_for_lemma(lemma, depth):
 
 
 def lookup(translation, depth):
+    """Hashes the (translated) lemma and looks it up in  the HIBP password file.
+    """
     # Hash and lookup translated lemma
     hashed_lemma = hash_sha1(translation)
     occurrences = lookup_pass(hashed_lemma)
+    # Handle the -t parameter
+    if args.max_lemmas_processed is not None:
+        if total_processed >= args.max_lemmas_processed:
+            _proper_shutdown()
+            sys.exit(0)
     # Increment "total" counter
-    global total_processed
-    total_processed += 1
+    inc_total_processed()
+    update_stats(current="%s / %d" %
+                 (translation, occurrences), finished=total_processed)
+
     # Print the translations to the result file.
     _write_result_to_results_file(translation, depth, occurrences)
 
 
+def inc_total_processed():
+    global total_processed
+    total_processed += 1
+
+
 def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
-    """Wrapper for the _write_results_file() function
+    """Writes a properly indented result to the result file.
     """
     _write_to_results_file("%s%s %d" % (
         lemma_depth * "  ", lemma_name, occurrences))
 
 
+def _write_summary_to_result_file():
+    """Writes the bottom lines containing the summary to the result file.
+    """
+    _write_to_results_file("")
+    _write_to_results_file(40 * "=")
+    _write_to_results_file("Starting Time: %s" % started_time)
+    _write_to_results_file("Total lemmas processed: %d" % total_processed)
+    finished_time = get_curr_time()
+    print("  Finished: %s" % finished_time)
+    _write_to_results_file("Finishing Time: %s" % finished_time)
+
+
 def _write_to_results_file(s):
+    """Writes generic data to the result file.
+    """
     outfile_f.write("%s\n" % s)
+
+
+def _proper_shutdown():
+    _write_summary_to_result_file()
+    print()
+    print("  Results written to %s" % outfile_name)
+    cleanup()
 
 
 if __name__ == "__main__":
@@ -184,19 +219,10 @@ if __name__ == "__main__":
     root_syn = wn.synset("entity.n.01")
     for root_lemma in root_syn.lemma_names():
         translations_for_lemma(root_lemma, root_syn.min_depth())
-        total_processed += 1
+        inc_total_processed()
 
     recurse_nouns_from_root(root_syn=root_syn, max_depth=args.dag_depth)
 
+    _proper_shutdown()
     print()
-    _write_to_results_file("")
-    _write_to_results_file(40 * "=")
-    _write_to_results_file("Starting Time: %s" % started_time)
-    _write_to_results_file("Total lemmas processed: %d" % total_processed)
-    finished_time = get_curr_time()
-    print("  Finished: %s" % finished_time)
-    _write_to_results_file("Finishing Time: %s" % finished_time)
-    print()
-    print("  Results written to %s" % outfile_name)
-    outfile_f.close()
-    print()
+    cleanup()
