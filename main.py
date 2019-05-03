@@ -30,6 +30,8 @@ parser.add_argument("-t", "--total", type=int,
                     help="Set the maximum number of lemmas that should be processed.", dest="max_lemmas_processed")
 parser.add_argument("-g", "--graph", type=int,
                     help="Display a directed graph for WordNet.", dest="draw_dag")
+parser.add_argument("-s", "--root-syn-name", type=str,
+                    help="Name of the word specified to be the root synset.", dest="root_syn_name")
 args = parser.parse_args()
 
 total_processed = 0
@@ -214,7 +216,7 @@ def _proper_shutdown():
 if __name__ == "__main__":
     if args.draw_dag == 1:
         from wn_graph import draw_graph
-        draw_graph(args.dag_depth)
+        draw_graph(args.root_syn_name, args.dag_depth)
     else:
         init()
         signal.signal(signal.SIGINT, sigint_handler)

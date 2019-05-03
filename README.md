@@ -1,5 +1,5 @@
 - [X] Permutations of each lemma
+- [X] Plot the results
 - [ ] Make results.txt results.json
-- [ ] Plot the results
-- [ ] JavaScript frontend to display entire graph and its relationships
+- [ ] Show classes of each lemma
 - [ ] Better form of result visualization in results.txt

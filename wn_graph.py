@@ -10,23 +10,42 @@ from nltk.corpus import wordnet as wn
 # To install pygraphviz on windows use the pre-built python binaries/wheel:
 # https://github.com/CristiFati/Prebuilt-Binaries/tree/master/Windows/PyGraphviz
 
-def draw_graph(max_depth):
+def draw_graph(root_syn_name, max_depth):
     G = nx.DiGraph()
-    G.add_node("entity.n.01", depth=0)
-    G.add_node("abstract_concept.n.01", depth=1)
-    G.add_node("thing.n.01", depth=1)
+    # G.add_node("entity.n.01", depth=0)
+    # G.add_node("abstract_concept.n.01", depth=1)
+    # G.add_node("thing.n.01", depth=1)
 
-    G.add_edge("entity.n.01", "abstract_concept.n.01")
-    G.add_edge("entity.n.01", "thing.n.01")
+    # G.add_edge("entity.n.01", "abstract_concept.n.01")
+    # G.add_edge("entity.n.01", "thing.n.01")
 
-    # Go over each synset and add it to the graph
-    root_syn_name = "entity.n.01"
-    root_syn = wn.synset(root_syn_name)
+    root_synsets = wn.synsets(root_syn_name)
+    if len(root_synsets) == 0:
+        print("  No synset found for: %s" % root_syn_name)
+        return
+
+    # If multiple synsets were found
+    if len(root_synsets) > 1:
+
+        print("  Multiple synset were found. Please choose: ")
+        for elem in range(len(root_synsets) - 1):
+            print("    [%d] %s" % (elem, root_synsets[elem]))
+        choice = input("Your choice [0-%d]: " % ((len(root_synsets)-2)))
+        try:
+            int_choice = int(choice)
+        except ValueError:
+            print("Invalid choice: %s" % choice)
+            return
+        if int_choice < 0 or int_choice > len(root_synsets) - 2:
+            print("Invalid choice: %s" % choice)
+
+    choice_root_syn = root_synsets[int_choice]
+
     # Create the first node in the digraph
-    G.add_node(root_syn_name)
-    _recurse_nouns_from_root(G, root_syn, max_depth)
+    G.add_node(choice_root_syn.name())
+    _recurse_nouns_from_root(G, choice_root_syn, max_depth)
 
-    pos = hierarchy_pos(G, "entity.n.01")
+    pos = hierarchy_pos(G, choice_root_syn.name())
     labels = nx.get_node_attributes(G, 'depth')
     # nx.draw(G, pos=pos, with_labels=True, labels=labels)
     nx.draw(G, pos=pos, with_labels=True)
@@ -37,6 +56,7 @@ def draw_graph(max_depth):
 
 def _recurse_nouns_from_root(G, root_syn, max_depth=0):
     # If the current depth in the DAG is reached, do not continue to iterate this path.
+    # TODO: We can not work with the absolute depth anymore, since the user can now specify at which level to start!!!
     if root_syn.min_depth() == max_depth:
         return
     curr_root_syn = root_syn
