@@ -17,16 +17,19 @@ import sys
 import argparse
 from translators import translator_registrar, translator
 
+
 # pip installation über py binary: py -m pip install nltk
 
 parser = argparse.ArgumentParser(
     description="Password hash anaylsis using WordNet and the HaveIBeenPwned database")
-parser.add_argument("-p", "--pass-database", type=str, required=True,
+parser.add_argument("-p", "--pass-database", type=str,
                     help="Path to the HIBP password database", dest="pass_db_path")
-parser.add_argument("-d", "--depth", type=int, required=True,
+parser.add_argument("-d", "--depth", type=int,
                     help="Depth in the DAG", dest="dag_depth")
 parser.add_argument("-t", "--total", type=int,
                     help="Set the maximum number of lemmas that should be processed.", dest="max_lemmas_processed")
+parser.add_argument("-g", "--graph", type=int,
+                    help="Display a directed graph for WordNet.", dest="draw_dag")
 args = parser.parse_args()
 
 total_processed = 0
@@ -209,20 +212,24 @@ def _proper_shutdown():
 
 
 if __name__ == "__main__":
-    init()
-    signal.signal(signal.SIGINT, sigint_handler)
-    clear_terminal()
-    nltk.download("wordnet")
-    print()
-    started_time = get_curr_time()
+    if args.draw_dag == 1:
+        from wn_graph import draw_graph
+        draw_graph(args.dag_depth)
+    else:
+        init()
+        signal.signal(signal.SIGINT, sigint_handler)
+        clear_terminal()
+        nltk.download("wordnet")
+        print()
+        started_time = get_curr_time()
 
-    root_syn = wn.synset("entity.n.01")
-    for root_lemma in root_syn.lemma_names():
-        translations_for_lemma(root_lemma, root_syn.min_depth())
-        inc_total_processed()
+        root_syn = wn.synset("entity.n.01")
+        for root_lemma in root_syn.lemma_names():
+            translations_for_lemma(root_lemma, root_syn.min_depth())
+            inc_total_processed()
 
-    recurse_nouns_from_root(root_syn=root_syn, max_depth=args.dag_depth)
+        recurse_nouns_from_root(root_syn=root_syn, max_depth=args.dag_depth)
 
-    _proper_shutdown()
-    print()
-    cleanup()
+        _proper_shutdown()
+        print()
+        cleanup()

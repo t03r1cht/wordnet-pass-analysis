@@ -1,5 +1,4 @@
 import random
-from utilitybelt import change_charset
 
 LEET_TRANSLATION_SIMPLE_FROM = "AaBbEeIiOo"
 LEET_TRANSLATION_SIMPLE_TO = "4488331100"
