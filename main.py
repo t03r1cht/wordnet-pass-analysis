@@ -253,36 +253,70 @@ def prompt_synset_choice(root_synsets):
     return root_synsets[int_choice]
 
 
-if __name__ == "__main__":
+def _download_wordnet():
+    """
+    """
     nltk.download("wordnet")
-    print("!!!! DONE !!!!")
-    if args.draw_dag == 1:
-        from wn_graph import draw_graph
-        draw_graph(args.root_syn_name, args.dag_depth)
+
+
+def option_draw_graph():
+    """
+    """
+    from wn_graph import draw_graph
+    draw_graph(args.root_syn_name, args.dag_depth)
+
+
+def option_lookup_passwords():
+    """
+
+    """
+    init()
+    signal.signal(signal.SIGINT, sigint_handler)
+    clear_terminal()
+    print()
+    root_synsets = wn.synsets(args.root_syn_name)
+    if len(root_synsets) == 0:
+        print("  No synset found for: %s" % root_syn_name)
+        sys.exit(0)
+    # If multiple synsets were found, prompt the user to choose which one to use.
+    if len(root_synsets) > 1:
+        choice_root_syn = prompt_synset_choice(root_synsets)
     else:
-        init()
-        signal.signal(signal.SIGINT, sigint_handler)
-        clear_terminal()
-        print()
-        root_synsets = wn.synsets(args.root_syn_name)
-        if len(root_synsets) == 0:
-            print("  No synset found for: %s" % root_syn_name)
+        choice_root_syn = root_synsets[0]
+    started_time = get_curr_time()
+    for root_lemma in choice_root_syn.lemma_names():
+        translations_for_lemma(root_lemma, choice_root_syn.min_depth())
+        inc_total_processed()
+    recurse_nouns_from_root(
+        root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
+
+    # Shutdown the script
+    _proper_shutdown()
+    print()
+    cleanup()
+
+
+if __name__ == "__main__":
+    try:
+        from nltk.corpus import wordnet as wn
+    except ImportError:
+        _download_wordnet()
+    if args.draw_dag == 1:
+        # Evaluate command line parameters
+        if args.dag_depth is None or args.root_syn_name is None:
+            print("Error: Missing parameters.")
+            parser.print_usage()
             sys.exit(0)
-        # If multiple synsets were found, prompt the user to choose which one to use.
-        if len(root_synsets) > 1:
-            choice_root_syn = prompt_synset_choice(root_synsets)
-        else:
-            choice_root_syn = root_synsets[0]
-
-        started_time = get_curr_time()
-
-        print(choice_root_syn.lemma_names())
-        for root_lemma in choice_root_syn.lemma_names():
-            translations_for_lemma(root_lemma, choice_root_syn.min_depth())
-            inc_total_processed()
-        recurse_nouns_from_root(
-            root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
-
-        _proper_shutdown()
-        print()
-        cleanup()
+        print("Running platform pre-check...")
+        if "Linux" in platform.platform():
+            print(
+                "You are running this script on Linux (%s). Due to currently unresolved bugs, the graph feature can only be used on Windows and MacOS." % platform.platform())
+            sys.exit(0)
+        option_draw_graph()
+    else:
+        # Evaluate command line parameters
+        if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:
+            print("Error: Missing parameters.")
+            parser.print_usage()
+            sys.exit(0)
+        option_lookup_passwords()

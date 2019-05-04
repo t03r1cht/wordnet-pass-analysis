@@ -3,4 +3,4 @@ FROM ubuntu:latest
 RUN apt-get update && \
     apt-get -y install sudo
 
-CMD ["sudo" , "cat", "/etc/passwd"]
+CMD tail -f /dev/null
