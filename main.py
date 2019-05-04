@@ -42,7 +42,8 @@ translation_handler = None
 
 
 def sigint_handler(sig, frame):
-    """Register the handler for the SIGINT signal.
+    """
+    Register the handler for the SIGINT signal.
 
     This is absolutely necessary to exit the program with Ctrl+C because a user easily misconfigure the
     programe (i.e. -d > 4) for it to result in a combinatorial explosion because of its recursion.
@@ -54,31 +55,38 @@ def sigint_handler(sig, frame):
 
 
 def cleanup():
+    """
+    Some cleanup work like closing the file handler.
+    """
     outfile_f.close()
 
 
 def get_shell_width():
-    """Return the number of colums in the current shell view.
+    """
+    Return the number of colums in the current shell view.
     """
     cols, _ = shutil.get_terminal_size((80, 20))
     return cols
 
 
 def get_curr_time():
-    """Return the current time, nicely formatted as a string.
+    """
+    Return the current time, nicely formatted as a string.
     """
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def clear_terminal():
-    """Clear the terminal. This is required to properly display the stats while running.
+    """
+    Clear the terminal. This is required to properly display the stats while running.
     """
     os.system("clear") if platform.system(
     ) == "Linux" or platform.system() == "Darwin" else os.system("cls")
 
 
 def update_stats(current, finished):
-    """Print out the stats while the program is running.
+    """
+    Print out the stats while the program is running.
     """
     clear_terminal()
     print()
@@ -94,7 +102,8 @@ def update_stats(current, finished):
 
 
 def lookup_pass(hash):
-    """Wrapper for _lookup_in_hash_file. Returns the occurrences of the
+    """
+    Wrapper for _lookup_in_hash_file. Returns the occurrences of the
     searched hash/password in the HIBP password file.
     """
     occurrences = _lookup_in_hash_file(hash)
@@ -105,7 +114,8 @@ def lookup_pass(hash):
 
 
 def _lookup_in_hash_file(hash):
-    """Implements actual file access.
+    """
+    Implements actual file access.
     """
     try:
         result = subprocess.check_output(
@@ -116,13 +126,15 @@ def _lookup_in_hash_file(hash):
 
 
 def hash_sha1(s):
-    """Hash the password.
+    """
+    Hash the password.
     """
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
 
 
 def recurse_nouns_from_root(root_syn, max_depth=0):
-    """Iterates over each hyponym synset until the desired depth in the DAG is reached.
+    """
+    Iterates over each hyponym synset until the desired depth in the DAG is reached.
 
     For each level of hyponyms in the DAG, this function will unpack each lemma of each
     synset of said depth level, which can be confusing when looking at results.txt.
@@ -143,7 +155,8 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
 
 
 def translations_for_lemma(lemma, depth):
-    """Compute all translations by using the registered translator.
+    """
+    Compute all translations by using the registered translator.
     """
     for translation_handler in translator.all:
         # The translator returns the translated lemma.
@@ -157,7 +170,8 @@ def translations_for_lemma(lemma, depth):
 
 
 def lookup(translation, depth):
-    """Hashes the (translated) lemma and looks it up in  the HIBP password file.
+    """
+    Hashes the (translated) lemma and looks it up in  the HIBP password file.
     """
     # Hash and lookup translated lemma
     hashed_lemma = hash_sha1(translation)
@@ -177,19 +191,24 @@ def lookup(translation, depth):
 
 
 def inc_total_processed():
+    """
+    Increment the global variable to track the overall progress of processed lemmas.
+    """
     global total_processed
     total_processed += 1
 
 
 def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
-    """Writes a properly indented result to the result file.
+    """
+    Writes a properly indented result to the result file.
     """
     _write_to_results_file("%s%s %d" % (
         lemma_depth * "  ", lemma_name, occurrences))
 
 
 def _write_summary_to_result_file():
-    """Writes the bottom lines containing the summary to the result file.
+    """
+    Writes the bottom lines containing the summary to the result file.
     """
     _write_to_results_file("")
     _write_to_results_file(40 * "=")
@@ -201,7 +220,8 @@ def _write_summary_to_result_file():
 
 
 def _write_to_results_file(s):
-    """Writes generic data to the result file.
+    """
+    Writes generic data to the result file.
     """
     outfile_f.write("%s\n" % s)
 

@@ -7,7 +7,8 @@ LEET_TRANS_TABLE_SIMPLE = str.maketrans(
 
 
 def translator_registrar():
-    """Decorator to register translation handlers
+    """
+    Decorator to register translation handlers
     """
     translation_registry = []
 
@@ -23,7 +24,8 @@ translator = translator_registrar()
 
 @translator
 def no_translator_translator(lemma):
-    """Return the lemma as is. Required because we want to also 
+    """
+    Return the lemma as is. Required because we want to also 
     search for occurences of the original lemma.
     """
     return lemma
@@ -31,20 +33,24 @@ def no_translator_translator(lemma):
 
 @translator
 def casing_translator(lemma):
-    """Return the lemma in uppercase.
+    """
+    Return the lemma in uppercase.
     """
     return lemma.upper()
 
 
 @translator
 def leet_translator(lemma):
-    """Returns a list of leet translations of the lemma.
+    """
+    Returns a list of leet translations of the lemma.
     """
 
     return lemma.translate(LEET_TRANS_TABLE_SIMPLE)
 
+
 @translator
 def yob_translator(lemma):
-    """Returns a list of lemmas with years of birth appended (1950-2019).
+    """
+    Returns a list of lemmas with years of birth appended (1950-2019).
     """
     return ["%s%d" % (lemma, yob) for yob in range(1950, 2019+1)]

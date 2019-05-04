@@ -11,22 +11,20 @@ from nltk.corpus import wordnet as wn
 # https://github.com/CristiFati/Prebuilt-Binaries/tree/master/Windows/PyGraphviz
 
 def draw_graph(root_syn_name, max_depth):
+    """
+    Draw a directed acyclic graph representing the WordNet.
+
+    root_syn_name: The synset the drawing will start from.
+    max_depth: the level until which this function should draw the graph.
+    """
     G = nx.DiGraph()
-    # G.add_node("entity.n.01", depth=0)
-    # G.add_node("abstract_concept.n.01", depth=1)
-    # G.add_node("thing.n.01", depth=1)
-
-    # G.add_edge("entity.n.01", "abstract_concept.n.01")
-    # G.add_edge("entity.n.01", "thing.n.01")
-
     root_synsets = wn.synsets(root_syn_name)
     if len(root_synsets) == 0:
         print("  No synset found for: %s" % root_syn_name)
         return
 
-    # If multiple synsets were found
+    # If multiple synsets were found, prompt the user to choose which one to use.
     if len(root_synsets) > 1:
-
         print("  Multiple synset were found. Please choose: ")
         for elem in range(len(root_synsets) - 1):
             print("    [%d] %s" % (elem, root_synsets[elem]))
@@ -38,7 +36,7 @@ def draw_graph(root_syn_name, max_depth):
             return
         if int_choice < 0 or int_choice > len(root_synsets) - 2:
             print("Invalid choice: %s" % choice)
-
+    # Make the choice the new root synset from we will start our recursion.
     choice_root_syn = root_synsets[int_choice]
 
     # Create the first node in the digraph
@@ -55,8 +53,11 @@ def draw_graph(root_syn_name, max_depth):
 
 
 def _recurse_nouns_from_root(G, root_syn, max_depth=0):
-    # If the current depth in the DAG is reached, do not continue to iterate this path.
+    """
+    Iterate over the entire WordNet starting from root_syn and running until the max_depth layer is reached.
+    """
     # TODO: We can not work with the absolute depth anymore, since the user can now specify at which level to start!!!
+    # If the current depth in the DAG is reached, do not continue to iterate this path.
     if root_syn.min_depth() == max_depth:
         return
     curr_root_syn = root_syn
@@ -67,10 +68,6 @@ def _recurse_nouns_from_root(G, root_syn, max_depth=0):
         G.add_edge(root_syn.name(), hypo.name())
         # Execute the function again with the new root synset being each hyponym we just found.
         _recurse_nouns_from_root(G, root_syn=hypo, max_depth=max_depth)
-
-
-def attach_node(G, from_node, to_node):
-    pass
 
 
 def hierarchy_pos(G, root=None, width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5):
