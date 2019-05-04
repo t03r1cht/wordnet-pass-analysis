@@ -145,6 +145,7 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
     # If the current depth in the DAG is reached, do not continue to iterate this path.
     if root_syn.min_depth() == max_depth:
         return
+
     curr_root_syn = root_syn
     for hypo in curr_root_syn.hyponyms():
         for lemma in hypo.lemma_names():
