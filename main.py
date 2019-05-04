@@ -254,6 +254,8 @@ def prompt_synset_choice(root_synsets):
 
 
 if __name__ == "__main__":
+    nltk.download("wordnet")
+    print("!!!! DONE !!!!")
     if args.draw_dag == 1:
         from wn_graph import draw_graph
         draw_graph(args.root_syn_name, args.dag_depth)
@@ -261,7 +263,6 @@ if __name__ == "__main__":
         init()
         signal.signal(signal.SIGINT, sigint_handler)
         clear_terminal()
-        nltk.download("wordnet")
         print()
         root_synsets = wn.synsets(args.root_syn_name)
         if len(root_synsets) == 0:
