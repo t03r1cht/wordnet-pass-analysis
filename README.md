@@ -10,14 +10,3 @@
 ## Issues
 
 ### Error
-
-Cmd:
-```
-python3.7 main.py -g 1 -s "boat"
-> 0
-```
-
-Error:
-```
-TypeError: cannot use hierarchy_pos on a graph that is not a tree
-```
