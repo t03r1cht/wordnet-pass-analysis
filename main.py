@@ -132,7 +132,7 @@ def hash_sha1(s):
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
 
 
-def recurse_nouns_from_root(root_syn, max_depth=0):
+def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     """
     Iterates over each hyponym synset until the desired depth in the DAG is reached.
 
@@ -143,7 +143,7 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
     """
 
     # If the current depth in the DAG is reached, do not continue to iterate this path.
-    if root_syn.min_depth() == max_depth:
+    if (root_syn.min_depth() - start_depth) >= rel_depth:
         return
 
     curr_root_syn = root_syn
@@ -152,7 +152,8 @@ def recurse_nouns_from_root(root_syn, max_depth=0):
             # Apply a set of translators to each lemma
             translations_for_lemma(lemma, hypo.min_depth())
         # Execute the function again with the new root synset being each hyponym we just found.
-        recurse_nouns_from_root(root_syn=hypo, max_depth=max_depth)
+        recurse_nouns_from_root(
+            root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
 
 
 def translations_for_lemma(lemma, depth):
@@ -234,6 +235,24 @@ def _proper_shutdown():
     cleanup()
 
 
+def prompt_synset_choice(root_synsets):
+    print("  Multiple synset were found. Please choose: ")
+    for elem in range(len(root_synsets)):
+        print("    [%d] %s" % (elem, root_synsets[elem]))
+    print()
+    choice = input("Your choice [0-%d]: " % ((len(root_synsets)-1)))
+    try:
+        int_choice = int(choice)
+    except ValueError:
+        print("Invalid choice: %s" % choice)
+        return
+    if int_choice < 0 or int_choice > len(root_synsets) - 1:
+        print("Invalid choice: %s" % choice)
+        return
+    # Make the choice the new root synset from we will start our recursion.
+    return root_synsets[int_choice]
+
+
 if __name__ == "__main__":
     if args.draw_dag == 1:
         from wn_graph import draw_graph
@@ -244,14 +263,24 @@ if __name__ == "__main__":
         clear_terminal()
         nltk.download("wordnet")
         print()
+        root_synsets = wn.synsets(args.root_syn_name)
+        if len(root_synsets) == 0:
+            print("  No synset found for: %s" % root_syn_name)
+            sys.exit(0)
+        # If multiple synsets were found, prompt the user to choose which one to use.
+        if len(root_synsets) > 1:
+            choice_root_syn = prompt_synset_choice(root_synsets)
+        else:
+            choice_root_syn = root_synsets[0]
+
         started_time = get_curr_time()
 
-        root_syn = wn.synset("entity.n.01")
-        for root_lemma in root_syn.lemma_names():
-            translations_for_lemma(root_lemma, root_syn.min_depth())
+        print(choice_root_syn.lemma_names())
+        for root_lemma in choice_root_syn.lemma_names():
+            translations_for_lemma(root_lemma, choice_root_syn.min_depth())
             inc_total_processed()
-
-        recurse_nouns_from_root(root_syn=root_syn, max_depth=args.dag_depth)
+        recurse_nouns_from_root(
+            root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
         _proper_shutdown()
         print()

@@ -5,6 +5,7 @@ from networkx.drawing.nx_agraph import graphviz_layout
 import random
 import pydot
 from nltk.corpus import wordnet as wn
+from main import prompt_synset_choice
 
 
 # To install pygraphviz on windows use the pre-built python binaries/wheel:
@@ -25,20 +26,7 @@ def draw_graph(root_syn_name, max_depth):
 
     # If multiple synsets were found, prompt the user to choose which one to use.
     if len(root_synsets) > 1:
-        print("  Multiple synset were found. Please choose: ")
-        for elem in range(len(root_synsets)):
-            print("    [%d] %s" % (elem, root_synsets[elem]))
-        choice = input("Your choice [0-%d]: " % ((len(root_synsets)-1)))
-        try:
-            int_choice = int(choice)
-        except ValueError:
-            print("Invalid choice: %s" % choice)
-            return
-        if int_choice < 0 or int_choice > len(root_synsets) - 1:
-            print("Invalid choice: %s" % choice)
-            return
-        # Make the choice the new root synset from we will start our recursion.
-        choice_root_syn = root_synsets[int_choice]
+        choice_root_syn = prompt_synset_choice(root_synsets)
     else:
         choice_root_syn = root_synsets[0]
 
@@ -48,7 +36,6 @@ def draw_graph(root_syn_name, max_depth):
     G.add_node(choice_root_syn.name())
     _recurse_nouns_from_root(G, root_syn=choice_root_syn,
                              start_depth=choice_root_syn.min_depth(), rel_depth=max_depth)
-    print("len G: %d" % len(G))
     pos = hierarchy_pos(G, choice_root_syn.name())
     # labels = nx.get_node_attributes(G, 'depth')
     # nx.draw(G, pos=pos, with_labels=True, labels=labels)
