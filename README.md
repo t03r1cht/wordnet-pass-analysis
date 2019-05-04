@@ -11,4 +11,8 @@
 
 ## Issues
 
-### Error
+## look for big files
+
+Using look on big files (bigger than 2^31-1) works fine on MacOS since MacOS supplies the user with a 64 bit look command. However, Ubuntu saddled the user with a 32 bit look utility.
+
+Fix here: https://github.com/stuartraetaylor/bsdmainutils-look
