@@ -21,9 +21,9 @@ from translators import translator_registrar, translator
 # pip installation über py binary: py -m pip install nltk
 
 parser = argparse.ArgumentParser(
-    description="Password hash anaylsis using WordNet and the HaveIBeenPwned database")
+    description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
 parser.add_argument("-p", "--pass-database", type=str,
-                    help="Path to the HIBP password database", dest="pass_db_path")
+                    help="Path to the HIBP password database.", dest="pass_db_path")
 parser.add_argument("-d", "--depth", type=int,
                     help="Depth in the DAG", dest="dag_depth")
 parser.add_argument("-t", "--total", type=int,
@@ -32,13 +32,17 @@ parser.add_argument("-g", "--graph", type=int,
                     help="Display a directed graph for WordNet.", dest="draw_dag")
 parser.add_argument("-s", "--root-syn-name", type=str,
                     help="Name of the word specified to be the root synset.", dest="root_syn_name")
+parser.add_argument("-c", "--classification", type=int,
+                    help="Subsume the hits for each class of the search hierarchy.", dest="subsume_for_classes")
+parser.add_argument("-r", "--result-file", type=str,
+                    help="Name of the result file.", dest="result_file_name")
 args = parser.parse_args()
 
 total_processed = 0
 started = ""
-# outfile_name = "results.txt"
-# outfile_f = open(outfile_name, "w+")
 translation_handler = None
+hits_for_lemmas = {}
+total_found = 0
 
 
 def sigint_handler(sig, frame):
@@ -145,15 +149,20 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     # If the current depth in the DAG is reached, do not continue to iterate this path.
     if (root_syn.min_depth() - start_depth) >= rel_depth:
         return
-
     curr_root_syn = root_syn
     for hypo in curr_root_syn.hyponyms():
         for lemma in hypo.lemma_names():
             # Apply a set of translators to each lemma
-            translations_for_lemma(lemma, hypo.min_depth())
+            total_hits = translations_for_lemma(lemma, hypo.min_depth())
+            append_with_hits(lemma, total_hits)
         # Execute the function again with the new root synset being each hyponym we just found.
         recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
+
+
+def append_with_hits(lemma, total_hits):
+    global hits_for_lemmas
+    hits_for_lemmas[lemma] = total_hits
 
 
 def translations_for_lemma(lemma, depth):
@@ -164,11 +173,14 @@ def translations_for_lemma(lemma, depth):
         # The translator returns the translated lemma.
         trans = translation_handler(lemma)
         # In some cases, translator may return a variable list of translations.
+        total_hits = 0
         if type(trans) == list:
             for p in trans:
-                lookup(p, depth)
+                trans_hits = lookup(p, depth)
+                total_hits += trans_hits
         else:
-            lookup(trans, depth)
+            total_hits = lookup(trans, depth)
+        return total_hits
 
 
 def lookup(translation, depth):
@@ -191,6 +203,11 @@ def lookup(translation, depth):
     # Print the translations to the result file.
     _write_result_to_results_file(translation, depth, occurrences)
 
+    # Return occurrences in order to be able to subsume them for each class.
+    global total_found
+    total_found += occurrences
+    return occurrences
+
 
 def inc_total_processed():
     """
@@ -204,18 +221,27 @@ def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
     """
     Writes a properly indented result to the result file.
     """
-    _write_to_results_file("%s%s %d" % (
-        lemma_depth * "  ", lemma_name, occurrences))
+    if args.subsume_for_classes == 1:
+        _write_to_results_file("%s%s %d" % (
+            lemma_depth * "  ", lemma_name, occurrences))
 
 
 def _write_summary_to_result_file(started_time):
     """
     Writes the bottom lines containing the summary to the result file.
     """
+    if args.subsume_for_classes == 1:
+        global hits_for_lemmas
+        for k, v in hits_for_lemmas.items():
+            _write_to_results_file("%s: %d" % (k, v))
+
     _write_to_results_file("")
     _write_to_results_file(40 * "=")
     _write_to_results_file("Starting Time: %s" % started_time)
     _write_to_results_file("Total lemmas processed: %d" % total_processed)
+    global total_found
+    _write_to_results_file(
+        "Total hits for password searches: %d" % total_found)
     finished_time = get_curr_time()
     print("  Finished: %s" % finished_time)
     _write_to_results_file("Finishing Time: %s" % finished_time)
@@ -259,6 +285,11 @@ def option_draw_graph():
     from wn_graph import draw_graph
     draw_graph(args.root_syn_name, args.dag_depth)
 
+"""
+alle begriffe aus abs lvl x
+suche nach allen lemmas in lvl
+1 lvl verknüpfung --> stark verbunden
+"""
 
 def option_lookup_passwords():
     """
@@ -270,7 +301,10 @@ def option_lookup_passwords():
     print()
     started_time = get_curr_time()
     # Open the file handler for a file with the starting time
-    outfile_name = "{0}_{1}.txt".format(started_time, args.root_syn_name)
+    if args.result_file_name is not None:
+        outfile_name = args.result_file_name
+    else:
+        outfile_name = "{0}_{1}.txt".format(started_time, args.root_syn_name)
     global outfile_f
     outfile_f = open(outfile_name, "w+")
 
@@ -321,4 +355,8 @@ if __name__ == "__main__":
             print("Error: Missing parameters.")
             parser.print_usage()
             sys.exit(0)
+        # if args.subsume_for_classes == 1:
+        #     option_subsume_for_classes()
+        # else:
+        #     option_lookup_passwords()
         option_lookup_passwords()

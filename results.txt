@@ -1,0 +1,78 @@
+entity 1092
+  abstraction 163
+  abstract_entity 0
+    attribute 228
+    communication 6188
+    group 3770
+    grouping 52
+    measure 635
+    quantity 671
+    amount 477
+    otherworld 358
+    psychological_feature 0
+    relation 2292
+    set 1530
+  physical_entity 0
+    causal_agent 0
+    cause 254
+    causal_agency 0
+    matter 5369
+    object 838
+    physical_object 0
+    process 3817
+    physical_process 0
+    substance 1283
+    thing 1992
+  thing 1992
+    change 40405
+    freshener 30
+    horror 7196
+    jimdandy 682
+    jimhickey 4
+    crackerjack 2253
+    pacifier 915
+    security_blanket 0
+    stinker 11707
+    whacker 346
+    whopper 3427
+abstraction: 163
+abstract_entity: 0
+attribute: 228
+communication: 6188
+group: 3770
+grouping: 52
+measure: 635
+quantity: 671
+amount: 477
+otherworld: 358
+psychological_feature: 0
+relation: 2292
+set: 1530
+physical_entity: 0
+causal_agent: 0
+cause: 254
+causal_agency: 0
+matter: 5369
+object: 838
+physical_object: 0
+process: 3817
+physical_process: 0
+substance: 1283
+thing: 1992
+change: 40405
+freshener: 30
+horror: 7196
+jimdandy: 682
+jimhickey: 4
+crackerjack: 2253
+pacifier: 915
+security_blanket: 0
+stinker: 11707
+whacker: 346
+whopper: 3427
+
+========================================
+Starting Time: 20190506_10.59.19
+Total lemmas processed: 38
+Total hits for password searches: 99966
+Finishing Time: 20190506_10.59.21
