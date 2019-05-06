@@ -36,8 +36,8 @@ args = parser.parse_args()
 
 total_processed = 0
 started = ""
-outfile_name = "results.txt"
-outfile_f = open(outfile_name, "w+")
+# outfile_name = "results.txt"
+# outfile_f = open(outfile_name, "w+")
 translation_handler = None
 
 
@@ -71,9 +71,9 @@ def get_shell_width():
 
 def get_curr_time():
     """
-    Return the current time, nicely formatted as a string.
+    Return the current time as a string.
     """
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
 
 
 def clear_terminal():
@@ -208,7 +208,7 @@ def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
         lemma_depth * "  ", lemma_name, occurrences))
 
 
-def _write_summary_to_result_file():
+def _write_summary_to_result_file(started_time):
     """
     Writes the bottom lines containing the summary to the result file.
     """
@@ -226,13 +226,6 @@ def _write_to_results_file(s):
     Writes generic data to the result file.
     """
     outfile_f.write("%s\n" % s)
-
-
-def _proper_shutdown():
-    _write_summary_to_result_file()
-    print()
-    print("  Results written to %s" % outfile_name)
-    cleanup()
 
 
 def prompt_synset_choice(root_synsets):
@@ -261,6 +254,7 @@ def _download_wordnet():
 
 def option_draw_graph():
     """
+    Draw the graph.
     """
     from wn_graph import draw_graph
     draw_graph(args.root_syn_name, args.dag_depth)
@@ -268,12 +262,18 @@ def option_draw_graph():
 
 def option_lookup_passwords():
     """
-
+    Lookup the passwords in the pwned passwords list.
     """
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
     print()
+    started_time = get_curr_time()
+    # Open the file handler for a file with the starting time
+    outfile_name = "{0}_{1}.txt".format(started_time, args.root_syn_name)
+    global outfile_f
+    outfile_f = open(outfile_name, "w+")
+
     root_synsets = wn.synsets(args.root_syn_name)
     if len(root_synsets) == 0:
         print("  No synset found for: %s" % root_syn_name)
@@ -283,7 +283,7 @@ def option_lookup_passwords():
         choice_root_syn = prompt_synset_choice(root_synsets)
     else:
         choice_root_syn = root_synsets[0]
-    started_time = get_curr_time()
+
     for root_lemma in choice_root_syn.lemma_names():
         translations_for_lemma(root_lemma, choice_root_syn.min_depth())
         inc_total_processed()
@@ -291,7 +291,9 @@ def option_lookup_passwords():
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
     # Shutdown the script
-    _proper_shutdown()
+    _write_summary_to_result_file(started_time)
+    print()
+    print("  Results written to %s" % outfile_name)
     print()
     cleanup()
 
