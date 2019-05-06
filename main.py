@@ -36,6 +36,8 @@ parser.add_argument("-c", "--classification", action="store_true",
                     help="Subsume the hits for each class of the search hierarchy.", dest="subsume_for_classes")
 parser.add_argument("-r", "--result-file", type=str,
                     help="Name of the result file.", dest="result_file_name")
+parser.add_argument("-z", "--is-debug", action="store_true",
+                    help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
 
 total_processed = 0
@@ -92,17 +94,18 @@ def update_stats(current, finished):
     """
     Print out the stats while the program is running.
     """
-    clear_terminal()
-    print()
-    print()
-    c_t = get_curr_time()
-    print("  WordNet Password Analysis // Time: %s" % c_t)
-    print()
-    global started
-    print("  Started: \t%s" % started)
-    print("  Processing: \t%s" % current)
-    print("  Done: \t%d" % finished)
-    print()
+    if not args.is_debug:
+        clear_terminal()
+        print()
+        print()
+        c_t = get_curr_time()
+        print("  WordNet Password Analysis // Time: %s" % c_t)
+        print()
+        global started
+        print("  Started: \t%s" % started)
+        print("  Processing: \t%s" % current)
+        print("  Done: \t%d" % finished)
+        print()
 
 
 def lookup_pass(hash):
@@ -154,33 +157,34 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         total_hits = 0
         for lemma in hypo.lemma_names():
             # Apply a set of translators to each lemma
-            total_hits += translations_for_lemma(lemma, hypo.min_depth())
+            lemma_hits = translations_for_lemma(lemma, hypo.min_depth())
+            total_hits += lemma_hits
+            #print("finished %s with %d hits" % (lemma, lemma_hits))
+            print()
+        print(hypo.min_depth())
+        print("%s%s: %d" % (hypo.min_depth() * "  ", hypo.name(), total_hits))
         append_with_hits(hypo.name(), total_hits)
         # Execute the function again with the new root synset being each hyponym we just found.
         recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
 
 
-def append_with_hits(lemma, total_hits):
-    global hits_for_lemmas
-    hits_for_lemmas[lemma] = total_hits
-
-
 def translations_for_lemma(lemma, depth):
     """
-    Compute all translations by using the registered translator.
+    Create all translations by using the registered translator using the lemma as base.
     """
+    total_hits = 0
     for translation_handler in translator.all:
         # The translator returns the translated lemma.
         trans = translation_handler(lemma)
         # In some cases, translator may return a variable list of translations.
-        total_hits = 0
+
         if type(trans) == list:
             for p in trans:
                 trans_hits = lookup(p, depth)
                 total_hits += trans_hits
         else:
-            total_hits = lookup(trans, depth)
+            total_hits += lookup(trans, depth)
     return total_hits
 
 
@@ -208,6 +212,14 @@ def lookup(translation, depth):
     global total_found
     total_found += occurrences
     return occurrences
+
+
+def append_with_hits(lemma, total_hits):
+    global hits_for_lemmas
+    if lemma in hits_for_lemmas:
+        hits_for_lemmas[lemma] += total_hits
+    else:
+        hits_for_lemmas[lemma] = total_hits
 
 
 def inc_total_processed():
@@ -240,8 +252,10 @@ def _write_summary_to_result_file(started_time, root_syn):
     _write_to_results_file(40 * "=")
     _write_to_results_file("")
     _write_to_results_file("Search Lemma: %s" % root_syn.name())
-    _write_to_results_file("Search Lemma Synonyms: %s" % root_syn.lemma_names())
-    _write_to_results_file("Search Lemma Definition: %s" % root_syn.definition())
+    _write_to_results_file("Search Lemma Synonyms: %s" %
+                           root_syn.lemma_names())
+    _write_to_results_file("Search Lemma Definition: %s" %
+                           root_syn.definition())
     _write_to_results_file("Search Lemma Examples: %s" % root_syn.examples())
     _write_to_results_file("Total Lemmas Processed: %d" % total_processed)
     global total_found
@@ -320,18 +334,29 @@ def option_lookup_passwords():
     if len(root_synsets) == 0:
         print("  No synset found for: %s" % root_syn_name)
         sys.exit(0)
+
     # If multiple synsets were found, prompt the user to choose which one to use.
     if len(root_synsets) > 1:
         choice_root_syn = prompt_synset_choice(root_synsets)
     else:
         choice_root_syn = root_synsets[0]
-
+    first_level_hits = 0
+    print(choice_root_syn.min_depth())
+    print(choice_root_syn.name())
     for root_lemma in choice_root_syn.lemma_names():
-        translations_for_lemma(root_lemma, choice_root_syn.min_depth())
+        hits = translations_for_lemma(
+            root_lemma, choice_root_syn.min_depth())
+        first_level_hits += hits
         inc_total_processed()
-    recurse_nouns_from_root(
-        root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
+    print("%s%s: %d" % (choice_root_syn.min_depth() *
+                        "  ", choice_root_syn.name(), first_level_hits))
 
+    append_with_hits(choice_root_syn.name(), first_level_hits)
+
+    global total_found
+    total_found += first_level_hits
+    hits_below = recurse_nouns_from_root(
+        root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
     # Shutdown the script
     _write_summary_to_result_file(started_time, choice_root_syn)
     print()
