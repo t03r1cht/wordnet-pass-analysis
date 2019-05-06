@@ -28,11 +28,11 @@ parser.add_argument("-d", "--depth", type=int,
                     help="Depth in the DAG", dest="dag_depth")
 parser.add_argument("-t", "--total", type=int,
                     help="Set the maximum number of lemmas that should be processed.", dest="max_lemmas_processed")
-parser.add_argument("-g", "--graph", type=int,
+parser.add_argument("-g", "--graph", action="store_true",
                     help="Display a directed graph for WordNet.", dest="draw_dag")
 parser.add_argument("-s", "--root-syn-name", type=str,
                     help="Name of the word specified to be the root synset.", dest="root_syn_name")
-parser.add_argument("-c", "--classification", type=int,
+parser.add_argument("-c", "--classification", action="store_true",
                     help="Subsume the hits for each class of the search hierarchy.", dest="subsume_for_classes")
 parser.add_argument("-r", "--result-file", type=str,
                     help="Name of the result file.", dest="result_file_name")
@@ -151,10 +151,11 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         return
     curr_root_syn = root_syn
     for hypo in curr_root_syn.hyponyms():
+        total_hits = 0
         for lemma in hypo.lemma_names():
             # Apply a set of translators to each lemma
-            total_hits = translations_for_lemma(lemma, hypo.min_depth())
-            append_with_hits(lemma, total_hits)
+            total_hits += translations_for_lemma(lemma, hypo.min_depth())
+        append_with_hits(hypo.name(), total_hits)
         # Execute the function again with the new root synset being each hyponym we just found.
         recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
@@ -180,7 +181,7 @@ def translations_for_lemma(lemma, depth):
                 total_hits += trans_hits
         else:
             total_hits = lookup(trans, depth)
-        return total_hits
+    return total_hits
 
 
 def lookup(translation, depth):
@@ -221,28 +222,33 @@ def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
     """
     Writes a properly indented result to the result file.
     """
-    if args.subsume_for_classes == 1:
+    if not args.subsume_for_classes:
         _write_to_results_file("%s%s %d" % (
             lemma_depth * "  ", lemma_name, occurrences))
 
 
-def _write_summary_to_result_file(started_time):
+def _write_summary_to_result_file(started_time, root_syn):
     """
     Writes the bottom lines containing the summary to the result file.
     """
-    if args.subsume_for_classes == 1:
+    if args.subsume_for_classes:
         global hits_for_lemmas
         for k, v in hits_for_lemmas.items():
             _write_to_results_file("%s: %d" % (k, v))
 
     _write_to_results_file("")
     _write_to_results_file(40 * "=")
-    _write_to_results_file("Starting Time: %s" % started_time)
-    _write_to_results_file("Total lemmas processed: %d" % total_processed)
+    _write_to_results_file("")
+    _write_to_results_file("Search Lemma: %s" % root_syn.name())
+    _write_to_results_file("Search Lemma Synonyms: %s" % root_syn.lemma_names())
+    _write_to_results_file("Search Lemma Definition: %s" % root_syn.definition())
+    _write_to_results_file("Search Lemma Examples: %s" % root_syn.examples())
+    _write_to_results_file("Total Lemmas Processed: %d" % total_processed)
     global total_found
     _write_to_results_file(
         "Total hits for password searches: %d" % total_found)
     finished_time = get_curr_time()
+    _write_to_results_file("Starting Time: %s" % started_time)
     print("  Finished: %s" % finished_time)
     _write_to_results_file("Finishing Time: %s" % finished_time)
 
@@ -285,11 +291,13 @@ def option_draw_graph():
     from wn_graph import draw_graph
     draw_graph(args.root_syn_name, args.dag_depth)
 
+
 """
 alle begriffe aus abs lvl x
 suche nach allen lemmas in lvl
 1 lvl verknüpfung --> stark verbunden
 """
+
 
 def option_lookup_passwords():
     """
@@ -325,7 +333,7 @@ def option_lookup_passwords():
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
     # Shutdown the script
-    _write_summary_to_result_file(started_time)
+    _write_summary_to_result_file(started_time, choice_root_syn)
     print()
     print("  Results written to %s" % outfile_name)
     print()
@@ -337,7 +345,7 @@ if __name__ == "__main__":
         from nltk.corpus import wordnet as wn
     except ImportError:
         _download_wordnet()
-    if args.draw_dag == 1:
+    if args.draw_dag:
         # Evaluate command line parameters
         if args.dag_depth is None or args.root_syn_name is None:
             print("Error: Missing parameters.")
@@ -355,8 +363,4 @@ if __name__ == "__main__":
             print("Error: Missing parameters.")
             parser.print_usage()
             sys.exit(0)
-        # if args.subsume_for_classes == 1:
-        #     option_subsume_for_classes()
-        # else:
-        #     option_lookup_passwords()
         option_lookup_passwords()
