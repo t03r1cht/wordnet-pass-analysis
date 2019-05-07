@@ -1,0 +1,15 @@
+entity.n.01: 1249
+abstraction.n.06: 173
+physical_entity.n.01: 0
+thing.n.08: 2324
+
+========================================
+
+Search Lemma: entity.n.01
+Search Lemma Synonyms: ['entity']
+Search Lemma Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
+Search Lemma Examples: []
+Total Lemmas Processed: 366
+Total hits for password searches: 3746
+Starting Time: 20190507_09.14.57
+Finishing Time: 20190507_09.15.00

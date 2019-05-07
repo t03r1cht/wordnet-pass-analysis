@@ -1,0 +1,38 @@
+                    boat.n.01 6459 (subsum=63040)
+                      ark.n.02 2381
+                      barge.n.01 7531
+                      bumboat.n.01 11
+                      canal_boat.n.01 367
+                      ferry.n.01 2708
+                      fireboat.n.01 119
+                      gondola.n.02 1432
+                      guard_boat.n.01 0
+                      gunboat.n.01 199
+                      junk.n.02 9461
+                      longboat.n.01 1055
+                      lugger.n.01 380
+                      mackinaw.n.03 598
+                      mailboat.n.01 730
+                      motorboat.n.01 1004
+                      pilot_boat.n.01 0
+                      police_boat.n.01 0
+                      punt.n.02 563
+                      river_boat.n.01 4
+                      scow.n.01 13
+                      sea_boat.n.01 0
+                      small_boat.n.01 0
+                      steamboat.n.01 2805
+                      surfboat.n.01 86
+                      tender.n.05 16819
+                      tugboat.n.01 8315
+
+========================================
+
+Search Lemma: boat.n.01
+Search Lemma Synonyms: ['boat']
+Search Lemma Definition: a small vessel for travel on water
+Search Lemma Examples: []
+Total Lemmas Processed: 3213
+Total hits for password searches: 63040
+Starting Time: 20190507_11.02.12
+Finishing Time: 20190507_11.02.37
