@@ -181,32 +181,10 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         # Works because of... recursion
         total_hits_for_current_synset += hits_below
         if args.subsume_for_classes:
-            # s = "%s%s: %d (below %d)" % ((hypo.min_depth() - start_depth) * "  ",
-            #                              hypo.name(), total_hits, hits_below)
-            s = "%s%s=%d,below=%d,parent=%s" % (hypo.min_depth() * "**",
-                                                hypo.name(), total_hits, hits_below, hypo.hypernyms())
+            s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (hypo.min_depth() * "**",
+                                                              hypo.name(), (total_hits + hits_below), hits_below, total_hits, hypo.hypernyms())
             print(s)
     return total_hits_for_current_synset
-
-
-def recurse_nouns_from_root_2(start_syn, start_depth, rel_depth=1):
-    pass
-
-
-def lookup_all_lemmas(synset):
-    for lemma in synset.lemma_names():
-        print("%slookup: %s [%s]" %
-              ((synset.min_depth() * "  "), lemma, synset.name()))
-
-
-def get_attached_synsets(synset):
-    attached_ss = synset.hyponyms()
-    if attached_ss == []:
-        print("attached synsets for %s: []" % synset.name())
-        return None
-    else:
-        print("attached synsets for %s: %s" % (synset.name(), attached_ss))
-        return attached_ss
 
 
 def translations_for_lemma(lemma, depth):
@@ -404,15 +382,15 @@ def option_lookup_passwords():
     if args.subsume_for_classes:
         s = "%s%s: %d" % (choice_root_syn.min_depth() *
                           "  ", choice_root_syn.name(), first_level_hits)
-        # print(s)
-        # _write_to_results_file(s)
         append_with_hits(choice_root_syn, first_level_hits)
 
     hits_below = recurse_nouns_from_root(
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
-    print("hits root: %d" % first_level_hits)
-    print("hits below root: %d" % hits_below)
-    print("sum: %d" % (first_level_hits + hits_below))
+    s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (choice_root_syn.min_depth() * "**",
+                                                      choice_root_syn.name(), (first_level_hits + hits_below), hits_below, first_level_hits, None)
+
+    print(s)
+
     # Writing results to result file
     print()
     # Using a options dictionary to pass option information to the function
