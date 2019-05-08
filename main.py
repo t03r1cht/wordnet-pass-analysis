@@ -154,8 +154,9 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     # Example:  rel_depth = 3, curr = 9, start = 7
     #           9 - 5 = 4,
     if (root_syn.min_depth() - start_depth) >= rel_depth:
-        return
+        return 0
     curr_root_syn = root_syn
+    hits_below = 0
     total_hits_for_current_synset = 0
     for hypo in curr_root_syn.hyponyms():
         total_hits = 0
@@ -166,17 +167,42 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             total_hits_for_current_synset += lemma_hits
         # If the -c flag is set, print and write the synsets classes with its respective occurences to the result file
         if args.subsume_for_classes:
-            s = "%s%s: %d" % (hypo.min_depth() * "  ",
+            s = "%s%s: %d" % ((hypo.min_depth() - start_depth) * "  ",
                               hypo.name(), total_hits)
-            print(s)
             # _write_to_results_file(s)
             append_with_hits(hypo, total_hits)
         # Execute the function again with the new root synset being each hyponym we just found.
-        recurse_nouns_from_root(
+        hits_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
-    # print("returning with %d total_hits (hits for lemmas of synset %s)" %
-    #       (total_hits_for_current_synset, curr_root_syn.name()))
+        # TODO
+        total_hits_for_current_synset += hits_below
+        if args.subsume_for_classes:
+            # s = "%s%s: %d (below %d)" % ((hypo.min_depth() - start_depth) * "  ",
+            #                              hypo.name(), total_hits, hits_below)
+            s = "%s%s=%d,below=%d,parent=%s" % (hypo.min_depth() * "**",
+                                                hypo.name(), total_hits, hits_below, hypo.hypernyms())
+            print(s)
     return total_hits_for_current_synset
+
+
+def recurse_nouns_from_root_2(start_syn, start_depth, rel_depth=1):
+    pass
+
+
+def lookup_all_lemmas(synset):
+    for lemma in synset.lemma_names():
+        print("%slookup: %s [%s]" %
+              ((synset.min_depth() * "  "), lemma, synset.name()))
+
+
+def get_attached_synsets(synset):
+    attached_ss = synset.hyponyms()
+    if attached_ss == []:
+        print("attached synsets for %s: []" % synset.name())
+        return None
+    else:
+        print("attached synsets for %s: %s" % (synset.name(), attached_ss))
+        return attached_ss
 
 
 def translations_for_lemma(lemma, depth):
@@ -263,10 +289,10 @@ def _write_summary_to_result_file(opts):
             if k == opts["root_syn"].name():
                 # TODO
                 _write_to_results_file("%s%s %d (subsum=%d)" % (
-                    v[0].min_depth() * "  ", v[0].name(),v[1], (v[1] + opts["hits_below_root"])))
+                    (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1], (v[1] + opts["hits_below_root"])))
             else:
                 _write_to_results_file("%s%s %d" % (
-                    v[0].min_depth() * "  ", v[0].name(), v[1]))
+                    (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1]))
 
     _write_to_results_file("")
     _write_to_results_file(40 * "=")
@@ -282,7 +308,7 @@ def _write_summary_to_result_file(opts):
     global total_found
     _write_to_results_file(
         "Total hits for password searches: %d" % total_found)
-    finished_time=get_curr_time()
+    finished_time = get_curr_time()
     print()
     _write_to_results_file("Starting Time: %s" % opts["started_time"])
     print("  Finished: %s" % finished_time)
@@ -301,10 +327,10 @@ def prompt_synset_choice(root_synsets):
     for elem in range(len(root_synsets)):
         print("    [%d] %s" % (elem, root_synsets[elem]))
     print()
-    choice=input("Your choice [0-%d]: " % ((len(root_synsets)-1)))
+    choice = input("Your choice [0-%d]: " % ((len(root_synsets)-1)))
     print()
     try:
-        int_choice=int(choice)
+        int_choice = int(choice)
     except ValueError:
         print("Invalid choice: %s" % choice)
         return
@@ -345,48 +371,56 @@ def option_lookup_passwords():
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
     print()
-    started_time=get_curr_time()
+    started_time = get_curr_time()
     # Open the file handler for a file with the starting time
     if args.result_file_name is not None:
-        outfile_name=args.result_file_name
+        outfile_name = args.result_file_name
     else:
-        outfile_name="{0}_{1}.txt".format(started_time, args.root_syn_name)
+        outfile_name = "{0}_{1}.txt".format(started_time, args.root_syn_name)
     global outfile_f
-    outfile_f=open(outfile_name, "w+")
+    outfile_f = open(outfile_name, "w+")
 
-    root_synsets=wn.synsets(args.root_syn_name)
+    root_synsets = wn.synsets(args.root_syn_name)
     if len(root_synsets) == 0:
         print("  No synset found for: %s" % root_syn_name)
         sys.exit(0)
 
     # If multiple synsets were found, prompt the user to choose which one to use.
     if len(root_synsets) > 1:
-        choice_root_syn=prompt_synset_choice(root_synsets)
+        choice_root_syn = prompt_synset_choice(root_synsets)
     else:
-        choice_root_syn=root_synsets[0]
-    first_level_hits=0
+        choice_root_syn = root_synsets[0]
+    first_level_hits = 0
     for root_lemma in choice_root_syn.lemma_names():
-        hits=translations_for_lemma(
+        hits = translations_for_lemma(
             root_lemma, choice_root_syn.min_depth())
         first_level_hits += hits
         inc_total_processed()
 
     if args.subsume_for_classes:
-        s="%s%s: %d" % (choice_root_syn.min_depth() *
+        s = "%s%s: %d" % (choice_root_syn.min_depth() *
                           "  ", choice_root_syn.name(), first_level_hits)
-        print(s)
+        # print(s)
         # _write_to_results_file(s)
         append_with_hits(choice_root_syn, first_level_hits)
 
-    hits_below=recurse_nouns_from_root(
+    # hits_below = recurse_nouns_from_root(
+    #     root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
+    hits_below = recurse_nouns_from_root(
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
+    print("hits root: %d" % first_level_hits)
+    print("hits below root: %d" % hits_below)
+    print("sum: %d" % (first_level_hits + hits_below))
+    return
+
     # Writing results to result file
     print()
     # TODO
-    opts={}
-    opts["root_syn"]=choice_root_syn
-    opts["started_time"]=started_time
-    opts["hits_below_root"]=hits_below
+    opts = {}
+    opts["root_syn"] = choice_root_syn
+    opts["started_time"] = started_time
+    opts["hits_below_root"] = hits_below
+    opts["start_depth"] = choice_root_syn.min_depth()
     _write_summary_to_result_file(opts)
     print()
     print("  Results written to %s" % outfile_name)
