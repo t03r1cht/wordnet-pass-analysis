@@ -1,0 +1,37 @@
+entity.n.01 1249 (subsum=112401)
+  abstraction.n.06 173
+    attribute.n.02 231
+    communication.n.02 6425
+    group.n.01 4380
+    measure.n.02 1882
+    otherworld.n.01 370
+    psychological_feature.n.01 0
+    relation.n.01 2383
+    set.n.02 3434
+  physical_entity.n.01 0
+    causal_agent.n.01 296
+    matter.n.03 5693
+    object.n.01 885
+    process.n.06 3983
+    substance.n.04 1331
+    thing.n.12 2324
+  thing.n.08 2324
+    change.n.06 46226
+    freshener.n.01 31
+    horror.n.02 8466
+    jimdandy.n.02 3121
+    pacifier.n.02 962
+    security_blanket.n.01 0
+    stinker.n.02 12302
+    whacker.n.01 3930
+
+========================================
+
+Search Lemma: entity.n.01
+Search Lemma Synonyms: ['entity']
+Search Lemma Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
+Search Lemma Examples: []
+Total Lemmas Processed: 2702
+Total hits for password searches: 112401
+Starting Time: 20190508_13.20.38
+Finishing Time: 20190508_13.20.55

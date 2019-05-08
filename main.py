@@ -174,7 +174,11 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         # Execute the function again with the new root synset being each hyponym we just found.
         hits_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
-        # TODO
+        # Add the sum of all hits below the current synset to the hits list of the current synset so
+        # below hits are automatically included (not included in the terminal output, we separate both these
+        # numbers into total_hits and hits_below so we can distinguis how many hits we found below and how
+        # many were produced by the current synset).
+        # Works because of... recursion
         total_hits_for_current_synset += hits_below
         if args.subsume_for_classes:
             # s = "%s%s: %d (below %d)" % ((hypo.min_depth() - start_depth) * "  ",
@@ -284,10 +288,10 @@ def _write_summary_to_result_file(opts):
     if args.subsume_for_classes:
         global hits_for_lemmas
 
-        # TODO
+        # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
         for k, v in hits_for_lemmas.items():
             if k == opts["root_syn"].name():
-                # TODO
+                # Will be replaced by something better in the
                 _write_to_results_file("%s%s %d (subsum=%d)" % (
                     (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1], (v[1] + opts["hits_below_root"])))
             else:
@@ -404,18 +408,14 @@ def option_lookup_passwords():
         # _write_to_results_file(s)
         append_with_hits(choice_root_syn, first_level_hits)
 
-    # hits_below = recurse_nouns_from_root(
-    #     root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
     hits_below = recurse_nouns_from_root(
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
     print("hits root: %d" % first_level_hits)
     print("hits below root: %d" % hits_below)
     print("sum: %d" % (first_level_hits + hits_below))
-    return
-
     # Writing results to result file
     print()
-    # TODO
+    # Using a options dictionary to pass option information to the function
     opts = {}
     opts["root_syn"] = choice_root_syn
     opts["started_time"] = started_time
