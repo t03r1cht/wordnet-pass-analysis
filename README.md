@@ -4,11 +4,12 @@
 - [X] Plot the results
 - [ ] Subsume the hit results for each class. Subsume only the "vanilla" lemmas or also their translations?
 - [X] Don't replace result files, but rather create a new file for each run (using the date, keyword, command etc.)
-- [ ] Cat term "bug"
+- [X] Cat term "bug"
 - [ ] Visualize Wordnet with hyperbolic tree (hypertree)
 - [ ] Make results.txt results.json
-- [ ] Show classes of each lemma
-- [ ] Better form of result visualization in results.txt
+- [X] Show classes of each lemma
+- [X] Better form of result visualization in results.txt
+- [ ] Write paper about this
 
 
 ## Issues

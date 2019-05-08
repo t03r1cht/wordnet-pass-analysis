@@ -169,8 +169,6 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         if args.subsume_for_classes:
             s = "%s%s: %d" % ((hypo.min_depth() - start_depth) * "  ",
                               hypo.name(), total_hits)
-            # _write_to_results_file(s)
-            append_with_hits(hypo, total_hits)
         # Execute the function again with the new root synset being each hyponym we just found.
         hits_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
@@ -184,6 +182,12 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (hypo.min_depth() * "**",
                                                               hypo.name(), (total_hits + hits_below), hits_below, total_hits, hypo.hypernyms())
             print(s)
+            # TODO Push each finished synset in a OrderedDict in order to be able to properly flush
+            # to the result file
+            # Is this the right position for this function or rather before the print statement after the
+            # synset was finished?
+            append_with_hits(hypo, total_hits)
+
     return total_hits_for_current_synset
 
 
@@ -339,7 +343,7 @@ def option_draw_graph():
 
 
 """
-alle begriffe aus abs lvl x
+alle begriffe ab lvl x
 suche nach allen lemmas in lvl
 1 lvl verknüpfung --> stark verbunden
 """
