@@ -54,3 +54,35 @@ def yob_translator(lemma):
     Returns a list of lemmas with years of birth appended (1950-2019).
     """
     return ["%s%d" % (lemma, yob) for yob in range(1950, 2019+1)]
+
+
+@translator
+def rem_vowel_translator(lemma):
+    """
+    Remove all vowels of a password.
+    """
+    return ""
+
+
+@translator
+def sc_cc_translator(lemma):
+    """
+    Snake case to camel case, e.g. john_wayne -> JohnWayne or john_wayne -> johnWayne
+    """
+    pass
+
+
+@translator
+def separator_translator(lemma):
+    """
+    Lemmas in WordNet are always separated by the underscore "_". Replace it by spaces, hyphens, dots etc.
+    """
+    pass
+
+
+@translator
+def uppercase_index_char(lemma):
+    """
+    Make the first char of the lemma upper case.
+    """
+    pass

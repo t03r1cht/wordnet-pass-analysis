@@ -159,7 +159,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     # Example:  rel_depth = 3, curr = 9, start = 7
     #           9 - 5 = 4,
     if (root_syn.min_depth() - start_depth) >= rel_depth:
-        return 0
+        return 0, 0
     curr_root_syn = root_syn
     hits_below = 0
     total_hits_for_current_synset = 0
@@ -176,10 +176,8 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             not_found += not_found_cnt
             not_found_for_current_synset += not_found_cnt
         # Execute the function again with the new root synset being each hyponym we just found.
-        x = recurse_nouns_from_root(
+        hits_below, not_found_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
-        hits_below = x[0] 
-        not_found_below = x[1]
         # Add the sum of all hits below the current synset to the hits list of the current synset so
         # below hits are automatically included (not included in the terminal output, we separate both these
         # numbers into total_hits and hits_below so we can distinguis how many hits we found below and how
@@ -190,7 +188,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         if args.subsume_for_classes:
             append_with_hits(hypo, total_hits, hits_below,
                              not_found, not_found_below)
-    return [total_hits_for_current_synset, not_found_for_current_synset]
+    return total_hits_for_current_synset, not_found_for_current_synset
 
 
 def translations_for_lemma(lemma, depth):

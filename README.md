@@ -6,7 +6,7 @@
 - [X] Don't replace result files, but rather create a new file for each run (using the date, keyword, command etc.)
 - [X] Cat term "bug"
 - [X] Replace update_stats by simple spinner
-- [ ] Count passwords which have not been found
+- [X] Count passwords which have not been found
 - [ ] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
 - [ ] Visualize Wordnet with hyperbolic tree (hypertree)
 - [X] Show classes of each lemma
