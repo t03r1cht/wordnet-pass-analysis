@@ -268,8 +268,12 @@ def _write_summary_to_result_file(opts):
     # we print only their respective classes to the result file
     # TODO: Fix output to file
     if args.subsume_for_classes:
-        global hits_for_lemmas
+        _write_to_results_file("")
+        _write_to_results_file(40 * "=")
+        _write_to_results_file("")
+        _write_to_results_file("    Synset Distribution")
 
+        global hits_for_lemmas
         # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
         for k, v in hits_for_lemmas.items():
             if k == opts["root_syn"].name():
@@ -283,6 +287,7 @@ def _write_summary_to_result_file(opts):
     _write_to_results_file("")
     _write_to_results_file(40 * "=")
     _write_to_results_file("")
+    _write_to_results_file("    Summary")
     _write_to_results_file("Search Lemma: %s" % opts["root_syn"].name())
     _write_to_results_file("Search Lemma Synonyms: %s" %
                            opts["root_syn"].lemma_names())

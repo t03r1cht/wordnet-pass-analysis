@@ -2,7 +2,7 @@
 
 - [X] Permutations of each lemma
 - [X] Plot the results
-- [ ] Subsume the hit results for each class. Subsume only the "vanilla" lemmas or also their translations?
+- [X] Subsume the hit results for each class. Subsume only the "vanilla" lemmas or also their translations?
 - [X] Don't replace result files, but rather create a new file for each run (using the date, keyword, command etc.)
 - [X] Cat term "bug"
 - [ ] Count passwords which have not been found
