@@ -69,7 +69,8 @@ def cleanup():
     """
     Some cleanup work like closing the file handler.
     """
-    outfile_f.close()
+    outfile_summary.close()
+    outfile_passwords.close()
 
 
 def get_shell_width():
