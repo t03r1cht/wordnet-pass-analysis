@@ -305,9 +305,7 @@ def _write_summary_to_result_file(opts):
         _write_to_results_file(
             "Total hits for password searches: %d" % total_found)
         finished_time = get_curr_time()
-        print()
         _write_to_results_file("Starting Time: %s" % opts["started_time"])
-        print("  Finished: %s" % finished_time)
         _write_to_results_file("Finishing Time: %s" % finished_time)
         sp.write("> wrote summary to %s" % args.result_file_name)
         sp.ok("✔")
@@ -393,8 +391,8 @@ def option_lookup_passwords():
         sp.ok("✔")
 
     if args.subsume_for_classes:
-        s = "%s%s: %d" % (choice_root_syn.min_depth() *
-                          "  ", choice_root_syn.name(), first_level_hits)
+        # s = "%s%s: %d" % (choice_root_syn.min_depth() *
+        #                   "  ", choice_root_syn.name(), first_level_hits)
         append_with_hits(choice_root_syn, first_level_hits)
 
     with yaspin(text="Processing WordNet...", color="cyan") as sp:
@@ -403,13 +401,11 @@ def option_lookup_passwords():
         # sp.write("> processed until depth %d" % args.dag_depth)
         sp.ok("✔")
 
-    s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (choice_root_syn.min_depth() * "**",
-                                                      choice_root_syn.name(), (first_level_hits + hits_below), hits_below, first_level_hits, None)
-
-    print(s)
-
+    # s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (choice_root_syn.min_depth() * "**",
+    #                                                   choice_root_syn.name(), (first_level_hits + hits_below), hits_below, first_level_hits, None)
+    # print(s)
     # Writing results to result file
-    print()
+    # print()
     # Using a options dictionary to pass option information to the function
     opts = {}
     opts["root_syn"] = choice_root_syn
@@ -417,9 +413,9 @@ def option_lookup_passwords():
     opts["hits_below_root"] = hits_below
     opts["start_depth"] = choice_root_syn.min_depth()
     _write_summary_to_result_file(opts)
-    print()
-    print("  Results written to %s" % outfile_name)
-    print()
+    # print()
+    # print("  Results written to %s" % outfile_name)
+    # print()
     cleanup()
 
 
