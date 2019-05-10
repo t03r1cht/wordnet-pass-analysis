@@ -307,7 +307,6 @@ def _write_summary_to_result_file(opts):
         finished_time = get_curr_time()
         _write_to_results_file("Starting Time: %s" % opts["started_time"])
         _write_to_results_file("Finishing Time: %s" % finished_time)
-        sp.write("> wrote summary to %s" % args.result_file_name)
         sp.ok("✔")
 
 
