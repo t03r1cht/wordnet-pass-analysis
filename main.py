@@ -265,48 +265,52 @@ def _write_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
-    # If we set the -c flag, instead of logging the single passwords that were searched,
-    # we print only their respective classes to the result file
-    # TODO: Fix output to file
-    if args.subsume_for_classes:
+    with yaspin(text="Writing summary to result file...", color="cyan") as sp:
+
+        # If we set the -c flag, instead of logging the single passwords that were searched,
+        # we print only their respective classes to the result file
+        # TODO: Fix output to file
+        if args.subsume_for_classes:
+            _write_to_results_file("")
+            _write_to_results_file(40 * "=")
+            _write_to_results_file("")
+            _write_to_results_file("    *** Synset Distribution ***")
+            _write_to_results_file("")
+
+            global hits_for_lemmas
+            # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
+            for k, v in hits_for_lemmas.items():
+                if k == opts["root_syn"].name():
+                    # Will be replaced by something better in the
+                    _write_to_results_file("%s%s %d (subsum=%d)" % (
+                        (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1], (v[1] + opts["hits_below_root"])))
+                else:
+                    _write_to_results_file("%s%s %d" % (
+                        (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1]))
+
         _write_to_results_file("")
         _write_to_results_file(40 * "=")
         _write_to_results_file("")
-        _write_to_results_file("    *** Synset Distribution ***")
+        _write_to_results_file("    *** Summary ***")
         _write_to_results_file("")
-
-        global hits_for_lemmas
-        # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
-        for k, v in hits_for_lemmas.items():
-            if k == opts["root_syn"].name():
-                # Will be replaced by something better in the
-                _write_to_results_file("%s%s %d (subsum=%d)" % (
-                    (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1], (v[1] + opts["hits_below_root"])))
-            else:
-                _write_to_results_file("%s%s %d" % (
-                    (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1]))
-
-    _write_to_results_file("")
-    _write_to_results_file(40 * "=")
-    _write_to_results_file("")
-    _write_to_results_file("    *** Summary ***")
-    _write_to_results_file("")
-    _write_to_results_file("Search Lemma: %s" % opts["root_syn"].name())
-    _write_to_results_file("Search Lemma Synonyms: %s" %
-                           opts["root_syn"].lemma_names())
-    _write_to_results_file("Search Lemma Definition: %s" %
-                           opts["root_syn"].definition())
-    _write_to_results_file("Search Lemma Examples: %s" %
-                           opts["root_syn"].examples())
-    _write_to_results_file("Total Lemmas Processed: %d" % total_processed)
-    global total_found
-    _write_to_results_file(
-        "Total hits for password searches: %d" % total_found)
-    finished_time = get_curr_time()
-    print()
-    _write_to_results_file("Starting Time: %s" % opts["started_time"])
-    print("  Finished: %s" % finished_time)
-    _write_to_results_file("Finishing Time: %s" % finished_time)
+        _write_to_results_file("Search Lemma: %s" % opts["root_syn"].name())
+        _write_to_results_file("Search Lemma Synonyms: %s" %
+                               opts["root_syn"].lemma_names())
+        _write_to_results_file("Search Lemma Definition: %s" %
+                               opts["root_syn"].definition())
+        _write_to_results_file("Search Lemma Examples: %s" %
+                               opts["root_syn"].examples())
+        _write_to_results_file("Total Lemmas Processed: %d" % total_processed)
+        global total_found
+        _write_to_results_file(
+            "Total hits for password searches: %d" % total_found)
+        finished_time = get_curr_time()
+        print()
+        _write_to_results_file("Starting Time: %s" % opts["started_time"])
+        print("  Finished: %s" % finished_time)
+        _write_to_results_file("Finishing Time: %s" % finished_time)
+        sp.write("> wrote summary to %s" % args.result_file_name)
+        sp.ok("✔")
 
 
 def _write_to_results_file(s):
@@ -377,12 +381,16 @@ def option_lookup_passwords():
         choice_root_syn = prompt_synset_choice(root_synsets)
     else:
         choice_root_syn = root_synsets[0]
-    first_level_hits = 0
-    for root_lemma in choice_root_syn.lemma_names():
-        hits = translations_for_lemma(
-            root_lemma, choice_root_syn.min_depth())
-        first_level_hits += hits
-        inc_total_processed()
+
+    with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
+        first_level_hits = 0
+        for root_lemma in choice_root_syn.lemma_names():
+            hits = translations_for_lemma(
+                root_lemma, choice_root_syn.min_depth())
+            first_level_hits += hits
+            inc_total_processed()
+        # sp.write("> finished")
+        sp.ok("✔")
 
     if args.subsume_for_classes:
         s = "%s%s: %d" % (choice_root_syn.min_depth() *
@@ -392,8 +400,9 @@ def option_lookup_passwords():
     with yaspin(text="Processing WordNet...", color="cyan") as sp:
         hits_below = recurse_nouns_from_root(
             root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
-        sp.write("> done recursing tree")
+        # sp.write("> processed until depth %d" % args.dag_depth)
         sp.ok("✔")
+
     s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (choice_root_syn.min_depth() * "**",
                                                       choice_root_syn.name(), (first_level_hits + hits_below), hits_below, first_level_hits, None)
 
