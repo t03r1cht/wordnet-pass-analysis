@@ -183,7 +183,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         if args.subsume_for_classes:
             s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (hypo.min_depth() * "**",
                                                               hypo.name(), (total_hits + hits_below), hits_below, total_hits, hypo.hypernyms())
-            print(s)
+            # print(s)
             # TODO Push each finished synset in a OrderedDict in order to be able to properly flush
             # to the result file
             # Is this the right position for this function or rather before the print statement after the
