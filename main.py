@@ -186,8 +186,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             # to the result file
             # Is this the right position for this function or rather before the print statement after the
             # synset was finished?
-            append_with_hits(hypo, total_hits)
-
+            append_with_hits(hypo, total_hits_for_current_synset)
     return total_hits_for_current_synset
 
 

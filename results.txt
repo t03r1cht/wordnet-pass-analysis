@@ -1,29 +1,29 @@
 entity.n.01 1249 (subsum=112401)
     attribute.n.02 231
-    communication.n.02 6425
-    group.n.01 4380
-    measure.n.02 1882
-    otherworld.n.01 370
-    psychological_feature.n.01 0
-    relation.n.01 2383
-    set.n.02 3434
-  abstraction.n.06 173
+    communication.n.02 6656
+    group.n.01 11036
+    measure.n.02 12918
+    otherworld.n.01 13288
+    psychological_feature.n.01 13288
+    relation.n.01 15671
+    set.n.02 19105
+  abstraction.n.06 19278
     causal_agent.n.01 296
-    matter.n.03 5693
-    object.n.01 885
-    process.n.06 3983
-    substance.n.04 1331
-    thing.n.12 2324
-  physical_entity.n.01 0
+    matter.n.03 5989
+    object.n.01 6874
+    process.n.06 10857
+    substance.n.04 12188
+    thing.n.12 14512
+  physical_entity.n.01 33790
     change.n.06 46226
-    freshener.n.01 31
-    horror.n.02 8466
-    jimdandy.n.02 3121
-    pacifier.n.02 962
-    security_blanket.n.01 0
-    stinker.n.02 12302
-    whacker.n.01 3930
-  thing.n.08 2324
+    freshener.n.01 46257
+    horror.n.02 54723
+    jimdandy.n.02 57844
+    pacifier.n.02 58806
+    security_blanket.n.01 58806
+    stinker.n.02 71108
+    whacker.n.01 75038
+  thing.n.08 111152
 
 ========================================
 
@@ -33,5 +33,5 @@ Search Lemma Definition: that which is perceived or known or inferred to have it
 Search Lemma Examples: []
 Total Lemmas Processed: 2702
 Total hits for password searches: 112401
-Starting Time: 20190508_14.41.26
-Finishing Time: 20190508_14.41.43
+Starting Time: 20190508_15.13.54
+Finishing Time: 20190508_15.14.23
