@@ -220,7 +220,6 @@ def lookup(translation, depth):
     # Handle the -t parameter
     if args.max_lemmas_processed is not None:
         if total_processed >= args.max_lemmas_processed:
-            _proper_shutdown()
             sys.exit(0)
     # Increment "total" counter
     inc_total_processed()
@@ -257,16 +256,20 @@ def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
     """
     Writes a properly indented result to the result file.
     """
+    # Only write the single passwords to the result file if the -c flag was not set.
+    # If this flag is set, we only log the classes of the searched passwords to the result file.
     if not args.subsume_for_classes:
         _write_to_results_file("%s%s %d" % (
             lemma_depth * "  ", lemma_name, occurrences))
 
 
-# def _write_summary_to_result_file(started_time, root_syn):
 def _write_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
+    # If we set the -c flag, instead of logging the single passwords that were searched,
+    # we print only their respective classes to the result file
+    # TODO: Fix output to file
     if args.subsume_for_classes:
         global hits_for_lemmas
 
