@@ -17,6 +17,7 @@ import sys
 import argparse
 from translators import translator_registrar, translator
 from collections import OrderedDict
+import collections
 from yaspin import yaspin
 
 
@@ -266,6 +267,7 @@ def _write_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
+
     with yaspin(text="Writing summary to result file...", color="cyan") as sp:
 
         # If we set the -c flag, instead of logging the single passwords that were searched,
@@ -279,8 +281,10 @@ def _write_summary_to_result_file(opts):
             _write_to_results_file("")
 
             global hits_for_lemmas
+            reversed_dict = collections.OrderedDict(reversed(list(hits_for_lemmas.items())))
+
             # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
-            for k, v in hits_for_lemmas.items():
+            for k, v in reversed_dict.items():
                 synset_id = v[0].name()
                 this_hits = v[1]
                 below_hits = v[2]
