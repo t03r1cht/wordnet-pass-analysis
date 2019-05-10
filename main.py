@@ -100,7 +100,6 @@ def update_stats(current, finished):
     """
     Print out the stats while the program is running.
     """
-    # if not args.is_debug:
     if not args.subsume_for_classes:
         clear_terminal()
         print()
@@ -164,19 +163,20 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     curr_root_syn = root_syn
     hits_below = 0
     total_hits_for_current_synset = 0
+    not_found_for_current_synset = 0
     for hypo in curr_root_syn.hyponyms():
         total_hits = 0
+        not_found = 0
         for lemma in hypo.lemma_names():
             # Apply a set of translators to each lemma
-            lemma_hits = translations_for_lemma(lemma, hypo.min_depth())
+            lemma_hits, not_found_cnt = translations_for_lemma(
+                lemma, hypo.min_depth())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
-        # If the -c flag is set, print and write the synsets classes with its respective occurences to the result file
-        if args.subsume_for_classes:
-            s = "%s%s: %d" % ((hypo.min_depth() - start_depth) * "  ",
-                              hypo.name(), total_hits)
+            not_found += not_found_cnt
+            not_found_for_current_synset += not_found_cnt
         # Execute the function again with the new root synset being each hyponym we just found.
-        hits_below = recurse_nouns_from_root(
+        hits_below, not_found_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
         # Add the sum of all hits below the current synset to the hits list of the current synset so
         # below hits are automatically included (not included in the terminal output, we separate both these
@@ -184,17 +184,11 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         # many were produced by the current synset).
         # Works because of... recursion
         total_hits_for_current_synset += hits_below
+        not_found_for_current_synset += not_found_below
         if args.subsume_for_classes:
-            s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (hypo.min_depth() * "**",
-                                                              hypo.name(), (total_hits + hits_below), hits_below, total_hits, hypo.hypernyms())
-            # print(s)
-            # TODO Push each finished synset in a OrderedDict in order to be able to properly flush
-            # to the result file
-            # Is this the right position for this function or rather before the print statement after the
-            # synset was finished?
-            # append_with_hits(hypo, total_hits + hits_below)
-            append_with_hits(hypo, total_hits, hits_below)
-    return total_hits_for_current_synset
+            append_with_hits(hypo, total_hits, hits_below,
+                             not_found, not_found_below)
+    return total_hits_for_current_synset, not_found_for_current_synset
 
 
 def translations_for_lemma(lemma, depth):
@@ -202,6 +196,7 @@ def translations_for_lemma(lemma, depth):
     Create all translations by using the registered translator using the lemma as base.
     """
     total_hits = 0
+    not_found_cnt = 0
     for translation_handler in translator.all:
         # The translator returns the translated lemma.
         trans = translation_handler(lemma)
@@ -211,9 +206,12 @@ def translations_for_lemma(lemma, depth):
             for p in trans:
                 trans_hits = lookup(p, depth)
                 total_hits += trans_hits
+                if trans_hits == 0:
+                    not_found_cnt += 1
         else:
             total_hits += lookup(trans, depth)
-    return total_hits
+            not_found_cnt += 1
+    return total_hits, not_found_cnt
 
 
 def lookup(translation, depth):
@@ -229,9 +227,6 @@ def lookup(translation, depth):
             sys.exit(0)
     # Increment "total" counter
     inc_total_processed()
-    # update_stats(current="%s / %d" %
-    #              (translation, occurrences), finished=total_processed)
-
     # Print the translations to the result file.
     _write_result_to_passwords_file(translation, depth, occurrences)
 
@@ -241,9 +236,9 @@ def lookup(translation, depth):
     return occurrences
 
 
-def append_with_hits(lemma, total_hits, below_hits):
+def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below):
     global hits_for_lemmas
-    res_set = [lemma, total_hits, below_hits]
+    res_set = [lemma, total_hits, below_hits, not_found, not_found_below]
     if lemma.name() in hits_for_lemmas:
         hits_for_lemmas[lemma.name()][1] += total_hits
     else:
@@ -275,7 +270,6 @@ def _write_summary_to_result_file(opts):
 
         # If we set the -c flag, instead of logging the single passwords that were searched,
         # we print only their respective classes to the result file
-        # TODO: Fix output to file
         if args.subsume_for_classes:
             _write_to_summary_file("")
             _write_to_summary_file(40 * "=")
@@ -293,13 +287,19 @@ def _write_summary_to_result_file(opts):
                 this_hits = v[1]
                 below_hits = v[2]
                 total_hits = v[1] + v[2]
-                _write_to_summary_file("%s%s,total=%d,this=%d,below=%d" % (
+                this_not_found = v[3]
+                below_not_found = v[4]
+                total_not_found = v[3] + v[4]
+                _write_to_summary_file("%s%s,total_found=%d,this_found=%d,below_found=%d,total_not_found=%d,this_not_found=%d,below_not_found=%d," % (
                     (v[0].min_depth() - opts["start_depth"]) *
                     "  ",  # indendation
                     synset_id,  # synset id
-                    total_hits,
+                    total_hits,  # hits of each synset
                     this_hits,
-                    below_hits))  # hits of each synset
+                    below_hits,
+                    total_not_found,
+                    this_not_found,
+                    below_not_found))
 
         _write_to_summary_file("")
         _write_to_summary_file(40 * "=")
@@ -412,15 +412,17 @@ def option_lookup_passwords():
 
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
         first_level_hits = 0
+        first_level_not_found = 0
         for root_lemma in choice_root_syn.lemma_names():
-            hits = translations_for_lemma(
+            hits, not_found = translations_for_lemma(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
+            first_level_not_found += not_found
             inc_total_processed()
         sp.ok("✔")
 
     with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
-        hits_below = recurse_nouns_from_root(
+        hits_below, not_found_below = recurse_nouns_from_root(
             root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
         sp.ok("✔")
 
@@ -428,7 +430,8 @@ def option_lookup_passwords():
     # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
     # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
     if args.subsume_for_classes:
-        append_with_hits(choice_root_syn, first_level_hits, hits_below)
+        append_with_hits(choice_root_syn, first_level_hits,
+                         hits_below, first_level_not_found, not_found_below)
 
     # Writing results to result file
     # Using a options dictionary to pass option information to the function
