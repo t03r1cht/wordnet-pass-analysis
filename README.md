@@ -5,11 +5,10 @@
 - [X] Subsume the hit results for each class. Subsume only the "vanilla" lemmas or also their translations?
 - [X] Don't replace result files, but rather create a new file for each run (using the date, keyword, command etc.)
 - [X] Cat term "bug"
-- [ ] Replace update_stats by simple spinner
+- [X] Replace update_stats by simple spinner
 - [ ] Count passwords which have not been found
 - [ ] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
 - [ ] Visualize Wordnet with hyperbolic tree (hypertree)
-- [ ] Make results.txt results.json
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
 - [ ] Write paper about this

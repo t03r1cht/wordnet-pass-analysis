@@ -37,8 +37,10 @@ parser.add_argument("-s", "--root-syn-name", type=str,
                     help="Name of the word specified to be the root synset.", dest="root_syn_name")
 parser.add_argument("-c", "--classification", action="store_true",
                     help="Subsume the hits for each class of the search hierarchy.", dest="subsume_for_classes")
-parser.add_argument("-r", "--result-file", type=str,
+parser.add_argument("--result-file", type=str,
                     help="Name of the result file.", dest="result_file_name")
+parser.add_argument("--summary-file", type=str,
+                    help="Name of the summary file.", dest="summary_file_name")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -230,7 +232,7 @@ def lookup(translation, depth):
     #              (translation, occurrences), finished=total_processed)
 
     # Print the translations to the result file.
-    # _write_result_to_results_file(translation, depth, occurrences)
+    _write_result_to_passwords_file(translation, depth, occurrences)
 
     # Return occurrences in order to be able to subsume them for each class.
     global total_found
@@ -255,11 +257,11 @@ def inc_total_processed():
     total_processed += 1
 
 
-def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
+def _write_result_to_passwords_file(lemma_name, lemma_depth, occurrences):
     """
     Writes a properly indented result to the result file.
     """
-    _write_to_results_file("%s%s %d" % (
+    _write_to_passwords_file("%s%s %d" % (
         lemma_depth * "  ", lemma_name, occurrences))
 
 
@@ -274,14 +276,15 @@ def _write_summary_to_result_file(opts):
         # we print only their respective classes to the result file
         # TODO: Fix output to file
         if args.subsume_for_classes:
-            _write_to_results_file("")
-            _write_to_results_file(40 * "=")
-            _write_to_results_file("")
-            _write_to_results_file("    *** Synset Distribution ***")
-            _write_to_results_file("")
+            _write_to_summary_file("")
+            _write_to_summary_file(40 * "=")
+            _write_to_summary_file("")
+            _write_to_summary_file("    *** Synset Distribution ***")
+            _write_to_summary_file("")
 
             global hits_for_lemmas
-            reversed_dict = collections.OrderedDict(reversed(list(hits_for_lemmas.items())))
+            reversed_dict = collections.OrderedDict(
+                reversed(list(hits_for_lemmas.items())))
 
             # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
             for k, v in reversed_dict.items():
@@ -289,7 +292,7 @@ def _write_summary_to_result_file(opts):
                 this_hits = v[1]
                 below_hits = v[2]
                 total_hits = v[1] + v[2]
-                _write_to_results_file("%s%s,total=%d,this=%d,below=%d" % (
+                _write_to_summary_file("%s%s,total=%d,this=%d,below=%d" % (
                     (v[0].min_depth() - opts["start_depth"]) *
                     "  ",  # indendation
                     synset_id,  # synset id
@@ -297,33 +300,40 @@ def _write_summary_to_result_file(opts):
                     this_hits,
                     below_hits))  # hits of each synset
 
-        _write_to_results_file("")
-        _write_to_results_file(40 * "=")
-        _write_to_results_file("")
-        _write_to_results_file("    *** Summary ***")
-        _write_to_results_file("")
-        _write_to_results_file("Search Lemma: %s" % opts["root_syn"].name())
-        _write_to_results_file("Search Lemma Synonyms: %s" %
+        _write_to_summary_file("")
+        _write_to_summary_file(40 * "=")
+        _write_to_summary_file("")
+        _write_to_summary_file("    *** Summary ***")
+        _write_to_summary_file("")
+        _write_to_summary_file("Search Lemma: %s" % opts["root_syn"].name())
+        _write_to_summary_file("Search Lemma Synonyms: %s" %
                                opts["root_syn"].lemma_names())
-        _write_to_results_file("Search Lemma Definition: %s" %
+        _write_to_summary_file("Search Lemma Definition: %s" %
                                opts["root_syn"].definition())
-        _write_to_results_file("Search Lemma Examples: %s" %
+        _write_to_summary_file("Search Lemma Examples: %s" %
                                opts["root_syn"].examples())
-        _write_to_results_file("Total Lemmas Processed: %d" % total_processed)
+        _write_to_summary_file("Total Lemmas Processed: %d" % total_processed)
         global total_found
-        _write_to_results_file(
+        _write_to_summary_file(
             "Total hits for password searches: %d" % total_found)
         finished_time = get_curr_time()
-        _write_to_results_file("Starting Time: %s" % opts["started_time"])
-        _write_to_results_file("Finishing Time: %s" % finished_time)
+        _write_to_summary_file("Starting Time: %s" % opts["started_time"])
+        _write_to_summary_file("Finishing Time: %s" % finished_time)
         sp.ok("✔")
 
 
-def _write_to_results_file(s):
+def _write_to_summary_file(s):
     """
     Writes generic data to the result file.
     """
-    outfile_f.write("%s\n" % s)
+    outfile_summary.write("%s\n" % s)
+
+
+def _write_to_passwords_file(s):
+    """
+    Writes generic data to the result file.
+    """
+    outfile_passwords.write("%s\n" % s)
 
 
 def prompt_synset_choice(root_synsets):
@@ -370,12 +380,23 @@ def option_lookup_passwords():
     print()
     started_time = get_curr_time()
     # Open the file handler for a file with the starting time
-    if args.result_file_name is not None:
-        outfile_name = args.result_file_name
+    if args.summary_file_name is not None:
+        outfile_summary_name = args.summary_file_name
     else:
-        outfile_name = "{0}_{1}.txt".format(started_time, args.root_syn_name)
-    global outfile_f
-    outfile_f = open(outfile_name, "w+")
+        outfile_summary_name = "{0}_{1}_summary.txt".format(
+            started_time, args.root_syn_name)
+
+    if args.result_file_name is not None:
+        outfile_passwords_name = args.result_file_name
+    else:
+        outfile_passwords_name = "{0}_{1}_passwords.txt".format(
+            started_time, args.root_syn_name)
+
+    global outfile_summary
+    outfile_summary = open(outfile_summary_name, "w+")
+
+    global outfile_passwords
+    outfile_passwords = open(outfile_passwords_name, "w+")
 
     root_synsets = wn.synsets(args.root_syn_name)
     if len(root_synsets) == 0:
