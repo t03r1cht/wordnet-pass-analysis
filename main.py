@@ -256,11 +256,8 @@ def _write_result_to_results_file(lemma_name, lemma_depth, occurrences):
     """
     Writes a properly indented result to the result file.
     """
-    # Only write the single passwords to the result file if the -c flag was not set.
-    # If this flag is set, we only log the classes of the searched passwords to the result file.
-    if not args.subsume_for_classes:
-        _write_to_results_file("%s%s %d" % (
-            lemma_depth * "  ", lemma_name, occurrences))
+    _write_to_results_file("%s%s %d" % (
+        lemma_depth * "  ", lemma_name, occurrences))
 
 
 def _write_summary_to_result_file(opts):
