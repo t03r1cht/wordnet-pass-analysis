@@ -17,6 +17,7 @@ import sys
 import argparse
 from translators import translator_registrar, translator
 from collections import OrderedDict
+from yaspin import yaspin
 
 
 # pip installation über py binary: py -m pip install nltk
@@ -223,8 +224,10 @@ def lookup(translation, depth):
             sys.exit(0)
     # Increment "total" counter
     inc_total_processed()
-    update_stats(current="%s / %d" %
-                 (translation, occurrences), finished=total_processed)
+    # update_stats(current="%s / %d" %
+    #              (translation, occurrences), finished=total_processed)
+
+    print("Processing... \\")
 
     # Print the translations to the result file.
     _write_result_to_results_file(translation, depth, occurrences)
@@ -289,7 +292,7 @@ def _write_summary_to_result_file(opts):
     _write_to_results_file(40 * "=")
     _write_to_results_file("")
     _write_to_results_file("    *** Summary ***")
-    _write_to_results_file("")    
+    _write_to_results_file("")
     _write_to_results_file("Search Lemma: %s" % opts["root_syn"].name())
     _write_to_results_file("Search Lemma Synonyms: %s" %
                            opts["root_syn"].lemma_names())
@@ -388,8 +391,11 @@ def option_lookup_passwords():
                           "  ", choice_root_syn.name(), first_level_hits)
         append_with_hits(choice_root_syn, first_level_hits)
 
-    hits_below = recurse_nouns_from_root(
-        root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
+    with yaspin(text="Downloading images", color="cyan") as sp:
+        hits_below = recurse_nouns_from_root(
+            root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
+        sp.write("> done recursing tree")
+        sp.ok("✔")
     s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (choice_root_syn.min_depth() * "**",
                                                       choice_root_syn.name(), (first_level_hits + hits_below), hits_below, first_level_hits, None)
 
