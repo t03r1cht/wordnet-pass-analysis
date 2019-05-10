@@ -188,7 +188,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         if args.subsume_for_classes:
             append_with_hits(hypo, total_hits, hits_below,
                              not_found, not_found_below)
-    return total_hits_for_current_synset, not_found_for_current_synset
+    return (total_hits_for_current_synset, not_found_for_current_synset)
 
 
 def translations_for_lemma(lemma, depth):
