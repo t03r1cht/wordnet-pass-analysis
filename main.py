@@ -341,13 +341,6 @@ def option_draw_graph():
     draw_graph(args.root_syn_name, args.dag_depth)
 
 
-"""
-alle begriffe ab lvl x
-suche nach allen lemmas in lvl
-1 lvl verknüpfung --> stark verbunden
-"""
-
-
 def option_lookup_passwords():
     """
     Lookup the passwords in the pwned passwords list.
