@@ -228,7 +228,7 @@ def lookup(translation, depth):
     #              (translation, occurrences), finished=total_processed)
 
     # Print the translations to the result file.
-    _write_result_to_results_file(translation, depth, occurrences)
+    # _write_result_to_results_file(translation, depth, occurrences)
 
     # Return occurrences in order to be able to subsume them for each class.
     global total_found
@@ -389,7 +389,7 @@ def option_lookup_passwords():
                           "  ", choice_root_syn.name(), first_level_hits)
         append_with_hits(choice_root_syn, first_level_hits)
 
-    with yaspin(text="Downloading images", color="cyan") as sp:
+    with yaspin(text="Processing WordNet...", color="cyan") as sp:
         hits_below = recurse_nouns_from_root(
             root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
         sp.write("> done recursing tree")
