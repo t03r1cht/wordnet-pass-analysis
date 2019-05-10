@@ -37,8 +37,8 @@ parser.add_argument("-c", "--classification", action="store_true",
                     help="Subsume the hits for each class of the search hierarchy.", dest="subsume_for_classes")
 parser.add_argument("-r", "--result-file", type=str,
                     help="Name of the result file.", dest="result_file_name")
-parser.add_argument("-z", "--is-debug", action="store_true",
-                    help="Debug mode.", dest="is_debug")
+# parser.add_argument("-z", "--is-debug", action="store_true",
+#                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
 
 total_processed = 0
@@ -95,7 +95,8 @@ def update_stats(current, finished):
     """
     Print out the stats while the program is running.
     """
-    if not args.is_debug:
+    # if not args.is_debug:
+    if not args.subsume_for_classes:
         clear_terminal()
         print()
         print()
