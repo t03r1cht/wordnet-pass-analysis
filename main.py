@@ -227,8 +227,6 @@ def lookup(translation, depth):
     # update_stats(current="%s / %d" %
     #              (translation, occurrences), finished=total_processed)
 
-    print("Processing... \\")
-
     # Print the translations to the result file.
     _write_result_to_results_file(translation, depth, occurrences)
 
