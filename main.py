@@ -394,7 +394,7 @@ def option_lookup_passwords():
         #                   "  ", choice_root_syn.name(), first_level_hits)
         append_with_hits(choice_root_syn, first_level_hits)
 
-    with yaspin(text="Processing WordNet...", color="cyan") as sp:
+    with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
         hits_below = recurse_nouns_from_root(
             root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
         # sp.write("> processed until depth %d" % args.dag_depth)
