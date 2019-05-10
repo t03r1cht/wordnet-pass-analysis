@@ -236,9 +236,9 @@ def lookup(translation, depth):
     return occurrences
 
 
-def append_with_hits(lemma, total_hits):
+def append_with_hits(lemma, total_hits, below_hits):
     global hits_for_lemmas
-    res_set = [lemma, total_hits]
+    res_set = [lemma, total_hits, below_hits]
     if lemma.name() in hits_for_lemmas:
         hits_for_lemmas[lemma.name()][1] += total_hits
     else:
@@ -280,13 +280,17 @@ def _write_summary_to_result_file(opts):
             global hits_for_lemmas
             # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
             for k, v in hits_for_lemmas.items():
-                if k == opts["root_syn"].name():
-                    # Will be replaced by something better in the
-                    _write_to_results_file("%s%s %d (subsum=%d)" % (
-                        (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1], (v[1] + opts["hits_below_root"])))
-                else:
-                    _write_to_results_file("%s%s %d" % (
-                        (v[0].min_depth() - opts["start_depth"]) * "  ", v[0].name(), v[1]))
+                synset_id = v[0].name()
+                this_hits = v[1]
+                below_hits = v[2]
+                total_hits = v[1] + v[2]
+                _write_to_results_file("%s%s,total=%d,this=%d,below=%d" % (
+                    (v[0].min_depth() - opts["start_depth"]) *
+                    "  ",  # indendation
+                    synset_id,  # synset id
+                    total_hits,
+                    this_hits,
+                    below_hits))  # hits of each synset
 
         _write_to_results_file("")
         _write_to_results_file(40 * "=")
@@ -386,25 +390,20 @@ def option_lookup_passwords():
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             inc_total_processed()
-        # sp.write("> finished")
         sp.ok("✔")
-
-    if args.subsume_for_classes:
-        # s = "%s%s: %d" % (choice_root_syn.min_depth() *
-        #                   "  ", choice_root_syn.name(), first_level_hits)
-        append_with_hits(choice_root_syn, first_level_hits)
 
     with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
         hits_below = recurse_nouns_from_root(
             root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
-        # sp.write("> processed until depth %d" % args.dag_depth)
         sp.ok("✔")
 
-    # s = "%s%s,total=%d,below=%d,this=%d,parent=%s" % (choice_root_syn.min_depth() * "**",
-    #                                                   choice_root_syn.name(), (first_level_hits + hits_below), hits_below, first_level_hits, None)
-    # print(s)
+    # Append the dict with the root synset after we processed the subtrees, since we are going to reverse
+    # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
+    # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
+    if args.subsume_for_classes:
+        append_with_hits(choice_root_syn, first_level_hits)
+
     # Writing results to result file
-    # print()
     # Using a options dictionary to pass option information to the function
     opts = {}
     opts["root_syn"] = choice_root_syn
@@ -412,9 +411,6 @@ def option_lookup_passwords():
     opts["hits_below_root"] = hits_below
     opts["start_depth"] = choice_root_syn.min_depth()
     _write_summary_to_result_file(opts)
-    # print()
-    # print("  Results written to %s" % outfile_name)
-    # print()
     cleanup()
 
 
