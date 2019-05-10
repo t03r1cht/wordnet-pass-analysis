@@ -188,7 +188,8 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             # to the result file
             # Is this the right position for this function or rather before the print statement after the
             # synset was finished?
-            append_with_hits(hypo, total_hits + hits_below)
+            # append_with_hits(hypo, total_hits + hits_below)
+            append_with_hits(hypo, total_hits, hits_below)
     return total_hits_for_current_synset
 
 
@@ -401,7 +402,7 @@ def option_lookup_passwords():
     # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
     # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
     if args.subsume_for_classes:
-        append_with_hits(choice_root_syn, first_level_hits)
+        append_with_hits(choice_root_syn, first_level_hits, hits_below)
 
     # Writing results to result file
     # Using a options dictionary to pass option information to the function
