@@ -178,7 +178,8 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         # Execute the function again with the new root synset being each hyponym we just found.
         x = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
-        hits_below, not_found_below = x
+        hits_below = x[0] 
+        not_found_below = x[1]
         # Add the sum of all hits below the current synset to the hits list of the current synset so
         # below hits are automatically included (not included in the terminal output, we separate both these
         # numbers into total_hits and hits_below so we can distinguis how many hits we found below and how
