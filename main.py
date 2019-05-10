@@ -271,7 +271,8 @@ def _write_summary_to_result_file(opts):
         _write_to_results_file("")
         _write_to_results_file(40 * "=")
         _write_to_results_file("")
-        _write_to_results_file("    Synset Distribution")
+        _write_to_results_file("    *** Synset Distribution ***")
+        _write_to_results_file("")
 
         global hits_for_lemmas
         # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
@@ -287,7 +288,8 @@ def _write_summary_to_result_file(opts):
     _write_to_results_file("")
     _write_to_results_file(40 * "=")
     _write_to_results_file("")
-    _write_to_results_file("    Summary")
+    _write_to_results_file("    *** Summary ***")
+    _write_to_results_file("")    
     _write_to_results_file("Search Lemma: %s" % opts["root_syn"].name())
     _write_to_results_file("Search Lemma Synonyms: %s" %
                            opts["root_syn"].lemma_names())
