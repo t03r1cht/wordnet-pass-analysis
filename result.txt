@@ -172,14 +172,50 @@ entity97 0
 entity98 5
 entity99 4
 ntty 0
-entity 1092
-entity 1092
-entity 1092
-entity 1092
-entity 1092
-entity 1092
-entity 1092
-entity 1092
+Entity 71
+entity123 41
+entity1234 0
+entity12345 0
+entity123456 0
+entity1234567 0
+entity12345678 0
+entity123456789 0
+entity1234567890 0
+123entity 0
+1234entity 0
+12345entity 0
+123456entity 0
+1234567entity 0
+12345678entity 0
+123456789entity 0
+1234567890entity 0
+entity! 30
+entity@ 1
+entity# 0
+entity$ 0
+entity% 0
+entity^ 0
+entity& 0
+entity* 6
+entity? 0
+entity. 14
+entity, 0
+entity-_ 0
+entity+ 0
+!entity 0
+@entity 0
+#entity 0
+$entity 0
+%entity 0
+^entity 0
+&entity 0
+*entity 0
+?entity 0
+.entity 0
+,entity 0
+-_entity 0
++entity 0
+entityentity 7
 entity 1092
 entity 1092
 entity 1092
@@ -358,14 +394,50 @@ entity 1092
   abstraction98 0
   abstraction99 0
   bstrctn 0
-  abstraction 163
-  abstraction 163
-  abstraction 163
-  abstraction 163
-  abstraction 163
-  abstraction 163
-  abstraction 163
-  abstraction 163
+  Abstraction 38
+  abstraction123 0
+  abstraction1234 0
+  abstraction12345 0
+  abstraction123456 0
+  abstraction1234567 0
+  abstraction12345678 0
+  abstraction123456789 0
+  abstraction1234567890 0
+  123abstraction 0
+  1234abstraction 0
+  12345abstraction 0
+  123456abstraction 0
+  1234567abstraction 0
+  12345678abstraction 0
+  123456789abstraction 0
+  1234567890abstraction 0
+  abstraction! 2
+  abstraction@ 0
+  abstraction# 0
+  abstraction$ 0
+  abstraction% 0
+  abstraction^ 0
+  abstraction& 0
+  abstraction* 0
+  abstraction? 0
+  abstraction. 0
+  abstraction, 0
+  abstraction-_ 0
+  abstraction+ 0
+  !abstraction 0
+  @abstraction 0
+  #abstraction 0
+  $abstraction 0
+  %abstraction 0
+  ^abstraction 0
+  &abstraction 0
+  *abstraction 0
+  ?abstraction 0
+  .abstraction 0
+  ,abstraction 0
+  -_abstraction 0
+  +abstraction 0
+  abstractionabstraction 0
   abstraction 163
   abstraction 163
   abstraction 163
@@ -544,14 +616,59 @@ entity 1092
   abstract_entity98 0
   abstract_entity99 0
   bstrct_ntty 0
-  abstract_entity 0
-  abstract_entity 0
-  abstract_entity 0
-  abstract_entity 0
-  abstract_entity 0
-  abstract_entity 0
-  abstract_entity 0
-  abstract_entity 0
+  AbstractEntity 0
+  abstractEntity 0
+  abstract-entity 0
+  abstract.entity 0
+  abstract,entity 0
+  abstract#entity 0
+  abstract+entity 0
+  abstract*entity 0
+  abstract entity 0
+  Abstract_entity 0
+  abstract_entity123 0
+  abstract_entity1234 0
+  abstract_entity12345 0
+  abstract_entity123456 0
+  abstract_entity1234567 0
+  abstract_entity12345678 0
+  abstract_entity123456789 0
+  abstract_entity1234567890 0
+  123abstract_entity 0
+  1234abstract_entity 0
+  12345abstract_entity 0
+  123456abstract_entity 0
+  1234567abstract_entity 0
+  12345678abstract_entity 0
+  123456789abstract_entity 0
+  1234567890abstract_entity 0
+  abstract_entity! 0
+  abstract_entity@ 0
+  abstract_entity# 0
+  abstract_entity$ 0
+  abstract_entity% 0
+  abstract_entity^ 0
+  abstract_entity& 0
+  abstract_entity* 0
+  abstract_entity? 0
+  abstract_entity. 0
+  abstract_entity, 0
+  abstract_entity-_ 0
+  abstract_entity+ 0
+  !abstract_entity 0
+  @abstract_entity 0
+  #abstract_entity 0
+  $abstract_entity 0
+  %abstract_entity 0
+  ^abstract_entity 0
+  &abstract_entity 0
+  *abstract_entity 0
+  ?abstract_entity 0
+  .abstract_entity 0
+  ,abstract_entity 0
+  -_abstract_entity 0
+  +abstract_entity 0
+  abstract_entityabstract_entity 0
   abstract_entity 0
   abstract_entity 0
   abstract_entity 0
@@ -730,14 +847,59 @@ entity 1092
   physical_entity98 0
   physical_entity99 0
   physcl_ntty 0
-  physical_entity 0
-  physical_entity 0
-  physical_entity 0
-  physical_entity 0
-  physical_entity 0
-  physical_entity 0
-  physical_entity 0
-  physical_entity 0
+  PhysicalEntity 0
+  physicalEntity 0
+  physical-entity 0
+  physical.entity 0
+  physical,entity 0
+  physical#entity 0
+  physical+entity 0
+  physical*entity 0
+  physical entity 0
+  Physical_entity 0
+  physical_entity123 0
+  physical_entity1234 0
+  physical_entity12345 0
+  physical_entity123456 0
+  physical_entity1234567 0
+  physical_entity12345678 0
+  physical_entity123456789 0
+  physical_entity1234567890 0
+  123physical_entity 0
+  1234physical_entity 0
+  12345physical_entity 0
+  123456physical_entity 0
+  1234567physical_entity 0
+  12345678physical_entity 0
+  123456789physical_entity 0
+  1234567890physical_entity 0
+  physical_entity! 0
+  physical_entity@ 0
+  physical_entity# 0
+  physical_entity$ 0
+  physical_entity% 0
+  physical_entity^ 0
+  physical_entity& 0
+  physical_entity* 0
+  physical_entity? 0
+  physical_entity. 0
+  physical_entity, 0
+  physical_entity-_ 0
+  physical_entity+ 0
+  !physical_entity 0
+  @physical_entity 0
+  #physical_entity 0
+  $physical_entity 0
+  %physical_entity 0
+  ^physical_entity 0
+  &physical_entity 0
+  *physical_entity 0
+  ?physical_entity 0
+  .physical_entity 0
+  ,physical_entity 0
+  -_physical_entity 0
+  +physical_entity 0
+  physical_entityphysical_entity 0
   physical_entity 0
   physical_entity 0
   physical_entity 0
@@ -916,14 +1078,50 @@ entity 1092
   thing98 24
   thing99 50
   thng 0
-  thing 1992
-  thing 1992
-  thing 1992
-  thing 1992
-  thing 1992
-  thing 1992
-  thing 1992
-  thing 1992
+  Thing 79
+  thing123 1007
+  thing1234 135
+  thing12345 82
+  thing123456 6
+  thing1234567 0
+  thing12345678 0
+  thing123456789 0
+  thing1234567890 0
+  123thing 32
+  1234thing 18
+  12345thing 8
+  123456thing 3
+  1234567thing 0
+  12345678thing 0
+  123456789thing 2
+  1234567890thing 0
+  thing! 80
+  thing@ 4
+  thing# 3
+  thing$ 1
+  thing% 0
+  thing^ 0
+  thing& 0
+  thing* 7
+  thing? 4
+  thing. 76
+  thing, 0
+  thing-_ 0
+  thing+ 1
+  !thing 5
+  @thing 2
+  #thing 3
+  $thing 3
+  %thing 0
+  ^thing 0
+  &thing 0
+  *thing 2
+  ?thing 0
+  .thing 0
+  ,thing 0
+  -_thing 0
+  +thing 0
+  thingthing 472
   thing 1992
   thing 1992
   thing 1992

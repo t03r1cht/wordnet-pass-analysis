@@ -15,7 +15,7 @@ import os
 import datetime
 import sys
 import argparse
-from translators import translator_registrar, translator
+from permutators import permutator_registrar, permutator
 from collections import OrderedDict
 import collections
 from yaspin import yaspin
@@ -38,16 +38,16 @@ parser.add_argument("-s", "--root-syn-name", type=str,
 parser.add_argument("-c", "--classification", action="store_true",
                     help="Subsume the hits for each class of the search hierarchy.", dest="subsume_for_classes")
 parser.add_argument("--result-file", type=str,
-                    help="Name of the result file.", dest="result_file_name", default="result.txt")
+                    help="Name of the result file.", dest="result_file_name")
 parser.add_argument("--summary-file", type=str,
-                    help="Name of the summary file.", dest="summary_file_name", default="passwords.txt")
+                    help="Name of the summary file.", dest="summary_file_name")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
 
 total_processed = 0
 started = ""
-translation_handler = None
+permutation_handler = None
 hits_for_lemmas = OrderedDict()
 total_found = 0
 
@@ -168,8 +168,8 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         total_hits = 0
         not_found = 0
         for lemma in hypo.lemma_names():
-            # Apply a set of translators to each lemma
-            lemma_hits, not_found_cnt = translations_for_lemma(
+            # Apply a set of permutations to each lemma
+            lemma_hits, not_found_cnt = permutations_for_lemma(
                 lemma, hypo.min_depth())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
@@ -191,22 +191,21 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     return total_hits_for_current_synset, not_found_for_current_synset
 
 
-def translations_for_lemma(lemma, depth):
+def permutations_for_lemma(lemma, depth):
     """
-    Create all translations by using the registered translator using the lemma as base.
+    Create all permutatuons by using the registered permutator using the lemma as base.
     """
     total_hits = 0
     not_found_cnt = 0
-    for translation_handler in translator.all:
-        # The translator returns the translated lemma.
-        trans = translation_handler(lemma)
-        # In case some translators could not be applied to the lemma
-        # For example when a lemma solely consists of vowels and one translator strips vowels.
+    for permutation_handler in permutator.all:
+        # The permutator returns the permutated lemma.
+        trans = permutation_handler(lemma)
+        # In case some permutators could not be applied to the lemma
+        # For example when a lemma solely consists of vowels and one permutator strips vowels.
         # That would leave us with a NoneType password.
         if trans == None:
             continue
-        # In some cases, translator may return a variable list of translations.
-
+        # In some cases, permutator may return a variable list of permutations.
         if type(trans) == list:
             for p in trans:
                 trans_hits = lookup(p, depth)
@@ -219,12 +218,12 @@ def translations_for_lemma(lemma, depth):
     return total_hits, not_found_cnt
 
 
-def lookup(translation, depth):
+def lookup(permutation, depth):
     """
     Hashes the (translated) lemma and looks it up in  the HIBP password file.
     """
     # Hash and lookup translated lemma
-    hashed_lemma = hash_sha1(translation)
+    hashed_lemma = hash_sha1(permutation)
     occurrences = lookup_pass(hashed_lemma)
     # Handle the -t parameter
     if args.max_lemmas_processed is not None:
@@ -232,8 +231,8 @@ def lookup(translation, depth):
             sys.exit(0)
     # Increment "total" counter
     inc_total_processed()
-    # Print the translations to the result file.
-    _write_result_to_passwords_file(translation, depth, occurrences)
+    # Print the permutations to the result file.
+    _write_result_to_passwords_file(permutation, depth, occurrences)
 
     # Return occurrences in order to be able to subsume them for each class.
     global total_found
@@ -318,13 +317,15 @@ def _write_summary_to_result_file(opts):
                                opts["root_syn"].definition())
         _write_to_summary_file("Search Lemma Examples: %s" %
                                opts["root_syn"].examples())
-        _write_to_summary_file("Total Lemmas Processed: %d" % total_processed)
+        _write_to_summary_file("Total Passwords Searched : %d" % total_processed)
         global total_found
         _write_to_summary_file(
             "Total hits for password searches: %d" % total_found)
         finished_time = get_curr_time()
         _write_to_summary_file("Starting Time: %s" % opts["started_time"])
         _write_to_summary_file("Finishing Time: %s" % finished_time)
+        sp.write("Writing summary to %s" % outfile_summary.name)
+        sp.write("Writing tested passwords to %s" % outfile_passwords.name)
         sp.ok("✔")
 
 
@@ -419,7 +420,7 @@ def option_lookup_passwords():
         first_level_hits = 0
         first_level_not_found = 0
         for root_lemma in choice_root_syn.lemma_names():
-            hits, not_found = translations_for_lemma(
+            hits, not_found = permutations_for_lemma(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             first_level_not_found += not_found
