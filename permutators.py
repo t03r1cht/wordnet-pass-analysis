@@ -56,6 +56,19 @@ PADDING_CHARS = [
     "+",
 ]
 
+VOWELS = [
+    "A",
+    "a",
+    "E",
+    "e",
+    "I",
+    "i",
+    "O",
+    "o",
+    "U",
+    "u",
+]
+
 
 def permutator_registrar():
     """
@@ -242,7 +255,7 @@ def reverse(lemma):
     """
     Reverse the lemma.
     """
-    return lemma
+    return lemma[::-1]
 
 
 @permutator
@@ -250,7 +263,13 @@ def upper_vowels(lemma):
     """
     Make vowels uppercase, e.g. hEllO.
     """
-    return lemma
+    perm = ""
+    for char in lemma:
+        if char in VOWELS:
+            perm += char.upper()
+        else:
+            perm += char
+    return perm
 
 
 @permutator
@@ -258,4 +277,10 @@ def upper_non_vowels(lemma):
     """
     Make everything except vowels uppercase, e.g. HeLLo.
     """
-    return lemma
+    perm = ""
+    for char in lemma:
+        if char not in VOWELS:
+            perm += char.upper()
+        else:
+            perm += char
+    return perm

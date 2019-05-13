@@ -317,7 +317,8 @@ def _write_summary_to_result_file(opts):
                                opts["root_syn"].definition())
         _write_to_summary_file("Search Lemma Examples: %s" %
                                opts["root_syn"].examples())
-        _write_to_summary_file("Total Passwords Searched : %d" % total_processed)
+        _write_to_summary_file(
+            "Total Passwords Searched : %d" % total_processed)
         global total_found
         _write_to_summary_file(
             "Total hits for password searches: %d" % total_found)
@@ -354,10 +355,10 @@ def prompt_synset_choice(root_synsets):
         int_choice = int(choice)
     except ValueError:
         print("Invalid choice: %s" % choice)
-        return
+        sys.exit(0)
     if int_choice < 0 or int_choice > len(root_synsets) - 1:
         print("Invalid choice: %s" % choice)
-        return
+        sys.exit(0)
     # Make the choice the new root synset from we will start our recursion.
     return root_synsets[int_choice]
 

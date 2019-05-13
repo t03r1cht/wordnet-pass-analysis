@@ -1,0 +1,13 @@
+
+========================================
+
+    *** Summary ***
+
+Search Lemma: boat.n.01
+Search Lemma Synonyms: ['boat']
+Search Lemma Definition: a small vessel for travel on water
+Search Lemma Examples: []
+Total Passwords Searched : 17967
+Total hits for password searches: 614468
+Starting Time: 20190513_14.15.39
+Finishing Time: 20190513_14.18.05
