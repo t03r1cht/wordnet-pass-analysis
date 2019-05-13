@@ -38,9 +38,9 @@ parser.add_argument("-s", "--root-syn-name", type=str,
 parser.add_argument("-c", "--classification", action="store_true",
                     help="Subsume the hits for each class of the search hierarchy.", dest="subsume_for_classes")
 parser.add_argument("--result-file", type=str,
-                    help="Name of the result file.", dest="result_file_name")
+                    help="Name of the result file.", dest="result_file_name", default="result.txt")
 parser.add_argument("--summary-file", type=str,
-                    help="Name of the summary file.", dest="summary_file_name")
+                    help="Name of the summary file.", dest="summary_file_name", default="passwords.txt")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -200,6 +200,11 @@ def translations_for_lemma(lemma, depth):
     for translation_handler in translator.all:
         # The translator returns the translated lemma.
         trans = translation_handler(lemma)
+        # In case some translators could not be applied to the lemma
+        # For example when a lemma solely consists of vowels and one translator strips vowels.
+        # That would leave us with a NoneType password.
+        if trans == None:
+            continue
         # In some cases, translator may return a variable list of translations.
 
         if type(trans) == list:

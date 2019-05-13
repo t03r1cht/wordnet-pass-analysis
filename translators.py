@@ -1,9 +1,22 @@
 import random
 
-LEET_TRANSLATION_SIMPLE_FROM = "AaBbEeIiOo"
-LEET_TRANSLATION_SIMPLE_TO = "4488331100"
+LEET_TRANSLATION_SIMPLE_FROM = "AaBbEeIiOoSs"
+LEET_TRANSLATION_SIMPLE_TO = "448833110055"
 LEET_TRANS_TABLE_SIMPLE = str.maketrans(
     LEET_TRANSLATION_SIMPLE_FROM, LEET_TRANSLATION_SIMPLE_TO)
+
+REMOVE_VOWELS = {
+    ord("a"): None,
+    ord("A"): None,
+    ord("e"): None,
+    ord("E"): None,
+    ord("i"): None,
+    ord("I"): None,
+    ord("o"): None,
+    ord("O"): None,
+    ord("u"): None,
+    ord("U"): None,
+}
 
 
 def translator_registrar():
@@ -23,7 +36,7 @@ translator = translator_registrar()
 
 
 @translator
-def no_translator_translator(lemma):
+def no_translator(lemma):
     """
     Return the lemma as is. Required because we want to also 
     search for occurences of the original lemma.
@@ -32,7 +45,7 @@ def no_translator_translator(lemma):
 
 
 @translator
-def casing_translator(lemma):
+def casing_(lemma):
     """
     Return the lemma in uppercase.
     """
@@ -40,7 +53,7 @@ def casing_translator(lemma):
 
 
 @translator
-def leet_translator(lemma):
+def leet(lemma):
     """
     Returns a list of leet translations of the lemma.
     """
@@ -49,7 +62,7 @@ def leet_translator(lemma):
 
 
 @translator
-def yob_translator(lemma):
+def year_long(lemma):
     """
     Returns a list of lemmas with years of birth appended (1950-2019).
     """
@@ -57,27 +70,38 @@ def yob_translator(lemma):
 
 
 @translator
-def rem_vowel_translator(lemma):
+def number(lemma):
     """
-    Remove all vowels of a password.
+    Returns a list of lemmas with years of birth appended (0-100).
     """
-    return ""
+    return ["%s%d" % (lemma, num) for num in range(100)]
 
 
 @translator
-def sc_cc_translator(lemma):
+def strip_vowel(lemma):
+    """
+    Remove all vowels of a lemma.
+    """
+    perm = lemma.translate(REMOVE_VOWELS)
+    if perm is None or len(perm) == 0:
+        return lemma
+    return perm
+
+
+@translator
+def sc_cc(lemma):
     """
     Snake case to camel case, e.g. john_wayne -> JohnWayne or john_wayne -> johnWayne
     """
-    pass
+    return lemma
 
 
 @translator
-def separator_translator(lemma):
+def separator(lemma):
     """
     Lemmas in WordNet are always separated by the underscore "_". Replace it by spaces, hyphens, dots etc.
     """
-    pass
+    return lemma
 
 
 @translator
@@ -85,4 +109,76 @@ def uppercase_index_char(lemma):
     """
     Make the first char of the lemma upper case.
     """
-    pass
+    return lemma
+
+
+@translator
+def num_seq_suffix(lemma):
+    """
+    Append common number sequence suffixes like 123 to the lemma.
+    """
+    return lemma
+
+
+@translator
+def num_seq_prefix(lemma):
+    """
+    Append common number sequence suffixes like 123 to the beginning of the lemma.
+    """
+    return lemma
+
+
+@translator
+def special_chars_suffix(lemma):
+    """
+    Append special characters to the lemma.
+    """
+    return lemma
+
+
+@translator
+def special_chars_prefix(lemma):
+    """
+    Append special characters to the beginning of the lemma.
+    """
+    return lemma
+
+
+@translator
+def duplicate(lemma):
+    """
+    Duplicates the lemma.
+    """
+    return lemma
+
+
+@translator
+def pad_with_characters(lemma):
+    """
+    Separate each character in the lemma with an underscore, e.g. h_e_l_l_o (dot, hyphen, hash etc.).
+    """
+    return lemma
+
+
+@translator
+def reverse(lemma):
+    """
+    Reverse the lemma.
+    """
+    return lemma
+
+
+@translator
+def upper_vowels(lemma):
+    """
+    Make vowels uppercase, e.g. hEllO.
+    """
+    return lemma
+
+
+@translator
+def upper_non_vowels(lemma):
+    """
+    Make everything except vowels uppercase, e.g. HeLLo.
+    """
+    return lemma
