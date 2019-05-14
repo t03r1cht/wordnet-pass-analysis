@@ -1,0 +1,45 @@
+
+========================================
+
+    *** Synset Distribution ***
+
+boat.n.01,total_found=173649,this_found=18692,below_found=154957,total_not_found=7628,this_not_found=43,below_not_found=7585,
+  tugboat.n.01,total_found=29623,this_found=29623,below_found=0,total_not_found=457,this_not_found=457,below_not_found=0,
+  tender.n.05,total_found=40727,this_found=40727,below_found=0,total_not_found=588,this_not_found=588,below_not_found=0,
+  surfboat.n.01,total_found=174,this_found=174,below_found=0,total_not_found=216,this_not_found=216,below_not_found=0,
+  steamboat.n.01,total_found=5734,this_found=5734,below_found=0,total_not_found=137,this_not_found=137,below_not_found=0,
+  small_boat.n.01,total_found=0,this_found=0,below_found=0,total_not_found=237,this_not_found=237,below_not_found=0,
+  sea_boat.n.01,total_found=4,this_found=4,below_found=0,total_not_found=236,this_not_found=236,below_not_found=0,
+  scow.n.01,total_found=172,this_found=172,below_found=0,total_not_found=203,this_not_found=203,below_not_found=0,
+  river_boat.n.01,total_found=13,this_found=13,below_found=0,total_not_found=235,this_not_found=235,below_not_found=0,
+  punt.n.02,total_found=1341,this_found=1341,below_found=0,total_not_found=139,this_not_found=139,below_not_found=0,
+  police_boat.n.01,total_found=0,this_found=0,below_found=0,total_not_found=237,this_not_found=237,below_not_found=0,
+  pilot_boat.n.01,total_found=0,this_found=0,below_found=0,total_not_found=237,this_not_found=237,below_not_found=0,
+  motorboat.n.01,total_found=2271,this_found=2271,below_found=0,total_not_found=381,this_not_found=381,below_not_found=0,
+  mailboat.n.01,total_found=1481,this_found=1481,below_found=0,total_not_found=847,this_not_found=847,below_not_found=0,
+  mackinaw.n.03,total_found=1289,this_found=1289,below_found=0,total_not_found=406,this_not_found=406,below_not_found=0,
+  lugger.n.01,total_found=791,this_found=791,below_found=0,total_not_found=171,this_not_found=171,below_not_found=0,
+  longboat.n.01,total_found=1691,this_found=1691,below_found=0,total_not_found=167,this_not_found=167,below_not_found=0,
+  junk.n.02,total_found=30367,this_found=30367,below_found=0,total_not_found=45,this_not_found=45,below_not_found=0,
+  gunboat.n.01,total_found=418,this_found=418,below_found=0,total_not_found=195,this_not_found=195,below_not_found=0,
+  guard_boat.n.01,total_found=0,this_found=0,below_found=0,total_not_found=237,this_not_found=237,below_not_found=0,
+  gondola.n.02,total_found=3217,this_found=3217,below_found=0,total_not_found=144,this_not_found=144,below_not_found=0,
+  fireboat.n.01,total_found=238,this_found=238,below_found=0,total_not_found=206,this_not_found=206,below_not_found=0,
+  ferry.n.01,total_found=6743,this_found=6743,below_found=0,total_not_found=273,this_not_found=273,below_not_found=0,
+  canal_boat.n.01,total_found=490,this_found=490,below_found=0,total_not_found=684,this_not_found=684,below_not_found=0,
+  bumboat.n.01,total_found=27,this_found=27,below_found=0,total_not_found=224,this_not_found=224,below_not_found=0,
+  barge.n.01,total_found=20979,this_found=20979,below_found=0,total_not_found=597,this_not_found=597,below_not_found=0,
+  ark.n.02,total_found=7167,this_found=7167,below_found=0,total_not_found=86,this_not_found=86,below_not_found=0,
+
+========================================
+
+    *** Summary ***
+
+Search Lemma: boat.n.01
+Search Lemma Synonyms: ['boat']
+Search Lemma Definition: a small vessel for travel on water
+Search Lemma Examples: []
+Total Passwords Searched : 10141
+Total hits for password searches: 173649
+Starting Time: 20190514_13.20.21
+Finishing Time: 20190514_13.21.26

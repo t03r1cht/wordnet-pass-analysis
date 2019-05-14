@@ -225,10 +225,6 @@ def lookup(permutation, depth):
     # Hash and lookup translated lemma
     hashed_lemma = hash_sha1(permutation)
     occurrences = lookup_pass(hashed_lemma)
-    # Handle the -t parameter
-    if args.max_lemmas_processed is not None:
-        if total_processed >= args.max_lemmas_processed:
-            sys.exit(0)
     # Increment "total" counter
     inc_total_processed()
     # Print the permutations to the result file.

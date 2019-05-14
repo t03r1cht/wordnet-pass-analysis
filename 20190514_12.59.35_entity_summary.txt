@@ -1,0 +1,13 @@
+
+========================================
+
+    *** Summary ***
+
+Search Lemma: entity.n.01
+Search Lemma Synonyms: ['entity']
+Search Lemma Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
+Search Lemma Examples: []
+Total Passwords Searched : 1159
+Total hits for password searches: 22495
+Starting Time: 20190514_12.59.35
+Finishing Time: 20190514_12.59.43
