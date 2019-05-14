@@ -7,7 +7,7 @@
 - [X] Cat term "bug"
 - [X] Replace update_stats by simple spinner
 - [X] Count passwords which have not been found
-- [ ] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
+- [X] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
 - [ ] Visualize Wordnet with hyperbolic tree (hypertree)
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
