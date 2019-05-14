@@ -29,8 +29,6 @@ parser.add_argument("-p", "--pass-database", type=str,
                     help="Path to the HIBP password database.", dest="pass_db_path")
 parser.add_argument("-d", "--depth", type=int,
                     help="Depth in the DAG", dest="dag_depth")
-parser.add_argument("-t", "--total", type=int,
-                    help="Set the maximum number of lemmas that should be processed.", dest="max_lemmas_processed")
 parser.add_argument("-g", "--graph", action="store_true",
                     help="Display a directed graph for WordNet.", dest="draw_dag")
 parser.add_argument("-s", "--root-syn-name", type=str,
@@ -41,6 +39,8 @@ parser.add_argument("--result-file", type=str,
                     help="Name of the result file.", dest="result_file_name")
 parser.add_argument("--summary-file", type=str,
                     help="Name of the summary file.", dest="summary_file_name")
+parser.add_argument("-t", "--hyperbolic-tree", action="store_true",
+                    help="Draw a hyperbolic tree from WordNet.", dest="draw_hypertree")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -451,11 +451,23 @@ def option_lookup_passwords():
     cleanup()
 
 
+def option_hypertree():
+    # import igraph instead of jgraph
+    import jgraph
+    from h3.tree import Tree
+    edges = jgraph.Graph.Barabasi(
+        n=500, m=3, directed=True).spanning_tree(None, True).get_edgelist()
+    tree = Tree(edges)
+    tree.scatter_plot(equators=False, tagging=False)
+
+
 if __name__ == "__main__":
     try:
         from nltk.corpus import wordnet as wn
     except ImportError:
         _download_wordnet()
+
+    # WordNet graph
     if args.draw_dag:
         # Evaluate command line parameters
         if args.dag_depth is None or args.root_syn_name is None:
@@ -468,6 +480,10 @@ if __name__ == "__main__":
                 "You are running this script on Linux (%s). Due to currently unresolved bugs, the graph feature can only be used on Windows and MacOS." % platform.platform())
             sys.exit(0)
         option_draw_graph()
+    # Draw the hyperbolic tree
+    elif args.draw_hypertree:
+        option_hypertree()
+    # Lookup passwords in password file
     else:
         # Evaluate command line parameters
         if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:
@@ -478,9 +494,6 @@ if __name__ == "__main__":
         print("Running platform pre-check...")
         if "Darwin" not in platform.platform():
             print(
-                "You are running this script on %s. Looking up passwords is currently only working on MacOS (Darwin) (and probably BSD-based systems). This is due to the fact \
-                that any OS other than the aforementioned are shipped with the 32-bit 'look' utility, whereas the BSD-based 'look' utility (e.g. MacOS) is 64-bit. This allows \
-                    using the look utility on very large files." % platform.platform())
+                "You are running this script on %s. Looking up passwords is currently only working on MacOS (Darwin) (and probably BSD-based systems). This is due to the fact that any OS other than the aforementioned are shipped with the 32-bit 'look' utility, whereas the BSD-based 'look' utility (e.g. MacOS) is 64-bit. This allows using the look utility on very large files." % platform.platform())
             sys.exit(0)
-
         option_lookup_passwords()
