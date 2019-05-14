@@ -456,7 +456,6 @@ if __name__ == "__main__":
         from nltk.corpus import wordnet as wn
     except ImportError:
         _download_wordnet()
-    print(platform.platform())
     if args.draw_dag:
         # Evaluate command line parameters
         if args.dag_depth is None or args.root_syn_name is None:
@@ -475,11 +474,13 @@ if __name__ == "__main__":
             print("Error: Missing parameters.")
             parser.print_usage()
             sys.exit(0)
-        
+
         print("Running platform pre-check...")
-        if "Linux" in platform.platform():
+        if "Darwin" not in platform.platform():
             print(
-                "You are running this script on Linux (%s). Due to currently unresolved bugs, the graph feature can only be used on Windows and MacOS." % platform.platform())
+                "You are running this script on %s. Looking up passwords is currently only working on MacOS (Darwin) (and probably BSD-based systems). This is due to the fact \
+                that any OS other than the aforementioned are shipped with the 32-bit 'look' utility, whereas the BSD-based 'look' utility (e.g. MacOS) is 64-bit. This allows \
+                    using the look utility on very large files." % platform.platform())
             sys.exit(0)
 
         option_lookup_passwords()
