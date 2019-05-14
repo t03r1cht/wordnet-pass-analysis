@@ -8,11 +8,11 @@
 - [X] Replace update_stats by simple spinner
 - [X] Count passwords which have not been found
 - [X] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
-- [ ] Visualize Wordnet with hyperbolic tree (hypertree)
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
+- [ ] Create flat password lists, classify them as well
 - [ ] Write paper about this
-
+- [ ] Visualize Wordnet with hyperbolic tree (hypertree)
 
 ## Issues
 
@@ -21,3 +21,12 @@
 Using look on big files (bigger than 2^31-1) works fine on MacOS since MacOS supplies the user with a 64 bit look command. However, Ubuntu saddled the user with a 32 bit look utility.
 
 Fix here: https://github.com/stuartraetaylor/bsdmainutils-look
+
+
+# Merging to lists
+
+Universal: https://github.com/danielmiessler/SecLists
+
+Names: https://github.com/dominictarr/random-name
+
+See: https://unix.stackexchange.com/questions/50103/merge-two-lists-while-removing-duplicates
