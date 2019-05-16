@@ -11,6 +11,7 @@
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
 - [ ] Create flat password lists, classify them as well
+- [ ] Problem with not_found, found does not add up to total_found
 - [ ] Write paper about this
 - [ ] Visualize Wordnet with hyperbolic tree (hypertree)
 

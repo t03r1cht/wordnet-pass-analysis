@@ -290,7 +290,7 @@ def _write_summary_to_result_file(opts):
                 this_not_found = v[3]
                 below_not_found = v[4]
                 total_not_found = v[3] + v[4]
-                _write_to_summary_file("%s%s,total_found=%d,this_found=%d,below_found=%d,total_not_found=%d,this_not_found=%d,below_not_found=%d," % (
+                _write_to_summary_file("%s%s,total_hits_sum=%d,this_found=%d,below_found=%d,total_not_found=%d,this_not_found=%d,below_not_found=%d," % (
                     (v[0].min_depth() - opts["start_depth"]) *
                     "  ",  # indendation
                     synset_id,  # synset id
@@ -313,14 +313,28 @@ def _write_summary_to_result_file(opts):
                                opts["root_syn"].definition())
         _write_to_summary_file("Search Lemma Examples: %s" %
                                opts["root_syn"].examples())
+        _write_to_summary_file("")
         _write_to_summary_file(
-            "Total Passwords Searched : %d" % total_processed)
-        global total_found
+            "Total Passwords Searched: %d" % total_processed)
         _write_to_summary_file(
-            "Total hits for password searches: %d" % total_found)
+            "Total Passwords (Success): %d" % total_found)
+        _write_to_summary_file(
+            "Total Passwords (Failure): %d" % total_not_found)
+        _write_to_summary_file(
+            "Total hits for password searches: {0} (median: {1:.2f} hits per password)".format(
+                total_hits_sum, total_hits_sum / total_processed))
+        _write_to_summary_file("")
+        _write_to_summary_file("Pct Found Passwords (Total): {0:.9f}%".format(
+                               (total_found / pwned_pw_amount * 100)))
+        _write_to_summary_file("Pct Not Found Passwords (Total): {0:.9f}%".format(
+                               (total_not_found / pwned_pw_amount * 100)))
+        _write_to_summary_file("Pct Found Passwords (Searched): {0:.2f}%".format(
+                               (total_found / total_processed * 100)))
+        _write_to_summary_file("Pct Not Found Passwords (Searched): {0:.2f}%".format(
+                               (total_not_found / total_processed * 100)))
         finished_time = get_curr_time()
         _write_to_summary_file("Starting Time: %s" % opts["started_time"])
-        _write_to_summary_file("Finishing Time: %s" % finished_time)
+        _write_to_summary_file("Finishing Tgime: %s" % finished_time)
         sp.write("Writing summary to %s" % outfile_summary.name)
         sp.write("Writing tested passwords to %s" % outfile_passwords.name)
         sp.ok("✔")
