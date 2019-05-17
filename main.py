@@ -45,11 +45,16 @@ parser.add_argument("-t", "--hyperbolic-tree", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
 
-total_processed = 0
 started = ""
 permutation_handler = None
 hits_for_lemmas = OrderedDict()
+
+# For tracking progress
+total_processed = 0
+total_hits_sum = 0
 total_found = 0
+total_not_found = 0
+pwned_pw_amount = 551509767
 
 
 def sigint_handler(sig, frame):
@@ -227,12 +232,18 @@ def lookup(permutation, depth):
     occurrences = lookup_pass(hashed_lemma)
     # Increment "total" counter
     inc_total_processed()
+    # Track found/not found
+    if occurrences == 0:
+        inc_total_not_found()
+    else:
+        inc_total_found()
+
     # Print the permutations to the result file.
     _write_result_to_passwords_file(permutation, depth, occurrences)
 
     # Return occurrences in order to be able to subsume them for each class.
-    global total_found
-    total_found += occurrences
+    global total_hits_sum
+    total_hits_sum += occurrences
     return occurrences
 
 
@@ -251,6 +262,22 @@ def inc_total_processed():
     """
     global total_processed
     total_processed += 1
+
+
+def inc_total_found():
+    """
+    Increment the global variable to track the passwords which could be found.
+    """
+    global total_found
+    total_found += 1
+
+
+def inc_total_not_found():
+    """
+    Increment the global variable to track the the passwords which could not be found.
+    """
+    global total_not_found
+    total_not_found += 1
 
 
 def _write_result_to_passwords_file(lemma_name, lemma_depth, occurrences):
@@ -289,7 +316,7 @@ def _write_summary_to_result_file(opts):
                 total_hits = v[1] + v[2]
                 this_not_found = v[3]
                 below_not_found = v[4]
-                total_not_found = v[3] + v[4]
+                total_not_found_loc = v[3] + v[4]
                 _write_to_summary_file("%s%s,total_hits_sum=%d,this_found=%d,below_found=%d,total_not_found=%d,this_not_found=%d,below_not_found=%d," % (
                     (v[0].min_depth() - opts["start_depth"]) *
                     "  ",  # indendation
@@ -297,44 +324,45 @@ def _write_summary_to_result_file(opts):
                     total_hits,  # hits of each synset
                     this_hits,
                     below_hits,
-                    total_not_found,
+                    total_not_found_loc,
                     this_not_found,
                     below_not_found))
 
         _write_to_summary_file("")
         _write_to_summary_file(40 * "=")
         _write_to_summary_file("")
-        _write_to_summary_file("    *** Summary ***")
+        _write_to_summary_file("    *** Searched Lemma ***")
         _write_to_summary_file("")
-        _write_to_summary_file("Search Lemma: %s" % opts["root_syn"].name())
-        _write_to_summary_file("Search Lemma Synonyms: %s" %
+        _write_to_summary_file("Identifier: %s" % opts["root_syn"].name())
+        _write_to_summary_file("Synonyms: %s" %
                                opts["root_syn"].lemma_names())
-        _write_to_summary_file("Search Lemma Definition: %s" %
+        _write_to_summary_file("Definition: %s" %
                                opts["root_syn"].definition())
-        _write_to_summary_file("Search Lemma Examples: %s" %
+        _write_to_summary_file("Examples: %s" %
                                opts["root_syn"].examples())
         _write_to_summary_file("")
+        _write_to_summary_file("    *** Stats ***")
+        _write_to_summary_file("")
         _write_to_summary_file(
-            "Total Passwords Searched: %d" % total_processed)
+            "Total Passwords Searched: {0} ({1:.2f}%)".format(total_processed,
+                                                              (total_processed / total_processed * 100)))
         _write_to_summary_file(
-            "Total Passwords (Success): %d" % total_found)
+            "Total Passwords (Success): {0} ({1:.2f}%)".format(total_found,
+                                                               (total_found / total_processed * 100)))
         _write_to_summary_file(
-            "Total Passwords (Failure): %d" % total_not_found)
+            "Total Passwords (Failure): {0} ({1:.2f}%)".format(total_not_found,
+                                                               (total_not_found / total_processed * 100)))
         _write_to_summary_file(
-            "Total hits for password searches: {0} (median: {1:.2f} hits per password)".format(
+            "Total hits for password searches: {0} ({1:.2f} hits per password)".format(
                 total_hits_sum, total_hits_sum / total_processed))
         _write_to_summary_file("")
-        _write_to_summary_file("Pct Found Passwords (Total): {0:.9f}%".format(
-                               (total_found / pwned_pw_amount * 100)))
-        _write_to_summary_file("Pct Not Found Passwords (Total): {0:.9f}%".format(
-                               (total_not_found / pwned_pw_amount * 100)))
-        _write_to_summary_file("Pct Found Passwords (Searched): {0:.2f}%".format(
-                               (total_found / total_processed * 100)))
-        _write_to_summary_file("Pct Not Found Passwords (Searched): {0:.2f}%".format(
-                               (total_not_found / total_processed * 100)))
+        _write_to_summary_file("Pct Found Passwords (Total): {0:.5f}%".format(
+                               (total_hits_sum / pwned_pw_amount * 100)))
+        _write_to_summary_file("Pct Not Found Passwords (Total): {0:.5f}%".format(
+                               ((1 - (total_hits_sum / pwned_pw_amount)) * 100)))
         finished_time = get_curr_time()
         _write_to_summary_file("Starting Time: %s" % opts["started_time"])
-        _write_to_summary_file("Finishing Tgime: %s" % finished_time)
+        _write_to_summary_file("Finishing Time: %s" % finished_time)
         sp.write("Writing summary to %s" % outfile_summary.name)
         sp.write("Writing tested passwords to %s" % outfile_passwords.name)
         sp.ok("✔")
@@ -435,7 +463,6 @@ def option_lookup_passwords():
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             first_level_not_found += not_found
-            inc_total_processed()
         sp.ok("✔")
 
     with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:

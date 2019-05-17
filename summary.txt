@@ -10,13 +10,21 @@ entity.n.01,total_hits_sum=22495,this_found=2391,below_found=20104,total_not_fou
 
 ========================================
 
-    *** Summary ***
+    *** Searched Lemma ***
 
-Search Lemma: entity.n.01
-Search Lemma Synonyms: ['entity']
-Search Lemma Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
-Search Lemma Examples: []
+Identifier: entity.n.01
+Synonyms: ['entity']
+Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
+Examples: []
 
-Total Passwords Searched: 1159
-Total Passwords (Success): 22495
-Total Passwords (Failure): 452
+    *** Stats ***
+
+Total Passwords Searched: 1158 (100.00%)
+Total Passwords (Success): 274 (23.66%)
+Total Passwords (Failure): 884 (76.34%)
+Total hits for password searches: 22495 (19.43 hits per password)
+
+Pct Found Passwords (Total): 0.00408%
+Pct Not Found Passwords (Total): 99.99592%
+Starting Time: 20190517_08.46.29
+Finishing Time: 20190517_08.46.38
