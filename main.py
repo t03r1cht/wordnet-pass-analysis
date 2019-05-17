@@ -317,7 +317,7 @@ def _write_summary_to_result_file(opts):
                 this_not_found = v[3]
                 below_not_found = v[4]
                 total_not_found_loc = v[3] + v[4]
-                _write_to_summary_file("%s%s,total_hits_sum=%d,this_found=%d,below_found=%d,total_not_found=%d,this_not_found=%d,below_not_found=%d," % (
+                _write_to_summary_file("%s%s|total_hits=%d|this_hits=%d|below_hits=%d|total_not_found=%d|this_not_found=%d|below_not_found=%d" % (
                     (v[0].min_depth() - opts["start_depth"]) *
                     "  ",  # indendation
                     synset_id,  # synset id
@@ -444,7 +444,7 @@ def option_lookup_passwords():
     global outfile_passwords
     outfile_passwords = open(outfile_passwords_name, "w+")
 
-    root_synsets = wn.synsets(args.root_syn_name)
+    root_synsets = wn.synsets(args.root_syn_name, "n")
     if len(root_synsets) == 0:
         print("  No synset found for: %s" % root_syn_name)
         sys.exit(0)

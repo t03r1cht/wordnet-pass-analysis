@@ -10,8 +10,10 @@
 - [X] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
+- [ ] Show synset synonyms in synset selection menu
+- [ ] Only allow nouns in synset selection menu
 - [ ] Create flat password lists, classify them as well
-- [ ] Problem with not_found, found does not add up to total_found
+- [X] Problem with not_found, found does not add up to total_found
 - [ ] Write paper about this
 - [ ] Visualize Wordnet with hyperbolic tree (hypertree)
 
