@@ -452,6 +452,18 @@ def option_lookup_passwords():
     clear_terminal()
     print()
     started_time = get_curr_time()
+
+    root_synsets = wn.synsets(args.root_syn_name, "n")
+    if len(root_synsets) == 0:
+        print("  No synset found for: %s" % args.root_syn_name)
+        sys.exit(0)
+
+    # If multiple synsets were found, prompt the user to choose which one to use.
+    if len(root_synsets) > 1:
+        choice_root_syn = prompt_synset_choice(root_synsets)
+    else:
+        choice_root_syn = root_synsets[0]
+
     # Open the file handler for a file with the starting time
     if args.summary_file_name is not None:
         outfile_summary_name = args.summary_file_name
@@ -470,17 +482,6 @@ def option_lookup_passwords():
 
     global outfile_passwords
     outfile_passwords = open(outfile_passwords_name, "w+")
-
-    root_synsets = wn.synsets(args.root_syn_name, "n")
-    if len(root_synsets) == 0:
-        print("  No synset found for: %s" % args.root_syn_name)
-        sys.exit(0)
-
-    # If multiple synsets were found, prompt the user to choose which one to use.
-    if len(root_synsets) > 1:
-        choice_root_syn = prompt_synset_choice(root_synsets)
-    else:
-        choice_root_syn = root_synsets[0]
 
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
         first_level_hits = 0
