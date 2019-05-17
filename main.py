@@ -164,24 +164,28 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     # Example:  rel_depth = 3, curr = 9, start = 7
     #           9 - 5 = 4,
     if (root_syn.min_depth() - start_depth) >= rel_depth:
-        return 0, 0
+        return 0, 0, 0
     curr_root_syn = root_syn
     hits_below = 0
     total_hits_for_current_synset = 0
     not_found_for_current_synset = 0
+    found_for_current_synset = 0
     for hypo in curr_root_syn.hyponyms():
         total_hits = 0
         not_found = 0
+        found = 0
         for lemma in hypo.lemma_names():
             # Apply a set of permutations to each lemma
-            lemma_hits, not_found_cnt = permutations_for_lemma(
+            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                 lemma, hypo.min_depth())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
             not_found += not_found_cnt
+            found += found_cnt
             not_found_for_current_synset += not_found_cnt
+            found_for_current_synset += found_cnt
         # Execute the function again with the new root synset being each hyponym we just found.
-        hits_below, not_found_below = recurse_nouns_from_root(
+        hits_below, not_found_below, found_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
         # Add the sum of all hits below the current synset to the hits list of the current synset so
         # below hits are automatically included (not included in the terminal output, we separate both these
@@ -190,10 +194,11 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         # Works because of... recursion
         total_hits_for_current_synset += hits_below
         not_found_for_current_synset += not_found_below
+        found_for_current_synset += found_below
         if args.subsume_for_classes:
             append_with_hits(hypo, total_hits, hits_below,
-                             not_found, not_found_below)
-    return total_hits_for_current_synset, not_found_for_current_synset
+                             not_found, not_found_below, found, found_below)
+    return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
 
 
 def permutations_for_lemma(lemma, depth):
@@ -202,6 +207,7 @@ def permutations_for_lemma(lemma, depth):
     """
     total_hits = 0
     not_found_cnt = 0
+    found_cnt = 0
     for permutation_handler in permutator.all:
         # The permutator returns the permutated lemma.
         trans = permutation_handler(lemma)
@@ -217,10 +223,17 @@ def permutations_for_lemma(lemma, depth):
                 total_hits += trans_hits
                 if trans_hits == 0:
                     not_found_cnt += 1
+                else:
+                    found_cnt += 1
         else:
-            total_hits += lookup(trans, depth)
-            not_found_cnt += 1
-    return total_hits, not_found_cnt
+            trans_hits = lookup(trans, depth)
+            if trans_hits == 0:
+                not_found_cnt += 1
+            else:
+                found_cnt += 1
+            total_hits += trans_hits
+
+    return total_hits, not_found_cnt, found_cnt
 
 
 def lookup(permutation, depth):
@@ -247,9 +260,10 @@ def lookup(permutation, depth):
     return occurrences
 
 
-def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below):
+def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below, found, found_below):
     global hits_for_lemmas
-    res_set = [lemma, total_hits, below_hits, not_found, not_found_below]
+    res_set = [lemma, total_hits, below_hits,
+               not_found, not_found_below, found, found_below]
     if lemma.name() in hits_for_lemmas:
         hits_for_lemmas[lemma.name()][1] += total_hits
     else:
@@ -317,16 +331,26 @@ def _write_summary_to_result_file(opts):
                 this_not_found = v[3]
                 below_not_found = v[4]
                 total_not_found_loc = v[3] + v[4]
-                _write_to_summary_file("%s%s|total_hits=%d|this_hits=%d|below_hits=%d|total_not_found=%d|this_not_found=%d|below_not_found=%d" % (
+                this_found = v[5]
+                below_found = v[6]
+                total_found_loc = v[5] + v[6]
+                pct_total_of_total = (total_found_loc / total_found) * 100
+                pct_this_of_total = (this_found / total_found) * 100
+                _write_to_summary_file("{0}{1}  pct_total={2:.2f}|pct_this={12:.2f}|total_hits={3}|this_hits={4}|below_hits={5}|total_found={6}|this_found={7}|below_found={8}|total_not_found={9}|this_not_found={10}|below_not_found={11}".format(
                     (v[0].min_depth() - opts["start_depth"]) *
                     "  ",  # indendation
                     synset_id,  # synset id
+                    pct_total_of_total,
                     total_hits,  # hits of each synset
                     this_hits,
                     below_hits,
+                    total_found_loc,
+                    this_found,
+                    below_found,
                     total_not_found_loc,
                     this_not_found,
-                    below_not_found))
+                    below_not_found,
+                    pct_this_of_total))
 
         _write_to_summary_file("")
         _write_to_summary_file(40 * "=")
@@ -385,7 +409,10 @@ def _write_to_passwords_file(s):
 def prompt_synset_choice(root_synsets):
     print("  Multiple synset were found. Please choose: ")
     for elem in range(len(root_synsets)):
-        print("    [%d] %s" % (elem, root_synsets[elem]))
+        print("    [{0}] Name: {1}, Synonyms: {2}".format(
+            elem,
+            root_synsets[elem].name(),
+            root_synsets[elem].lemma_names()))
     print()
     choice = input("Your choice [0-%d]: " % ((len(root_synsets)-1)))
     print()
@@ -446,7 +473,7 @@ def option_lookup_passwords():
 
     root_synsets = wn.synsets(args.root_syn_name, "n")
     if len(root_synsets) == 0:
-        print("  No synset found for: %s" % root_syn_name)
+        print("  No synset found for: %s" % args.root_syn_name)
         sys.exit(0)
 
     # If multiple synsets were found, prompt the user to choose which one to use.
@@ -458,15 +485,17 @@ def option_lookup_passwords():
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
         first_level_hits = 0
         first_level_not_found = 0
+        first_level_found = 0
         for root_lemma in choice_root_syn.lemma_names():
-            hits, not_found = permutations_for_lemma(
+            hits, not_found, found = permutations_for_lemma(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             first_level_not_found += not_found
+            first_level_found += found
         sp.ok("✔")
 
     with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
-        hits_below, not_found_below = recurse_nouns_from_root(
+        hits_below, not_found_below, found_below = recurse_nouns_from_root(
             root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
         sp.ok("✔")
 
@@ -475,7 +504,7 @@ def option_lookup_passwords():
     # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
     if args.subsume_for_classes:
         append_with_hits(choice_root_syn, first_level_hits,
-                         hits_below, first_level_not_found, not_found_below)
+                         hits_below, first_level_not_found, not_found_below, first_level_found, found_below)
 
     # Writing results to result file
     # Using a options dictionary to pass option information to the function

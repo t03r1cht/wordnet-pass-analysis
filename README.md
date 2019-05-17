@@ -11,7 +11,7 @@
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
 - [ ] Show synset synonyms in synset selection menu
-- [ ] Only allow nouns in synset selection menu
+- [X] Only allow nouns in synset selection menu
 - [ ] Create flat password lists, classify them as well
 - [X] Problem with not_found, found does not add up to total_found
 - [ ] Write paper about this
