@@ -10,7 +10,7 @@
 - [X] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
-- [X] Show synset synonyms in synset selection menu
+- [Xg] Show synset synonyms in synset selection menu
 - [X] Only allow nouns in synset selection menu
 - [ ] Create flat password lists, classify them as well
 - [X] Problem with not_found, found does not add up to total_found
@@ -33,3 +33,9 @@ Universal: https://github.com/danielmiessler/SecLists
 Names: https://github.com/dominictarr/random-name
 
 See: https://unix.stackexchange.com/questions/50103/merge-two-lists-while-removing-duplicates
+
+# Plot Ideas
+
+- Average hits per passwords depending on the root synset (animals, vehicles etc.) in a scatter plot
+- Distribution of found passwords per class in a scatter plot
+- Pct Success/Failure distribution based on the root synset

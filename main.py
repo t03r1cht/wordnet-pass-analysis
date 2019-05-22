@@ -41,6 +41,8 @@ parser.add_argument("--summary-file", type=str,
                     help="Name of the summary file.", dest="summary_file_name")
 parser.add_argument("-t", "--hyperbolic-tree", action="store_true",
                     help="Draw a hyperbolic tree from WordNet.", dest="draw_hypertree")
+parser.add_argument("-l", "--from-lists", type=str,
+                    help="Path to the folder containing self-created password lists.", dest="from_lists")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -528,6 +530,24 @@ def option_hypertree():
     tree.scatter_plot(equators=False, tagging=False)
 
 
+def option_permutate_from_lists():
+    # Check if the specified directory is valid
+    if not args.from_lists:
+        print("ERROR: Please enter a path to a directory containing password base lists.")
+        return
+    # Check if directory exists and is a directory
+    if not os.path.isdir(args.from_lists):
+        print("ERROR: Not a directory")
+        return
+
+    # Check if directory contains at least 1 file
+    if len(os.listdir(args.from_lists)) == 0:
+        print("ERROR: Directory is empty.")
+        return
+    
+    # Check if file is a text file
+
+
 if __name__ == "__main__":
     try:
         from nltk.corpus import wordnet as wn
@@ -550,7 +570,9 @@ if __name__ == "__main__":
     # Draw the hyperbolic tree
     elif args.draw_hypertree:
         option_hypertree()
-    # Lookup passwords in password file
+    # Lookup words from self-created lists
+    elif args.from_lists:
+        option_permutate_from_lists()
     else:
         # Evaluate command line parameters
         if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:

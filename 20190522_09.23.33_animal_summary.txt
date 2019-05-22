@@ -1,0 +1,145 @@
+
+========================================
+
+    *** Synset Distribution ***
+
+animal.n.01  pct_total=100.00|pct_this=8.53|total_hits=1404651|this_hits=281991|below_hits=1122660|total_found=9341|this_found=797|below_found=8544|total_not_found=30688|this_not_found=580|below_not_found=30108
+  zooplankton.n.01  pct_total=0.05|pct_this=0.05|total_hits=76|this_hits=76|below_hits=0|total_found=5|this_found=5|below_found=0|total_not_found=223|this_not_found=223|below_not_found=0
+  young.n.01  pct_total=6.16|pct_this=3.74|total_hits=138235|this_hits=133476|below_hits=4759|total_found=575|this_found=349|below_found=226|total_not_found=1276|this_not_found=107|below_not_found=1169
+    young_mammal.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    young_fish.n.01  pct_total=0.01|pct_this=0.01|total_hits=2|this_hits=2|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=236|this_not_found=236|below_not_found=0
+    young_bird.n.01  pct_total=0.01|pct_this=0.01|total_hits=2|this_hits=2|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=236|this_not_found=236|below_not_found=0
+    spat.n.03  pct_total=0.98|pct_this=0.98|total_hits=1128|this_hits=1128|below_hits=0|total_found=92|this_found=92|below_found=0|total_not_found=136|this_not_found=136|below_not_found=0
+    orphan.n.04  pct_total=1.22|pct_this=1.22|total_hits=3362|this_hits=3362|below_hits=0|total_found=114|this_found=114|below_found=0|total_not_found=114|this_not_found=114|below_not_found=0
+    hatchling.n.01  pct_total=0.19|pct_this=0.19|total_hits=265|this_hits=265|below_hits=0|total_found=18|this_found=18|below_found=0|total_not_found=210|this_not_found=210|below_not_found=0
+  work_animal.n.01  pct_total=0.52|pct_this=0.00|total_hits=538|this_hits=0|below_hits=538|total_found=49|this_found=0|below_found=49|total_not_found=890|this_not_found=237|below_not_found=653
+    draft_animal.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    beast_of_burden.n.01  pct_total=0.52|pct_this=0.52|total_hits=538|this_hits=538|below_hits=0|total_found=49|this_found=49|below_found=0|total_not_found=416|this_not_found=416|below_not_found=0
+  varmint.n.02  pct_total=0.71|pct_this=0.71|total_hits=1300|this_hits=1300|below_hits=0|total_found=66|this_found=66|below_found=0|total_not_found=390|this_not_found=390|below_not_found=0
+  thoroughbred.n.03  pct_total=1.27|pct_this=1.27|total_hits=3686|this_hits=3686|below_hits=0|total_found=119|this_found=119|below_found=0|total_not_found=565|this_not_found=565|below_not_found=0
+  survivor.n.03  pct_total=1.96|pct_this=1.96|total_hits=30569|this_hits=30569|below_hits=0|total_found=183|this_found=183|below_found=0|total_not_found=45|this_not_found=45|below_not_found=0
+  stunt.n.02  pct_total=1.53|pct_this=1.53|total_hits=6793|this_hits=6793|below_hits=0|total_found=143|this_found=143|below_found=0|total_not_found=85|this_not_found=85|below_not_found=0
+  stayer.n.01  pct_total=0.56|pct_this=0.56|total_hits=663|this_hits=663|below_hits=0|total_found=52|this_found=52|below_found=0|total_not_found=176|this_not_found=176|below_not_found=0
+  scavenger.n.03  pct_total=0.75|pct_this=0.75|total_hits=2625|this_hits=2625|below_hits=0|total_found=70|this_found=70|below_found=0|total_not_found=388|this_not_found=158|below_not_found=230
+    bottom-feeder.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=230|this_not_found=230|below_not_found=0
+  range_animal.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+  racer.n.03  pct_total=4.51|pct_this=2.08|total_hits=66782|this_hits=46375|below_hits=20407|total_found=421|this_found=194|below_found=227|total_not_found=491|this_not_found=34|below_not_found=457
+    steeplechaser.n.01  pct_total=0.01|pct_this=0.01|total_hits=7|this_hits=7|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+    greyhound.n.01  pct_total=1.64|pct_this=1.64|total_hits=18798|this_hits=18798|below_hits=0|total_found=153|this_found=153|below_found=0|total_not_found=75|this_not_found=75|below_not_found=0
+    finisher.n.06  pct_total=0.78|pct_this=0.78|total_hits=1602|this_hits=1602|below_hits=0|total_found=73|this_found=73|below_found=0|total_not_found=155|this_not_found=155|below_not_found=0
+  prey.n.02  pct_total=2.34|pct_this=2.34|total_hits=4284|this_hits=4284|below_hits=0|total_found=219|this_found=219|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+  predator.n.02  pct_total=2.61|pct_this=2.04|total_hits=76023|this_hits=74384|below_hits=1639|total_found=244|this_found=191|below_found=53|total_not_found=449|this_not_found=274|below_not_found=175
+    carnivore.n.02  pct_total=0.57|pct_this=0.57|total_hits=1639|this_hits=1639|below_hits=0|total_found=53|this_found=53|below_found=0|total_not_found=175|this_not_found=175|below_not_found=0
+  poikilotherm.n.01  pct_total=0.10|pct_this=0.10|total_hits=40|this_hits=40|below_hits=0|total_found=9|this_found=9|below_found=0|total_not_found=447|this_not_found=447|below_not_found=0
+  pleurodont.n.01  pct_total=0.01|pct_this=0.01|total_hits=4|this_hits=4|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+  pet.n.01  pct_total=2.01|pct_this=2.01|total_hits=16765|this_hits=16765|below_hits=0|total_found=188|this_found=188|below_found=0|total_not_found=40|this_not_found=40|below_not_found=0
+  pest.n.04  pct_total=3.02|pct_this=1.82|total_hits=7114|this_hits=3780|below_hits=3334|total_found=282|this_found=170|below_found=112|total_not_found=174|this_not_found=58|below_not_found=116
+    vermin.n.02  pct_total=1.20|pct_this=1.20|total_hits=3334|this_hits=3334|below_hits=0|total_found=112|this_found=112|below_found=0|total_not_found=116|this_not_found=116|below_not_found=0
+  peeper.n.03  pct_total=1.60|pct_this=1.60|total_hits=8011|this_hits=8011|below_hits=0|total_found=149|this_found=149|below_found=0|total_not_found=79|this_not_found=79|below_not_found=0
+  omnivore.n.02  pct_total=0.46|pct_this=0.46|total_hits=458|this_hits=458|below_hits=0|total_found=43|this_found=43|below_found=0|total_not_found=185|this_not_found=185|below_not_found=0
+  mutant.n.02  pct_total=1.74|pct_this=1.74|total_hits=12751|this_hits=12751|below_hits=0|total_found=163|this_found=163|below_found=0|total_not_found=65|this_not_found=65|below_not_found=0
+  molter.n.01  pct_total=0.46|pct_this=0.46|total_hits=436|this_hits=436|below_hits=0|total_found=43|this_found=43|below_found=0|total_not_found=413|this_not_found=413|below_not_found=0
+  migrator.n.02  pct_total=0.16|pct_this=0.16|total_hits=159|this_hits=159|below_hits=0|total_found=15|this_found=15|below_found=0|total_not_found=213|this_not_found=213|below_not_found=0
+  metazoan.n.01  pct_total=0.04|pct_this=0.04|total_hits=33|this_hits=33|below_hits=0|total_found=4|this_found=4|below_found=0|total_not_found=224|this_not_found=224|below_not_found=0
+  mate.n.03  pct_total=2.10|pct_this=2.10|total_hits=56656|this_hits=56656|below_hits=0|total_found=196|this_found=196|below_found=0|total_not_found=32|this_not_found=32|below_not_found=0
+  marine_animal.n.01  pct_total=0.02|pct_this=0.01|total_hits=4|this_hits=3|below_hits=1|total_found=2|this_found=1|below_found=1|total_not_found=1404|this_not_found=947|below_not_found=457
+    by-catch.n.01  pct_total=0.01|pct_this=0.01|total_hits=1|this_hits=1|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=457|this_not_found=457|below_not_found=0
+  male.n.01  pct_total=7.72|pct_this=2.03|total_hits=94069|this_hits=13719|below_hits=80350|total_found=721|this_found=190|below_found=531|total_not_found=656|this_not_found=38|below_not_found=618
+    sire.n.03  pct_total=1.31|pct_this=1.31|total_hits=2409|this_hits=2409|below_hits=0|total_found=122|this_found=122|below_found=0|total_not_found=106|this_not_found=106|below_not_found=0
+    male_horse.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    colt.n.01  pct_total=2.01|pct_this=2.01|total_hits=64063|this_hits=64063|below_hits=0|total_found=188|this_found=188|below_found=0|total_not_found=40|this_not_found=40|below_not_found=0
+    bullock.n.02  pct_total=2.37|pct_this=2.37|total_hits=13878|this_hits=13878|below_hits=0|total_found=221|this_found=221|below_found=0|total_not_found=235|this_not_found=235|below_not_found=0
+  larva.n.01  pct_total=14.08|pct_this=0.96|total_hits=79538|this_hits=1151|below_hits=78387|total_found=1315|this_found=90|below_found=1225|total_not_found=4658|this_not_found=138|below_not_found=4520
+    wireworm.n.01  pct_total=0.04|pct_this=0.04|total_hits=26|this_hits=26|below_hits=0|total_found=4|this_found=4|below_found=0|total_not_found=224|this_not_found=224|below_not_found=0
+    wiggler.n.02  pct_total=0.75|pct_this=0.75|total_hits=1109|this_hits=1109|below_hits=0|total_found=70|this_found=70|below_found=0|total_not_found=386|this_not_found=386|below_not_found=0
+    tadpole.n.01  pct_total=2.91|pct_this=2.91|total_hits=21433|this_hits=21433|below_hits=0|total_found=272|this_found=272|below_found=0|total_not_found=412|this_not_found=412|below_not_found=0
+    strawworm.n.02  pct_total=0.04|pct_this=0.04|total_hits=16|this_hits=16|below_hits=0|total_found=4|this_found=4|below_found=0|total_not_found=452|this_not_found=452|below_not_found=0
+    nymph.n.02  pct_total=1.16|pct_this=1.16|total_hits=3238|this_hits=3238|below_hits=0|total_found=108|this_found=108|below_found=0|total_not_found=120|this_not_found=120|below_not_found=0
+    mealworm.n.01  pct_total=0.30|pct_this=0.30|total_hits=408|this_hits=408|below_hits=0|total_found=28|this_found=28|below_found=0|total_not_found=200|this_not_found=200|below_not_found=0
+    leptocephalus.n.01  pct_total=0.02|pct_this=0.02|total_hits=5|this_hits=5|below_hits=0|total_found=2|this_found=2|below_found=0|total_not_found=226|this_not_found=226|below_not_found=0
+    hellgrammiate.n.01  pct_total=1.49|pct_this=1.49|total_hits=4795|this_hits=4795|below_hits=0|total_found=139|this_found=139|below_found=0|total_not_found=317|this_not_found=317|below_not_found=0
+    grub.n.02  pct_total=1.42|pct_this=1.42|total_hits=2079|this_hits=2079|below_hits=0|total_found=133|this_found=133|below_found=0|total_not_found=95|this_not_found=95|below_not_found=0
+    doodlebug.n.03  pct_total=1.98|pct_this=1.98|total_hits=26141|this_hits=26141|below_hits=0|total_found=185|this_found=185|below_found=0|total_not_found=508|this_not_found=508|below_not_found=0
+    cercaria.n.01  pct_total=0.04|pct_this=0.04|total_hits=122|this_hits=122|below_hits=0|total_found=4|this_found=4|below_found=0|total_not_found=224|this_not_found=224|below_not_found=0
+    caterpillar.n.01  pct_total=1.47|pct_this=1.47|total_hits=8776|this_hits=8776|below_hits=0|total_found=137|this_found=137|below_found=0|total_not_found=91|this_not_found=91|below_not_found=0
+    caseworm.n.01  pct_total=0.01|pct_this=0.01|total_hits=5|this_hits=5|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+    bot.n.01  pct_total=1.48|pct_this=1.48|total_hits=10234|this_hits=10234|below_hits=0|total_found=138|this_found=138|below_found=0|total_not_found=90|this_not_found=90|below_not_found=0
+    bladder_worm.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    ascidian_tadpole.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    aphid_lion.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=474|this_not_found=474|below_not_found=0
+  invertebrate.n.01  pct_total=6.83|pct_this=0.03|total_hits=91126|this_hits=36|below_hits=91090|total_found=638|this_found=3|below_found=635|total_not_found=6721|this_not_found=225|below_not_found=6496
+    zoophyte.n.01  pct_total=0.16|pct_this=0.16|total_hits=98|this_hits=98|below_hits=0|total_found=15|this_found=15|below_found=0|total_not_found=213|this_not_found=213|below_not_found=0
+    worm.n.01  pct_total=1.97|pct_this=1.97|total_hits=13957|this_hits=13957|below_hits=0|total_found=184|this_found=184|below_found=0|total_not_found=44|this_not_found=44|below_not_found=0
+    woodborer.n.01  pct_total=0.28|pct_this=0.28|total_hits=352|this_hits=352|below_hits=0|total_found=26|this_found=26|below_found=0|total_not_found=430|this_not_found=430|below_not_found=0
+    symbion_pandora.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    sponge.n.04  pct_total=2.12|pct_this=2.12|total_hits=72711|this_hits=72711|below_hits=0|total_found=198|this_found=198|below_found=0|total_not_found=486|this_not_found=486|below_not_found=0
+    rotifer.n.01  pct_total=0.21|pct_this=0.21|total_hits=250|this_hits=250|below_hits=0|total_found=20|this_found=20|below_found=0|total_not_found=208|this_not_found=208|below_not_found=0
+    phoronid.n.01  pct_total=0.01|pct_this=0.01|total_hits=4|this_hits=4|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+    peanut_worm.n.01  pct_total=0.02|pct_this=0.02|total_hits=6|this_hits=6|below_hits=0|total_found=2|this_found=2|below_found=0|total_not_found=463|this_not_found=463|below_not_found=0
+    mollusk.n.01  pct_total=1.50|pct_this=1.50|total_hits=3411|this_hits=3411|below_hits=0|total_found=140|this_found=140|below_found=0|total_not_found=544|this_not_found=544|below_not_found=0
+    entoproct.n.01  pct_total=0.01|pct_this=0.01|total_hits=1|this_hits=1|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+    ectoproct.n.01  pct_total=0.01|pct_this=0.01|total_hits=2|this_hits=2|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+    echinoderm.n.01  pct_total=0.04|pct_this=0.04|total_hits=63|this_hits=63|below_hits=0|total_found=4|this_found=4|below_found=0|total_not_found=224|this_not_found=224|below_not_found=0
+    ctenophore.n.01  pct_total=0.01|pct_this=0.01|total_hits=14|this_hits=14|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=464|this_not_found=464|below_not_found=0
+    coelenterate.n.01  pct_total=0.14|pct_this=0.14|total_hits=52|this_hits=52|below_hits=0|total_found=13|this_found=13|below_found=0|total_not_found=443|this_not_found=443|below_not_found=0
+    bryozoan.n.01  pct_total=0.02|pct_this=0.02|total_hits=15|this_hits=15|below_hits=0|total_found=2|this_found=2|below_found=0|total_not_found=1165|this_not_found=1165|below_not_found=0
+    brachiopod.n.01  pct_total=0.19|pct_this=0.19|total_hits=72|this_hits=72|below_hits=0|total_found=18|this_found=18|below_found=0|total_not_found=675|this_not_found=675|below_not_found=0
+    arthropod.n.01  pct_total=0.10|pct_this=0.10|total_hits=82|this_hits=82|below_hits=0|total_found=9|this_found=9|below_found=0|total_not_found=219|this_not_found=219|below_not_found=0
+  insectivore.n.02  pct_total=0.02|pct_this=0.02|total_hits=9|this_hits=9|below_hits=0|total_found=2|this_found=2|below_found=0|total_not_found=226|this_not_found=226|below_not_found=0
+  homeotherm.n.01  pct_total=0.10|pct_this=0.10|total_hits=21|this_hits=21|below_hits=0|total_found=9|this_found=9|below_found=0|total_not_found=675|this_not_found=675|below_not_found=0
+  hexapod.n.01  pct_total=0.11|pct_this=0.11|total_hits=182|this_hits=182|below_hits=0|total_found=10|this_found=10|below_found=0|total_not_found=218|this_not_found=218|below_not_found=0
+  herbivore.n.01  pct_total=0.22|pct_this=0.22|total_hits=270|this_hits=270|below_hits=0|total_found=21|this_found=21|below_found=0|total_not_found=207|this_not_found=207|below_not_found=0
+  giant.n.01  pct_total=1.95|pct_this=1.95|total_hits=15564|this_hits=15564|below_hits=0|total_found=182|this_found=182|below_found=0|total_not_found=46|this_not_found=46|below_not_found=0
+  game.n.04  pct_total=2.23|pct_this=2.13|total_hits=63419|this_hits=63386|below_hits=33|total_found=208|this_found=199|below_found=9|total_not_found=494|this_not_found=29|below_not_found=465
+    game_bird.n.01  pct_total=0.03|pct_this=0.03|total_hits=7|this_hits=7|below_hits=0|total_found=3|this_found=3|below_found=0|total_not_found=234|this_not_found=234|below_not_found=0
+    big_game.n.01  pct_total=0.06|pct_this=0.06|total_hits=26|this_hits=26|below_hits=0|total_found=6|this_found=6|below_found=0|total_not_found=231|this_not_found=231|below_not_found=0
+  fictional_animal.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+  female.n.01  pct_total=6.79|pct_this=2.01|total_hits=70428|this_hits=34030|below_hits=36398|total_found=634|this_found=188|below_found=446|total_not_found=515|this_not_found=40|below_not_found=475
+    hen.n.04  pct_total=1.57|pct_this=1.57|total_hits=7905|this_hits=7905|below_hits=0|total_found=147|this_found=147|below_found=0|total_not_found=81|this_not_found=81|below_not_found=0
+    filly.n.01  pct_total=1.46|pct_this=1.46|total_hits=2978|this_hits=2978|below_hits=0|total_found=136|this_found=136|below_found=0|total_not_found=92|this_not_found=92|below_not_found=0
+    female_mammal.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    dam.n.03  pct_total=1.74|pct_this=1.74|total_hits=25515|this_hits=25515|below_hits=0|total_found=163|this_found=163|below_found=0|total_not_found=65|this_not_found=65|below_not_found=0
+  feeder.n.06  pct_total=1.54|pct_this=1.54|total_hits=8227|this_hits=8227|below_hits=0|total_found=144|this_found=144|below_found=0|total_not_found=84|this_not_found=84|below_not_found=0
+  embryo.n.02  pct_total=1.50|pct_this=1.01|total_hits=2045|this_hits=1502|below_hits=543|total_found=140|this_found=94|below_found=46|total_not_found=1465|this_not_found=599|below_not_found=866
+    morula.n.01  pct_total=0.29|pct_this=0.29|total_hits=355|this_hits=355|below_hits=0|total_found=27|this_found=27|below_found=0|total_not_found=201|this_not_found=201|below_not_found=0
+    gastrula.n.01  pct_total=0.03|pct_this=0.03|total_hits=37|this_hits=37|below_hits=0|total_found=3|this_found=3|below_found=0|total_not_found=225|this_not_found=225|below_not_found=0
+    blastula.n.01  pct_total=0.17|pct_this=0.17|total_hits=151|this_hits=151|below_hits=0|total_found=16|this_found=16|below_found=0|total_not_found=440|this_not_found=440|below_not_found=0
+  domestic_animal.n.01  pct_total=8.31|pct_this=0.00|total_hits=225410|this_hits=0|below_hits=225410|total_found=776|this_found=0|below_found=776|total_not_found=2260|this_not_found=474|below_not_found=1786
+    stray.n.01  pct_total=1.31|pct_this=1.31|total_hits=1964|this_hits=1964|below_hits=0|total_found=122|this_found=122|below_found=0|total_not_found=106|this_not_found=106|below_not_found=0
+    stocker.n.01  pct_total=1.20|pct_this=1.20|total_hits=3799|this_hits=3799|below_hits=0|total_found=112|this_found=112|below_found=0|total_not_found=116|this_not_found=116|below_not_found=0
+    head.n.02  pct_total=1.98|pct_this=1.98|total_hits=22201|this_hits=22201|below_hits=0|total_found=185|this_found=185|below_found=0|total_not_found=43|this_not_found=43|below_not_found=0
+    feeder.n.01  pct_total=1.54|pct_this=1.54|total_hits=8227|this_hits=8227|below_hits=0|total_found=144|this_found=144|below_found=0|total_not_found=84|this_not_found=84|below_not_found=0
+    domestic_cat.n.01  pct_total=0.12|pct_this=0.12|total_hits=32|this_hits=32|below_hits=0|total_found=11|this_found=11|below_found=0|total_not_found=937|this_not_found=937|below_not_found=0
+    dog.n.01  pct_total=2.16|pct_this=2.16|total_hits=189187|this_hits=189187|below_hits=0|total_found=202|this_found=202|below_found=0|total_not_found=500|this_not_found=500|below_not_found=0
+  darter.n.02  pct_total=1.05|pct_this=1.05|total_hits=2041|this_hits=2041|below_hits=0|total_found=98|this_found=98|below_found=0|total_not_found=130|this_not_found=130|below_not_found=0
+  critter.n.01  pct_total=1.81|pct_this=1.81|total_hits=30507|this_hits=30507|below_hits=0|total_found=169|this_found=169|below_found=0|total_not_found=59|this_not_found=59|below_not_found=0
+  creepy-crawly.n.01  pct_total=0.01|pct_this=0.01|total_hits=1|this_hits=1|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=229|this_not_found=229|below_not_found=0
+  chordate.n.01  pct_total=0.30|pct_this=0.06|total_hits=193|this_hits=24|below_hits=169|total_found=28|this_found=6|below_found=22|total_not_found=1568|this_not_found=222|below_not_found=1346
+    vertebrate.n.01  pct_total=0.07|pct_this=0.07|total_hits=55|this_hits=55|below_hits=0|total_found=7|this_found=7|below_found=0|total_not_found=449|this_not_found=449|below_not_found=0
+    tunicate.n.01  pct_total=0.15|pct_this=0.15|total_hits=110|this_hits=110|below_hits=0|total_found=14|this_found=14|below_found=0|total_not_found=670|this_not_found=670|below_not_found=0
+    cephalochordate.n.01  pct_total=0.01|pct_this=0.01|total_hits=4|this_hits=4|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+  captive.n.02  pct_total=0.62|pct_this=0.62|total_hits=1054|this_hits=1054|below_hits=0|total_found=58|this_found=58|below_found=0|total_not_found=170|this_not_found=170|below_not_found=0
+  biped.n.01  pct_total=0.16|pct_this=0.16|total_hits=191|this_hits=191|below_hits=0|total_found=15|this_found=15|below_found=0|total_not_found=213|this_not_found=213|below_not_found=0
+  adult.n.02  pct_total=1.42|pct_this=1.42|total_hits=4356|this_hits=4356|below_hits=0|total_found=133|this_found=133|below_found=0|total_not_found=95|this_not_found=95|below_not_found=0
+  acrodont.n.01  pct_total=0.01|pct_this=0.01|total_hits=4|this_hits=4|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=227|this_not_found=227|below_not_found=0
+
+========================================
+
+    *** Searched Lemma ***
+
+Identifier: animal.n.01
+Synonyms: ['animal', 'animate_being', 'beast', 'brute', 'creature', 'fauna']
+Definition: a living organism characterized by voluntary movement
+Examples: []
+
+    *** Stats ***
+
+Total Passwords Searched: 40029 (100.00%)
+Total Passwords (Success): 9341 (23.34%)
+Total Passwords (Failure): 30688 (76.66%)
+Total hits for password searches: 1404651 (35.09 hits per password)
+
+Pct Found Passwords (Total): 0.25469%
+Pct Not Found Passwords (Total): 99.74531%
+Starting Time: 20190522_09.23.33
+Finishing Time: 20190522_09.29.32
