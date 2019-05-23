@@ -10,8 +10,10 @@
 - [X] Check other password brute force tools like John the Ripper or Hashcat which password variations they use
 - [X] Show classes of each lemma
 - [X] Better form of result visualization in results.txt
-- [Xg] Show synset synonyms in synset selection menu
+- [X] Show synset synonyms in synset selection menu
 - [X] Only allow nouns in synset selection menu
+- [ ] Combine all permutators with each other
+- [ ] Flush memory to the disk if the script is supposed to run for a long time
 - [ ] Create flat password lists, classify them as well
 - [X] Problem with not_found, found does not add up to total_found
 - [ ] Write paper about this

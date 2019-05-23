@@ -1,0 +1,52 @@
+
+========================================
+
+    *** Synset Distribution ***
+
+entity.n.01  pct_total=100.00|pct_this=3.24|total_hits=306835|this_hits=2391|below_hits=304444|total_found=2777|this_found=90|below_found=2687|total_not_found=5731|this_not_found=138|below_not_found=5593
+  thing.n.08  pct_total=41.56|pct_this=6.05|total_hits=209618|this_hits=19865|below_hits=189753|total_found=1154|this_found=168|below_found=986|total_not_found=1591|this_not_found=60|below_not_found=1531
+    whacker.n.01  pct_total=6.99|pct_this=6.99|total_hits=11270|this_hits=11270|below_hits=0|total_found=194|this_found=194|below_found=0|total_not_found=262|this_not_found=262|below_not_found=0
+    stinker.n.02  pct_total=6.81|pct_this=6.81|total_hits=31574|this_hits=31574|below_hits=0|total_found=189|this_found=189|below_found=0|total_not_found=39|this_not_found=39|below_not_found=0
+    security_blanket.n.01  pct_total=0.04|pct_this=0.04|total_hits=3|this_hits=3|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=236|this_not_found=236|below_not_found=0
+    pacifier.n.02  pct_total=2.59|pct_this=2.59|total_hits=1687|this_hits=1687|below_hits=0|total_found=72|this_found=72|below_found=0|total_not_found=156|this_not_found=156|below_not_found=0
+    jimdandy.n.02  pct_total=5.29|pct_this=5.29|total_hits=4736|this_hits=4736|below_hits=0|total_found=147|this_found=147|below_found=0|total_not_found=537|this_not_found=537|below_not_found=0
+    horror.n.02  pct_total=6.05|pct_this=6.05|total_hits=20222|this_hits=20222|below_hits=0|total_found=168|this_found=168|below_found=0|total_not_found=60|this_not_found=60|below_not_found=0
+    freshener.n.01  pct_total=0.32|pct_this=0.32|total_hits=59|this_hits=59|below_hits=0|total_found=9|this_found=9|below_found=0|total_not_found=219|this_not_found=219|below_not_found=0
+    change.n.06  pct_total=7.42|pct_this=7.42|total_hits=120202|this_hits=120202|below_hits=0|total_found=206|this_found=206|below_found=0|total_not_found=22|this_not_found=22|below_not_found=0
+  physical_entity.n.01  pct_total=26.00|pct_this=0.00|total_hits=46765|this_hits=0|below_hits=46765|total_found=722|this_found=0|below_found=722|total_not_found=1831|this_not_found=237|below_not_found=1594
+    thing.n.12  pct_total=6.05|pct_this=6.05|total_hits=19865|this_hits=19865|below_hits=0|total_found=168|this_found=168|below_found=0|total_not_found=60|this_not_found=60|below_not_found=0
+    substance.n.04  pct_total=2.66|pct_this=2.66|total_hits=2654|this_hits=2654|below_hits=0|total_found=74|this_found=74|below_found=0|total_not_found=154|this_not_found=154|below_not_found=0
+    process.n.06  pct_total=4.25|pct_this=4.25|total_hits=7325|this_hits=7325|below_hits=0|total_found=118|this_found=118|below_found=0|total_not_found=347|this_not_found=347|below_not_found=0
+    object.n.01  pct_total=3.93|pct_this=3.93|total_hits=1969|this_hits=1969|below_hits=0|total_found=109|this_found=109|below_found=0|total_not_found=356|this_not_found=356|below_not_found=0
+    matter.n.03  pct_total=5.55|pct_this=5.55|total_hits=12385|this_hits=12385|below_hits=0|total_found=154|this_found=154|below_found=0|total_not_found=74|this_not_found=74|below_not_found=0
+    causal_agent.n.01  pct_total=3.56|pct_this=3.56|total_hits=2567|this_hits=2567|below_hits=0|total_found=99|this_found=99|below_found=0|total_not_found=603|this_not_found=603|below_not_found=0
+  abstraction.n.06  pct_total=29.20|pct_this=0.58|total_hits=48061|this_hits=239|below_hits=47822|total_found=811|this_found=16|below_found=795|total_not_found=2171|this_not_found=449|below_not_found=1722
+    set.n.02  pct_total=5.55|pct_this=5.55|total_hits=16523|this_hits=16523|below_hits=0|total_found=154|this_found=154|below_found=0|total_not_found=74|this_not_found=74|below_not_found=0
+    relation.n.01  pct_total=3.82|pct_this=3.82|total_hits=3540|this_hits=3540|below_hits=0|total_found=106|this_found=106|below_found=0|total_not_found=122|this_not_found=122|below_not_found=0
+    psychological_feature.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
+    otherworld.n.01  pct_total=0.90|pct_this=0.90|total_hits=477|this_hits=477|below_hits=0|total_found=25|this_found=25|below_found=0|total_not_found=203|this_not_found=203|below_not_found=0
+    measure.n.02  pct_total=7.63|pct_this=7.63|total_hits=4046|this_hits=4046|below_hits=0|total_found=212|this_found=212|below_found=0|total_not_found=472|this_not_found=472|below_not_found=0
+    group.n.01  pct_total=6.63|pct_this=6.63|total_hits=15369|this_hits=15369|below_hits=0|total_found=184|this_found=184|below_found=0|total_not_found=272|this_not_found=272|below_not_found=0
+    communication.n.02  pct_total=3.46|pct_this=3.46|total_hits=7569|this_hits=7569|below_hits=0|total_found=96|this_found=96|below_found=0|total_not_found=132|this_not_found=132|below_not_found=0
+    attribute.n.02  pct_total=0.65|pct_this=0.65|total_hits=298|this_hits=298|below_hits=0|total_found=18|this_found=18|below_found=0|total_not_found=210|this_not_found=210|below_not_found=0
+
+========================================
+
+    *** Searched Lemma ***
+
+Identifier: entity.n.01
+Synonyms: ['entity']
+Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
+Examples: []
+
+    *** Stats ***
+
+Total Passwords Searched: 8508 (100.00%)
+Total Passwords (Success): 2777 (32.64%)
+Total Passwords (Failure): 5731 (67.36%)
+Total hits for password searches: 306835 (36.06 hits per password)
+
+Pct Found Passwords (Total): 0.05564%
+Pct Not Found Passwords (Total): 99.94436%
+Starting Time: 20190522_15.26.59
+Finishing Time: 20190522_15.28.03

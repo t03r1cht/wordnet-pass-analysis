@@ -210,6 +210,7 @@ def permutations_for_lemma(lemma, depth):
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
+    # TODO: Combine all permutators with each other
     for permutation_handler in permutator.all:
         # The permutator returns the permutated lemma.
         trans = permutation_handler(lemma)
@@ -544,8 +545,13 @@ def option_permutate_from_lists():
     if len(os.listdir(args.from_lists)) == 0:
         print("ERROR: Directory is empty.")
         return
-    
-    # Check if file is a text file
+
+    # Gather filenames from dir
+    dir_content = os.listdir(args.from_lists)
+    dir_txt_content = []
+    for f in dir_content:
+        if f.endswith(".txt"):
+            dir_txt_content.append(f)
 
 
 if __name__ == "__main__":

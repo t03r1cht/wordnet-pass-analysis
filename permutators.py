@@ -284,3 +284,5 @@ def upper_non_vowels(lemma):
         else:
             perm += char
     return perm
+
+# X x X combination
