@@ -15,6 +15,7 @@
 - [ ] Combine all permutators with each other
 - [ ] Flush memory to the disk if the script is supposed to run for a long time
 - [ ] Create flat password lists, classify them as well
+- [ ] Port OpenBSD/Darwin look tool to Linux
 - [X] Problem with not_found, found does not add up to total_found
 - [ ] Write paper about this
 - [ ] Visualize Wordnet with hyperbolic tree (hypertree)

@@ -1,23 +1,25 @@
-from nltk.corpus import wordnet as wn
 import nltk
 import hashlib
 import timeit
 import subprocess
-from subprocess import CalledProcessError
 import time
 import sys
 import random
-import shutil
 import signal
-from colorama import init, Fore, Back, Style
-import platform
 import os
-import datetime
 import sys
 import argparse
-from permutators import permutator_registrar, permutator
-from collections import OrderedDict
 import collections
+import platform
+import shutil
+import datetime
+
+from nltk.corpus import wordnet as wn
+from subprocess import CalledProcessError
+from colorama import init, Fore, Back, Style
+from permutators import permutator_registrar, permutator
+from combinators import combinator_registrar, combinator
+from collections import OrderedDict
 from yaspin import yaspin
 
 
@@ -57,6 +59,7 @@ total_hits_sum = 0
 total_found = 0
 total_not_found = 0
 pwned_pw_amount = 551509767
+counter = 0
 
 
 def sigint_handler(sig, frame):
@@ -70,14 +73,6 @@ def sigint_handler(sig, frame):
     print("Caught Ctrl+C, shutting down...")
     cleanup()
     sys.exit(0)
-
-
-def cleanup():
-    """
-    Some cleanup work like closing the file handler.
-    """
-    outfile_summary.close()
-    outfile_passwords.close()
 
 
 def get_shell_width():
@@ -119,6 +114,38 @@ def update_stats(current, finished):
         print("  Processing: \t%s" % current)
         print("  Done: \t%d" % finished)
         print()
+
+
+def inc_total_processed():
+    """
+    Increment the global variable to track the overall progress of processed lemmas.
+    """
+    global total_processed
+    total_processed += 1
+
+
+def inc_total_found():
+    """
+    Increment the global variable to track the passwords which could be found.
+    """
+    global total_found
+    total_found += 1
+
+
+def inc_total_not_found():
+    """
+    Increment the global variable to track the the passwords which could not be found.
+    """
+    global total_not_found
+    total_not_found += 1
+
+
+def cleanup():
+    """
+    Some cleanup work like closing the file handler.
+    """
+    outfile_summary.close()
+    outfile_passwords.close()
 
 
 def lookup_pass(hash):
@@ -178,7 +205,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         found = 0
         for lemma in hypo.lemma_names():
             # Apply a set of permutations to each lemma
-            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
                 lemma, hypo.min_depth())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
@@ -210,7 +237,6 @@ def permutations_for_lemma(lemma, depth):
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
-    # TODO: Combine all permutators with each other
     for permutation_handler in permutator.all:
         # The permutator returns the permutated lemma.
         trans = permutation_handler(lemma)
@@ -237,6 +263,42 @@ def permutations_for_lemma(lemma, depth):
             total_hits += trans_hits
 
     return total_hits, not_found_cnt, found_cnt
+
+
+def permutations_for_lemma_experimental(lemma, depth):
+    # for permutation_handler in permutator.all:
+        # Execute each handler alone before starting with combinations
+        # trans = permutation_handler(lemma)
+        # if trans == None:
+        #     pass
+        # elif type(trans) == list:
+        #     for p in trans:
+        #         lookup_experimental(p, 0)
+        # else:
+        #     lookup_experimental(trans, 0)
+    permutation_combinations_experimental(lemma)
+    print("Total permutations: %d" % counter)
+    return 0, 0, 0
+
+
+def permutation_combinations_experimental(lemma):
+    for combination_handler in combinator.all:
+        permutations = combination_handler(lemma, permutator.all)
+        for p in permutations:
+            lookup_experimental(p, 0)
+
+
+def lookup_experimental(permutation, depth):
+    global counter
+    if permutation == None:
+        pass
+    elif type(permutation) == list:
+        for p in permutation:
+            print("DEBUG: lookup: %s" % (p))
+            counter += 1
+    else:
+        print("DEBUG: lookup: %s" % (permutation))
+        counter += 1
 
 
 def lookup(permutation, depth):
@@ -271,30 +333,6 @@ def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below, 
         hits_for_lemmas[lemma.name()][1] += total_hits
     else:
         hits_for_lemmas[lemma.name()] = res_set
-
-
-def inc_total_processed():
-    """
-    Increment the global variable to track the overall progress of processed lemmas.
-    """
-    global total_processed
-    total_processed += 1
-
-
-def inc_total_found():
-    """
-    Increment the global variable to track the passwords which could be found.
-    """
-    global total_found
-    total_found += 1
-
-
-def inc_total_not_found():
-    """
-    Increment the global variable to track the the passwords which could not be found.
-    """
-    global total_not_found
-    total_not_found += 1
 
 
 def _write_result_to_passwords_file(lemma_name, lemma_depth, occurrences):
@@ -491,12 +529,13 @@ def option_lookup_passwords():
         first_level_not_found = 0
         first_level_found = 0
         for root_lemma in choice_root_syn.lemma_names():
-            hits, not_found, found = permutations_for_lemma(
+            hits, not_found, found = permutations_for_lemma_experimental(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             first_level_not_found += not_found
             first_level_found += found
         sp.ok("✔")
+        return
 
     with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
         hits_below, not_found_below, found_below = recurse_nouns_from_root(
@@ -532,26 +571,56 @@ def option_hypertree():
 
 
 def option_permutate_from_lists():
-    # Check if the specified directory is valid
-    if not args.from_lists:
-        print("ERROR: Please enter a path to a directory containing password base lists.")
-        return
-    # Check if directory exists and is a directory
-    if not os.path.isdir(args.from_lists):
-        print("ERROR: Not a directory")
-        return
+    with yaspin(text="Checking prerequisites...", color="cyan") as sp:
+        # Check if the specified directory is valid
+        if not args.from_lists:
+            sp.write(
+                "ERROR: Please enter a path to a directory containing password base lists.")
+            sp.fail("💥")
+            return
+        # Check if directory exists and is a directory
+        if not os.path.isdir(args.from_lists):
+            sp.write("ERROR: Not a directory")
+            sp.fail("💥")
+            return
 
-    # Check if directory contains at least 1 file
-    if len(os.listdir(args.from_lists)) == 0:
-        print("ERROR: Directory is empty.")
-        return
+        # Check if directory contains at least 1 file
+        if len(os.listdir(args.from_lists)) == 0:
+            sp.write("ERROR: Directory is empty.")
+            sp.fail("💥")
+            return
 
-    # Gather filenames from dir
-    dir_content = os.listdir(args.from_lists)
-    dir_txt_content = []
-    for f in dir_content:
-        if f.endswith(".txt"):
-            dir_txt_content.append(f)
+        # Gather filenames from dir
+        dir_content = os.listdir(args.from_lists)
+        dir_txt_content = []
+        for f in dir_content:
+            if f.endswith(".txt"):
+                dir_txt_content.append(f)
+
+        if len(dir_txt_content) > 0:
+            sp.write("Found %d text files in %s" %
+                     (len(dir_txt_content), args.from_lists))
+            sp.ok("✔")
+        else:
+            sp.write("Could not find any textfiles")
+            sp.fail("💥")
+
+    # Iterate over each list
+    for pass_list in dir_txt_content:
+        # Read file and iterate over words
+        try:
+            pass_file = open("%s/%s" % (args.from_lists, pass_list))
+            curr_pass_list = pass_file.readlines()
+        except Exception as e:
+            print("Failed to open file '%s'" % pass_list)
+            # Continue with next file instead of terminating the script
+            continue
+        print("%s/%s" % (args.from_lists, pass_list))
+        for password_base in curr_pass_list:
+            if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
+                continue
+            else:
+                print("\t%s" % password_base.strip("\n").strip("\r"))
 
 
 if __name__ == "__main__":
