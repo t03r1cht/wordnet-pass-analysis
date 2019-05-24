@@ -266,26 +266,37 @@ def permutations_for_lemma(lemma, depth):
 
 
 def permutations_for_lemma_experimental(lemma, depth):
-    # for permutation_handler in permutator.all:
-        # Execute each handler alone before starting with combinations
-        # trans = permutation_handler(lemma)
-        # if trans == None:
-        #     pass
-        # elif type(trans) == list:
-        #     for p in trans:
-        #         lookup_experimental(p, 0)
-        # else:
-        #     lookup_experimental(trans, 0)
-    permutation_combinations_experimental(lemma)
-    print("Total permutations: %d" % counter)
-    return 0, 0, 0
-
-
-def permutation_combinations_experimental(lemma):
+    # for combination_handler in combinator.all:
+    #     permutations = combination_handler(lemma, permutator.all)
+    #     for p in permutations:
+    #         lookup_experimental(p, 0)
+    # return 0, 0, 0
+    total_hits = 0
+    not_found_cnt = 0
+    found_cnt = 0
     for combination_handler in combinator.all:
+        # Generate all permutations
         permutations = combination_handler(lemma, permutator.all)
-        for p in permutations:
-            lookup_experimental(p, 0)
+        if permutations == None:
+            continue
+        # Combinators always return a list of permutations
+        if type(permutations) == list:
+            for p in permutations:
+                trans_hits = lookup(p, depth)
+                total_hits += trans_hits
+                if trans_hits == 0:
+                    not_found_cnt += 1
+                else:
+                    found_cnt += 1
+        else:
+            trans_hits = lookup(permutations, depth)
+            if trans_hits == 0:
+                not_found_cnt += 1
+            else:
+                found_cnt += 1
+            total_hits += trans_hits
+
+    return total_hits, not_found_cnt, found_cnt
 
 
 def lookup_experimental(permutation, depth):
@@ -535,7 +546,6 @@ def option_lookup_passwords():
             first_level_not_found += not_found
             first_level_found += found
         sp.ok("✔")
-        return
 
     with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
         hits_below, not_found_below, found_below = recurse_nouns_from_root(

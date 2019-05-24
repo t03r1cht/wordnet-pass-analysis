@@ -1,0 +1,30 @@
+
+========================================
+
+    *** Synset Distribution ***
+
+entity.n.01  pct_total=100.00|pct_this=30.10|total_hits=25658|this_hits=3412|below_hits=22246|total_found=495|this_found=149|below_found=346|total_not_found=21899|this_not_found=3455|below_not_found=18444
+  thing.n.08  pct_total=62.63|pct_this=62.63|total_hits=21815|this_hits=21815|below_hits=0|total_found=310|this_found=310|below_found=0|total_not_found=3294|this_not_found=3294|below_not_found=0
+  physical_entity.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=5791|this_not_found=5791|below_not_found=0
+  abstraction.n.06  pct_total=7.27|pct_this=7.27|total_hits=431|this_hits=431|below_hits=0|total_found=36|this_found=36|below_found=0|total_not_found=9359|this_not_found=9359|below_not_found=0
+
+========================================
+
+    *** Searched Lemma ***
+
+Identifier: entity.n.01
+Synonyms: ['entity']
+Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
+Examples: []
+
+    *** Stats ***
+
+Total Passwords Searched: 22394 (100.00%)
+Total Passwords (Success): 495 (2.21%)
+Total Passwords (Failure): 21899 (97.79%)
+Total hits for password searches: 25658 (1.15 hits per password)
+
+Pct Found Passwords (Total): 0.00465%
+Pct Not Found Passwords (Total): 99.99535%
+Starting Time: 20190524_10.01.31
+Finishing Time: 20190524_10.05.18

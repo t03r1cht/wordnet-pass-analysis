@@ -27,6 +27,22 @@ def combinator_registrar():
 combinator = combinator_registrar()
 
 
+def append_to_list(elem, elem_list):
+    """
+    Flatten nested lists since some permutators return lists.
+    If we simply append this list return value to ret_list, we have a nested list which causes trouble
+    in the lookup process.
+    """
+    if type(elem) == list:
+        for item in elem:
+            elem_list.append(item)
+    elif elem is None:
+        pass
+    else:
+        elem_list.append(elem)
+    return elem_list
+
+
 @combinator
 def no_combinations(lemma, permutator_registry):
     ret_list = []
@@ -37,10 +53,10 @@ def no_combinations(lemma, permutator_registry):
         elif type(perm) == list:
             for p in perm:
                 if p != None:
-                    ret_list.append(p)
+                    ret_list = append_to_list(p, ret_list)
         else:
             if perm != None:
-                ret_list.append(perm)
+                ret_list = append_to_list(perm, ret_list)
     return ret_list
 
 
@@ -68,9 +84,9 @@ def cxc(lemma, permutator_registry):
                 for p in current_base_permutation:
                     comb_perm = permutator(p)
                     if comb_perm != None:
-                        ret_list.append(comb_perm)
+                        ret_list = append_to_list(comb_perm, ret_list)
             else:  # If the permutator returned a single permutation
                 comb_perm = permutator(current_base_permutation)
                 if comb_perm != None:
-                    ret_list.append(comb_perm)
+                    ret_list = append_to_list(comb_perm, ret_list)
     return ret_list
