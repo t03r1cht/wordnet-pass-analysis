@@ -1,27 +1,26 @@
-import nltk
-import hashlib
-import timeit
-import subprocess
-import time
-import sys
-import random
-import signal
-import os
-import sys
 import argparse
 import collections
-import platform
-import shutil
 import datetime
-
-from nltk.corpus import wordnet as wn
-from subprocess import CalledProcessError
-from colorama import init, Fore, Back, Style
-from permutators import permutator_registrar, permutator
-from combinators import combinator_registrar, combinator
+import hashlib
+import os
+import platform
+import random
+import shutil
+import signal
+import subprocess
+import sys
+import time
+import timeit
 from collections import OrderedDict
+from subprocess import CalledProcessError
+
+import nltk
+from colorama import Back, Fore, Style, init
+from nltk.corpus import wordnet as wn
 from yaspin import yaspin
 
+from combinators import combinator, combinator_registrar
+from permutators import permutator, permutator_registrar
 
 # pip installation über py binary: py -m pip install nltk
 
@@ -60,6 +59,7 @@ total_found = 0
 total_not_found = 0
 pwned_pw_amount = 551509767
 counter = 0
+total_base_lemmas = 0  # track the total number of base lemmas
 
 
 def sigint_handler(sig, frame):
@@ -75,6 +75,33 @@ def sigint_handler(sig, frame):
     sys.exit(0)
 
 
+def _init_file_handles(started_time):
+    # Open the file handler for a file with the starting time
+    if args.summary_file_name is not None:
+        outfile_summary_name = args.summary_file_name
+    elif args.root_syn_name:
+        outfile_summary_name = "{0}_{1}_summary.txt".format(
+            started_time, args.root_syn_name)
+    else:
+        outfile_summary_name = "{0}_summary.txt".format(
+            started_time)
+
+    if args.result_file_name is not None:
+        outfile_passwords_name = args.result_file_name
+    elif args.root_syn_name:
+        outfile_passwords_name = "{0}_{1}_passwords.txt".format(
+            started_time, args.root_syn_name)
+    else:
+        outfile_passwords_name = "{0}_passwords.txt".format(
+            started_time)
+
+    global outfile_summary
+    outfile_summary = open(outfile_summary_name, "w+")
+
+    global outfile_passwords
+    outfile_passwords = open(outfile_passwords_name, "w+")
+
+
 def get_shell_width():
     """
     Return the number of colums in the current shell view.
@@ -87,7 +114,8 @@ def get_curr_time():
     """
     Return the current time as a string.
     """
-    return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
+    # return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
+    return datetime.datetime.now()
 
 
 def clear_terminal():
@@ -266,11 +294,6 @@ def permutations_for_lemma(lemma, depth):
 
 
 def permutations_for_lemma_experimental(lemma, depth):
-    # for combination_handler in combinator.all:
-    #     permutations = combination_handler(lemma, permutator.all)
-    #     for p in permutations:
-    #         lookup_experimental(p, 0)
-    # return 0, 0, 0
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
@@ -299,19 +322,6 @@ def permutations_for_lemma_experimental(lemma, depth):
     return total_hits, not_found_cnt, found_cnt
 
 
-def lookup_experimental(permutation, depth):
-    global counter
-    if permutation == None:
-        pass
-    elif type(permutation) == list:
-        for p in permutation:
-            print("DEBUG: lookup: %s" % (p))
-            counter += 1
-    else:
-        print("DEBUG: lookup: %s" % (permutation))
-        counter += 1
-
-
 def lookup(permutation, depth):
     """
     Hashes the (translated) lemma and looks it up in  the HIBP password file.
@@ -329,7 +339,6 @@ def lookup(permutation, depth):
 
     # Print the permutations to the result file.
     _write_result_to_passwords_file(permutation, depth, occurrences)
-
     # Return occurrences in order to be able to subsume them for each class.
     global total_hits_sum
     total_hits_sum += occurrences
@@ -444,6 +453,50 @@ def _write_summary_to_result_file(opts):
         sp.ok("✔")
 
 
+def _write_lists_summary_to_result_file(opts):
+    """
+    Writes the bottom lines containing the summary to the result file.
+    """
+    with yaspin(text="Writing summary to result file...", color="cyan") as sp:
+        _write_to_summary_file("")
+        _write_to_summary_file("")
+        _write_to_summary_file("    *** Stats ***")
+        _write_to_summary_file("")
+        _write_to_summary_file("")
+        _write_to_summary_file(
+            "Total Passwords Searched: {0} ({1:.2f}%)".format(total_processed,
+                                                              (total_processed / total_processed * 100)))
+        _write_to_summary_file(
+            "Total Passwords (Success): {0} ({1:.2f}%)".format(total_found,
+                                                               (total_found / total_processed * 100)))
+        _write_to_summary_file(
+            "Total Passwords (Failure): {0} ({1:.2f}%)".format(total_not_found,
+                                                               (total_not_found / total_processed * 100)))
+        _write_to_summary_file(
+            "Total hits for password searches: {0} ({1:.2f} hits per password)".format(
+                total_hits_sum, total_hits_sum / total_processed))
+        _write_to_summary_file("")
+        _write_to_summary_file("Pct Found Passwords (Total): {0:.5f}%".format(
+                               (total_hits_sum / pwned_pw_amount * 100)))
+        _write_to_summary_file("Pct Not Found Passwords (Total): {0:.5f}%".format(
+                               ((1 - (total_hits_sum / pwned_pw_amount)) * 100)))
+        _write_to_summary_file("")
+        _write_to_summary_file("Base Lemmas (Total): {0} ({1:.2f} permutations per base lemma)".format(
+            total_base_lemmas, total_processed / total_base_lemmas))
+        _write_to_summary_file("")
+        _write_to_summary_file("")
+        started_time = opts["started_time"]
+        finished_time = get_curr_time()
+        time_delta = finished_time - started_time
+        _write_to_summary_file(
+            "Average Time per Base Lemma: {0:.3f}".format(time_delta.seconds / total_base_lemmas))
+        _write_to_summary_file("Starting Time: %s" % started_time)
+        _write_to_summary_file("Finishing Time: %s" % finished_time)
+        sp.write("Writing summary to %s" % outfile_summary.name)
+        sp.write("Writing tested passwords to %s" % outfile_passwords.name)
+        sp.ok("✔")
+
+
 def _write_to_summary_file(s):
     """
     Writes generic data to the result file.
@@ -516,24 +569,8 @@ def option_lookup_passwords():
     else:
         choice_root_syn = root_synsets[0]
 
-    # Open the file handler for a file with the starting time
-    if args.summary_file_name is not None:
-        outfile_summary_name = args.summary_file_name
-    else:
-        outfile_summary_name = "{0}_{1}_summary.txt".format(
-            started_time, args.root_syn_name)
-
-    if args.result_file_name is not None:
-        outfile_passwords_name = args.result_file_name
-    else:
-        outfile_passwords_name = "{0}_{1}_passwords.txt".format(
-            started_time, args.root_syn_name)
-
-    global outfile_summary
-    outfile_summary = open(outfile_summary_name, "w+")
-
-    global outfile_passwords
-    outfile_passwords = open(outfile_passwords_name, "w+")
+    # Initiate the file handles for the result and summary file
+    _init_file_handles(started_time)
 
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
         first_level_hits = 0
@@ -581,6 +618,8 @@ def option_hypertree():
 
 
 def option_permutate_from_lists():
+    signal.signal(signal.SIGINT, sigint_handler)
+    clear_terminal()
     with yaspin(text="Checking prerequisites...", color="cyan") as sp:
         # Check if the specified directory is valid
         if not args.from_lists:
@@ -615,22 +654,44 @@ def option_permutate_from_lists():
             sp.write("Could not find any textfiles")
             sp.fail("💥")
 
+    started_time = get_curr_time()
+    # Initialize the file handles to write to
+    _init_file_handles(started_time)
+
+    # Create options dict
+    opts = {}
+    opts["started_time"] = started_time
+    opts["list_dir"] = args.from_lists
     # Iterate over each list
-    for pass_list in dir_txt_content:
-        # Read file and iterate over words
-        try:
-            pass_file = open("%s/%s" % (args.from_lists, pass_list))
-            curr_pass_list = pass_file.readlines()
-        except Exception as e:
-            print("Failed to open file '%s'" % pass_list)
-            # Continue with next file instead of terminating the script
-            continue
-        print("%s/%s" % (args.from_lists, pass_list))
-        for password_base in curr_pass_list:
-            if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
+    _write_to_summary_file("    *** Search Summary ***")
+    _write_to_summary_file("")
+    _write_to_summary_file("")
+    global total_base_lemmas
+    with yaspin(text="Processing word lists...", color="cyan") as sp:
+        for pass_list in dir_txt_content:
+            _write_to_summary_file("%s" % pass_list)
+            try:
+                pass_file = open("%s/%s" % (args.from_lists, pass_list))
+                curr_pass_list = pass_file.readlines()
+            except Exception as e:
+                print("Failed to open file '%s'" % pass_list)
+                # Continue with next file instead of terminating the script
                 continue
-            else:
-                print("\t%s" % password_base.strip("\n").strip("\r"))
+            for password_base in curr_pass_list:
+                if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
+                    continue
+                else:
+                    total_base_lemmas += 1
+                    password_base = password_base.strip("\n").strip("\r")
+                    total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
+                        password_base, 0)
+                    s = "\t%s [total_hits=%d|total_found=%d|total_not_found=%d]" % (
+                        password_base, total_hits, found_cnt, not_found_cnt)
+                    _write_to_summary_file(s)
+            sp.write("Finished %s" % pass_list)
+        sp.ok("✔")
+    _write_lists_summary_to_result_file(opts)
+    cleanup()
 
 
 if __name__ == "__main__":

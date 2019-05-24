@@ -84,10 +84,11 @@ tiptel
 
 #financial
 amex
+americanexpress
 visa
 mastercard
 
-#office supplies (en
+#office supplies (en)
 abilityone
 alera
 ataglance
