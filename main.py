@@ -118,6 +118,10 @@ def get_curr_time():
     return datetime.datetime.now()
 
 
+def get_curr_time_str():
+    return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
+
+
 def clear_terminal():
     """
     Clear the terminal. This is required to properly display the stats while running.
@@ -570,7 +574,7 @@ def option_lookup_passwords():
         choice_root_syn = root_synsets[0]
 
     # Initiate the file handles for the result and summary file
-    _init_file_handles(started_time)
+    _init_file_handles(get_curr_time_str())
 
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
         first_level_hits = 0
@@ -656,7 +660,7 @@ def option_permutate_from_lists():
 
     started_time = get_curr_time()
     # Initialize the file handles to write to
-    _init_file_handles(started_time)
+    _init_file_handles(get_curr_time_str())
 
     # Create options dict
     opts = {}
