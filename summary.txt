@@ -1,25 +1,25 @@
     *** Search Summary ***
 
 
-brands.txt
-	iiyama [total_hits=10660|total_found=157|total_not_found=71|pct_found=100.00]
-	samsung [total_hits=590205|total_found=217|total_not_found=11|pct_found=58.02]
-	ibm [total_hits=8885|total_found=126|total_not_found=102|pct_found=25.20]
-	apple [total_hits=625401|total_found=218|total_not_found=10|pct_found=30.36]
-	nokia [total_hits=211254|total_found=214|total_not_found=14|pct_found=22.96]
-	blackberry [total_hits=54710|total_found=184|total_not_found=44|pct_found=16.49]
-	fujitsu [total_hits=16519|total_found=161|total_not_found=67|pct_found=12.61]
-	cherry [total_hits=365444|total_found=212|total_not_found=16|pct_found=14.24]
-	lenovo [total_hits=24031|total_found=186|total_not_found=42|pct_found=11.10]
-	hp [total_hits=21422|total_found=187|total_not_found=41|pct_found=10.04]
-	acer [total_hits=52179|total_found=198|total_not_found=30|pct_found=9.61]
-	intel [total_hits=30771|total_found=198|total_not_found=30|pct_found=8.77]
-	amd [total_hits=7912|total_found=136|total_not_found=92|pct_found=5.68]
-	alcatel [total_hits=17903|total_found=164|total_not_found=64|pct_found=6.41]
-	lucent [total_hits=4075|total_found=120|total_not_found=108|pct_found=4.48]
-	alcatellucent [total_hits=70|total_found=3|total_not_found=225|pct_found=0.11]
-	aoc [total_hits=40673|total_found=91|total_not_found=137|pct_found=3.28]
-	print-klex [total_hits=0|total_found=0|total_not_found=230|pct_found=0.00]
+brands.txt [pct_found=100.00%|total_hits=2082114|found=2772|not_found=1334]
+  iiyama [pct_found=5.66%|total_hits=10660|found=157|not_found=71]
+  samsung [pct_found=7.83%|total_hits=590205|found=217|not_found=11]
+  ibm [pct_found=4.55%|total_hits=8885|found=126|not_found=102]
+  apple [pct_found=7.86%|total_hits=625401|found=218|not_found=10]
+  nokia [pct_found=7.72%|total_hits=211254|found=214|not_found=14]
+  blackberry [pct_found=6.64%|total_hits=54710|found=184|not_found=44]
+  fujitsu [pct_found=5.81%|total_hits=16519|found=161|not_found=67]
+  cherry [pct_found=7.65%|total_hits=365444|found=212|not_found=16]
+  lenovo [pct_found=6.71%|total_hits=24031|found=186|not_found=42]
+  hp [pct_found=6.75%|total_hits=21422|found=187|not_found=41]
+  acer [pct_found=7.14%|total_hits=52179|found=198|not_found=30]
+  intel [pct_found=7.14%|total_hits=30771|found=198|not_found=30]
+  amd [pct_found=4.91%|total_hits=7912|found=136|not_found=92]
+  alcatel [pct_found=5.92%|total_hits=17903|found=164|not_found=64]
+  lucent [pct_found=4.33%|total_hits=4075|found=120|not_found=108]
+  alcatellucent [pct_found=0.11%|total_hits=70|found=3|not_found=225]
+  aoc [pct_found=3.28%|total_hits=40673|found=91|not_found=137]
+  print-klex [pct_found=0.00%|total_hits=0|found=0|not_found=230]
 
 
     *** Stats ***
@@ -36,6 +36,6 @@ Pct Not Found Passwords (Total): 99.62247%
 Base Lemmas (Total): 18 (228.11 permutations per base lemma)
 
 
-Average Time per Base Lemma: 1.389
-Starting Time: 2019-05-29 12:31:31.177438
-Finishing Time: 2019-05-29 12:31:56.635082
+Average Time per Base Lemma: 1.222 s
+Starting Time: 2019-05-29 16:32:23.845520
+Finishing Time: 2019-05-29 16:32:45.872976

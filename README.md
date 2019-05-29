@@ -16,9 +16,9 @@
 - [x] Combine all permutators with each other
 - [x] Create flat password lists, classify them as well
 - [X] Add lemma permutation/search statistics to WordNet mode
-- [ ] Add stats for each word file (for example brands.txt had 40% of all results)
+- [X] Add stats for each word file (for example brands.txt had 40% of all results)
+- [X] Add percentages in summary file for each word in list mode
 - [ ] Add more combinators (C1xC2xC3...)
-- [ ] Add percentages in summary file for each word in list mode
 - [ ] When combining permutators, there are still some duplicate lemmas, need to be removed to not falsify the result
 - [ ] Flush memory to the disk if the script is supposed to run for a long time
 - [ ] Port OpenBSD/Darwin look tool to Linux

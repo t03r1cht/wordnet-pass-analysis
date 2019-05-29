@@ -51,6 +51,7 @@ args = parser.parse_args()
 started = ""
 permutation_handler = None
 hits_for_lemmas = OrderedDict()
+hits_for_list_lemmas = OrderedDict()
 
 # For tracking progress
 total_processed = 0
@@ -76,9 +77,7 @@ def sigint_handler(sig, frame):
 
 
 def _init_file_handles(started_time):
-    """
-    Open the file handler for the result/summary file.
-    """
+    # Open the file handler for a file with the starting time
     if args.summary_file_name is not None:
         outfile_summary_name = args.summary_file_name
     elif args.root_syn_name:
@@ -114,16 +113,13 @@ def get_shell_width():
 
 def get_curr_time():
     """
-    Return the current time as a timestamp.
+    Return the current time as a string.
     """
     # return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
     return datetime.datetime.now()
 
 
 def get_curr_time_str():
-    """
-    Return the current time as a string.
-    """
     return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
 
 
@@ -242,9 +238,9 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         not_found = 0
         found = 0
         for lemma in hypo.lemma_names():
-            # Apply a set of permutations to each lemma
             total_base_lemmas += 1
-            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+            # Apply a set of permutations to each lemma
+            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
                 lemma, hypo.min_depth())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
@@ -271,9 +267,40 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
 
 def permutations_for_lemma(lemma, depth):
     """
-    Create multiple permutations for the passed lemma by combining combinators 
-    in different ways with each other
+    Create all permutatuons by using the registered permutator using the lemma as base.
     """
+    total_hits = 0
+    not_found_cnt = 0
+    found_cnt = 0
+    for permutation_handler in permutator.all:
+        # The permutator returns the permutated lemma.
+        trans = permutation_handler(lemma)
+        # In case some permutators could not be applied to the lemma
+        # For example when a lemma solely consists of vowels and one permutator strips vowels.
+        # That would leave us with a NoneType password.
+        if trans == None:
+            continue
+        # In some cases, permutator may return a variable list of permutations.
+        if type(trans) == list:
+            for p in trans:
+                trans_hits = lookup(p, depth)
+                total_hits += trans_hits
+                if trans_hits == 0:
+                    not_found_cnt += 1
+                else:
+                    found_cnt += 1
+        else:
+            trans_hits = lookup(trans, depth)
+            if trans_hits == 0:
+                not_found_cnt += 1
+            else:
+                found_cnt += 1
+            total_hits += trans_hits
+
+    return total_hits, not_found_cnt, found_cnt
+
+
+def permutations_for_lemma_experimental(lemma, depth):
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
@@ -304,7 +331,7 @@ def permutations_for_lemma(lemma, depth):
 
 def lookup(permutation, depth):
     """
-    Hashes the lemma and looks it up in  the HIBP password file.
+    Hashes the (translated) lemma and looks it up in  the HIBP password file.
     """
     # Hash and lookup translated lemma
     hashed_lemma = hash_sha1(permutation)
@@ -326,10 +353,6 @@ def lookup(permutation, depth):
 
 
 def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below, found, found_below):
-    """
-    Append hits of a lookup to the global hits_for_lemmas dict which will be used to print the classification
-    in the summary.
-    """
     global hits_for_lemmas
     res_set = [lemma, total_hits, below_hits,
                not_found, not_found_below, found, found_below]
@@ -349,7 +372,7 @@ def _write_result_to_passwords_file(lemma_name, lemma_depth, occurrences):
 
 def _write_summary_to_result_file(opts):
     """
-    Writes the bottom lines containing the summary to the result file for the WordNet mode.
+    Writes the bottom lines containing the summary to the result file.
     """
 
     with yaspin(text="Writing summary to result file...", color="cyan") as sp:
@@ -433,11 +456,12 @@ def _write_summary_to_result_file(opts):
         _write_to_summary_file("Base Lemmas (Total): {0} ({1:.2f} permutations per base lemma)".format(
             total_base_lemmas, total_processed / total_base_lemmas))
         _write_to_summary_file("")
+        _write_to_summary_file("")
         started_time = opts["started_time"]
         finished_time = get_curr_time()
         time_delta = finished_time - started_time
         _write_to_summary_file(
-            "Average Time per Base Lemma: {0:.3f}".format(time_delta.seconds / total_base_lemmas))
+            "Average Time per Base Lemma: {0:.3f} s".format(time_delta.seconds / total_base_lemmas))
         _write_to_summary_file("Starting Time: %s" % started_time)
         _write_to_summary_file("Finishing Time: %s" % finished_time)
         sp.write("Writing summary to %s" % outfile_summary.name)
@@ -447,9 +471,48 @@ def _write_summary_to_result_file(opts):
 
 def _write_lists_summary_to_result_file(opts):
     """
-    Writes the bottom lines containing the summary to the result file for word lists mode.
+    Writes the bottom lines containing the summary to the result file.
     """
     with yaspin(text="Writing summary to result file...", color="cyan") as sp:
+        _write_to_summary_file("    *** Search Summary ***")
+        _write_to_summary_file("")
+        _write_to_summary_file("")
+        for word_list in hits_for_list_lemmas:
+            # items() returns a tuple key-value pair with index 0 being the key and index 1 being the value
+            # Write stats for file
+            list_total_hits = hits_for_list_lemmas[word_list]["_total_hits"]
+            list_found_count = hits_for_list_lemmas[word_list]["_found_count"]
+            list_not_found_count = hits_for_list_lemmas[word_list]["_not_found_count"]
+            pct_found = list_found_count / total_found * 100
+
+            _write_to_summary_file(
+                "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
+                    word_list,
+                    pct_found,
+                    list_total_hits,
+                    list_found_count,
+                    list_not_found_count))
+
+            # Write stats for each word of the file
+
+            # create list without the fields that start with "_" containing values used for the file stats entry (see above)
+            lemma_only_list = []
+
+            for item in hits_for_list_lemmas[word_list].items():
+                if not item[0].startswith("_"):
+                    lemma_only_list.append(item)
+
+            # for dict_item in hits_for_list_lemmas[word_list].items():
+            for dict_item in lemma_only_list:
+                lemma_name = dict_item[0]
+                value_array = dict_item[1]
+                total_hits_loc = value_array[0]
+                found_count_loc = value_array[1]
+                not_found_count_loc = value_array[2]
+                pct_found_lemma = found_count_loc / total_found * 100
+                _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|found={2}|not_found={3}]".format(
+                    lemma_name, total_hits_loc, found_count_loc, not_found_count_loc, pct_found_lemma))
+
         _write_to_summary_file("")
         _write_to_summary_file("")
         _write_to_summary_file("    *** Stats ***")
@@ -481,7 +544,7 @@ def _write_lists_summary_to_result_file(opts):
         finished_time = get_curr_time()
         time_delta = finished_time - started_time
         _write_to_summary_file(
-            "Average Time per Base Lemma: {0:.3f}".format(time_delta.seconds / total_base_lemmas))
+            "Average Time per Base Lemma: {0:.3f} s".format(time_delta.seconds / total_base_lemmas))
         _write_to_summary_file("Starting Time: %s" % started_time)
         _write_to_summary_file("Finishing Time: %s" % finished_time)
         sp.write("Writing summary to %s" % outfile_summary.name)
@@ -504,9 +567,6 @@ def _write_to_passwords_file(s):
 
 
 def prompt_synset_choice(root_synsets):
-    """
-    In case the user chose a word which corresponds to multiple synsets, prompt the user for a choice.
-    """
     print("  Multiple synset were found. Please choose: ")
     for elem in range(len(root_synsets)):
         print("    [{0}] Name: {1}, Synonyms: {2}".format(
@@ -566,16 +626,14 @@ def option_lookup_passwords():
 
     # Initiate the file handles for the result and summary file
     _init_file_handles(get_curr_time_str())
-
-    # Lookup the starting synset, since "recurse_nouns_from_root" only processes the hyponyms of the passed synset.
+    global total_base_lemmas
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
         first_level_hits = 0
         first_level_not_found = 0
         first_level_found = 0
-        global total_base_lemmas
         for root_lemma in choice_root_syn.lemma_names():
             total_base_lemmas += 1
-            hits, not_found, found = permutations_for_lemma(
+            hits, not_found, found = permutations_for_lemma_experimental(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             first_level_not_found += not_found
@@ -606,9 +664,6 @@ def option_lookup_passwords():
 
 
 def option_hypertree():
-    """
-    On hold. Subject to deletion.
-    """
     # import igraph instead of jgraph
     import jgraph
     from h3.tree import Tree
@@ -619,9 +674,6 @@ def option_hypertree():
 
 
 def option_permutate_from_lists():
-    """
-    Use word lists as base words to generate multiple passwords.
-    """
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
     with yaspin(text="Checking prerequisites...", color="cyan") as sp:
@@ -667,13 +719,9 @@ def option_permutate_from_lists():
     opts["started_time"] = started_time
     opts["list_dir"] = args.from_lists
     # Iterate over each list
-    _write_to_summary_file("    *** Search Summary ***")
-    _write_to_summary_file("")
-    _write_to_summary_file("")
     global total_base_lemmas
     with yaspin(text="Processing word lists...", color="cyan") as sp:
         for pass_list in dir_txt_content:
-            _write_to_summary_file("%s" % pass_list)
             try:
                 pass_file = open("%s/%s" % (args.from_lists, pass_list))
                 curr_pass_list = pass_file.readlines()
@@ -687,16 +735,42 @@ def option_permutate_from_lists():
                 else:
                     total_base_lemmas += 1
                     password_base = password_base.strip("\n").strip("\r")
-                    total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+                    total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
                         password_base, 0)
-                    s = "\t{0} [total_hits={1}|total_found={2}|total_not_found={3}|pct_found={4:.2f}]".format(
-                        password_base, total_hits, found_cnt, not_found_cnt,
-                        (found_cnt / total_found) * 100)
-                    _write_to_summary_file(s)
+                    # s = "\t%s [total_hits=%d|total_found=%d|total_not_found=%d]" % (
+                    #     password_base, total_hits, found_cnt, not_found_cnt)
+                    # _write_to_summary_file(s)
+                    append_list_lemma_to_list(
+                        pass_list, password_base, total_hits, found_cnt, not_found_cnt)
             sp.write("Finished %s" % pass_list)
         sp.ok("✔")
     _write_lists_summary_to_result_file(opts)
     cleanup()
+
+
+def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_found_count):
+    global hits_for_list_lemmas
+    content = [total_hits, found_count, not_found_count]
+    if not list_name in hits_for_list_lemmas:
+        hits_for_list_lemmas[list_name] = {}
+
+    hits_for_list_lemmas[list_name][lemma] = content
+    # Update the total stats for the file
+    # Add the total hits to the file total hits
+    if not "_total_hits" in hits_for_list_lemmas[list_name]:
+        hits_for_list_lemmas[list_name]["_total_hits"] = total_hits
+    else:
+        hits_for_list_lemmas[list_name]["_total_hits"] += total_hits
+
+    if not "_found_count" in hits_for_list_lemmas[list_name]:
+        hits_for_list_lemmas[list_name]["_found_count"] = found_count
+    else:
+        hits_for_list_lemmas[list_name]["_found_count"] += found_count
+
+    if not "_not_found_count" in hits_for_list_lemmas[list_name]:
+        hits_for_list_lemmas[list_name]["_not_found_count"] = not_found_count
+    else:
+        hits_for_list_lemmas[list_name]["_not_found_count"] += not_found_count
 
 
 if __name__ == "__main__":
