@@ -76,7 +76,9 @@ def sigint_handler(sig, frame):
 
 
 def _init_file_handles(started_time):
-    # Open the file handler for a file with the starting time
+    """
+    Open the file handler for the result/summary file.
+    """
     if args.summary_file_name is not None:
         outfile_summary_name = args.summary_file_name
     elif args.root_syn_name:
@@ -112,13 +114,16 @@ def get_shell_width():
 
 def get_curr_time():
     """
-    Return the current time as a string.
+    Return the current time as a timestamp.
     """
     # return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
     return datetime.datetime.now()
 
 
 def get_curr_time_str():
+    """
+    Return the current time as a string.
+    """
     return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
 
 
@@ -237,7 +242,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         found = 0
         for lemma in hypo.lemma_names():
             # Apply a set of permutations to each lemma
-            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
+            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                 lemma, hypo.min_depth())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
@@ -264,40 +269,9 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
 
 def permutations_for_lemma(lemma, depth):
     """
-    Create all permutatuons by using the registered permutator using the lemma as base.
+    Create multiple permutations for the passed lemma by combining combinators 
+    in different ways with each other
     """
-    total_hits = 0
-    not_found_cnt = 0
-    found_cnt = 0
-    for permutation_handler in permutator.all:
-        # The permutator returns the permutated lemma.
-        trans = permutation_handler(lemma)
-        # In case some permutators could not be applied to the lemma
-        # For example when a lemma solely consists of vowels and one permutator strips vowels.
-        # That would leave us with a NoneType password.
-        if trans == None:
-            continue
-        # In some cases, permutator may return a variable list of permutations.
-        if type(trans) == list:
-            for p in trans:
-                trans_hits = lookup(p, depth)
-                total_hits += trans_hits
-                if trans_hits == 0:
-                    not_found_cnt += 1
-                else:
-                    found_cnt += 1
-        else:
-            trans_hits = lookup(trans, depth)
-            if trans_hits == 0:
-                not_found_cnt += 1
-            else:
-                found_cnt += 1
-            total_hits += trans_hits
-
-    return total_hits, not_found_cnt, found_cnt
-
-
-def permutations_for_lemma_experimental(lemma, depth):
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
@@ -350,6 +324,10 @@ def lookup(permutation, depth):
 
 
 def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below, found, found_below):
+    """
+    Append hits of a lookup to the global hits_for_lemmas dict which will be used to print the classification
+    in the summary.
+    """
     global hits_for_lemmas
     res_set = [lemma, total_hits, below_hits,
                not_found, not_found_below, found, found_below]
@@ -369,7 +347,7 @@ def _write_result_to_passwords_file(lemma_name, lemma_depth, occurrences):
 
 def _write_summary_to_result_file(opts):
     """
-    Writes the bottom lines containing the summary to the result file.
+    Writes the bottom lines containing the summary to the result file for the WordNet mode.
     """
 
     with yaspin(text="Writing summary to result file...", color="cyan") as sp:
@@ -459,7 +437,7 @@ def _write_summary_to_result_file(opts):
 
 def _write_lists_summary_to_result_file(opts):
     """
-    Writes the bottom lines containing the summary to the result file.
+    Writes the bottom lines containing the summary to the result file for word lists mode.
     """
     with yaspin(text="Writing summary to result file...", color="cyan") as sp:
         _write_to_summary_file("")
@@ -516,6 +494,9 @@ def _write_to_passwords_file(s):
 
 
 def prompt_synset_choice(root_synsets):
+    """
+    In case the user chose a word which corresponds to multiple synsets, prompt the user for a choice.
+    """
     print("  Multiple synset were found. Please choose: ")
     for elem in range(len(root_synsets)):
         print("    [{0}] Name: {1}, Synonyms: {2}".format(
@@ -581,7 +562,7 @@ def option_lookup_passwords():
         first_level_not_found = 0
         first_level_found = 0
         for root_lemma in choice_root_syn.lemma_names():
-            hits, not_found, found = permutations_for_lemma_experimental(
+            hits, not_found, found = permutations_for_lemma(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             first_level_not_found += not_found
@@ -612,6 +593,9 @@ def option_lookup_passwords():
 
 
 def option_hypertree():
+    """
+    On hold. Subject to deletion.
+    """
     # import igraph instead of jgraph
     import jgraph
     from h3.tree import Tree
@@ -622,6 +606,9 @@ def option_hypertree():
 
 
 def option_permutate_from_lists():
+    """
+    Use word lists as base words to generate multiple passwords.
+    """
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
     with yaspin(text="Checking prerequisites...", color="cyan") as sp:
@@ -687,7 +674,7 @@ def option_permutate_from_lists():
                 else:
                     total_base_lemmas += 1
                     password_base = password_base.strip("\n").strip("\r")
-                    total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
+                    total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                         password_base, 0)
                     s = "\t%s [total_hits=%d|total_found=%d|total_not_found=%d]" % (
                         password_base, total_hits, found_cnt, not_found_cnt)
