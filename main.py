@@ -236,12 +236,14 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     total_hits_for_current_synset = 0
     not_found_for_current_synset = 0
     found_for_current_synset = 0
+    global total_base_lemmas
     for hypo in curr_root_syn.hyponyms():
         total_hits = 0
         not_found = 0
         found = 0
         for lemma in hypo.lemma_names():
             # Apply a set of permutations to each lemma
+            total_base_lemmas += 1
             lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                 lemma, hypo.min_depth())
             total_hits += lemma_hits
@@ -302,7 +304,7 @@ def permutations_for_lemma(lemma, depth):
 
 def lookup(permutation, depth):
     """
-    Hashes the (translated) lemma and looks it up in  the HIBP password file.
+    Hashes the lemma and looks it up in  the HIBP password file.
     """
     # Hash and lookup translated lemma
     hashed_lemma = hash_sha1(permutation)
@@ -427,8 +429,17 @@ def _write_summary_to_result_file(opts):
                                (total_hits_sum / pwned_pw_amount * 100)))
         _write_to_summary_file("Pct Not Found Passwords (Total): {0:.5f}%".format(
                                ((1 - (total_hits_sum / pwned_pw_amount)) * 100)))
+        _write_to_summary_file("")
+        _write_to_summary_file("Base Lemmas (Total): {0} ({1:.2f} permutations per base lemma)".format(
+            total_base_lemmas, total_processed / total_base_lemmas))
+        _write_to_summary_file("")
+        _write_to_summary_file("")
+        started_time = opts["started_time"]
         finished_time = get_curr_time()
-        _write_to_summary_file("Starting Time: %s" % opts["started_time"])
+        time_delta = finished_time - started_time
+        _write_to_summary_file(
+            "Average Time per Base Lemma: {0:.3f}".format(time_delta.seconds / total_base_lemmas))
+        _write_to_summary_file("Starting Time: %s" % started_time)
         _write_to_summary_file("Finishing Time: %s" % finished_time)
         sp.write("Writing summary to %s" % outfile_summary.name)
         sp.write("Writing tested passwords to %s" % outfile_passwords.name)
@@ -562,7 +573,9 @@ def option_lookup_passwords():
         first_level_hits = 0
         first_level_not_found = 0
         first_level_found = 0
+        global total_base_lemmas
         for root_lemma in choice_root_syn.lemma_names():
+            total_base_lemmas += 1
             hits, not_found, found = permutations_for_lemma(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits

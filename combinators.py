@@ -63,7 +63,7 @@ def no_combinations(lemma, permutator_registry):
 @combinator
 def cxc(lemma, permutator_registry):
     ret_list = []
-    for permutation_handler in permutator_registry:
+    for permutation_handler in permutator_registry[9:11]:
         trans = permutation_handler(lemma)
         # Create a list with all permutators except me (the current iteration of all permutatos (see outer loop))
         exc_me = []

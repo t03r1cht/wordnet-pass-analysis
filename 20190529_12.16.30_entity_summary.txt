@@ -26,10 +26,6 @@ Total hits for password searches: 22495 (19.43 hits per password)
 
 Pct Found Passwords (Total): 0.00408%
 Pct Not Found Passwords (Total): 99.99592%
-
-Base Lemmas (Total): 5 (231.60 permutations per base lemma)
-
-
-Average Time per Base Lemma: 1.600
-Starting Time: 2019-05-29 12:18:38.972887
-Finishing Time: 2019-05-29 12:18:47.399073
+Average Time per Base Lemma: 1.800
+Starting Time: 2019-05-29 12:16:28.424579
+Finishing Time: 2019-05-29 12:16:37.695833
