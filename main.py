@@ -557,6 +557,7 @@ def option_lookup_passwords():
     # Initiate the file handles for the result and summary file
     _init_file_handles(get_curr_time_str())
 
+    # Lookup the starting synset, since "recurse_nouns_from_root" only processes the hyponyms of the passed synset.
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
         first_level_hits = 0
         first_level_not_found = 0
