@@ -1,1158 +1,4106 @@
-entity 1092
-ENTITY 46
-3nt1ty 18
-entity1950 0
-entity1951 0
-entity1952 0
-entity1953 0
-entity1954 0
-entity1955 0
-entity1956 0
-entity1957 0
-entity1958 0
-entity1959 0
-entity1960 0
-entity1961 0
-entity1962 0
-entity1963 0
-entity1964 0
-entity1965 0
-entity1966 0
-entity1967 0
-entity1968 0
-entity1969 0
-entity1970 0
-entity1971 9
-entity1972 0
-entity1973 0
-entity1974 3
-entity1975 0
-entity1976 15
-entity1977 0
-entity1978 0
-entity1979 0
-entity1980 0
-entity1981 0
-entity1982 8
-entity1983 0
-entity1984 3
-entity1985 0
-entity1986 0
-entity1987 3
-entity1988 0
-entity1989 0
-entity1990 0
-entity1991 0
-entity1992 1
-entity1993 0
-entity1994 0
-entity1995 0
-entity1996 0
-entity1997 1
-entity1998 0
-entity1999 0
-entity2000 3
-entity2001 0
-entity2002 1
-entity2003 0
-entity2004 0
-entity2005 17
-entity2006 7
-entity2007 0
-entity2008 11
-entity2009 0
-entity2010 7
-entity2011 0
-entity2012 3
-entity2013 1
-entity2014 0
-entity2015 0
-entity2016 0
-entity2017 0
-entity2018 0
-entity2019 0
-entity0 22
-entity1 407
-entity2 16
-entity3 15
-entity4 24
-entity5 3
-entity6 5
-entity7 45
-entity8 6
-entity9 19
-entity10 12
-entity11 13
-entity12 33
-entity13 32
-entity14 1
-entity15 1
-entity16 1
-entity17 3
-entity18 1
-entity19 8
-entity20 14
-entity21 14
-entity22 8
-entity23 15
-entity24 3
-entity25 2
-entity26 5
-entity27 11
-entity28 0
-entity29 3
-entity30 2
-entity31 0
-entity32 0
-entity33 4
-entity34 0
-entity35 0
-entity36 0
-entity37 0
-entity38 0
-entity39 0
-entity40 0
-entity41 1
-entity42 8
-entity43 0
-entity44 24
-entity45 0
-entity46 0
-entity47 0
-entity48 6
-entity49 0
-entity50 0
-entity51 0
-entity52 0
-entity53 1
-entity54 2
-entity55 7
-entity56 0
-entity57 0
-entity58 0
-entity59 0
-entity60 0
-entity61 0
-entity62 0
-entity63 0
-entity64 9
-entity65 2
-entity66 0
-entity67 0
-entity68 3
-entity69 8
-entity70 0
-entity71 1
-entity72 0
-entity73 0
-entity74 8
-entity75 0
-entity76 2
-entity77 29
-entity78 3
-entity79 15
-entity80 3
-entity81 5
-entity82 0
-entity83 13
-entity84 4
-entity85 7
-entity86 1
-entity87 3
-entity88 21
-entity89 15
-entity90 4
-entity91 4
-entity92 0
-entity93 3
-entity94 0
-entity95 0
-entity96 1
-entity97 0
-entity98 5
-entity99 4
-ntty 0
-Entity 71
-entity123 41
-entity1234 0
-entity12345 0
-entity123456 0
-entity1234567 0
-entity12345678 0
-entity123456789 0
-entity1234567890 0
-123entity 0
-1234entity 0
-12345entity 0
-123456entity 0
-1234567entity 0
-12345678entity 0
-123456789entity 0
-1234567890entity 0
-entity! 30
-entity@ 1
-entity# 0
-entity$ 0
-entity% 0
-entity^ 0
-entity& 0
-entity* 6
-entity? 0
-entity. 14
-entity, 0
-entity-_ 0
-entity+ 0
-!entity 0
-@entity 0
-#entity 0
-$entity 0
-%entity 0
-^entity 0
-&entity 0
-*entity 0
-?entity 0
-.entity 0
-,entity 0
--_entity 0
-+entity 0
-entityentity 7
-e_n_t_i_t_y 0
-e-n-t-i-t-y 0
-e.n.t.i.t.y 0
-e,n,t,i,t,y 0
-e#n#t#i#t#y 0
-e*n*t*i*t*y 0
-e+n+t+i+t+y 0
-ytitne 2
-EntIty 0
-eNTiTY 0
-  abstraction 163
-  ABSTRACTION 2
-  485tr4ct10n 0
-  abstraction1950 0
-  abstraction1951 0
-  abstraction1952 0
-  abstraction1953 0
-  abstraction1954 0
-  abstraction1955 0
-  abstraction1956 0
-  abstraction1957 0
-  abstraction1958 0
-  abstraction1959 0
-  abstraction1960 0
-  abstraction1961 0
-  abstraction1962 0
-  abstraction1963 0
-  abstraction1964 0
-  abstraction1965 0
-  abstraction1966 0
-  abstraction1967 0
-  abstraction1968 0
-  abstraction1969 0
-  abstraction1970 0
-  abstraction1971 0
-  abstraction1972 0
-  abstraction1973 0
-  abstraction1974 0
-  abstraction1975 0
-  abstraction1976 0
-  abstraction1977 0
-  abstraction1978 0
-  abstraction1979 0
-  abstraction1980 0
-  abstraction1981 0
-  abstraction1982 0
-  abstraction1983 0
-  abstraction1984 0
-  abstraction1985 0
-  abstraction1986 0
-  abstraction1987 0
-  abstraction1988 0
-  abstraction1989 4
-  abstraction1990 0
-  abstraction1991 0
-  abstraction1992 0
-  abstraction1993 0
-  abstraction1994 0
-  abstraction1995 0
-  abstraction1996 0
-  abstraction1997 0
-  abstraction1998 0
-  abstraction1999 0
-  abstraction2000 0
-  abstraction2001 0
-  abstraction2002 0
-  abstraction2003 0
-  abstraction2004 0
-  abstraction2005 0
-  abstraction2006 0
-  abstraction2007 0
-  abstraction2008 1
-  abstraction2009 0
-  abstraction2010 1
-  abstraction2011 0
-  abstraction2012 2
-  abstraction2013 0
-  abstraction2014 0
-  abstraction2015 0
-  abstraction2016 0
-  abstraction2017 0
-  abstraction2018 0
-  abstraction2019 0
-  abstraction0 0
-  abstraction1 10
-  abstraction2 2
-  abstraction3 0
-  abstraction4 0
-  abstraction5 0
-  abstraction6 1
-  abstraction7 0
-  abstraction8 0
-  abstraction9 0
-  abstraction10 0
-  abstraction11 2
-  abstraction12 0
-  abstraction13 2
-  abstraction14 0
-  abstraction15 0
-  abstraction16 0
-  abstraction17 0
-  abstraction18 0
-  abstraction19 0
-  abstraction20 0
-  abstraction21 0
-  abstraction22 0
-  abstraction23 0
-  abstraction24 0
-  abstraction25 0
-  abstraction26 0
-  abstraction27 0
-  abstraction28 0
-  abstraction29 0
-  abstraction30 0
-  abstraction31 0
-  abstraction32 0
-  abstraction33 0
-  abstraction34 0
-  abstraction35 0
-  abstraction36 0
-  abstraction37 0
-  abstraction38 0
-  abstraction39 0
-  abstraction40 0
-  abstraction41 0
-  abstraction42 0
-  abstraction43 0
-  abstraction44 0
-  abstraction45 0
-  abstraction46 0
-  abstraction47 0
-  abstraction48 0
-  abstraction49 0
-  abstraction50 0
-  abstraction51 0
-  abstraction52 0
-  abstraction53 0
-  abstraction54 1
-  abstraction55 0
-  abstraction56 0
-  abstraction57 0
-  abstraction58 0
-  abstraction59 0
-  abstraction60 0
-  abstraction61 0
-  abstraction62 0
-  abstraction63 0
-  abstraction64 0
-  abstraction65 0
-  abstraction66 0
-  abstraction67 0
-  abstraction68 0
-  abstraction69 2
-  abstraction70 0
-  abstraction71 0
-  abstraction72 0
-  abstraction73 0
-  abstraction74 0
-  abstraction75 0
-  abstraction76 0
-  abstraction77 0
-  abstraction78 0
-  abstraction79 0
-  abstraction80 0
-  abstraction81 0
-  abstraction82 0
-  abstraction83 0
-  abstraction84 0
-  abstraction85 0
-  abstraction86 0
-  abstraction87 0
-  abstraction88 6
-  abstraction89 0
-  abstraction90 0
-  abstraction91 0
-  abstraction92 0
-  abstraction93 0
-  abstraction94 0
-  abstraction95 0
-  abstraction96 0
-  abstraction97 0
-  abstraction98 0
-  abstraction99 0
-  bstrctn 0
-  Abstraction 38
-  abstraction123 0
-  abstraction1234 0
-  abstraction12345 0
-  abstraction123456 0
-  abstraction1234567 0
-  abstraction12345678 0
-  abstraction123456789 0
-  abstraction1234567890 0
-  123abstraction 0
-  1234abstraction 0
-  12345abstraction 0
-  123456abstraction 0
-  1234567abstraction 0
-  12345678abstraction 0
-  123456789abstraction 0
-  1234567890abstraction 0
-  abstraction! 2
-  abstraction@ 0
-  abstraction# 0
-  abstraction$ 0
-  abstraction% 0
-  abstraction^ 0
-  abstraction& 0
-  abstraction* 0
-  abstraction? 0
-  abstraction. 0
-  abstraction, 0
-  abstraction-_ 0
-  abstraction+ 0
-  !abstraction 0
-  @abstraction 0
-  #abstraction 0
-  $abstraction 0
-  %abstraction 0
-  ^abstraction 0
-  &abstraction 0
-  *abstraction 0
-  ?abstraction 0
-  .abstraction 0
-  ,abstraction 0
-  -_abstraction 0
-  +abstraction 0
-  abstractionabstraction 0
-  a_b_s_t_r_a_c_t_i_o_n 0
-  a-b-s-t-r-a-c-t-i-o-n 0
-  a.b.s.t.r.a.c.t.i.o.n 0
-  a,b,s,t,r,a,c,t,i,o,n 0
-  a#b#s#t#r#a#c#t#i#o#n 0
-  a*b*s*t*r*a*c*t*i*o*n 0
-  a+b+s+t+r+a+c+t+i+o+n 0
-  noitcartsba 0
-  AbstrActIOn 0
-  aBSTRaCTioN 0
-  abstract_entity 0
-  ABSTRACT_ENTITY 0
-  485tr4ct_3nt1ty 0
-  abstract_entity1950 0
-  abstract_entity1951 0
-  abstract_entity1952 0
-  abstract_entity1953 0
-  abstract_entity1954 0
-  abstract_entity1955 0
-  abstract_entity1956 0
-  abstract_entity1957 0
-  abstract_entity1958 0
-  abstract_entity1959 0
-  abstract_entity1960 0
-  abstract_entity1961 0
-  abstract_entity1962 0
-  abstract_entity1963 0
-  abstract_entity1964 0
-  abstract_entity1965 0
-  abstract_entity1966 0
-  abstract_entity1967 0
-  abstract_entity1968 0
-  abstract_entity1969 0
-  abstract_entity1970 0
-  abstract_entity1971 0
-  abstract_entity1972 0
-  abstract_entity1973 0
-  abstract_entity1974 0
-  abstract_entity1975 0
-  abstract_entity1976 0
-  abstract_entity1977 0
-  abstract_entity1978 0
-  abstract_entity1979 0
-  abstract_entity1980 0
-  abstract_entity1981 0
-  abstract_entity1982 0
-  abstract_entity1983 0
-  abstract_entity1984 0
-  abstract_entity1985 0
-  abstract_entity1986 0
-  abstract_entity1987 0
-  abstract_entity1988 0
-  abstract_entity1989 0
-  abstract_entity1990 0
-  abstract_entity1991 0
-  abstract_entity1992 0
-  abstract_entity1993 0
-  abstract_entity1994 0
-  abstract_entity1995 0
-  abstract_entity1996 0
-  abstract_entity1997 0
-  abstract_entity1998 0
-  abstract_entity1999 0
-  abstract_entity2000 0
-  abstract_entity2001 0
-  abstract_entity2002 0
-  abstract_entity2003 0
-  abstract_entity2004 0
-  abstract_entity2005 0
-  abstract_entity2006 0
-  abstract_entity2007 0
-  abstract_entity2008 0
-  abstract_entity2009 0
-  abstract_entity2010 0
-  abstract_entity2011 0
-  abstract_entity2012 0
-  abstract_entity2013 0
-  abstract_entity2014 0
-  abstract_entity2015 0
-  abstract_entity2016 0
-  abstract_entity2017 0
-  abstract_entity2018 0
-  abstract_entity2019 0
-  abstract_entity0 0
-  abstract_entity1 0
-  abstract_entity2 0
-  abstract_entity3 0
-  abstract_entity4 0
-  abstract_entity5 0
-  abstract_entity6 0
-  abstract_entity7 0
-  abstract_entity8 0
-  abstract_entity9 0
-  abstract_entity10 0
-  abstract_entity11 0
-  abstract_entity12 0
-  abstract_entity13 0
-  abstract_entity14 0
-  abstract_entity15 0
-  abstract_entity16 0
-  abstract_entity17 0
-  abstract_entity18 0
-  abstract_entity19 0
-  abstract_entity20 0
-  abstract_entity21 0
-  abstract_entity22 0
-  abstract_entity23 0
-  abstract_entity24 0
-  abstract_entity25 0
-  abstract_entity26 0
-  abstract_entity27 0
-  abstract_entity28 0
-  abstract_entity29 0
-  abstract_entity30 0
-  abstract_entity31 0
-  abstract_entity32 0
-  abstract_entity33 0
-  abstract_entity34 0
-  abstract_entity35 0
-  abstract_entity36 0
-  abstract_entity37 0
-  abstract_entity38 0
-  abstract_entity39 0
-  abstract_entity40 0
-  abstract_entity41 0
-  abstract_entity42 0
-  abstract_entity43 0
-  abstract_entity44 0
-  abstract_entity45 0
-  abstract_entity46 0
-  abstract_entity47 0
-  abstract_entity48 0
-  abstract_entity49 0
-  abstract_entity50 0
-  abstract_entity51 0
-  abstract_entity52 0
-  abstract_entity53 0
-  abstract_entity54 0
-  abstract_entity55 0
-  abstract_entity56 0
-  abstract_entity57 0
-  abstract_entity58 0
-  abstract_entity59 0
-  abstract_entity60 0
-  abstract_entity61 0
-  abstract_entity62 0
-  abstract_entity63 0
-  abstract_entity64 0
-  abstract_entity65 0
-  abstract_entity66 0
-  abstract_entity67 0
-  abstract_entity68 0
-  abstract_entity69 0
-  abstract_entity70 0
-  abstract_entity71 0
-  abstract_entity72 0
-  abstract_entity73 0
-  abstract_entity74 0
-  abstract_entity75 0
-  abstract_entity76 0
-  abstract_entity77 0
-  abstract_entity78 0
-  abstract_entity79 0
-  abstract_entity80 0
-  abstract_entity81 0
-  abstract_entity82 0
-  abstract_entity83 0
-  abstract_entity84 0
-  abstract_entity85 0
-  abstract_entity86 0
-  abstract_entity87 0
-  abstract_entity88 0
-  abstract_entity89 0
-  abstract_entity90 0
-  abstract_entity91 0
-  abstract_entity92 0
-  abstract_entity93 0
-  abstract_entity94 0
-  abstract_entity95 0
-  abstract_entity96 0
-  abstract_entity97 0
-  abstract_entity98 0
-  abstract_entity99 0
-  bstrct_ntty 0
-  AbstractEntity 0
-  abstractEntity 0
-  abstract-entity 0
-  abstract.entity 0
-  abstract,entity 0
-  abstract#entity 0
-  abstract+entity 0
-  abstract*entity 0
-  abstract entity 0
-  Abstract_entity 0
-  abstract_entity123 0
-  abstract_entity1234 0
-  abstract_entity12345 0
-  abstract_entity123456 0
-  abstract_entity1234567 0
-  abstract_entity12345678 0
-  abstract_entity123456789 0
-  abstract_entity1234567890 0
-  123abstract_entity 0
-  1234abstract_entity 0
-  12345abstract_entity 0
-  123456abstract_entity 0
-  1234567abstract_entity 0
-  12345678abstract_entity 0
-  123456789abstract_entity 0
-  1234567890abstract_entity 0
-  abstract_entity! 0
-  abstract_entity@ 0
-  abstract_entity# 0
-  abstract_entity$ 0
-  abstract_entity% 0
-  abstract_entity^ 0
-  abstract_entity& 0
-  abstract_entity* 0
-  abstract_entity? 0
-  abstract_entity. 0
-  abstract_entity, 0
-  abstract_entity-_ 0
-  abstract_entity+ 0
-  !abstract_entity 0
-  @abstract_entity 0
-  #abstract_entity 0
-  $abstract_entity 0
-  %abstract_entity 0
-  ^abstract_entity 0
-  &abstract_entity 0
-  *abstract_entity 0
-  ?abstract_entity 0
-  .abstract_entity 0
-  ,abstract_entity 0
-  -_abstract_entity 0
-  +abstract_entity 0
-  abstract_entityabstract_entity 0
-  a_b_s_t_r_a_c_t___e_n_t_i_t_y 0
-  a-b-s-t-r-a-c-t-_-e-n-t-i-t-y 0
-  a.b.s.t.r.a.c.t._.e.n.t.i.t.y 0
-  a,b,s,t,r,a,c,t,_,e,n,t,i,t,y 0
-  a#b#s#t#r#a#c#t#_#e#n#t#i#t#y 0
-  a*b*s*t*r*a*c*t*_*e*n*t*i*t*y 0
-  a+b+s+t+r+a+c+t+_+e+n+t+i+t+y 0
-  ytitne_tcartsba 0
-  AbstrAct_EntIty 0
-  aBSTRaCT_eNTiTY 0
-  physical_entity 0
-  PHYSICAL_ENTITY 0
-  phy51c4l_3nt1ty 0
-  physical_entity1950 0
-  physical_entity1951 0
-  physical_entity1952 0
-  physical_entity1953 0
-  physical_entity1954 0
-  physical_entity1955 0
-  physical_entity1956 0
-  physical_entity1957 0
-  physical_entity1958 0
-  physical_entity1959 0
-  physical_entity1960 0
-  physical_entity1961 0
-  physical_entity1962 0
-  physical_entity1963 0
-  physical_entity1964 0
-  physical_entity1965 0
-  physical_entity1966 0
-  physical_entity1967 0
-  physical_entity1968 0
-  physical_entity1969 0
-  physical_entity1970 0
-  physical_entity1971 0
-  physical_entity1972 0
-  physical_entity1973 0
-  physical_entity1974 0
-  physical_entity1975 0
-  physical_entity1976 0
-  physical_entity1977 0
-  physical_entity1978 0
-  physical_entity1979 0
-  physical_entity1980 0
-  physical_entity1981 0
-  physical_entity1982 0
-  physical_entity1983 0
-  physical_entity1984 0
-  physical_entity1985 0
-  physical_entity1986 0
-  physical_entity1987 0
-  physical_entity1988 0
-  physical_entity1989 0
-  physical_entity1990 0
-  physical_entity1991 0
-  physical_entity1992 0
-  physical_entity1993 0
-  physical_entity1994 0
-  physical_entity1995 0
-  physical_entity1996 0
-  physical_entity1997 0
-  physical_entity1998 0
-  physical_entity1999 0
-  physical_entity2000 0
-  physical_entity2001 0
-  physical_entity2002 0
-  physical_entity2003 0
-  physical_entity2004 0
-  physical_entity2005 0
-  physical_entity2006 0
-  physical_entity2007 0
-  physical_entity2008 0
-  physical_entity2009 0
-  physical_entity2010 0
-  physical_entity2011 0
-  physical_entity2012 0
-  physical_entity2013 0
-  physical_entity2014 0
-  physical_entity2015 0
-  physical_entity2016 0
-  physical_entity2017 0
-  physical_entity2018 0
-  physical_entity2019 0
-  physical_entity0 0
-  physical_entity1 0
-  physical_entity2 0
-  physical_entity3 0
-  physical_entity4 0
-  physical_entity5 0
-  physical_entity6 0
-  physical_entity7 0
-  physical_entity8 0
-  physical_entity9 0
-  physical_entity10 0
-  physical_entity11 0
-  physical_entity12 0
-  physical_entity13 0
-  physical_entity14 0
-  physical_entity15 0
-  physical_entity16 0
-  physical_entity17 0
-  physical_entity18 0
-  physical_entity19 0
-  physical_entity20 0
-  physical_entity21 0
-  physical_entity22 0
-  physical_entity23 0
-  physical_entity24 0
-  physical_entity25 0
-  physical_entity26 0
-  physical_entity27 0
-  physical_entity28 0
-  physical_entity29 0
-  physical_entity30 0
-  physical_entity31 0
-  physical_entity32 0
-  physical_entity33 0
-  physical_entity34 0
-  physical_entity35 0
-  physical_entity36 0
-  physical_entity37 0
-  physical_entity38 0
-  physical_entity39 0
-  physical_entity40 0
-  physical_entity41 0
-  physical_entity42 0
-  physical_entity43 0
-  physical_entity44 0
-  physical_entity45 0
-  physical_entity46 0
-  physical_entity47 0
-  physical_entity48 0
-  physical_entity49 0
-  physical_entity50 0
-  physical_entity51 0
-  physical_entity52 0
-  physical_entity53 0
-  physical_entity54 0
-  physical_entity55 0
-  physical_entity56 0
-  physical_entity57 0
-  physical_entity58 0
-  physical_entity59 0
-  physical_entity60 0
-  physical_entity61 0
-  physical_entity62 0
-  physical_entity63 0
-  physical_entity64 0
-  physical_entity65 0
-  physical_entity66 0
-  physical_entity67 0
-  physical_entity68 0
-  physical_entity69 0
-  physical_entity70 0
-  physical_entity71 0
-  physical_entity72 0
-  physical_entity73 0
-  physical_entity74 0
-  physical_entity75 0
-  physical_entity76 0
-  physical_entity77 0
-  physical_entity78 0
-  physical_entity79 0
-  physical_entity80 0
-  physical_entity81 0
-  physical_entity82 0
-  physical_entity83 0
-  physical_entity84 0
-  physical_entity85 0
-  physical_entity86 0
-  physical_entity87 0
-  physical_entity88 0
-  physical_entity89 0
-  physical_entity90 0
-  physical_entity91 0
-  physical_entity92 0
-  physical_entity93 0
-  physical_entity94 0
-  physical_entity95 0
-  physical_entity96 0
-  physical_entity97 0
-  physical_entity98 0
-  physical_entity99 0
-  physcl_ntty 0
-  PhysicalEntity 0
-  physicalEntity 0
-  physical-entity 0
-  physical.entity 0
-  physical,entity 0
-  physical#entity 0
-  physical+entity 0
-  physical*entity 0
-  physical entity 0
-  Physical_entity 0
-  physical_entity123 0
-  physical_entity1234 0
-  physical_entity12345 0
-  physical_entity123456 0
-  physical_entity1234567 0
-  physical_entity12345678 0
-  physical_entity123456789 0
-  physical_entity1234567890 0
-  123physical_entity 0
-  1234physical_entity 0
-  12345physical_entity 0
-  123456physical_entity 0
-  1234567physical_entity 0
-  12345678physical_entity 0
-  123456789physical_entity 0
-  1234567890physical_entity 0
-  physical_entity! 0
-  physical_entity@ 0
-  physical_entity# 0
-  physical_entity$ 0
-  physical_entity% 0
-  physical_entity^ 0
-  physical_entity& 0
-  physical_entity* 0
-  physical_entity? 0
-  physical_entity. 0
-  physical_entity, 0
-  physical_entity-_ 0
-  physical_entity+ 0
-  !physical_entity 0
-  @physical_entity 0
-  #physical_entity 0
-  $physical_entity 0
-  %physical_entity 0
-  ^physical_entity 0
-  &physical_entity 0
-  *physical_entity 0
-  ?physical_entity 0
-  .physical_entity 0
-  ,physical_entity 0
-  -_physical_entity 0
-  +physical_entity 0
-  physical_entityphysical_entity 0
-  p_h_y_s_i_c_a_l___e_n_t_i_t_y 0
-  p-h-y-s-i-c-a-l-_-e-n-t-i-t-y 0
-  p.h.y.s.i.c.a.l._.e.n.t.i.t.y 0
-  p,h,y,s,i,c,a,l,_,e,n,t,i,t,y 0
-  p#h#y#s#i#c#a#l#_#e#n#t#i#t#y 0
-  p*h*y*s*i*c*a*l*_*e*n*t*i*t*y 0
-  p+h+y+s+i+c+a+l+_+e+n+t+i+t+y 0
-  ytitne_lacisyhp 0
-  physIcAl_EntIty 0
-  PHYSiCaL_eNTiTY 0
-  thing 1992
-  THING 27
-  th1ng 36
-  thing1950 4
-  thing1951 4
-  thing1952 0
-  thing1953 0
-  thing1954 0
-  thing1955 0
-  thing1956 4
-  thing1957 0
-  thing1958 0
-  thing1959 0
-  thing1960 0
-  thing1961 0
-  thing1962 5
-  thing1963 0
-  thing1964 0
-  thing1965 0
-  thing1966 8
-  thing1967 0
-  thing1968 1
-  thing1969 1
-  thing1970 4
-  thing1971 0
-  thing1972 0
-  thing1973 5
-  thing1974 13
-  thing1975 7
-  thing1976 3
-  thing1977 5
-  thing1978 0
-  thing1979 3
-  thing1980 0
-  thing1981 0
-  thing1982 2
-  thing1983 0
-  thing1984 5
-  thing1985 5
-  thing1986 2
-  thing1987 6
-  thing1988 0
-  thing1989 6
-  thing1990 0
-  thing1991 11
-  thing1992 0
-  thing1993 3
-  thing1994 10
-  thing1995 4
-  thing1996 9
-  thing1997 10
-  thing1998 2
-  thing1999 0
-  thing2000 35
-  thing2001 0
-  thing2002 10
-  thing2003 2
-  thing2004 7
-  thing2005 1
-  thing2006 7
-  thing2007 20
-  thing2008 17
-  thing2009 5
-  thing2010 11
-  thing2011 8
-  thing2012 4
-  thing2013 0
-  thing2014 0
-  thing2015 0
-  thing2016 0
-  thing2017 0
-  thing2018 0
-  thing2019 0
-  thing0 113
-  thing1 6497
-  thing2 3628
-  thing3 552
-  thing4 308
-  thing5 199
-  thing6 132
-  thing7 139
-  thing8 93
-  thing9 169
-  thing10 83
-  thing11 203
-  thing12 755
-  thing13 180
-  thing14 47
-  thing15 35
-  thing16 88
-  thing17 25
-  thing18 29
-  thing19 45
-  thing20 38
-  thing21 143
-  thing22 183
-  thing23 100
-  thing24 62
-  thing25 24
-  thing26 54
-  thing27 30
-  thing28 16
-  thing29 20
-  thing30 15
-  thing31 2
-  thing32 21
-  thing33 68
-  thing34 26
-  thing35 31
-  thing36 11
-  thing37 24
-  thing38 15
-  thing39 2
-  thing40 25
-  thing41 29
-  thing42 38
-  thing43 43
-  thing44 39
-  thing45 40
-  thing46 10
-  thing47 20
-  thing48 1
-  thing49 7
-  thing50 9
-  thing51 29
-  thing52 10
-  thing53 6
-  thing54 13
-  thing55 63
-  thing56 20
-  thing57 6
-  thing58 21
-  thing59 8
-  thing60 14
-  thing61 7
-  thing62 24
-  thing63 6
-  thing64 6
-  thing65 18
-  thing66 22
-  thing67 65
-  thing68 2
-  thing69 80
-  thing70 1
-  thing71 9
-  thing72 7
-  thing73 23
-  thing74 23
-  thing75 20
-  thing76 22
-  thing77 48
-  thing78 17
-  thing79 11
-  thing80 27
-  thing81 9
-  thing82 7
-  thing83 3
-  thing84 6
-  thing85 13
-  thing86 27
-  thing87 25
-  thing88 53
-  thing89 40
-  thing90 46
-  thing91 16
-  thing92 22
-  thing93 8
-  thing94 11
-  thing95 22
-  thing96 9
-  thing97 6
-  thing98 24
-  thing99 50
-  thng 0
-  Thing 79
-  thing123 1007
-  thing1234 135
-  thing12345 82
-  thing123456 6
-  thing1234567 0
-  thing12345678 0
-  thing123456789 0
-  thing1234567890 0
-  123thing 32
-  1234thing 18
-  12345thing 8
-  123456thing 3
-  1234567thing 0
-  12345678thing 0
-  123456789thing 2
-  1234567890thing 0
-  thing! 80
-  thing@ 4
-  thing# 3
-  thing$ 1
-  thing% 0
-  thing^ 0
-  thing& 0
-  thing* 7
-  thing? 4
-  thing. 76
-  thing, 0
-  thing-_ 0
-  thing+ 1
-  !thing 5
-  @thing 2
-  #thing 3
-  $thing 3
-  %thing 0
-  ^thing 0
-  &thing 0
-  *thing 2
-  ?thing 0
-  .thing 0
-  ,thing 0
-  -_thing 0
-  +thing 0
-  thingthing 472
-  t_h_i_n_g 3
-  t-h-i-n-g 0
-  t.h.i.n.g 0
-  t,h,i,n,g 0
-  t#h#i#n#g 0
-  t*h*i*n*g 0
-  t+h+i+n+g 0
-  gniht 12
-  thIng 0
-  THiNG 0
+iiyama 6321
+IIYAMA 141
+11y4m4 3
+iiyama1950 0
+iiyama1951 0
+iiyama1952 0
+iiyama1953 0
+iiyama1954 4
+iiyama1955 0
+iiyama1956 3
+iiyama1957 3
+iiyama1958 3
+iiyama1959 1
+iiyama1960 0
+iiyama1961 0
+iiyama1962 0
+iiyama1963 0
+iiyama1964 2
+iiyama1965 0
+iiyama1966 0
+iiyama1967 11
+iiyama1968 2
+iiyama1969 0
+iiyama1970 0
+iiyama1971 3
+iiyama1972 3
+iiyama1973 0
+iiyama1974 0
+iiyama1975 0
+iiyama1976 12
+iiyama1977 6
+iiyama1978 8
+iiyama1979 0
+iiyama1980 0
+iiyama1981 4
+iiyama1982 1
+iiyama1983 4
+iiyama1984 14
+iiyama1985 2
+iiyama1986 4
+iiyama1987 14
+iiyama1988 2
+iiyama1989 2
+iiyama1990 13
+iiyama1991 10
+iiyama1992 27
+iiyama1993 6
+iiyama1994 5
+iiyama1995 7
+iiyama1996 6
+iiyama1997 18
+iiyama1998 0
+iiyama1999 0
+iiyama2000 10
+iiyama2001 0
+iiyama2002 11
+iiyama2003 3
+iiyama2004 0
+iiyama2005 14
+iiyama2006 22
+iiyama2007 4
+iiyama2008 7
+iiyama2009 20
+iiyama2010 10
+iiyama2011 3
+iiyama2012 3
+iiyama2013 0
+iiyama2014 0
+iiyama2015 0
+iiyama2016 0
+iiyama2017 0
+iiyama2018 0
+iiyama2019 0
+iiyama0 19
+iiyama1 735
+iiyama2 169
+iiyama3 25
+iiyama4 11
+iiyama5 8
+iiyama6 13
+iiyama7 17
+iiyama8 5
+iiyama9 15
+iiyama10 58
+iiyama11 140
+iiyama12 198
+iiyama13 59
+iiyama14 15
+iiyama15 32
+iiyama16 49
+iiyama17 135
+iiyama18 46
+iiyama19 57
+iiyama20 54
+iiyama21 31
+iiyama22 59
+iiyama23 32
+iiyama24 48
+iiyama25 5
+iiyama26 14
+iiyama27 4
+iiyama28 10
+iiyama29 23
+iiyama30 2
+iiyama31 11
+iiyama32 10
+iiyama33 27
+iiyama34 3
+iiyama35 9
+iiyama36 2
+iiyama37 0
+iiyama38 0
+iiyama39 0
+iiyama40 1
+iiyama41 8
+iiyama42 1
+iiyama43 0
+iiyama44 5
+iiyama45 22
+iiyama46 3
+iiyama47 7
+iiyama48 10
+iiyama49 2
+iiyama50 6
+iiyama51 3
+iiyama52 16
+iiyama53 0
+iiyama54 2
+iiyama55 6
+iiyama56 3
+iiyama57 6
+iiyama58 4
+iiyama59 19
+iiyama60 1
+iiyama61 9
+iiyama62 12
+iiyama63 7
+iiyama64 15
+iiyama65 12
+iiyama66 20
+iiyama67 7
+iiyama68 8
+iiyama69 61
+iiyama70 11
+iiyama71 8
+iiyama72 1
+iiyama73 9
+iiyama74 7
+iiyama75 16
+iiyama76 9
+iiyama77 43
+iiyama78 14
+iiyama79 13
+iiyama80 6
+iiyama81 26
+iiyama82 64
+iiyama83 6
+iiyama84 1
+iiyama85 17
+iiyama86 7
+iiyama87 12
+iiyama88 68
+iiyama89 15
+iiyama90 37
+iiyama91 30
+iiyama92 41
+iiyama93 17
+iiyama94 9
+iiyama95 8
+iiyama96 2
+iiyama97 3
+iiyama98 1
+iiyama99 52
+ym 257
+Iiyama 60
+iiyama123 371
+iiyama1234 32
+iiyama12345 8
+iiyama123456 3
+iiyama1234567 0
+iiyama12345678 0
+iiyama123456789 2
+iiyama1234567890 0
+123iiyama 21
+1234iiyama 0
+12345iiyama 0
+123456iiyama 0
+1234567iiyama 0
+12345678iiyama 0
+123456789iiyama 0
+1234567890iiyama 0
+iiyama! 22
+iiyama@ 2
+iiyama# 0
+iiyama$ 1
+iiyama% 0
+iiyama^ 0
+iiyama& 0
+iiyama* 1
+iiyama? 5
+iiyama. 33
+iiyama, 2
+iiyama-_ 0
+iiyama+ 0
+!iiyama 0
+@iiyama 0
+#iiyama 0
+$iiyama 0
+%iiyama 0
+^iiyama 0
+&iiyama 0
+*iiyama 0
+?iiyama 0
+.iiyama 1
+,iiyama 0
+-_iiyama 0
++iiyama 0
+iiyamaiiyama 36
+i_i_y_a_m_a 0
+i-i-y-a-m-a 0
+i.i.y.a.m.a 0
+i,i,y,a,m,a 0
+i#i#y#a#m#a 0
+i*i*y*a*m*a 0
+i+i+y+a+m+a 0
+amayii 52
+IIyAmA 0
+iiYaMa 0
+samsung 310144
+SAMSUNG 8590
+54m5ung 81
+samsung1950 16
+samsung1951 12
+samsung1952 28
+samsung1953 20
+samsung1954 26
+samsung1955 21
+samsung1956 43
+samsung1957 39
+samsung1958 37
+samsung1959 30
+samsung1960 22
+samsung1961 33
+samsung1962 65
+samsung1963 39
+samsung1964 89
+samsung1965 61
+samsung1966 55
+samsung1967 68
+samsung1968 46
+samsung1969 72
+samsung1970 82
+samsung1971 127
+samsung1972 96
+samsung1973 141
+samsung1974 149
+samsung1975 186
+samsung1976 181
+samsung1977 183
+samsung1978 197
+samsung1979 248
+samsung1980 225
+samsung1981 370
+samsung1982 334
+samsung1983 287
+samsung1984 381
+samsung1985 486
+samsung1986 481
+samsung1987 492
+samsung1988 492
+samsung1989 444
+samsung1990 561
+samsung1991 662
+samsung1992 557
+samsung1993 654
+samsung1994 534
+samsung1995 603
+samsung1996 411
+samsung1997 264
+samsung1998 329
+samsung1999 195
+samsung2000 525
+samsung2001 169
+samsung2002 128
+samsung2003 125
+samsung2004 137
+samsung2005 245
+samsung2006 123
+samsung2007 234
+samsung2008 404
+samsung2009 765
+samsung2010 1826
+samsung2011 1107
+samsung2012 700
+samsung2013 320
+samsung2014 141
+samsung2015 151
+samsung2016 15
+samsung2017 3
+samsung2018 0
+samsung2019 4
+samsung0 2080
+samsung1 85345
+samsung2 9685
+samsung3 3867
+samsung4 2323
+samsung5 3808
+samsung6 2377
+samsung7 4832
+samsung8 2478
+samsung9 2986
+samsung10 2900
+samsung11 4666
+samsung12 9289
+samsung13 3144
+samsung14 1921
+samsung15 1813
+samsung16 1281
+samsung17 1335
+samsung18 1261
+samsung19 1475
+samsung20 1471
+samsung21 2817
+samsung22 3509
+samsung23 2538
+samsung24 1408
+samsung25 1161
+samsung26 759
+samsung27 887
+samsung28 778
+samsung29 618
+samsung30 620
+samsung31 523
+samsung32 937
+samsung33 962
+samsung34 496
+samsung35 313
+samsung36 257
+samsung37 253
+samsung38 163
+samsung39 120
+samsung40 315
+samsung41 187
+samsung42 417
+samsung43 211
+samsung44 601
+samsung45 585
+samsung46 295
+samsung47 248
+samsung48 117
+samsung49 165
+samsung50 516
+samsung51 147
+samsung52 367
+samsung53 132
+samsung54 268
+samsung55 1287
+samsung56 468
+samsung57 271
+samsung58 180
+samsung59 371
+samsung60 190
+samsung61 188
+samsung62 171
+samsung63 200
+samsung64 199
+samsung65 254
+samsung66 650
+samsung67 526
+samsung68 314
+samsung69 2161
+samsung70 203
+samsung71 258
+samsung72 324
+samsung73 334
+samsung74 327
+samsung75 384
+samsung76 455
+samsung77 1479
+samsung78 707
+samsung79 473
+samsung80 479
+samsung81 680
+samsung82 558
+samsung83 572
+samsung84 692
+samsung85 929
+samsung86 890
+samsung87 1241
+samsung88 3292
+samsung89 1607
+samsung90 1010
+samsung91 1066
+samsung92 1098
+samsung93 907
+samsung94 895
+samsung95 832
+samsung96 673
+samsung97 413
+samsung98 682
+samsung99 1678
+smsng 12
+Samsung 9078
+samsung123 20433
+samsung1234 1743
+samsung12345 1274
+samsung123456 418
+samsung1234567 111
+samsung12345678 48
+samsung123456789 235
+samsung1234567890 67
+123samsung 424
+1234samsung 70
+12345samsung 74
+123456samsung 14
+1234567samsung 0
+12345678samsung 0
+123456789samsung 56
+1234567890samsung 14
+samsung! 2084
+samsung@ 280
+samsung# 60
+samsung$ 74
+samsung% 14
+samsung^ 3
+samsung& 31
+samsung* 173
+samsung? 114
+samsung. 2588
+samsung, 63
+samsung-_ 0
+samsung+ 43
+!samsung 25
+@samsung 34
+#samsung 3
+$samsung 6
+%samsung 0
+^samsung 0
+&samsung 3
+*samsung 32
+?samsung 2
+.samsung 69
+,samsung 1
+-_samsung 0
++samsung 1
+samsungsamsung 1102
+s_a_m_s_u_n_g 2
+s-a-m-s-u-n-g 2
+s.a.m.s.u.n.g 3
+s,a,m,s,u,n,g 0
+s#a#m#s#u#n#g 0
+s*a*m*s*u*n*g 0
+s+a+m+s+u+n+g 0
+gnusmas 5603
+sAmsUng 1
+SaMSuNG 12
+ibm 3146
+IBM 80
+18m 122
+ibm1950 0
+ibm1951 1
+ibm1952 0
+ibm1953 1
+ibm1954 0
+ibm1955 3
+ibm1956 4
+ibm1957 3
+ibm1958 1
+ibm1959 1
+ibm1960 2
+ibm1961 0
+ibm1962 0
+ibm1963 13
+ibm1964 2
+ibm1965 14
+ibm1966 0
+ibm1967 4
+ibm1968 1
+ibm1969 16
+ibm1970 3
+ibm1971 4
+ibm1972 9
+ibm1973 14
+ibm1974 8
+ibm1975 2
+ibm1976 6
+ibm1977 7
+ibm1978 8
+ibm1979 16
+ibm1980 6
+ibm1981 19
+ibm1982 8
+ibm1983 21
+ibm1984 3
+ibm1985 1
+ibm1986 2
+ibm1987 10
+ibm1988 9
+ibm1989 15
+ibm1990 16
+ibm1991 10
+ibm1992 15
+ibm1993 2
+ibm1994 5
+ibm1995 14
+ibm1996 1
+ibm1997 16
+ibm1998 13
+ibm1999 17
+ibm2000 82
+ibm2001 31
+ibm2002 6
+ibm2003 57
+ibm2004 29
+ibm2005 38
+ibm2006 52
+ibm2007 41
+ibm2008 43
+ibm2009 37
+ibm2010 83
+ibm2011 52
+ibm2012 23
+ibm2013 19
+ibm2014 3
+ibm2015 2
+ibm2016 0
+ibm2017 0
+ibm2018 0
+ibm2019 0
+ibm0 2
+ibm1 36
+ibm2 5
+ibm3 5
+ibm4 8
+ibm5 1
+ibm6 5
+ibm7 1
+ibm8 0
+ibm9 0
+ibm10 9
+ibm11 8
+ibm12 81
+ibm13 8
+ibm14 1
+ibm15 5
+ibm16 0
+ibm17 0
+ibm18 0
+ibm19 2
+ibm20 4
+ibm21 4
+ibm22 4
+ibm23 1
+ibm24 0
+ibm25 0
+ibm26 6
+ibm27 0
+ibm28 0
+ibm29 2
+ibm30 0
+ibm31 2
+ibm32 0
+ibm33 0
+ibm34 0
+ibm35 0
+ibm36 3
+ibm37 0
+ibm38 1
+ibm39 0
+ibm40 0
+ibm41 0
+ibm42 0
+ibm43 0
+ibm44 0
+ibm45 1
+ibm46 0
+ibm47 7
+ibm48 1
+ibm49 0
+ibm50 0
+ibm51 0
+ibm52 0
+ibm53 0
+ibm54 0
+ibm55 1
+ibm56 0
+ibm57 0
+ibm58 0
+ibm59 2
+ibm60 0
+ibm61 3
+ibm62 0
+ibm63 0
+ibm64 0
+ibm65 0
+ibm66 5
+ibm67 0
+ibm68 0
+ibm69 18
+ibm70 2
+ibm71 2
+ibm72 0
+ibm73 0
+ibm74 0
+ibm75 0
+ibm76 0
+ibm77 3
+ibm78 0
+ibm79 0
+ibm80 0
+ibm81 0
+ibm82 2
+ibm83 1
+ibm84 1
+ibm85 0
+ibm86 3
+ibm87 0
+ibm88 0
+ibm89 0
+ibm90 2
+ibm91 2
+ibm92 0
+ibm93 0
+ibm94 0
+ibm95 0
+ibm96 0
+ibm97 15
+ibm98 1
+ibm99 2
+bm 624
+Ibm 27
+ibm123 1148
+ibm1234 135
+ibm12345 384
+ibm123456 114
+ibm1234567 14
+ibm12345678 0
+ibm123456789 20
+ibm1234567890 6
+123ibm 76
+1234ibm 16
+12345ibm 13
+123456ibm 21
+1234567ibm 10
+12345678ibm 0
+123456789ibm 1
+1234567890ibm 0
+ibm! 0
+ibm@ 0
+ibm# 0
+ibm$ 0
+ibm% 0
+ibm^ 0
+ibm& 0
+ibm* 0
+ibm? 0
+ibm. 0
+ibm, 0
+ibm-_ 0
+ibm+ 0
+!ibm 0
+@ibm 0
+#ibm 0
+$ibm 0
+%ibm 0
+^ibm 0
+&ibm 0
+*ibm 0
+?ibm 0
+.ibm 0
+,ibm 0
+-_ibm 0
++ibm 0
+ibmibm 1538
+i_b_m 0
+i-b-m 0
+i.b.m 0
+i,b,m 0
+i#b#m 0
+i*b*m 0
+i+b+m 0
+mbi 137
+Ibm 27
+iBM 4
+apple 227431
+APPLE 1724
+4ppl3 31
+apple1950 43
+apple1951 28
+apple1952 31
+apple1953 53
+apple1954 24
+apple1955 38
+apple1956 56
+apple1957 38
+apple1958 55
+apple1959 51
+apple1960 70
+apple1961 50
+apple1962 61
+apple1963 70
+apple1964 127
+apple1965 117
+apple1966 101
+apple1967 65
+apple1968 109
+apple1969 190
+apple1970 145
+apple1971 77
+apple1972 151
+apple1973 178
+apple1974 170
+apple1975 163
+apple1976 263
+apple1977 221
+apple1978 157
+apple1979 203
+apple1980 312
+apple1981 224
+apple1982 340
+apple1983 240
+apple1984 421
+apple1985 395
+apple1986 340
+apple1987 450
+apple1988 324
+apple1989 364
+apple1990 382
+apple1991 302
+apple1992 394
+apple1993 415
+apple1994 435
+apple1995 368
+apple1996 395
+apple1997 389
+apple1998 366
+apple1999 209
+apple2000 756
+apple2001 262
+apple2002 158
+apple2003 132
+apple2004 200
+apple2005 247
+apple2006 421
+apple2007 516
+apple2008 1612
+apple2009 845
+apple2010 854
+apple2011 756
+apple2012 482
+apple2013 233
+apple2014 139
+apple2015 84
+apple2016 12
+apple2017 13
+apple2018 17
+apple2019 0
+apple0 1526
+apple1 97235
+apple2 17216
+apple3 10056
+apple4 5923
+apple5 9179
+apple6 4538
+apple7 6679
+apple8 3663
+apple9 3692
+apple10 4941
+apple11 7026
+apple12 16765
+apple13 5472
+apple14 3271
+apple15 2952
+apple16 2580
+apple17 2160
+apple18 1911
+apple19 1532
+apple20 1654
+apple21 4232
+apple22 7892
+apple23 5713
+apple24 3012
+apple25 2841
+apple26 1290
+apple27 1320
+apple28 1102
+apple29 828
+apple30 850
+apple31 665
+apple32 1154
+apple33 2761
+apple34 1514
+apple35 653
+apple36 451
+apple37 499
+apple38 283
+apple39 215
+apple40 364
+apple41 349
+apple42 636
+apple43 422
+apple44 1911
+apple45 2267
+apple46 329
+apple47 330
+apple48 349
+apple49 352
+apple50 500
+apple51 336
+apple52 391
+apple53 255
+apple54 675
+apple55 2062
+apple56 821
+apple57 328
+apple58 207
+apple59 189
+apple60 259
+apple61 269
+apple62 231
+apple63 270
+apple64 401
+apple65 448
+apple66 1188
+apple67 687
+apple68 331
+apple69 3185
+apple70 324
+apple71 330
+apple72 428
+apple73 366
+apple74 336
+apple75 560
+apple76 523
+apple77 1842
+apple78 677
+apple79 516
+apple80 483
+apple81 386
+apple82 569
+apple83 443
+apple84 628
+apple85 548
+apple86 591
+apple87 871
+apple88 2274
+apple89 1203
+apple90 1173
+apple91 937
+apple92 1105
+apple93 981
+apple94 1061
+apple95 829
+apple96 583
+apple97 658
+apple98 713
+apple99 3105
+ppl 285
+Apple 2142
+apple123 58976
+apple1234 5906
+apple12345 2796
+apple123456 779
+apple1234567 75
+apple12345678 34
+apple123456789 232
+apple1234567890 46
+123apple 2261
+1234apple 311
+12345apple 218
+123456apple 96
+1234567apple 1
+12345678apple 13
+123456789apple 67
+1234567890apple 9
+apple! 3591
+apple@ 175
+apple# 45
+apple$ 214
+apple% 16
+apple^ 5
+apple& 32
+apple* 265
+apple? 119
+apple. 2245
+apple, 34
+apple-_ 0
+apple+ 34
+!apple 53
+@apple 41
+#apple 8
+$apple 14
+%apple 1
+^apple 2
+&apple 4
+*apple 30
+?apple 0
+.apple 53
+,apple 1
+-_apple 0
++apple 4
+appleapple 4206
+a_p_p_l_e 0
+a-p-p-l-e 3
+a.p.p.l.e 14
+a,p,p,l,e 0
+a#p#p#l#e 0
+a*p*p*l*e 0
+a+p+p+l+e 0
+elppa 211
+ApplE 8
+aPPLe 0
+nokia 54628
+NOKIA 1816
+n0k14 17
+nokia1950 8
+nokia1951 7
+nokia1952 7
+nokia1953 13
+nokia1954 14
+nokia1955 21
+nokia1956 21
+nokia1957 16
+nokia1958 23
+nokia1959 32
+nokia1960 14
+nokia1961 17
+nokia1962 33
+nokia1963 49
+nokia1964 78
+nokia1965 62
+nokia1966 64
+nokia1967 54
+nokia1968 66
+nokia1969 72
+nokia1970 58
+nokia1971 86
+nokia1972 88
+nokia1973 143
+nokia1974 140
+nokia1975 159
+nokia1976 213
+nokia1977 203
+nokia1978 223
+nokia1979 200
+nokia1980 253
+nokia1981 299
+nokia1982 343
+nokia1983 272
+nokia1984 414
+nokia1985 366
+nokia1986 462
+nokia1987 596
+nokia1988 599
+nokia1989 450
+nokia1990 483
+nokia1991 653
+nokia1992 663
+nokia1993 610
+nokia1994 626
+nokia1995 1325
+nokia1996 624
+nokia1997 476
+nokia1998 309
+nokia1999 213
+nokia2000 5469
+nokia2001 177
+nokia2002 231
+nokia2003 148
+nokia2004 179
+nokia2005 226
+nokia2006 316
+nokia2007 343
+nokia2008 491
+nokia2009 822
+nokia2010 1389
+nokia2011 754
+nokia2012 436
+nokia2013 147
+nokia2014 56
+nokia2015 45
+nokia2016 34
+nokia2017 4
+nokia2018 8
+nokia2019 8
+nokia0 671
+nokia1 24253
+nokia2 3757
+nokia3 1689
+nokia4 721
+nokia5 1980
+nokia6 1698
+nokia7 1633
+nokia8 885
+nokia9 935
+nokia10 1144
+nokia11 2842
+nokia12 4164
+nokia13 1214
+nokia14 559
+nokia15 695
+nokia16 585
+nokia17 683
+nokia18 673
+nokia19 523
+nokia20 556
+nokia21 1112
+nokia22 1469
+nokia23 1067
+nokia24 519
+nokia25 615
+nokia26 421
+nokia27 383
+nokia28 242
+nokia29 259
+nokia30 248
+nokia31 344
+nokia32 717
+nokia33 1131
+nokia34 291
+nokia35 244
+nokia36 137
+nokia37 142
+nokia38 46
+nokia39 51
+nokia40 60
+nokia41 110
+nokia42 92
+nokia43 79
+nokia44 321
+nokia45 223
+nokia46 162
+nokia47 96
+nokia48 69
+nokia49 70
+nokia50 234
+nokia51 320
+nokia52 435
+nokia53 301
+nokia54 128
+nokia55 783
+nokia56 235
+nokia57 196
+nokia58 329
+nokia59 98
+nokia60 245
+nokia61 240
+nokia62 356
+nokia63 685
+nokia64 105
+nokia65 410
+nokia66 1040
+nokia67 237
+nokia68 185
+nokia69 873
+nokia70 1274
+nokia71 347
+nokia72 967
+nokia73 2622
+nokia74 264
+nokia75 303
+nokia76 500
+nokia77 1020
+nokia78 577
+nokia79 242
+nokia80 373
+nokia81 522
+nokia82 668
+nokia83 361
+nokia84 377
+nokia85 382
+nokia86 565
+nokia87 570
+nokia88 1357
+nokia89 815
+nokia90 902
+nokia91 686
+nokia92 623
+nokia93 605
+nokia94 453
+nokia95 1893
+nokia96 545
+nokia97 687
+nokia98 379
+nokia99 1243
+nk 418
+Nokia 2880
+nokia123 20695
+nokia1234 2860
+nokia12345 2547
+nokia123456 606
+nokia1234567 73
+nokia12345678 47
+nokia123456789 238
+nokia1234567890 67
+123nokia 416
+1234nokia 54
+12345nokia 210
+123456nokia 79
+1234567nokia 20
+12345678nokia 10
+123456789nokia 54
+1234567890nokia 26
+nokia! 483
+nokia@ 106
+nokia# 3
+nokia$ 13
+nokia% 4
+nokia^ 2
+nokia& 4
+nokia* 36
+nokia? 8
+nokia. 635
+nokia, 4
+nokia-_ 2
+nokia+ 24
+!nokia 9
+@nokia 18
+#nokia 6
+$nokia 0
+%nokia 0
+^nokia 0
+&nokia 0
+*nokia 8
+?nokia 0
+.nokia 10
+,nokia 0
+-_nokia 0
++nokia 0
+nokianokia 5950
+n_o_k_i_a 0
+n-o-k-i-a 33
+n.o.k.i.a 9
+n,o,k,i,a 0
+n#o#k#i#a 0
+n*o*k*i*a 0
+n+o+k+i+a 0
+aikon 484
+nOkIA 0
+NoKia 2
+blackberry 39162
+BLACKBERRY 517
+8l4ck83rry 0
+blackberry1950 0
+blackberry1951 1
+blackberry1952 0
+blackberry1953 0
+blackberry1954 0
+blackberry1955 1
+blackberry1956 2
+blackberry1957 3
+blackberry1958 12
+blackberry1959 3
+blackberry1960 0
+blackberry1961 1
+blackberry1962 1
+blackberry1963 0
+blackberry1964 2
+blackberry1965 2
+blackberry1966 0
+blackberry1967 8
+blackberry1968 21
+blackberry1969 6
+blackberry1970 5
+blackberry1971 4
+blackberry1972 10
+blackberry1973 8
+blackberry1974 27
+blackberry1975 13
+blackberry1976 21
+blackberry1977 21
+blackberry1978 14
+blackberry1979 14
+blackberry1980 15
+blackberry1981 19
+blackberry1982 15
+blackberry1983 29
+blackberry1984 20
+blackberry1985 17
+blackberry1986 30
+blackberry1987 63
+blackberry1988 39
+blackberry1989 54
+blackberry1990 29
+blackberry1991 23
+blackberry1992 29
+blackberry1993 32
+blackberry1994 29
+blackberry1995 20
+blackberry1996 27
+blackberry1997 18
+blackberry1998 11
+blackberry1999 2
+blackberry2000 30
+blackberry2001 19
+blackberry2002 9
+blackberry2003 10
+blackberry2004 0
+blackberry2005 4
+blackberry2006 18
+blackberry2007 18
+blackberry2008 22
+blackberry2009 39
+blackberry2010 162
+blackberry2011 141
+blackberry2012 60
+blackberry2013 8
+blackberry2014 5
+blackberry2015 27
+blackberry2016 0
+blackberry2017 0
+blackberry2018 0
+blackberry2019 0
+blackberry0 86
+blackberry1 3646
+blackberry2 512
+blackberry3 164
+blackberry4 125
+blackberry5 169
+blackberry6 119
+blackberry7 336
+blackberry8 96
+blackberry9 186
+blackberry10 343
+blackberry11 291
+blackberry12 606
+blackberry13 194
+blackberry14 85
+blackberry15 72
+blackberry16 63
+blackberry17 114
+blackberry18 113
+blackberry19 99
+blackberry20 104
+blackberry21 192
+blackberry22 325
+blackberry23 200
+blackberry24 112
+blackberry25 110
+blackberry26 61
+blackberry27 60
+blackberry28 82
+blackberry29 46
+blackberry30 33
+blackberry31 28
+blackberry32 23
+blackberry33 83
+blackberry34 25
+blackberry35 26
+blackberry36 11
+blackberry37 8
+blackberry38 27
+blackberry39 31
+blackberry40 26
+blackberry41 7
+blackberry42 39
+blackberry43 18
+blackberry44 48
+blackberry45 29
+blackberry46 14
+blackberry47 23
+blackberry48 27
+blackberry49 26
+blackberry50 14
+blackberry51 8
+blackberry52 3
+blackberry53 11
+blackberry54 12
+blackberry55 45
+blackberry56 22
+blackberry57 13
+blackberry58 13
+blackberry59 10
+blackberry60 3
+blackberry61 25
+blackberry62 17
+blackberry63 16
+blackberry64 16
+blackberry65 7
+blackberry66 34
+blackberry67 37
+blackberry68 18
+blackberry69 169
+blackberry70 12
+blackberry71 34
+blackberry72 24
+blackberry73 16
+blackberry74 54
+blackberry75 14
+blackberry76 20
+blackberry77 88
+blackberry78 33
+blackberry79 32
+blackberry80 35
+blackberry81 33
+blackberry82 26
+blackberry83 30
+blackberry84 41
+blackberry85 60
+blackberry86 46
+blackberry87 76
+blackberry88 145
+blackberry89 107
+blackberry90 83
+blackberry91 46
+blackberry92 60
+blackberry93 42
+blackberry94 15
+blackberry95 35
+blackberry96 27
+blackberry97 35
+blackberry98 27
+blackberry99 173
+blckbrry 6
+Blackberry 1030
+blackberry123 1013
+blackberry1234 135
+blackberry12345 116
+blackberry123456 15
+blackberry1234567 13
+blackberry12345678 0
+blackberry123456789 6
+blackberry1234567890 4
+123blackberry 19
+1234blackberry 4
+12345blackberry 0
+123456blackberry 0
+1234567blackberry 0
+12345678blackberry 0
+123456789blackberry 2
+1234567890blackberry 0
+blackberry! 35
+blackberry@ 8
+blackberry# 1
+blackberry$ 4
+blackberry% 0
+blackberry^ 0
+blackberry& 0
+blackberry* 4
+blackberry? 4
+blackberry. 51
+blackberry, 0
+blackberry-_ 0
+blackberry+ 0
+!blackberry 0
+@blackberry 2
+#blackberry 3
+$blackberry 1
+%blackberry 0
+^blackberry 0
+&blackberry 0
+*blackberry 4
+?blackberry 0
+.blackberry 0
+,blackberry 0
+-_blackberry 0
++blackberry 0
+blackberryblackberry 0
+b_l_a_c_k_b_e_r_r_y 0
+b-l-a-c-k-b-e-r-r-y 0
+b.l.a.c.k.b.e.r.r.y 0
+b,l,a,c,k,b,e,r,r,y 0
+b#l#a#c#k#b#e#r#r#y 0
+b*l*a*c*k*b*e*r*r*y 0
+b+l+a+c+k+b+e+r+r+y 0
+yrrebkcalb 33
+blAckbErry 0
+BLaCKBeRRY 0
+fujitsu 8940
+FUJITSU 212
+fuj1t5u 14
+fujitsu1950 1
+fujitsu1951 0
+fujitsu1952 2
+fujitsu1953 0
+fujitsu1954 0
+fujitsu1955 0
+fujitsu1956 0
+fujitsu1957 0
+fujitsu1958 0
+fujitsu1959 0
+fujitsu1960 0
+fujitsu1961 0
+fujitsu1962 3
+fujitsu1963 0
+fujitsu1964 0
+fujitsu1965 0
+fujitsu1966 0
+fujitsu1967 0
+fujitsu1968 0
+fujitsu1969 7
+fujitsu1970 3
+fujitsu1971 7
+fujitsu1972 0
+fujitsu1973 2
+fujitsu1974 0
+fujitsu1975 3
+fujitsu1976 0
+fujitsu1977 8
+fujitsu1978 4
+fujitsu1979 7
+fujitsu1980 0
+fujitsu1981 3
+fujitsu1982 7
+fujitsu1983 13
+fujitsu1984 7
+fujitsu1985 13
+fujitsu1986 8
+fujitsu1987 0
+fujitsu1988 16
+fujitsu1989 5
+fujitsu1990 2
+fujitsu1991 2
+fujitsu1992 0
+fujitsu1993 8
+fujitsu1994 6
+fujitsu1995 3
+fujitsu1996 8
+fujitsu1997 2
+fujitsu1998 1
+fujitsu1999 0
+fujitsu2000 4
+fujitsu2001 16
+fujitsu2002 13
+fujitsu2003 1
+fujitsu2004 3
+fujitsu2005 1
+fujitsu2006 4
+fujitsu2007 4
+fujitsu2008 16
+fujitsu2009 19
+fujitsu2010 39
+fujitsu2011 27
+fujitsu2012 35
+fujitsu2013 8
+fujitsu2014 7
+fujitsu2015 1
+fujitsu2016 0
+fujitsu2017 0
+fujitsu2018 0
+fujitsu2019 0
+fujitsu0 75
+fujitsu1 2698
+fujitsu2 294
+fujitsu3 89
+fujitsu4 52
+fujitsu5 94
+fujitsu6 61
+fujitsu7 91
+fujitsu8 78
+fujitsu9 90
+fujitsu10 79
+fujitsu11 135
+fujitsu12 173
+fujitsu13 81
+fujitsu14 14
+fujitsu15 48
+fujitsu16 35
+fujitsu17 31
+fujitsu18 26
+fujitsu19 44
+fujitsu20 25
+fujitsu21 32
+fujitsu22 40
+fujitsu23 106
+fujitsu24 23
+fujitsu25 44
+fujitsu26 31
+fujitsu27 12
+fujitsu28 16
+fujitsu29 7
+fujitsu30 1
+fujitsu31 7
+fujitsu32 20
+fujitsu33 26
+fujitsu34 8
+fujitsu35 10
+fujitsu36 5
+fujitsu37 0
+fujitsu38 2
+fujitsu39 3
+fujitsu40 4
+fujitsu41 7
+fujitsu42 12
+fujitsu43 2
+fujitsu44 13
+fujitsu45 4
+fujitsu46 0
+fujitsu47 0
+fujitsu48 0
+fujitsu49 5
+fujitsu50 4
+fujitsu51 1
+fujitsu52 1
+fujitsu53 5
+fujitsu54 0
+fujitsu55 18
+fujitsu56 4
+fujitsu57 4
+fujitsu58 3
+fujitsu59 14
+fujitsu60 1
+fujitsu61 1
+fujitsu62 4
+fujitsu63 0
+fujitsu64 10
+fujitsu65 10
+fujitsu66 16
+fujitsu67 14
+fujitsu68 13
+fujitsu69 31
+fujitsu70 9
+fujitsu71 6
+fujitsu72 1
+fujitsu73 2
+fujitsu74 4
+fujitsu75 18
+fujitsu76 7
+fujitsu77 49
+fujitsu78 8
+fujitsu79 35
+fujitsu80 8
+fujitsu81 48
+fujitsu82 24
+fujitsu83 7
+fujitsu84 41
+fujitsu85 8
+fujitsu86 41
+fujitsu87 30
+fujitsu88 147
+fujitsu89 79
+fujitsu90 11
+fujitsu91 49
+fujitsu92 60
+fujitsu93 15
+fujitsu94 13
+fujitsu95 41
+fujitsu96 5
+fujitsu97 6
+fujitsu98 12
+fujitsu99 44
+fjts 4
+Fujitsu 445
+fujitsu123 460
+fujitsu1234 26
+fujitsu12345 10
+fujitsu123456 9
+fujitsu1234567 0
+fujitsu12345678 4
+fujitsu123456789 0
+fujitsu1234567890 0
+123fujitsu 18
+1234fujitsu 5
+12345fujitsu 0
+123456fujitsu 0
+1234567fujitsu 0
+12345678fujitsu 0
+123456789fujitsu 0
+1234567890fujitsu 0
+fujitsu! 56
+fujitsu@ 9
+fujitsu# 0
+fujitsu$ 1
+fujitsu% 0
+fujitsu^ 0
+fujitsu& 0
+fujitsu* 4
+fujitsu? 1
+fujitsu. 73
+fujitsu, 0
+fujitsu-_ 0
+fujitsu+ 2
+!fujitsu 0
+@fujitsu 3
+#fujitsu 0
+$fujitsu 0
+%fujitsu 0
+^fujitsu 0
+&fujitsu 0
+*fujitsu 2
+?fujitsu 0
+.fujitsu 3
+,fujitsu 0
+-_fujitsu 0
++fujitsu 0
+fujitsufujitsu 16
+f_u_j_i_t_s_u 0
+f-u-j-i-t-s-u 0
+f.u.j.i.t.s.u 0
+f,u,j,i,t,s,u 0
+f#u#j#i#t#s#u 0
+f*u*j*i*t*s*u 0
+f+u+j+i+t+s+u 0
+ustijuf 118
+fUjItsU 0
+FuJiTSu 0
+cherry 96465
+CHERRY 2432
+ch3rry 2695
+cherry1950 24
+cherry1951 16
+cherry1952 7
+cherry1953 35
+cherry1954 16
+cherry1955 18
+cherry1956 23
+cherry1957 8
+cherry1958 11
+cherry1959 18
+cherry1960 31
+cherry1961 30
+cherry1962 25
+cherry1963 31
+cherry1964 43
+cherry1965 30
+cherry1966 22
+cherry1967 51
+cherry1968 38
+cherry1969 67
+cherry1970 71
+cherry1971 32
+cherry1972 55
+cherry1973 82
+cherry1974 33
+cherry1975 68
+cherry1976 63
+cherry1977 74
+cherry1978 59
+cherry1979 98
+cherry1980 132
+cherry1981 95
+cherry1982 157
+cherry1983 102
+cherry1984 131
+cherry1985 115
+cherry1986 185
+cherry1987 246
+cherry1988 204
+cherry1989 296
+cherry1990 226
+cherry1991 134
+cherry1992 257
+cherry1993 192
+cherry1994 212
+cherry1995 216
+cherry1996 216
+cherry1997 133
+cherry1998 128
+cherry1999 102
+cherry2000 823
+cherry2001 82
+cherry2002 49
+cherry2003 74
+cherry2004 96
+cherry2005 100
+cherry2006 230
+cherry2007 335
+cherry2008 458
+cherry2009 380
+cherry2010 436
+cherry2011 210
+cherry2012 140
+cherry2013 72
+cherry2014 30
+cherry2015 17
+cherry2016 11
+cherry2017 0
+cherry2018 2
+cherry2019 3
+cherry0 1225
+cherry1 61287
+cherry2 10189
+cherry3 5735
+cherry4 3783
+cherry5 5553
+cherry6 4064
+cherry7 6461
+cherry8 3016
+cherry9 2914
+cherry10 4009
+cherry11 5898
+cherry12 12569
+cherry13 7250
+cherry14 4377
+cherry15 3887
+cherry16 3564
+cherry17 2550
+cherry18 2765
+cherry19 1732
+cherry20 1713
+cherry21 3706
+cherry22 4394
+cherry23 3709
+cherry24 2251
+cherry25 2027
+cherry26 1122
+cherry27 1353
+cherry28 1128
+cherry29 904
+cherry30 654
+cherry31 611
+cherry32 683
+cherry33 1402
+cherry34 729
+cherry35 400
+cherry36 336
+cherry37 349
+cherry38 237
+cherry39 185
+cherry40 244
+cherry41 229
+cherry42 350
+cherry43 238
+cherry44 1139
+cherry45 1054
+cherry46 230
+cherry47 241
+cherry48 277
+cherry49 192
+cherry50 301
+cherry51 372
+cherry52 310
+cherry53 212
+cherry54 352
+cherry55 1355
+cherry56 722
+cherry57 268
+cherry58 225
+cherry59 223
+cherry60 175
+cherry61 127
+cherry62 249
+cherry63 241
+cherry64 447
+cherry65 355
+cherry66 983
+cherry67 640
+cherry68 338
+cherry69 6339
+cherry70 264
+cherry71 214
+cherry72 349
+cherry73 331
+cherry74 310
+cherry75 364
+cherry76 394
+cherry77 1603
+cherry78 745
+cherry79 451
+cherry80 355
+cherry81 374
+cherry82 436
+cherry83 603
+cherry84 572
+cherry85 753
+cherry86 817
+cherry87 928
+cherry88 1898
+cherry89 1436
+cherry90 834
+cherry91 757
+cherry92 1074
+cherry93 1140
+cherry94 842
+cherry95 924
+cherry96 729
+cherry97 592
+cherry98 634
+cherry99 1405
+chrry 35
+Cherry 2406
+cherry123 18704
+cherry1234 3287
+cherry12345 664
+cherry123456 161
+cherry1234567 8
+cherry12345678 2
+cherry123456789 35
+cherry1234567890 18
+123cherry 562
+1234cherry 105
+12345cherry 40
+123456cherry 13
+1234567cherry 0
+12345678cherry 0
+123456789cherry 10
+1234567890cherry 0
+cherry! 4167
+cherry@ 114
+cherry# 41
+cherry$ 158
+cherry% 21
+cherry^ 18
+cherry& 5
+cherry* 632
+cherry? 135
+cherry. 1824
+cherry, 41
+cherry-_ 0
+cherry+ 15
+!cherry 44
+@cherry 30
+#cherry 3
+$cherry 25
+%cherry 2
+^cherry 0
+&cherry 6
+*cherry 78
+?cherry 6
+.cherry 47
+,cherry 8
+-_cherry 0
++cherry 0
+cherrycherry 500
+c_h_e_r_r_y 0
+c-h-e-r-r-y 1
+c.h.e.r.r.y 0
+c,h,e,r,r,y 0
+c#h#e#r#r#y 0
+c*h*e*r*r*y 0
+c+h+e+r+r+y 0
+yrrehc 398
+chErry 0
+CHeRRY 0
+lenovo 12439
+LENOVO 323
+l3n0v0 79
+lenovo1950 1
+lenovo1951 5
+lenovo1952 0
+lenovo1953 2
+lenovo1954 60
+lenovo1955 0
+lenovo1956 0
+lenovo1957 7
+lenovo1958 1
+lenovo1959 7
+lenovo1960 0
+lenovo1961 5
+lenovo1962 0
+lenovo1963 4
+lenovo1964 0
+lenovo1965 0
+lenovo1966 11
+lenovo1967 4
+lenovo1968 0
+lenovo1969 16
+lenovo1970 5
+lenovo1971 0
+lenovo1972 6
+lenovo1973 1
+lenovo1974 12
+lenovo1975 7
+lenovo1976 14
+lenovo1977 2
+lenovo1978 27
+lenovo1979 13
+lenovo1980 41
+lenovo1981 15
+lenovo1982 13
+lenovo1983 41
+lenovo1984 22
+lenovo1985 36
+lenovo1986 35
+lenovo1987 17
+lenovo1988 67
+lenovo1989 42
+lenovo1990 49
+lenovo1991 52
+lenovo1992 24
+lenovo1993 63
+lenovo1994 41
+lenovo1995 65
+lenovo1996 47
+lenovo1997 29
+lenovo1998 24
+lenovo1999 16
+lenovo2000 31
+lenovo2001 29
+lenovo2002 11
+lenovo2003 5
+lenovo2004 2
+lenovo2005 4
+lenovo2006 19
+lenovo2007 37
+lenovo2008 108
+lenovo2009 124
+lenovo2010 236
+lenovo2011 125
+lenovo2012 114
+lenovo2013 57
+lenovo2014 48
+lenovo2015 31
+lenovo2016 8
+lenovo2017 0
+lenovo2018 0
+lenovo2019 0
+lenovo0 37
+lenovo1 1674
+lenovo2 175
+lenovo3 119
+lenovo4 41
+lenovo5 62
+lenovo6 58
+lenovo7 91
+lenovo8 41
+lenovo9 46
+lenovo10 200
+lenovo11 228
+lenovo12 462
+lenovo13 115
+lenovo14 48
+lenovo15 107
+lenovo16 40
+lenovo17 83
+lenovo18 43
+lenovo19 63
+lenovo20 84
+lenovo21 145
+lenovo22 117
+lenovo23 99
+lenovo24 36
+lenovo25 35
+lenovo26 38
+lenovo27 36
+lenovo28 29
+lenovo29 41
+lenovo30 26
+lenovo31 39
+lenovo32 22
+lenovo33 84
+lenovo34 12
+lenovo35 13
+lenovo36 19
+lenovo37 6
+lenovo38 10
+lenovo39 17
+lenovo40 8
+lenovo41 2
+lenovo42 6
+lenovo43 19
+lenovo44 29
+lenovo45 42
+lenovo46 3
+lenovo47 20
+lenovo48 8
+lenovo49 21
+lenovo50 11
+lenovo51 7
+lenovo52 1
+lenovo53 7
+lenovo54 16
+lenovo55 28
+lenovo56 62
+lenovo57 21
+lenovo58 14
+lenovo59 6
+lenovo60 13
+lenovo61 34
+lenovo62 2
+lenovo63 57
+lenovo64 19
+lenovo65 13
+lenovo66 23
+lenovo67 13
+lenovo68 10
+lenovo69 72
+lenovo70 13
+lenovo71 10
+lenovo72 8
+lenovo73 10
+lenovo74 19
+lenovo75 16
+lenovo76 15
+lenovo77 131
+lenovo78 34
+lenovo79 40
+lenovo80 20
+lenovo81 42
+lenovo82 23
+lenovo83 18
+lenovo84 32
+lenovo85 9
+lenovo86 19
+lenovo87 109
+lenovo88 139
+lenovo89 49
+lenovo90 40
+lenovo91 26
+lenovo92 37
+lenovo93 36
+lenovo94 14
+lenovo95 48
+lenovo96 17
+lenovo97 38
+lenovo98 20
+lenovo99 110
+lnv 44
+Lenovo 412
+lenovo123 1616
+lenovo1234 213
+lenovo12345 132
+lenovo123456 60
+lenovo1234567 0
+lenovo12345678 1
+lenovo123456789 16
+lenovo1234567890 29
+123lenovo 34
+1234lenovo 5
+12345lenovo 0
+123456lenovo 9
+1234567lenovo 0
+12345678lenovo 0
+123456789lenovo 2
+1234567890lenovo 0
+lenovo! 35
+lenovo@ 0
+lenovo# 0
+lenovo$ 0
+lenovo% 1
+lenovo^ 0
+lenovo& 4
+lenovo* 6
+lenovo? 4
+lenovo. 35
+lenovo, 0
+lenovo-_ 0
+lenovo+ 1
+!lenovo 0
+@lenovo 0
+#lenovo 1
+$lenovo 0
+%lenovo 0
+^lenovo 0
+&lenovo 0
+*lenovo 0
+?lenovo 0
+.lenovo 0
+,lenovo 0
+-_lenovo 0
++lenovo 0
+lenovolenovo 103
+l_e_n_o_v_o 0
+l-e-n-o-v-o 2
+l.e.n.o.v.o 0
+l,e,n,o,v,o 0
+l#e#n#o#v#o 0
+l*e*n*o*v*o 0
+l+e+n+o+v+o 0
+ovonel 114
+lEnOvO 0
+LeNoVo 3
+hp 1760
+HP 324
+hp 1760
+hp1950 11
+hp1951 5
+hp1952 7
+hp1953 6
+hp1954 23
+hp1955 98
+hp1956 40
+hp1957 17
+hp1958 30
+hp1959 23
+hp1960 30
+hp1961 38
+hp1962 27
+hp1963 19
+hp1964 27
+hp1965 13
+hp1966 47
+hp1967 30
+hp1968 48
+hp1969 33
+hp1970 50
+hp1971 18
+hp1972 80
+hp1973 34
+hp1974 40
+hp1975 69
+hp1976 50
+hp1977 62
+hp1978 41
+hp1979 63
+hp1980 72
+hp1981 92
+hp1982 83
+hp1983 95
+hp1984 48
+hp1985 110
+hp1986 124
+hp1987 98
+hp1988 126
+hp1989 117
+hp1990 113
+hp1991 115
+hp1992 129
+hp1993 133
+hp1994 127
+hp1995 67
+hp1996 117
+hp1997 98
+hp1998 90
+hp1999 28
+hp2000 308
+hp2001 119
+hp2002 94
+hp2003 62
+hp2004 84
+hp2005 118
+hp2006 156
+hp2007 469
+hp2008 226
+hp2009 326
+hp2010 292
+hp2011 147
+hp2012 73
+hp2013 41
+hp2014 13
+hp2015 16
+hp2016 0
+hp2017 3
+hp2018 1
+hp2019 3
+hp0 20
+hp1 50
+hp2 73
+hp3 44
+hp4 24
+hp5 19
+hp6 23
+hp7 25
+hp8 12
+hp9 4
+hp10 10
+hp11 9
+hp12 40
+hp13 12
+hp14 13
+hp15 11
+hp16 20
+hp17 11
+hp18 2
+hp19 6
+hp20 8
+hp21 19
+hp22 7
+hp23 14
+hp24 27
+hp25 3
+hp26 2
+hp27 7
+hp28 23
+hp29 1
+hp30 1
+hp31 6
+hp32 1
+hp33 5
+hp34 15
+hp35 2
+hp36 1
+hp37 1
+hp38 1
+hp39 3
+hp40 4
+hp41 1
+hp42 1
+hp43 5
+hp44 1
+hp45 14
+hp46 5
+hp47 1
+hp48 7
+hp49 8
+hp50 6
+hp51 10
+hp52 2
+hp53 1
+hp54 12
+hp55 8
+hp56 7
+hp57 1
+hp58 1
+hp59 4
+hp60 4
+hp61 1
+hp62 5
+hp63 8
+hp64 1
+hp65 4
+hp66 3
+hp67 0
+hp68 0
+hp69 17
+hp70 9
+hp71 8
+hp72 16
+hp73 0
+hp74 0
+hp75 34
+hp76 0
+hp77 0
+hp78 5
+hp79 15
+hp80 0
+hp81 3
+hp82 0
+hp83 0
+hp84 17
+hp85 3
+hp86 5
+hp87 1
+hp88 4
+hp89 6
+hp90 0
+hp91 4
+hp92 1
+hp93 0
+hp94 2
+hp95 5
+hp96 0
+hp97 6
+hp98 9
+hp99 30
+hp 1760
+Hp 94
+hp123 228
+hp1234 1403
+hp12345 669
+hp123456 1324
+hp1234567 213
+hp12345678 188
+hp123456789 117
+hp1234567890 14
+123hp 21
+1234hp 396
+12345hp 179
+123456hp 507
+1234567hp 42
+12345678hp 28
+123456789hp 115
+1234567890hp 22
+hp! 12
+hp@ 0
+hp# 0
+hp$ 0
+hp% 0
+hp^ 0
+hp& 1
+hp* 0
+hp? 0
+hp. 0
+hp, 0
+hp-_ 0
+hp+ 0
+!hp 0
+@hp 0
+#hp 0
+$hp 0
+%hp 0
+^hp 0
+&hp 0
+*hp 0
+?hp 0
+.hp 0
+,hp 8
+-_hp 0
++hp 0
+hphp 168
+h_p 0
+h-p 3
+h.p 3
+h,p 0
+h#p 0
+h*p 0
+h+p 0
+ph 1467
+hp 1760
+HP 324
+acer 5431
+ACER 126
+4c3r 3
+acer1950 6
+acer1951 36
+acer1952 14
+acer1953 12
+acer1954 11
+acer1955 5
+acer1956 34
+acer1957 17
+acer1958 36
+acer1959 21
+acer1960 27
+acer1961 73
+acer1962 43
+acer1963 36
+acer1964 40
+acer1965 31
+acer1966 39
+acer1967 39
+acer1968 94
+acer1969 36
+acer1970 53
+acer1971 105
+acer1972 63
+acer1973 57
+acer1974 55
+acer1975 122
+acer1976 82
+acer1977 100
+acer1978 166
+acer1979 89
+acer1980 111
+acer1981 102
+acer1982 170
+acer1983 95
+acer1984 147
+acer1985 168
+acer1986 139
+acer1987 174
+acer1988 188
+acer1989 229
+acer1990 225
+acer1991 203
+acer1992 255
+acer1993 201
+acer1994 239
+acer1995 261
+acer1996 249
+acer1997 322
+acer1998 173
+acer1999 119
+acer2000 364
+acer2001 114
+acer2002 97
+acer2003 71
+acer2004 46
+acer2005 123
+acer2006 216
+acer2007 342
+acer2008 833
+acer2009 651
+acer2010 1002
+acer2011 525
+acer2012 284
+acer2013 118
+acer2014 93
+acer2015 31
+acer2016 3
+acer2017 10
+acer2018 4
+acer2019 0
+acer0 8
+acer1 487
+acer2 67
+acer3 33
+acer4 22
+acer5 28
+acer6 6
+acer7 38
+acer8 18
+acer9 16
+acer10 438
+acer11 1582
+acer12 2602
+acer13 550
+acer14 419
+acer15 350
+acer16 234
+acer17 401
+acer18 254
+acer19 241
+acer20 259
+acer21 474
+acer22 638
+acer23 404
+acer24 241
+acer25 223
+acer26 149
+acer27 149
+acer28 91
+acer29 144
+acer30 110
+acer31 71
+acer32 113
+acer33 194
+acer34 194
+acer35 105
+acer36 43
+acer37 66
+acer38 28
+acer39 25
+acer40 60
+acer41 34
+acer42 68
+acer43 23
+acer44 190
+acer45 247
+acer46 45
+acer47 120
+acer48 48
+acer49 39
+acer50 69
+acer51 74
+acer52 35
+acer53 14
+acer54 87
+acer55 241
+acer56 227
+acer57 98
+acer58 31
+acer59 53
+acer60 30
+acer61 42
+acer62 105
+acer63 24
+acer64 146
+acer65 70
+acer66 190
+acer67 70
+acer68 90
+acer69 367
+acer70 55
+acer71 68
+acer72 80
+acer73 29
+acer74 57
+acer75 65
+acer76 95
+acer77 532
+acer78 101
+acer79 132
+acer80 63
+acer81 53
+acer82 105
+acer83 106
+acer84 154
+acer85 141
+acer86 91
+acer87 149
+acer88 314
+acer89 260
+acer90 252
+acer91 213
+acer92 201
+acer93 253
+acer94 183
+acer95 175
+acer96 191
+acer97 105
+acer98 111
+acer99 381
+cr 2443
+Acer 159
+acer123 5327
+acer1234 2606
+acer12345 898
+acer123456 396
+acer1234567 30
+acer12345678 25
+acer123456789 153
+acer1234567890 17
+123acer 161
+1234acer 111
+12345acer 29
+123456acer 49
+1234567acer 0
+12345678acer 4
+123456789acer 28
+1234567890acer 0
+acer! 8
+acer@ 1
+acer# 0
+acer$ 0
+acer% 0
+acer^ 0
+acer& 5
+acer* 0
+acer? 0
+acer. 11
+acer, 0
+acer-_ 0
+acer+ 0
+!acer 0
+@acer 2
+#acer 0
+$acer 0
+%acer 0
+^acer 0
+&acer 0
+*acer 0
+?acer 0
+.acer 0
+,acer 0
+-_acer 0
++acer 0
+aceracer 4582
+a_c_e_r 0
+a-c-e-r 2
+a.c.e.r 4
+a,c,e,r 0
+a#c#e#r 0
+a*c*e*r 0
+a+c+e+r 0
+reca 146
+AcEr 16
+aCeR 0
+intel 6255
+INTEL 129
+1nt3l 21
+intel1950 3
+intel1951 0
+intel1952 0
+intel1953 3
+intel1954 14
+intel1955 0
+intel1956 1
+intel1957 5
+intel1958 0
+intel1959 9
+intel1960 2
+intel1961 12
+intel1962 1
+intel1963 2
+intel1964 17
+intel1965 8
+intel1966 3
+intel1967 0
+intel1968 23
+intel1969 6
+intel1970 7
+intel1971 18
+intel1972 12
+intel1973 4
+intel1974 8
+intel1975 24
+intel1976 19
+intel1977 14
+intel1978 31
+intel1979 20
+intel1980 28
+intel1981 30
+intel1982 24
+intel1983 19
+intel1984 13
+intel1985 61
+intel1986 69
+intel1987 61
+intel1988 61
+intel1989 25
+intel1990 53
+intel1991 43
+intel1992 31
+intel1993 24
+intel1994 34
+intel1995 70
+intel1996 44
+intel1997 46
+intel1998 49
+intel1999 8
+intel2000 205
+intel2001 32
+intel2002 28
+intel2003 16
+intel2004 41
+intel2005 50
+intel2006 57
+intel2007 140
+intel2008 131
+intel2009 143
+intel2010 181
+intel2011 58
+intel2012 63
+intel2013 13
+intel2014 12
+intel2015 10
+intel2016 0
+intel2017 2
+intel2018 0
+intel2019 0
+intel0 159
+intel1 4335
+intel2 919
+intel3 369
+intel4 938
+intel5 529
+intel6 272
+intel7 367
+intel8 140
+intel9 221
+intel10 163
+intel11 399
+intel12 800
+intel13 317
+intel14 114
+intel15 141
+intel16 74
+intel17 69
+intel18 106
+intel19 74
+intel20 104
+intel21 162
+intel22 288
+intel23 258
+intel24 91
+intel25 76
+intel26 54
+intel27 35
+intel28 74
+intel29 56
+intel30 24
+intel31 9
+intel32 106
+intel33 110
+intel34 43
+intel35 40
+intel36 24
+intel37 13
+intel38 14
+intel39 7
+intel40 26
+intel41 16
+intel42 42
+intel43 2
+intel44 104
+intel45 77
+intel46 37
+intel47 62
+intel48 23
+intel49 23
+intel50 16
+intel51 22
+intel52 15
+intel53 18
+intel54 29
+intel55 128
+intel56 25
+intel57 10
+intel58 17
+intel59 8
+intel60 12
+intel61 16
+intel62 12
+intel63 14
+intel64 90
+intel65 29
+intel66 81
+intel67 36
+intel68 25
+intel69 188
+intel70 38
+intel71 26
+intel72 17
+intel73 10
+intel74 23
+intel75 44
+intel76 26
+intel77 124
+intel78 81
+intel79 23
+intel80 77
+intel81 56
+intel82 30
+intel83 39
+intel84 83
+intel85 50
+intel86 103
+intel87 85
+intel88 118
+intel89 71
+intel90 74
+intel91 37
+intel92 42
+intel93 35
+intel94 46
+intel95 94
+intel96 70
+intel97 71
+intel98 77
+intel99 288
+ntl 80
+Intel 943
+intel123 4082
+intel1234 502
+intel12345 148
+intel123456 85
+intel1234567 11
+intel12345678 2
+intel123456789 7
+intel1234567890 3
+123intel 106
+1234intel 30
+12345intel 21
+123456intel 20
+1234567intel 11
+12345678intel 0
+123456789intel 0
+1234567890intel 0
+intel! 110
+intel@ 24
+intel# 10
+intel$ 6
+intel% 0
+intel^ 2
+intel& 4
+intel* 24
+intel? 15
+intel. 61
+intel, 3
+intel-_ 0
+intel+ 2
+!intel 4
+@intel 5
+#intel 0
+$intel 3
+%intel 0
+^intel 0
+&intel 0
+*intel 0
+?intel 0
+.intel 4
+,intel 0
+-_intel 0
++intel 0
+intelintel 488
+i_n_t_e_l 0
+i-n-t-e-l 3
+i.n.t.e.l 0
+i,n,t,e,l 0
+i#n#t#e#l 0
+i*n*t*e*l 0
+i+n+t+e+l 0
+letni 51
+IntEl 0
+iNTeL 0
+amd 664
+AMD 113
+4md 29
+amd1950 0
+amd1951 4
+amd1952 1
+amd1953 18
+amd1954 14
+amd1955 2
+amd1956 12
+amd1957 5
+amd1958 8
+amd1959 4
+amd1960 9
+amd1961 12
+amd1962 16
+amd1963 12
+amd1964 14
+amd1965 8
+amd1966 7
+amd1967 21
+amd1968 5
+amd1969 6
+amd1970 19
+amd1971 4
+amd1972 30
+amd1973 8
+amd1974 11
+amd1975 18
+amd1976 28
+amd1977 30
+amd1978 9
+amd1979 21
+amd1980 17
+amd1981 13
+amd1982 27
+amd1983 22
+amd1984 85
+amd1985 34
+amd1986 38
+amd1987 41
+amd1988 46
+amd1989 34
+amd1990 47
+amd1991 37
+amd1992 41
+amd1993 37
+amd1994 24
+amd1995 67
+amd1996 51
+amd1997 14
+amd1998 27
+amd1999 7
+amd2000 150
+amd2001 39
+amd2002 16
+amd2003 74
+amd2004 43
+amd2005 19
+amd2006 39
+amd2007 53
+amd2008 71
+amd2009 62
+amd2010 64
+amd2011 26
+amd2012 46
+amd2013 2
+amd2014 11
+amd2015 0
+amd2016 0
+amd2017 0
+amd2018 0
+amd2019 0
+amd0 5
+amd1 41
+amd2 4
+amd3 8
+amd4 5
+amd5 8
+amd6 0
+amd7 0
+amd8 0
+amd9 2
+amd10 4
+amd11 0
+amd12 10
+amd13 11
+amd14 5
+amd15 5
+amd16 4
+amd17 1
+amd18 3
+amd19 0
+amd20 12
+amd21 5
+amd22 4
+amd23 1
+amd24 1
+amd25 10
+amd26 7
+amd27 0
+amd28 0
+amd29 5
+amd30 4
+amd31 0
+amd32 0
+amd33 2
+amd34 0
+amd35 0
+amd36 0
+amd37 0
+amd38 20
+amd39 0
+amd40 0
+amd41 0
+amd42 0
+amd43 4
+amd44 0
+amd45 2
+amd46 0
+amd47 0
+amd48 0
+amd49 0
+amd50 0
+amd51 0
+amd52 0
+amd53 0
+amd54 2
+amd55 9
+amd56 2
+amd57 0
+amd58 0
+amd59 0
+amd60 0
+amd61 5
+amd62 0
+amd63 0
+amd64 149
+amd65 9
+amd66 2
+amd67 0
+amd68 4
+amd69 0
+amd70 0
+amd71 2
+amd72 0
+amd73 0
+amd74 0
+amd75 0
+amd76 0
+amd77 3
+amd78 9
+amd79 0
+amd80 0
+amd81 0
+amd82 0
+amd83 3
+amd84 5
+amd85 0
+amd86 15
+amd87 0
+amd88 0
+amd89 1
+amd90 0
+amd91 0
+amd92 2
+amd93 2
+amd94 0
+amd95 0
+amd96 0
+amd97 0
+amd98 3
+amd99 3
+md 1191
+Amd 26
+amd123 1499
+amd1234 130
+amd12345 137
+amd123456 91
+amd1234567 31
+amd12345678 3
+amd123456789 6
+amd1234567890 0
+123amd 160
+1234amd 19
+12345amd 4
+123456amd 29
+1234567amd 9
+12345678amd 0
+123456789amd 4
+1234567890amd 0
+amd! 0
+amd@ 0
+amd# 0
+amd$ 0
+amd% 0
+amd^ 0
+amd& 0
+amd* 0
+amd? 0
+amd. 2
+amd, 0
+amd-_ 0
+amd+ 0
+!amd 0
+@amd 0
+#amd 0
+$amd 0
+%amd 0
+^amd 0
+&amd 0
+*amd 0
+?amd 0
+.amd 0
+,amd 0
+-_amd 0
++amd 0
+amdamd 857
+a_m_d 2
+a-m-d 0
+a.m.d 2
+a,m,d 0
+a#m#d 0
+a*m*d 0
+a+m+d 0
+dma 657
+Amd 26
+aMD 18
+alcatel 11329
+ALCATEL 318
+4lc4t3l 8
+alcatel1950 0
+alcatel1951 0
+alcatel1952 8
+alcatel1953 0
+alcatel1954 0
+alcatel1955 0
+alcatel1956 0
+alcatel1957 0
+alcatel1958 0
+alcatel1959 3
+alcatel1960 2
+alcatel1961 0
+alcatel1962 0
+alcatel1963 2
+alcatel1964 2
+alcatel1965 2
+alcatel1966 0
+alcatel1967 0
+alcatel1968 2
+alcatel1969 0
+alcatel1970 0
+alcatel1971 7
+alcatel1972 2
+alcatel1973 0
+alcatel1974 3
+alcatel1975 6
+alcatel1976 4
+alcatel1977 3
+alcatel1978 10
+alcatel1979 12
+alcatel1980 0
+alcatel1981 0
+alcatel1982 11
+alcatel1983 7
+alcatel1984 0
+alcatel1985 5
+alcatel1986 5
+alcatel1987 6
+alcatel1988 8
+alcatel1989 7
+alcatel1990 5
+alcatel1991 12
+alcatel1992 12
+alcatel1993 0
+alcatel1994 9
+alcatel1995 13
+alcatel1996 1
+alcatel1997 2
+alcatel1998 16
+alcatel1999 0
+alcatel2000 11
+alcatel2001 19
+alcatel2002 8
+alcatel2003 11
+alcatel2004 6
+alcatel2005 2
+alcatel2006 5
+alcatel2007 8
+alcatel2008 21
+alcatel2009 30
+alcatel2010 76
+alcatel2011 10
+alcatel2012 10
+alcatel2013 25
+alcatel2014 4
+alcatel2015 4
+alcatel2016 0
+alcatel2017 0
+alcatel2018 0
+alcatel2019 0
+alcatel0 89
+alcatel1 1775
+alcatel2 220
+alcatel3 87
+alcatel4 40
+alcatel5 79
+alcatel6 18
+alcatel7 108
+alcatel8 91
+alcatel9 98
+alcatel10 63
+alcatel11 100
+alcatel12 192
+alcatel13 107
+alcatel14 60
+alcatel15 26
+alcatel16 4
+alcatel17 31
+alcatel18 20
+alcatel19 39
+alcatel20 42
+alcatel21 46
+alcatel22 33
+alcatel23 70
+alcatel24 20
+alcatel25 32
+alcatel26 42
+alcatel27 8
+alcatel28 13
+alcatel29 29
+alcatel30 2
+alcatel31 15
+alcatel32 16
+alcatel33 19
+alcatel34 1
+alcatel35 9
+alcatel36 9
+alcatel37 0
+alcatel38 4
+alcatel39 2
+alcatel40 0
+alcatel41 0
+alcatel42 6
+alcatel43 0
+alcatel44 6
+alcatel45 16
+alcatel46 1
+alcatel47 1
+alcatel48 0
+alcatel49 1
+alcatel50 3
+alcatel51 10
+alcatel52 0
+alcatel53 2
+alcatel54 2
+alcatel55 17
+alcatel56 16
+alcatel57 11
+alcatel58 2
+alcatel59 16
+alcatel60 16
+alcatel61 1
+alcatel62 10
+alcatel63 2
+alcatel64 13
+alcatel65 8
+alcatel66 3
+alcatel67 0
+alcatel68 6
+alcatel69 46
+alcatel70 12
+alcatel71 16
+alcatel72 3
+alcatel73 4
+alcatel74 9
+alcatel75 31
+alcatel76 10
+alcatel77 34
+alcatel78 15
+alcatel79 11
+alcatel80 12
+alcatel81 26
+alcatel82 7
+alcatel83 16
+alcatel84 11
+alcatel85 14
+alcatel86 62
+alcatel87 15
+alcatel88 66
+alcatel89 36
+alcatel90 26
+alcatel91 33
+alcatel92 14
+alcatel93 23
+alcatel94 10
+alcatel95 23
+alcatel96 11
+alcatel97 6
+alcatel98 16
+alcatel99 44
+lctl 0
+Alcatel 344
+alcatel123 400
+alcatel1234 50
+alcatel12345 32
+alcatel123456 4
+alcatel1234567 0
+alcatel12345678 0
+alcatel123456789 2
+alcatel1234567890 0
+123alcatel 15
+1234alcatel 11
+12345alcatel 2
+123456alcatel 0
+1234567alcatel 0
+12345678alcatel 0
+123456789alcatel 0
+1234567890alcatel 0
+alcatel! 35
+alcatel@ 2
+alcatel# 0
+alcatel$ 1
+alcatel% 0
+alcatel^ 0
+alcatel& 5
+alcatel* 3
+alcatel? 0
+alcatel. 52
+alcatel, 1
+alcatel-_ 0
+alcatel+ 0
+!alcatel 4
+@alcatel 5
+#alcatel 0
+$alcatel 0
+%alcatel 0
+^alcatel 0
+&alcatel 0
+*alcatel 1
+?alcatel 0
+.alcatel 3
+,alcatel 0
+-_alcatel 0
++alcatel 0
+alcatelalcatel 47
+a_l_c_a_t_e_l 0
+a-l-c-a-t-e-l 0
+a.l.c.a.t.e.l 0
+a,l,c,a,t,e,l 0
+a#l#c#a#t#e#l 0
+a*l*c*a*t*e*l 0
+a+l+c+a+t+e+l 0
+letacla 302
+AlcAtEl 0
+aLCaTeL 0
+lucent 1779
+LUCENT 49
+luc3nt 15
+lucent1950 0
+lucent1951 0
+lucent1952 0
+lucent1953 0
+lucent1954 0
+lucent1955 0
+lucent1956 0
+lucent1957 0
+lucent1958 0
+lucent1959 2
+lucent1960 0
+lucent1961 0
+lucent1962 0
+lucent1963 0
+lucent1964 0
+lucent1965 0
+lucent1966 1
+lucent1967 0
+lucent1968 0
+lucent1969 0
+lucent1970 3
+lucent1971 0
+lucent1972 0
+lucent1973 0
+lucent1974 0
+lucent1975 0
+lucent1976 0
+lucent1977 1
+lucent1978 3
+lucent1979 7
+lucent1980 0
+lucent1981 4
+lucent1982 0
+lucent1983 4
+lucent1984 1
+lucent1985 1
+lucent1986 5
+lucent1987 4
+lucent1988 0
+lucent1989 1
+lucent1990 0
+lucent1991 0
+lucent1992 0
+lucent1993 1
+lucent1994 0
+lucent1995 0
+lucent1996 0
+lucent1997 0
+lucent1998 4
+lucent1999 1
+lucent2000 38
+lucent2001 0
+lucent2002 7
+lucent2003 0
+lucent2004 0
+lucent2005 13
+lucent2006 2
+lucent2007 10
+lucent2008 13
+lucent2009 15
+lucent2010 0
+lucent2011 0
+lucent2012 0
+lucent2013 2
+lucent2014 0
+lucent2015 0
+lucent2016 0
+lucent2017 0
+lucent2018 0
+lucent2019 0
+lucent0 16
+lucent1 434
+lucent2 100
+lucent3 16
+lucent4 35
+lucent5 4
+lucent6 12
+lucent7 31
+lucent8 9
+lucent9 9
+lucent10 16
+lucent11 60
+lucent12 93
+lucent13 8
+lucent14 13
+lucent15 5
+lucent16 4
+lucent17 16
+lucent18 2
+lucent19 9
+lucent20 18
+lucent21 20
+lucent22 26
+lucent23 24
+lucent24 8
+lucent25 13
+lucent26 2
+lucent27 13
+lucent28 11
+lucent29 4
+lucent30 0
+lucent31 1
+lucent32 11
+lucent33 30
+lucent34 3
+lucent35 3
+lucent36 3
+lucent37 0
+lucent38 2
+lucent39 7
+lucent40 1
+lucent41 16
+lucent42 5
+lucent43 0
+lucent44 6
+lucent45 22
+lucent46 0
+lucent47 0
+lucent48 0
+lucent49 0
+lucent50 8
+lucent51 4
+lucent52 15
+lucent53 0
+lucent54 10
+lucent55 7
+lucent56 28
+lucent57 5
+lucent58 0
+lucent59 7
+lucent60 0
+lucent61 1
+lucent62 2
+lucent63 2
+lucent64 5
+lucent65 19
+lucent66 7
+lucent67 5
+lucent68 0
+lucent69 55
+lucent70 3
+lucent71 0
+lucent72 5
+lucent73 2
+lucent74 12
+lucent75 10
+lucent76 14
+lucent77 21
+lucent78 4
+lucent79 5
+lucent80 0
+lucent81 0
+lucent82 3
+lucent83 0
+lucent84 13
+lucent85 2
+lucent86 2
+lucent87 8
+lucent88 5
+lucent89 4
+lucent90 0
+lucent91 0
+lucent92 0
+lucent93 0
+lucent94 0
+lucent95 0
+lucent96 3
+lucent97 23
+lucent98 43
+lucent99 88
+lcnt 0
+Lucent 85
+lucent123 330
+lucent1234 25
+lucent12345 6
+lucent123456 0
+lucent1234567 0
+lucent12345678 0
+lucent123456789 0
+lucent1234567890 0
+123lucent 2
+1234lucent 0
+12345lucent 0
+123456lucent 0
+1234567lucent 0
+12345678lucent 0
+123456789lucent 0
+1234567890lucent 0
+lucent! 4
+lucent@ 2
+lucent# 3
+lucent$ 3
+lucent% 0
+lucent^ 0
+lucent& 0
+lucent* 1
+lucent? 0
+lucent. 5
+lucent, 0
+lucent-_ 0
+lucent+ 0
+!lucent 0
+@lucent 1
+#lucent 0
+$lucent 0
+%lucent 0
+^lucent 0
+&lucent 0
+*lucent 0
+?lucent 0
+.lucent 0
+,lucent 0
+-_lucent 0
++lucent 0
+lucentlucent 18
+l_u_c_e_n_t 0
+l-u-c-e-n-t 0
+l.u.c.e.n.t 0
+l,u,c,e,n,t 0
+l#u#c#e#n#t 0
+l*u*c*e*n*t 0
+l+u+c+e+n+t 0
+tnecul 13
+lUcEnt 0
+LuCeNT 0
+alcatellucent 66
+ALCATELLUCENT 0
+4lc4t3lluc3nt 0
+alcatellucent1950 0
+alcatellucent1951 0
+alcatellucent1952 0
+alcatellucent1953 0
+alcatellucent1954 0
+alcatellucent1955 0
+alcatellucent1956 0
+alcatellucent1957 0
+alcatellucent1958 0
+alcatellucent1959 0
+alcatellucent1960 0
+alcatellucent1961 0
+alcatellucent1962 0
+alcatellucent1963 0
+alcatellucent1964 0
+alcatellucent1965 0
+alcatellucent1966 0
+alcatellucent1967 0
+alcatellucent1968 0
+alcatellucent1969 0
+alcatellucent1970 0
+alcatellucent1971 0
+alcatellucent1972 0
+alcatellucent1973 0
+alcatellucent1974 0
+alcatellucent1975 0
+alcatellucent1976 0
+alcatellucent1977 0
+alcatellucent1978 0
+alcatellucent1979 0
+alcatellucent1980 0
+alcatellucent1981 0
+alcatellucent1982 0
+alcatellucent1983 0
+alcatellucent1984 0
+alcatellucent1985 0
+alcatellucent1986 0
+alcatellucent1987 0
+alcatellucent1988 0
+alcatellucent1989 0
+alcatellucent1990 0
+alcatellucent1991 0
+alcatellucent1992 0
+alcatellucent1993 0
+alcatellucent1994 0
+alcatellucent1995 0
+alcatellucent1996 0
+alcatellucent1997 0
+alcatellucent1998 0
+alcatellucent1999 0
+alcatellucent2000 0
+alcatellucent2001 0
+alcatellucent2002 0
+alcatellucent2003 0
+alcatellucent2004 0
+alcatellucent2005 0
+alcatellucent2006 0
+alcatellucent2007 0
+alcatellucent2008 0
+alcatellucent2009 0
+alcatellucent2010 0
+alcatellucent2011 0
+alcatellucent2012 0
+alcatellucent2013 0
+alcatellucent2014 0
+alcatellucent2015 0
+alcatellucent2016 0
+alcatellucent2017 0
+alcatellucent2018 0
+alcatellucent2019 0
+alcatellucent0 0
+alcatellucent1 1
+alcatellucent2 0
+alcatellucent3 0
+alcatellucent4 0
+alcatellucent5 0
+alcatellucent6 0
+alcatellucent7 0
+alcatellucent8 0
+alcatellucent9 0
+alcatellucent10 0
+alcatellucent11 0
+alcatellucent12 0
+alcatellucent13 0
+alcatellucent14 0
+alcatellucent15 0
+alcatellucent16 0
+alcatellucent17 0
+alcatellucent18 0
+alcatellucent19 0
+alcatellucent20 0
+alcatellucent21 0
+alcatellucent22 0
+alcatellucent23 0
+alcatellucent24 0
+alcatellucent25 0
+alcatellucent26 0
+alcatellucent27 0
+alcatellucent28 0
+alcatellucent29 0
+alcatellucent30 0
+alcatellucent31 0
+alcatellucent32 0
+alcatellucent33 0
+alcatellucent34 0
+alcatellucent35 0
+alcatellucent36 0
+alcatellucent37 0
+alcatellucent38 0
+alcatellucent39 0
+alcatellucent40 0
+alcatellucent41 0
+alcatellucent42 0
+alcatellucent43 0
+alcatellucent44 0
+alcatellucent45 0
+alcatellucent46 0
+alcatellucent47 0
+alcatellucent48 0
+alcatellucent49 0
+alcatellucent50 0
+alcatellucent51 0
+alcatellucent52 0
+alcatellucent53 0
+alcatellucent54 0
+alcatellucent55 0
+alcatellucent56 0
+alcatellucent57 0
+alcatellucent58 0
+alcatellucent59 0
+alcatellucent60 0
+alcatellucent61 0
+alcatellucent62 0
+alcatellucent63 0
+alcatellucent64 0
+alcatellucent65 0
+alcatellucent66 0
+alcatellucent67 0
+alcatellucent68 0
+alcatellucent69 0
+alcatellucent70 0
+alcatellucent71 0
+alcatellucent72 0
+alcatellucent73 0
+alcatellucent74 0
+alcatellucent75 0
+alcatellucent76 3
+alcatellucent77 0
+alcatellucent78 0
+alcatellucent79 0
+alcatellucent80 0
+alcatellucent81 0
+alcatellucent82 0
+alcatellucent83 0
+alcatellucent84 0
+alcatellucent85 0
+alcatellucent86 0
+alcatellucent87 0
+alcatellucent88 0
+alcatellucent89 0
+alcatellucent90 0
+alcatellucent91 0
+alcatellucent92 0
+alcatellucent93 0
+alcatellucent94 0
+alcatellucent95 0
+alcatellucent96 0
+alcatellucent97 0
+alcatellucent98 0
+alcatellucent99 0
+lctllcnt 0
+Alcatellucent 0
+alcatellucent123 0
+alcatellucent1234 0
+alcatellucent12345 0
+alcatellucent123456 0
+alcatellucent1234567 0
+alcatellucent12345678 0
+alcatellucent123456789 0
+alcatellucent1234567890 0
+123alcatellucent 0
+1234alcatellucent 0
+12345alcatellucent 0
+123456alcatellucent 0
+1234567alcatellucent 0
+12345678alcatellucent 0
+123456789alcatellucent 0
+1234567890alcatellucent 0
+alcatellucent! 0
+alcatellucent@ 0
+alcatellucent# 0
+alcatellucent$ 0
+alcatellucent% 0
+alcatellucent^ 0
+alcatellucent& 0
+alcatellucent* 0
+alcatellucent? 0
+alcatellucent. 0
+alcatellucent, 0
+alcatellucent-_ 0
+alcatellucent+ 0
+!alcatellucent 0
+@alcatellucent 0
+#alcatellucent 0
+$alcatellucent 0
+%alcatellucent 0
+^alcatellucent 0
+&alcatellucent 0
+*alcatellucent 0
+?alcatellucent 0
+.alcatellucent 0
+,alcatellucent 0
+-_alcatellucent 0
++alcatellucent 0
+alcatellucentalcatellucent 0
+a_l_c_a_t_e_l_l_u_c_e_n_t 0
+a-l-c-a-t-e-l-l-u-c-e-n-t 0
+a.l.c.a.t.e.l.l.u.c.e.n.t 0
+a,l,c,a,t,e,l,l,u,c,e,n,t 0
+a#l#c#a#t#e#l#l#u#c#e#n#t 0
+a*l*c*a*t*e*l*l*u*c*e*n*t 0
+a+l+c+a+t+e+l+l+u+c+e+n+t 0
+tneculletacla 0
+AlcAtEllUcEnt 0
+aLCaTeLLuCeNT 0
+aoc 146
+AOC 18
+40c 33
+aoc1950 0
+aoc1951 0
+aoc1952 0
+aoc1953 0
+aoc1954 2
+aoc1955 1
+aoc1956 4
+aoc1957 1
+aoc1958 0
+aoc1959 0
+aoc1960 2
+aoc1961 0
+aoc1962 0
+aoc1963 0
+aoc1964 0
+aoc1965 0
+aoc1966 0
+aoc1967 0
+aoc1968 5
+aoc1969 0
+aoc1970 7
+aoc1971 10
+aoc1972 9
+aoc1973 2
+aoc1974 1
+aoc1975 5
+aoc1976 5
+aoc1977 3
+aoc1978 5
+aoc1979 17
+aoc1980 4
+aoc1981 9
+aoc1982 0
+aoc1983 8
+aoc1984 0
+aoc1985 0
+aoc1986 4
+aoc1987 4
+aoc1988 7
+aoc1989 2
+aoc1990 3
+aoc1991 0
+aoc1992 6
+aoc1993 5
+aoc1994 1
+aoc1995 5
+aoc1996 4
+aoc1997 18
+aoc1998 2
+aoc1999 2
+aoc2000 8
+aoc2001 0
+aoc2002 20
+aoc2003 1
+aoc2004 4
+aoc2005 8
+aoc2006 58
+aoc2007 1
+aoc2008 8
+aoc2009 24
+aoc2010 18
+aoc2011 17
+aoc2012 0
+aoc2013 0
+aoc2014 0
+aoc2015 0
+aoc2016 0
+aoc2017 0
+aoc2018 0
+aoc2019 0
+aoc0 0
+aoc1 4
+aoc2 1
+aoc3 0
+aoc4 2
+aoc5 0
+aoc6 0
+aoc7 1
+aoc8 0
+aoc9 0
+aoc10 0
+aoc11 2
+aoc12 2
+aoc13 0
+aoc14 0
+aoc15 3
+aoc16 3
+aoc17 3
+aoc18 5
+aoc19 2
+aoc20 5
+aoc21 0
+aoc22 4
+aoc23 0
+aoc24 4
+aoc25 0
+aoc26 0
+aoc27 0
+aoc28 1
+aoc29 0
+aoc30 0
+aoc31 0
+aoc32 1
+aoc33 4
+aoc34 0
+aoc35 0
+aoc36 0
+aoc37 0
+aoc38 0
+aoc39 0
+aoc40 0
+aoc41 0
+aoc42 0
+aoc43 0
+aoc44 4
+aoc45 0
+aoc46 0
+aoc47 0
+aoc48 0
+aoc49 0
+aoc50 0
+aoc51 0
+aoc52 0
+aoc53 0
+aoc54 0
+aoc55 0
+aoc56 0
+aoc57 0
+aoc58 0
+aoc59 0
+aoc60 0
+aoc61 0
+aoc62 0
+aoc63 0
+aoc64 0
+aoc65 0
+aoc66 2
+aoc67 0
+aoc68 2
+aoc69 0
+aoc70 0
+aoc71 0
+aoc72 0
+aoc73 0
+aoc74 2
+aoc75 0
+aoc76 2
+aoc77 1
+aoc78 3
+aoc79 0
+aoc80 0
+aoc81 0
+aoc82 1
+aoc83 0
+aoc84 0
+aoc85 0
+aoc86 0
+aoc87 0
+aoc88 0
+aoc89 0
+aoc90 0
+aoc91 0
+aoc92 0
+aoc93 1
+aoc94 0
+aoc95 12
+aoc96 0
+aoc97 0
+aoc98 0
+aoc99 0
+c 38644
+Aoc 3
+aoc123 348
+aoc1234 49
+aoc12345 43
+aoc123456 61
+aoc1234567 5
+aoc12345678 0
+aoc123456789 8
+aoc1234567890 0
+123aoc 23
+1234aoc 1
+12345aoc 1
+123456aoc 4
+1234567aoc 2
+12345678aoc 0
+123456789aoc 1
+1234567890aoc 0
+aoc! 0
+aoc@ 0
+aoc# 0
+aoc$ 0
+aoc% 0
+aoc^ 0
+aoc& 0
+aoc* 0
+aoc? 0
+aoc. 0
+aoc, 0
+aoc-_ 0
+aoc+ 0
+!aoc 0
+@aoc 0
+#aoc 0
+$aoc 0
+%aoc 0
+^aoc 0
+&aoc 0
+*aoc 0
+?aoc 0
+.aoc 0
+,aoc 0
+-_aoc 0
++aoc 0
+aocaoc 338
+a_o_c 15
+a-o-c 0
+a.o.c 0
+a,o,c 0
+a#o#c 0
+a*o*c 0
+a+o+c 0
+coa 521
+AOc 2
+aoC 0
+print-klex 0
+PRINT-KLEX 0
+pr1nt-kl3x 0
+print-klex1950 0
+print-klex1951 0
+print-klex1952 0
+print-klex1953 0
+print-klex1954 0
+print-klex1955 0
+print-klex1956 0
+print-klex1957 0
+print-klex1958 0
+print-klex1959 0
+print-klex1960 0
+print-klex1961 0
+print-klex1962 0
+print-klex1963 0
+print-klex1964 0
+print-klex1965 0
+print-klex1966 0
+print-klex1967 0
+print-klex1968 0
+print-klex1969 0
+print-klex1970 0
+print-klex1971 0
+print-klex1972 0
+print-klex1973 0
+print-klex1974 0
+print-klex1975 0
+print-klex1976 0
+print-klex1977 0
+print-klex1978 0
+print-klex1979 0
+print-klex1980 0
+print-klex1981 0
+print-klex1982 0
+print-klex1983 0
+print-klex1984 0
+print-klex1985 0
+print-klex1986 0
+print-klex1987 0
+print-klex1988 0
+print-klex1989 0
+print-klex1990 0
+print-klex1991 0
+print-klex1992 0
+print-klex1993 0
+print-klex1994 0
+print-klex1995 0
+print-klex1996 0
+print-klex1997 0
+print-klex1998 0
+print-klex1999 0
+print-klex2000 0
+print-klex2001 0
+print-klex2002 0
+print-klex2003 0
+print-klex2004 0
+print-klex2005 0
+print-klex2006 0
+print-klex2007 0
+print-klex2008 0
+print-klex2009 0
+print-klex2010 0
+print-klex2011 0
+print-klex2012 0
+print-klex2013 0
+print-klex2014 0
+print-klex2015 0
+print-klex2016 0
+print-klex2017 0
+print-klex2018 0
+print-klex2019 0
+print-klex0 0
+print-klex1 0
+print-klex2 0
+print-klex3 0
+print-klex4 0
+print-klex5 0
+print-klex6 0
+print-klex7 0
+print-klex8 0
+print-klex9 0
+print-klex10 0
+print-klex11 0
+print-klex12 0
+print-klex13 0
+print-klex14 0
+print-klex15 0
+print-klex16 0
+print-klex17 0
+print-klex18 0
+print-klex19 0
+print-klex20 0
+print-klex21 0
+print-klex22 0
+print-klex23 0
+print-klex24 0
+print-klex25 0
+print-klex26 0
+print-klex27 0
+print-klex28 0
+print-klex29 0
+print-klex30 0
+print-klex31 0
+print-klex32 0
+print-klex33 0
+print-klex34 0
+print-klex35 0
+print-klex36 0
+print-klex37 0
+print-klex38 0
+print-klex39 0
+print-klex40 0
+print-klex41 0
+print-klex42 0
+print-klex43 0
+print-klex44 0
+print-klex45 0
+print-klex46 0
+print-klex47 0
+print-klex48 0
+print-klex49 0
+print-klex50 0
+print-klex51 0
+print-klex52 0
+print-klex53 0
+print-klex54 0
+print-klex55 0
+print-klex56 0
+print-klex57 0
+print-klex58 0
+print-klex59 0
+print-klex60 0
+print-klex61 0
+print-klex62 0
+print-klex63 0
+print-klex64 0
+print-klex65 0
+print-klex66 0
+print-klex67 0
+print-klex68 0
+print-klex69 0
+print-klex70 0
+print-klex71 0
+print-klex72 0
+print-klex73 0
+print-klex74 0
+print-klex75 0
+print-klex76 0
+print-klex77 0
+print-klex78 0
+print-klex79 0
+print-klex80 0
+print-klex81 0
+print-klex82 0
+print-klex83 0
+print-klex84 0
+print-klex85 0
+print-klex86 0
+print-klex87 0
+print-klex88 0
+print-klex89 0
+print-klex90 0
+print-klex91 0
+print-klex92 0
+print-klex93 0
+print-klex94 0
+print-klex95 0
+print-klex96 0
+print-klex97 0
+print-klex98 0
+print-klex99 0
+prnt-klx 0
+PrintKlex 0
+printKlex 0
+Print-klex 0
+print-klex123 0
+print-klex1234 0
+print-klex12345 0
+print-klex123456 0
+print-klex1234567 0
+print-klex12345678 0
+print-klex123456789 0
+print-klex1234567890 0
+123print-klex 0
+1234print-klex 0
+12345print-klex 0
+123456print-klex 0
+1234567print-klex 0
+12345678print-klex 0
+123456789print-klex 0
+1234567890print-klex 0
+print-klex! 0
+print-klex@ 0
+print-klex# 0
+print-klex$ 0
+print-klex% 0
+print-klex^ 0
+print-klex& 0
+print-klex* 0
+print-klex? 0
+print-klex. 0
+print-klex, 0
+print-klex-_ 0
+print-klex+ 0
+!print-klex 0
+@print-klex 0
+#print-klex 0
+$print-klex 0
+%print-klex 0
+^print-klex 0
+&print-klex 0
+*print-klex 0
+?print-klex 0
+.print-klex 0
+,print-klex 0
+-_print-klex 0
++print-klex 0
+print-klexprint-klex 0
+p_r_i_n_t_-_k_l_e_x 0
+p-r-i-n-t---k-l-e-x 0
+p.r.i.n.t.-.k.l.e.x 0
+p,r,i,n,t,-,k,l,e,x 0
+p#r#i#n#t#-#k#l#e#x 0
+p*r*i*n*t*-*k*l*e*x 0
+p+r+i+n+t+-+k+l+e+x 0
+xelk-tnirp 0
+prInt-klEx 0
+PRiNT-KLeX 0

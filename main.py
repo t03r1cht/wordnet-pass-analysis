@@ -433,7 +433,6 @@ def _write_summary_to_result_file(opts):
         _write_to_summary_file("Base Lemmas (Total): {0} ({1:.2f} permutations per base lemma)".format(
             total_base_lemmas, total_processed / total_base_lemmas))
         _write_to_summary_file("")
-        _write_to_summary_file("")
         started_time = opts["started_time"]
         finished_time = get_curr_time()
         time_delta = finished_time - started_time
@@ -690,8 +689,9 @@ def option_permutate_from_lists():
                     password_base = password_base.strip("\n").strip("\r")
                     total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                         password_base, 0)
-                    s = "\t%s [total_hits=%d|total_found=%d|total_not_found=%d]" % (
-                        password_base, total_hits, found_cnt, not_found_cnt)
+                    s = "\t{0} [total_hits={1}|total_found={2}|total_not_found={3}|pct_found={4:.2f}]".format(
+                        password_base, total_hits, found_cnt, not_found_cnt,
+                        (found_cnt / total_found) * 100)
                     _write_to_summary_file(s)
             sp.write("Finished %s" % pass_list)
         sp.ok("✔")

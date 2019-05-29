@@ -1,35 +1,41 @@
+    *** Search Summary ***
 
-========================================
 
-    *** Synset Distribution ***
+brands.txt
+	iiyama [total_hits=10660|total_found=157|total_not_found=71|pct_found=100.00]
+	samsung [total_hits=590205|total_found=217|total_not_found=11|pct_found=58.02]
+	ibm [total_hits=8885|total_found=126|total_not_found=102|pct_found=25.20]
+	apple [total_hits=625401|total_found=218|total_not_found=10|pct_found=30.36]
+	nokia [total_hits=211254|total_found=214|total_not_found=14|pct_found=22.96]
+	blackberry [total_hits=54710|total_found=184|total_not_found=44|pct_found=16.49]
+	fujitsu [total_hits=16519|total_found=161|total_not_found=67|pct_found=12.61]
+	cherry [total_hits=365444|total_found=212|total_not_found=16|pct_found=14.24]
+	lenovo [total_hits=24031|total_found=186|total_not_found=42|pct_found=11.10]
+	hp [total_hits=21422|total_found=187|total_not_found=41|pct_found=10.04]
+	acer [total_hits=52179|total_found=198|total_not_found=30|pct_found=9.61]
+	intel [total_hits=30771|total_found=198|total_not_found=30|pct_found=8.77]
+	amd [total_hits=7912|total_found=136|total_not_found=92|pct_found=5.68]
+	alcatel [total_hits=17903|total_found=164|total_not_found=64|pct_found=6.41]
+	lucent [total_hits=4075|total_found=120|total_not_found=108|pct_found=4.48]
+	alcatellucent [total_hits=70|total_found=3|total_not_found=225|pct_found=0.11]
+	aoc [total_hits=40673|total_found=91|total_not_found=137|pct_found=3.28]
+	print-klex [total_hits=0|total_found=0|total_not_found=230|pct_found=0.00]
 
-entity.n.01  pct_total=100.00|pct_this=32.85|total_hits=22495|this_hits=2391|below_hits=20104|total_found=274|this_found=90|below_found=184|total_not_found=884|this_not_found=138|below_not_found=746
-  thing.n.08  pct_total=61.31|pct_this=61.31|total_hits=19865|this_hits=19865|below_hits=0|total_found=168|this_found=168|below_found=0|total_not_found=60|this_not_found=60|below_not_found=0
-  physical_entity.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=237|this_not_found=237|below_not_found=0
-  abstraction.n.06  pct_total=5.84|pct_this=5.84|total_hits=239|this_hits=239|below_hits=0|total_found=16|this_found=16|below_found=0|total_not_found=449|this_not_found=449|below_not_found=0
-
-========================================
-
-    *** Searched Lemma ***
-
-Identifier: entity.n.01
-Synonyms: ['entity']
-Definition: that which is perceived or known or inferred to have its own distinct existence (living or nonliving)
-Examples: []
 
     *** Stats ***
 
-Total Passwords Searched: 1158 (100.00%)
-Total Passwords (Success): 274 (23.66%)
-Total Passwords (Failure): 884 (76.34%)
-Total hits for password searches: 22495 (19.43 hits per password)
 
-Pct Found Passwords (Total): 0.00408%
-Pct Not Found Passwords (Total): 99.99592%
+Total Passwords Searched: 4106 (100.00%)
+Total Passwords (Success): 2772 (67.51%)
+Total Passwords (Failure): 1334 (32.49%)
+Total hits for password searches: 2082114 (507.09 hits per password)
 
-Base Lemmas (Total): 5 (231.60 permutations per base lemma)
+Pct Found Passwords (Total): 0.37753%
+Pct Not Found Passwords (Total): 99.62247%
+
+Base Lemmas (Total): 18 (228.11 permutations per base lemma)
 
 
-Average Time per Base Lemma: 1.600
-Starting Time: 2019-05-29 12:18:38.972887
-Finishing Time: 2019-05-29 12:18:47.399073
+Average Time per Base Lemma: 1.389
+Starting Time: 2019-05-29 12:31:31.177438
+Finishing Time: 2019-05-29 12:31:56.635082
