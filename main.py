@@ -61,6 +61,7 @@ total_not_found = 0
 pwned_pw_amount = 551509767
 counter = 0
 total_base_lemmas = 0  # track the total number of base lemmas
+lemmas_to_process = 0
 
 
 def sigint_handler(sig, frame):
@@ -511,11 +512,11 @@ def _write_lists_summary_to_result_file(opts):
                 not_found_count_loc = value_array[2]
                 pct_found_lemma = found_count_loc / total_found * 100
                 _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|searched={5}|found={2}|not_found={3}]".format(
-                    lemma_name, 
-                    total_hits_loc, 
-                    found_count_loc, 
-                    not_found_count_loc, 
-                    pct_found_lemma, 
+                    lemma_name,
+                    total_hits_loc,
+                    found_count_loc,
+                    not_found_count_loc,
+                    pct_found_lemma,
                     found_count_loc + not_found_count_loc))
 
         _write_to_summary_file("")
@@ -545,9 +546,9 @@ def _write_lists_summary_to_result_file(opts):
             total_base_lemmas, total_processed / total_base_lemmas))
         _write_to_summary_file("")
         _write_to_summary_file("")
-        started_time=opts["started_time"]
-        finished_time=get_curr_time()
-        time_delta=finished_time - started_time
+        started_time = opts["started_time"]
+        finished_time = get_curr_time()
+        time_delta = finished_time - started_time
         _write_to_summary_file(
             "Average Time per Base Lemma: {0:.3f} s".format(time_delta.seconds / total_base_lemmas))
         _write_to_summary_file("Starting Time: %s" % started_time)
@@ -579,10 +580,10 @@ def prompt_synset_choice(root_synsets):
             root_synsets[elem].name(),
             root_synsets[elem].lemma_names()))
     print()
-    choice=input("Your choice [0-%d]: " % ((len(root_synsets)-1)))
+    choice = input("Your choice [0-%d]: " % ((len(root_synsets)-1)))
     print()
     try:
-        int_choice=int(choice)
+        int_choice = int(choice)
     except ValueError:
         print("Invalid choice: %s" % choice)
         sys.exit(0)
@@ -616,29 +617,29 @@ def option_lookup_passwords():
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
     print()
-    started_time=get_curr_time()
+    started_time = get_curr_time()
 
-    root_synsets=wn.synsets(args.root_syn_name, "n")
+    root_synsets = wn.synsets(args.root_syn_name, "n")
     if len(root_synsets) == 0:
         print("  No synset found for: %s" % args.root_syn_name)
         sys.exit(0)
 
     # If multiple synsets were found, prompt the user to choose which one to use.
     if len(root_synsets) > 1:
-        choice_root_syn=prompt_synset_choice(root_synsets)
+        choice_root_syn = prompt_synset_choice(root_synsets)
     else:
-        choice_root_syn=root_synsets[0]
+        choice_root_syn = root_synsets[0]
 
     # Initiate the file handles for the result and summary file
     _init_file_handles(get_curr_time_str())
     global total_base_lemmas
     with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
-        first_level_hits=0
-        first_level_not_found=0
-        first_level_found=0
+        first_level_hits = 0
+        first_level_not_found = 0
+        first_level_found = 0
         for root_lemma in choice_root_syn.lemma_names():
             total_base_lemmas += 1
-            hits, not_found, found=permutations_for_lemma_experimental(
+            hits, not_found, found = permutations_for_lemma_experimental(
                 root_lemma, choice_root_syn.min_depth())
             first_level_hits += hits
             first_level_not_found += not_found
@@ -646,7 +647,7 @@ def option_lookup_passwords():
         sp.ok("✔")
 
     with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
-        hits_below, not_found_below, found_below=recurse_nouns_from_root(
+        hits_below, not_found_below, found_below = recurse_nouns_from_root(
             root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
         sp.ok("✔")
 
@@ -659,11 +660,11 @@ def option_lookup_passwords():
 
     # Writing results to result file
     # Using a options dictionary to pass option information to the function
-    opts={}
-    opts["root_syn"]=choice_root_syn
-    opts["started_time"]=started_time
-    opts["hits_below_root"]=hits_below
-    opts["start_depth"]=choice_root_syn.min_depth()
+    opts = {}
+    opts["root_syn"] = choice_root_syn
+    opts["started_time"] = started_time
+    opts["hits_below_root"] = hits_below
+    opts["start_depth"] = choice_root_syn.min_depth()
     _write_summary_to_result_file(opts)
     cleanup()
 
@@ -672,108 +673,134 @@ def option_hypertree():
     # import igraph instead of jgraph
     import jgraph
     from h3.tree import Tree
-    edges=jgraph.Graph.Barabasi(
+    edges = jgraph.Graph.Barabasi(
         n=500, m=3, directed=True).spanning_tree(None, True).get_edgelist()
-    tree=Tree(edges)
+    tree = Tree(edges)
     tree.scatter_plot(equators=False, tagging=False)
 
 
 def option_permutate_from_lists():
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
-    with yaspin(text="Checking prerequisites...", color="cyan") as sp:
-        # Check if the specified directory is valid
-        if not args.from_lists:
-            sp.write(
-                "ERROR: Please enter a path to a directory containing password base lists.")
-            sp.fail("💥")
-            return
-        # Check if directory exists and is a directory
-        if not os.path.isdir(args.from_lists):
-            sp.write("ERROR: Not a directory")
-            sp.fail("💥")
-            return
-
-        # Check if directory contains at least 1 file
-        if len(os.listdir(args.from_lists)) == 0:
-            sp.write("ERROR: Directory is empty.")
-            sp.fail("💥")
-            return
-
-        # Gather filenames from dir
-        dir_content=os.listdir(args.from_lists)
-        dir_txt_content=[]
-        for f in dir_content:
-            if f.endswith(".txt"):
-                dir_txt_content.append(f)
-
-        if len(dir_txt_content) > 0:
-            sp.write("Found %d text files in %s" %
-                     (len(dir_txt_content), args.from_lists))
-            sp.ok("✔")
-        else:
-            sp.write("Could not find any textfiles")
-            sp.fail("💥")
-
-    started_time=get_curr_time()
     # Initialize the file handles to write to
     _init_file_handles(get_curr_time_str())
+    # Check if the specified directory is valid
+    print("Checking prerequisites...")
+    if not args.from_lists:
+        print(
+            "ERROR: Please enter a path to a directory containing password base lists.")
+        print("💥")
+        return
+    # Check if directory exists and is a directory
+    if not os.path.isdir(args.from_lists):
+        print("ERROR: Not a directory")
+        print("💥")
+        return
+
+    # Check if directory contains at least 1 file
+    if len(os.listdir(args.from_lists)) == 0:
+        print("ERROR: Directory is empty.")
+        print("💥")
+        return
+
+    # Gather filenames from dir
+    dir_content = os.listdir(args.from_lists)
+    dir_txt_content = []
+    for f in dir_content:
+        if f.endswith(".txt"):
+            dir_txt_content.append(f)
+
+    if len(dir_txt_content) > 0:
+        print("Found %d text files in %s" %
+                           (len(dir_txt_content), args.from_lists))
+    else:
+        print("Could not find any textfiles")
+        print("💥")
+
+    started_time = get_curr_time()
 
     # Create options dict
-    opts={}
-    opts["started_time"]=started_time
-    opts["list_dir"]=args.from_lists
+    opts = {}
+    opts["started_time"] = started_time
+    opts["list_dir"] = args.from_lists
     # Iterate over each list
     global total_base_lemmas
-    with yaspin(text="Processing word lists...", color="cyan") as sp:
-        for pass_list in dir_txt_content:
-            try:
-                pass_file=open("%s/%s" % (args.from_lists, pass_list))
-                curr_pass_list=pass_file.readlines()
-            except Exception as e:
-                print("Failed to open file '%s'" % pass_list)
-                # Continue with next file instead of terminating the script
+    # for progress tracking
+    global lemmas_to_process
+    for txt_file in dir_txt_content:
+        try:
+            result = subprocess.check_output(
+                ["wc", "-l", "{0}/{1}".format(args.from_lists, txt_file)])
+        except CalledProcessError as e:
+            print(
+                "Could not count lines for destination directory! % s" % e)
+            return None
+        result = result.decode(
+            "utf-8").strip("\n").strip("\r").lstrip().split(" ")[0]
+        lemmas_to_process += int(result)
+    print("Total lemmas to process: %d" % lemmas_to_process)
+    print("Starting: %s" % started_time)
+
+    for pass_list in dir_txt_content:
+        try:
+            pass_file = open("%s/%s" % (args.from_lists, pass_list))
+            curr_pass_list = pass_file.readlines()
+        except Exception as e:
+            print("Failed to open file '%s'" % pass_list)
+            # Continue with next file instead of terminating the script
+            continue
+        for password_base in curr_pass_list:
+            if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
                 continue
-            for password_base in curr_pass_list:
-                if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
-                    continue
-                else:
-                    total_base_lemmas += 1
-                    password_base=password_base.strip("\n").strip("\r")
-                    total_hits, not_found_cnt, found_cnt=permutations_for_lemma_experimental(
-                        password_base, 0)
-                    # s = "\t%s [total_hits=%d|total_found=%d|total_not_found=%d]" % (
-                    #     password_base, total_hits, found_cnt, not_found_cnt)
-                    # _write_to_summary_file(s)
-                    append_list_lemma_to_list(
-                        pass_list, password_base, total_hits, found_cnt, not_found_cnt)
-            sp.write("Finished %s" % pass_list)
-        sp.ok("✔")
+            else:
+                total_base_lemmas += 1
+                password_base = password_base.strip("\n").strip("\r")
+                total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
+                    password_base, 0)
+                append_list_lemma_to_list(
+                    pass_list, password_base, total_hits, found_cnt, not_found_cnt)
+            curr_time = get_curr_time()
+            time_diff = curr_time - started_time
+            curr_lemma_time = time_diff.seconds / total_base_lemmas
+            remaining_lemmas = lemmas_to_process - total_base_lemmas
+            remaining_time_est = remaining_lemmas * curr_lemma_time
+
+            print("")
+            print("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}".format(
+                pass_list,
+                total_base_lemmas,
+                lemmas_to_process,
+                time_diff.seconds,
+                remaining_time_est / 60,
+                remaining_time_est / 60 / 60,
+                curr_lemma_time,
+                total_processed))
+
     _write_lists_summary_to_result_file(opts)
     cleanup()
 
 
 def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_found_count):
     global hits_for_list_lemmas
-    content=[total_hits, found_count, not_found_count]
+    content = [total_hits, found_count, not_found_count]
     if not list_name in hits_for_list_lemmas:
-        hits_for_list_lemmas[list_name]={}
+        hits_for_list_lemmas[list_name] = {}
 
-    hits_for_list_lemmas[list_name][lemma]=content
+    hits_for_list_lemmas[list_name][lemma] = content
     # Update the total stats for the file
     # Add the total hits to the file total hits
     if not "_total_hits" in hits_for_list_lemmas[list_name]:
-        hits_for_list_lemmas[list_name]["_total_hits"]=total_hits
+        hits_for_list_lemmas[list_name]["_total_hits"] = total_hits
     else:
         hits_for_list_lemmas[list_name]["_total_hits"] += total_hits
 
     if not "_found_count" in hits_for_list_lemmas[list_name]:
-        hits_for_list_lemmas[list_name]["_found_count"]=found_count
+        hits_for_list_lemmas[list_name]["_found_count"] = found_count
     else:
         hits_for_list_lemmas[list_name]["_found_count"] += found_count
 
     if not "_not_found_count" in hits_for_list_lemmas[list_name]:
-        hits_for_list_lemmas[list_name]["_not_found_count"]=not_found_count
+        hits_for_list_lemmas[list_name]["_not_found_count"] = not_found_count
     else:
         hits_for_list_lemmas[list_name]["_not_found_count"] += not_found_count
 

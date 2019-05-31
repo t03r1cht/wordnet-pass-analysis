@@ -1,0 +1,4 @@
+Checking prerequisites...
+Found 24 text files in lists
+Total lemmas to process: 11285
+Starting: 2019-05-31 14:26:50.209896
