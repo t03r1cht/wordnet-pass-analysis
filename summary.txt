@@ -1,41 +1,25 @@
     *** Search Summary ***
 
 
-brands.txt [pct_found=100.00%|total_hits=2082114|found=2772|not_found=1334]
-  iiyama [pct_found=5.66%|total_hits=10660|found=157|not_found=71]
-  samsung [pct_found=7.83%|total_hits=590205|found=217|not_found=11]
-  ibm [pct_found=4.55%|total_hits=8885|found=126|not_found=102]
-  apple [pct_found=7.86%|total_hits=625401|found=218|not_found=10]
-  nokia [pct_found=7.72%|total_hits=211254|found=214|not_found=14]
-  blackberry [pct_found=6.64%|total_hits=54710|found=184|not_found=44]
-  fujitsu [pct_found=5.81%|total_hits=16519|found=161|not_found=67]
-  cherry [pct_found=7.65%|total_hits=365444|found=212|not_found=16]
-  lenovo [pct_found=6.71%|total_hits=24031|found=186|not_found=42]
-  hp [pct_found=6.75%|total_hits=21422|found=187|not_found=41]
-  acer [pct_found=7.14%|total_hits=52179|found=198|not_found=30]
-  intel [pct_found=7.14%|total_hits=30771|found=198|not_found=30]
-  amd [pct_found=4.91%|total_hits=7912|found=136|not_found=92]
-  alcatel [pct_found=5.92%|total_hits=17903|found=164|not_found=64]
-  lucent [pct_found=4.33%|total_hits=4075|found=120|not_found=108]
-  alcatellucent [pct_found=0.11%|total_hits=70|found=3|not_found=225]
-  aoc [pct_found=3.28%|total_hits=40673|found=91|not_found=137]
-  print-klex [pct_found=0.00%|total_hits=0|found=0|not_found=230]
+brands.txt [pct_found=100.00%|total_hits=814923|found=1154|not_found=6054]
+  iiyama [pct_found=32.93%|total_hits=65431|searched=3604|found=380|not_found=3224]
+  samsung [pct_found=67.07%|total_hits=749492|searched=3604|found=774|not_found=2830]
 
 
     *** Stats ***
 
 
-Total Passwords Searched: 4106 (100.00%)
-Total Passwords (Success): 2772 (67.51%)
-Total Passwords (Failure): 1334 (32.49%)
-Total hits for password searches: 2082114 (507.09 hits per password)
+Total Passwords Searched: 7208 (100.00%)
+Total Passwords (Success): 1154 (16.01%)
+Total Passwords (Failure): 6054 (83.99%)
+Total hits for password searches: 814923 (113.06 hits per password)
 
-Pct Found Passwords (Total): 0.37753%
-Pct Not Found Passwords (Total): 99.62247%
+Pct Found Passwords (Total): 0.14776%
+Pct Not Found Passwords (Total): 99.85224%
 
-Base Lemmas (Total): 18 (228.11 permutations per base lemma)
+Base Lemmas (Total): 2 (3604.00 permutations per base lemma)
 
 
-Average Time per Base Lemma: 1.222 s
-Starting Time: 2019-05-29 16:32:23.845520
-Finishing Time: 2019-05-29 16:32:45.872976
+Average Time per Base Lemma: 17.000 s
+Starting Time: 2019-05-31 10:13:27.845468
+Finishing Time: 2019-05-31 10:14:02.090226

@@ -45,6 +45,9 @@ def append_to_list(elem, elem_list):
 
 @combinator
 def no_combinations(lemma, permutator_registry):
+    """
+    Run each permutator on its own.
+    """
     ret_list = []
     for permutator in permutator_registry:
         perm = permutator(lemma)
@@ -62,6 +65,9 @@ def no_combinations(lemma, permutator_registry):
 
 @combinator
 def cxc(lemma, permutator_registry):
+    """
+    Combine each combinator with each other exactly one time in the sense c2(c1(lemma))
+    """
     ret_list = []
     for permutation_handler in permutator_registry:
         trans = permutation_handler(lemma)
