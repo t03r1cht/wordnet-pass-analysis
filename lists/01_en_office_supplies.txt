@@ -10,7 +10,7 @@ stapler
 tesa
 scotchtape
 pencil
-pen
+
 crayon
 inkpen
 calendar
@@ -35,7 +35,7 @@ contract
 organizer
 stamp
 whiteout
-stamp
+
 cutter
 paperknife
 indexcard

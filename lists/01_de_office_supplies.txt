@@ -1,7 +1,6 @@
 papier
 ordner
 ringbuch
-etikett
 whiteboard
 stift
 mappe

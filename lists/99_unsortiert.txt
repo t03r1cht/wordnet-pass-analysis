@@ -69,7 +69,7 @@ desk
 keyboard
 cherry
 
-cherry
+
 apple
 pear
 pineapple
@@ -120,7 +120,7 @@ password12345678901234567890
 password0123
 password01234
 
-password
+
 Password
 PassWord
 Passw0rd
@@ -188,30 +188,30 @@ qwertyuiop
 1234567890
 
 #which keyboard line?
-12345678
-qwertyu
+
+
 asdfghj
 zxcvbnm
 
 #leftright
-qwert
+
 trewq
-asdfg
+
 gfdsa
 zxcvb
 bvcxz
-12345
+
 54321
-123456
+
 654321
-1234567
+
 7654321
 
 #cleverbeginnings
-qwert
+
 werty
 wertyu
-asdfg
+
 sdfgh
 sdfghj
 
@@ -226,13 +226,13 @@ xswzaq
 
 #pressshift
 QWERT
-qwert
+
 ASDF
-asdf
+
 !"§$
-1234
+
 !"§$%&
-123456
+
 
 #Firstlettercaps
 Qwert
@@ -282,7 +282,7 @@ microsoft
 microsoft1
 microsoft123
 microsoft123!
-apple
+
 apple123
 mitsubishi
 fedex
@@ -316,11 +316,11 @@ gyros
 
 
 #fruits
-apple
+
 peach
-pear
-cherry
-banana
+
+
+
 mango
 
 #drugs
@@ -499,7 +499,7 @@ hitler79
 88hitler
 88hitlerhh
 78hitlerhh
-adolfhitler
+
 88hh
 hh88
 goebbels
@@ -507,12 +507,12 @@ göbbels
 goering
 göring
 ilovehitler
-ihatejews
+
 vernichtungslager
 killalljews
 hitlerwasright
 jewsarebad
-killalljews
+
 ww2wasgood
 ichliebehitler
 hitleristcool
@@ -525,8 +525,8 @@ tchernobyl
 governmentshutdown
 
 #keyboard stuff
-qwertz
-qwerty
+
+
 
 #colors
 red

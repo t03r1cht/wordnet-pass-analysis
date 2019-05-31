@@ -38,7 +38,7 @@ poppin
 coastalbusinesssupplies
 filofax
 frankinplanner
-avery
+
 shoplet
 rocketbook
 papersource

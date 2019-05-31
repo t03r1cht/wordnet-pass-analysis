@@ -10,11 +10,11 @@ european_central_bank
 bayernlb
 bremer_bank
 comdirect
-commerzbank
+
 consorsbank
 dab_bnp_paribas
 dekabank_deutsche_girozentrale
-deutsche_bank
+
 deutsche_pfandbriefbank
 dz_bank
 gls_bank
