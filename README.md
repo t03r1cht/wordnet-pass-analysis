@@ -18,8 +18,16 @@
 - [X] Add lemma permutation/search statistics to WordNet mode
 - [X] Add stats for each word file (for example brands.txt had 40% of all results)
 - [X] Add percentages in summary file for each word in list mode
+- [ ] Show estimated time / progress
 - [ ] Port OpenBSD/Darwin look tool to Linux
 - [ ] Write paper about this
+
+## Word Lists
+
+- Food/Drink Brands
+- Fruits
+- Objects near the office desk
+- Tech brands
 
 ## Issues
 
