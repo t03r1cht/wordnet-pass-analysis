@@ -1,0 +1,26 @@
+    *** Search Summary ***
+
+
+04_tech_brands.txt [pct_found=100.00%|total_hits=609750|found=500|not_found=184]
+  iiyama [pct_found=31.40%|total_hits=10660|searched=228|found=157|not_found=71]
+  samsung [pct_found=43.40%|total_hits=590205|searched=228|found=217|not_found=11]
+  ibm [pct_found=25.20%|total_hits=8885|searched=228|found=126|not_found=102]
+
+
+    *** Stats ***
+
+
+Total Passwords Searched: 684 (100.00%)
+Total Passwords (Success): 500 (73.10%)
+Total Passwords (Failure): 184 (26.90%)
+Total hits for password searches: 609750 (891.45 hits per password)
+
+Pct Found Passwords (Total): 0.11056%
+Pct Not Found Passwords (Total): 99.88944%
+
+Base Lemmas (Total): 3 (228.00 permutations per base lemma)
+
+
+Average Time per Base Lemma: 1.000 s
+Starting Time: 2019-06-05 11:07:14.864139
+Finishing Time: 2019-06-05 11:07:18.106168

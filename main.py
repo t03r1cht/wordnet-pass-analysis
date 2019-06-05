@@ -376,7 +376,7 @@ def _write_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
-    print("")
+    print()
     with yaspin(text="Writing summary to result file...", color="cyan") as sp:
 
         # If we set the -c flag, instead of logging the single passwords that were searched,
@@ -772,7 +772,7 @@ def option_permutate_from_lists():
             remaining_time_est = remaining_lemmas * curr_lemma_time
 
             print("")
-            print("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}".format(
+            print("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
                 pass_list,
                 total_base_lemmas,
                 lemmas_to_process,
@@ -783,6 +783,7 @@ def option_permutate_from_lists():
                 total_processed))
 
     _write_lists_summary_to_result_file(opts)
+    print()
     cleanup()
 
 
