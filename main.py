@@ -376,7 +376,7 @@ def _write_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
-
+    print("")
     with yaspin(text="Writing summary to result file...", color="cyan") as sp:
 
         # If we set the -c flag, instead of logging the single passwords that were searched,
