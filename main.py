@@ -43,6 +43,8 @@ parser.add_argument("-t", "--hyperbolic-tree", action="store_true",
                     help="Draw a hyperbolic tree from WordNet.", dest="draw_hypertree")
 parser.add_argument("-l", "--from-lists", type=str,
                     help="Path to the folder containing self-created password lists.", dest="from_lists")
+parser.add_argument("-z", "--download-wordnet", action="store_true",
+                    help="Download WordNet.", dest="dl_wordnet")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -810,10 +812,18 @@ def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_fou
 
 
 if __name__ == "__main__":
-    try:
-        from nltk.corpus import wordnet as wn
-    except LookupError:
+    # try:
+    #     from nltk.corpus import wordnet as wn
+    #     print("import ok")
+    # except ImportError:
+    #     print("ERROR IMPORT")
+    #     _download_wordnet()
+
+    if args.dl_wordnet:
         _download_wordnet()
+    
+    from nltk.corpus import wordnet as wn
+
 
     # WordNet graph
     if args.draw_dag:
