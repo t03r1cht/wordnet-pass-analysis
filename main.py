@@ -16,7 +16,6 @@ from subprocess import CalledProcessError
 
 import nltk
 from colorama import Back, Fore, Style, init
-from nltk.corpus import wordnet as wn
 from yaspin import yaspin
 
 from combinators import combinator, combinator_registrar
@@ -598,6 +597,11 @@ def _download_wordnet():
     """
     Download the NLTK wordnet corpus.
     """
+    try:
+        import nltk
+    except:
+        print("Error importing nltk")
+        sys.exit(0)
     nltk.download("wordnet")
 
 
@@ -808,7 +812,7 @@ def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_fou
 if __name__ == "__main__":
     try:
         from nltk.corpus import wordnet as wn
-    except ImportError:
+    except LookupError:
         _download_wordnet()
 
     # WordNet graph
