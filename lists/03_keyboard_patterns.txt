@@ -1,4 +1,3 @@
-#left to right
 1234567890
 123456789
 12345678
@@ -62,8 +61,6 @@ yx
 <zxc
 <zx
 <z
-
-#right to left
 üpoiuztrewq
 üpoiuztrew
 üpoiuztre
@@ -71,14 +68,12 @@ yx
 poiuzt
 üpoiu
 üpoi
-
 üpo
 üp
 poiuztrewq
 poiuztrew
 poiuztre
 poiuztr
-
 poiuz
 poiu
 poi
@@ -89,9 +84,6 @@ poiuytre
 poiuytr
 poiuyt
 poiuy
-
-
-
 äölkjhgfdsa
 äölkjhgfds
 äölkjhgfd
@@ -115,7 +107,6 @@ lk
 -.,mnbvcx
 -.,mnbvc
 -.,mnbv
-
 -.,mnb
 -.,mn
 -.,m
@@ -128,8 +119,6 @@ mnbv
 mnb
 mn
 mnbvcxzx
-
-#top to bottom left to right
 qay
 qaywsx
 qaywsxedc
@@ -139,8 +128,6 @@ qaywsxedcrfvtgbzhn
 qaywsxedcrfvtgbzhnujm
 qaywsxedcrfvtgbzhnujmik,
 qaywsxedcrfvtgbzhnujmik,ol.
-
-#top to bottom right to left
 ol.
 ol.ik,
 ol.ik,ujm
@@ -150,8 +137,6 @@ ol.ik,ujmzhntgbrfv
 ol.ik,ujmzhntgbrfvedc
 ol.ik,ujmzhntgbrfvedcwsx
 ol.ik,ujmzhntgbrfvedcwsxqay
-
-#bottom to top left to right
 yaq
 yaqxsw
 yaqxswcde
@@ -161,8 +146,6 @@ yaqxswcdevfrbgtnhz
 yaqxswcdevfrbgtnhzmju
 yaqxswcdevfrbgtnhzmju,ki
 yaqxswcdevfrbgtnhzmju,ki.lo
-
-#bottom to top right to left
 .lo
 .lo,ki
 .lo,kimju

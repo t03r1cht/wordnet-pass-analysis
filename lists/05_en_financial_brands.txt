@@ -1,4 +1,3 @@
-#financial
 amex
 americanexpress
 visa

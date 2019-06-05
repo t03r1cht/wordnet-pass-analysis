@@ -188,17 +188,6 @@ microsoft_office_2003
 microsoft_office_2007
 microsoft_office_2010
 microsoft_office_2013
-
-
-
-
-
-
-
-
-
-
-
 age_of_empires_series
 banjo-kazooie_series
 battletoads_series

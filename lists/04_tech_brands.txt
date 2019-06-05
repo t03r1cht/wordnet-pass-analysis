@@ -49,7 +49,6 @@ novica
 packardbell
 microsoft
 razer
-
 gigaset
 smarts
 4gsystems

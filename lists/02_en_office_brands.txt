@@ -1,4 +1,3 @@
-#office supplies (en)
 abilityone
 alera
 ataglance
@@ -38,7 +37,6 @@ poppin
 coastalbusinesssupplies
 filofax
 frankinplanner
-
 shoplet
 rocketbook
 papersource

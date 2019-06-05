@@ -1,6 +1,3 @@
-#_biggest_cities_ge
-#_https://de.wikipedia.org/wiki/liste_der_gro%c%fst%c%adte_in_deutschland
-
 berlin
 hamburg
 münchen

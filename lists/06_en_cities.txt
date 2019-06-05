@@ -1,6 +1,3 @@
-#_biggest_cities_(us)
-#_from_https://de.wikipedia.org/wiki/Liste_der_St%C3%A4dte_in_den_Vereinigten_Staaten
-
 new_york_city
 los_angeles
 chicago
@@ -112,15 +109,12 @@ rochester
 oxnard
 moreno_valley
 fayetteville
-
-
 yonkers
 huntington_beach
 montgomery
 amarillo
 little_rock
 akron
-
 augusta
 grand_rapids
 shreveport
@@ -166,12 +160,10 @@ palmdale
 salinas
 alexandria
 lakewood
-
 pasadena
 sunnyvale
 pomona
 hollywood
-
 escondido
 clarksville
 joliet
@@ -185,7 +177,6 @@ mesquite
 killeen
 syracuse
 mcallen
-
 bellevue
 fullerton
 orange
@@ -230,7 +221,6 @@ berkeley
 round_rock
 ann_arbor
 fargo
-
 allentown
 evansville
 beaumont
@@ -241,11 +231,8 @@ independence
 provo
 lansing
 el_monte
-
 fairfield
 clearwater
-
-
 carlsbad
 westminster
 west_jordan
@@ -269,7 +256,6 @@ billings
 pueblo
 palm_bay
 centennial
-
 ventura
 pompano_beach
 north_charleston

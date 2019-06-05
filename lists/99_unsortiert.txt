@@ -39,7 +39,6 @@ cccccccccc
 ccccccccccc
 cccccccccccc
 ccccccccccccc
-
 bird
 cow
 dog
@@ -47,7 +46,6 @@ cat
 fish
 hamster
 spider
-
 birdbird
 cowcow
 dogdog
@@ -55,31 +53,24 @@ catcat
 fishfish
 hamsterhamster
 spiderspider
-
 bmw
 mercedes
 ferrari
 ferari
 lamborghini
 lamborgini
-
 flower
 cactus
 desk
 keyboard
 cherry
-
-
 apple
 pear
 pineapple
 carrot
-
 spaghetti
 tortellini
 lasagne
-
-
 garfield
 darth
 vader
@@ -95,7 +86,6 @@ jarjar
 ironman
 superman
 batman
-
 password
 password1
 password12
@@ -119,8 +109,6 @@ password1234567890123456789
 password12345678901234567890
 password0123
 password01234
-
-
 Password
 PassWord
 Passw0rd
@@ -130,7 +118,6 @@ Pussword
 pussword
 Pissword
 pissword
-
 iamsmart
 iamthesmartest
 iamclever
@@ -139,8 +126,6 @@ clever
 Clever
 smart
 Smart
-
-#thinking about hackers
 stupidhacker
 dumbhacker
 hackThis
@@ -160,8 +145,6 @@ sm4rterthanyou
 smarterthanU
 sosmart
 soSmart
-
-
 asd
 asdf
 asdfg
@@ -174,8 +157,6 @@ qwertyu
 qwertyui
 qwertyuio
 qwertyuiop
-
-#how long numbers
 1
 12
 123
@@ -186,36 +167,19 @@ qwertyuiop
 12345678
 123456789
 1234567890
-
-#which keyboard line?
-
-
 asdfghj
 zxcvbnm
-
-#leftright
-
 trewq
-
 gfdsa
 zxcvb
 bvcxz
-
 54321
-
 654321
-
 7654321
-
-#cleverbeginnings
-
 werty
 wertyu
-
 sdfgh
 sdfghj
-
-#updown
 qaz
 zaq
 wsx
@@ -223,31 +187,20 @@ xsw
 qazwsx
 qazxsw
 xswzaq
-
-#pressshift
 QWERT
-
 ASDF
-
 !"§$
-
 !"§$%&
-
-
-#Firstlettercaps
 Qwert
 quert
 qWert
 qwErt
 qweRt
 qwerT
-
 afep
 Afep
 aFep
 afeP
-
-#Nicesounds
 sumcom
 sumdom
 domban
@@ -256,14 +209,10 @@ dapwap
 paptap
 lapnap
 wunkon
-
-#nonicesounds
 wrtplc
 lpskfc
 cdcklp
 rphkfl
-
-#speaking to myself
 icomittedmurder
 icanremember
 rememberme
@@ -272,8 +221,6 @@ caniremember
 thisiseasy
 easyaspie
 simplemind
-
-#company names
 belden
 belden1
 belden123
@@ -282,7 +229,6 @@ microsoft
 microsoft1
 microsoft123
 microsoft123!
-
 apple123
 mitsubishi
 fedex
@@ -293,9 +239,6 @@ finanzamt
 irs
 irsirs
 belden2403
-
-
-#food and drinks
 coke
 banana
 water
@@ -313,17 +256,8 @@ chickenburger
 doner
 döner
 gyros
-
-
-#fruits
-
 peach
-
-
-
 mango
-
-#drugs
 cocaine
 aspirine
 dope
@@ -333,16 +267,12 @@ heroine
 crack
 crystalmeth
 meth
-
-#illegal activities
 robbery
 rape
 childporn
 porn
 bestiality
 incest
-
-#confessions
 iamagangster
 iamillegal
 ihurthim
@@ -383,15 +313,11 @@ iamlesbian
 iamhisfather
 ikilledmykid
 ikilledmybaby
-
-#self esteam
 ihatemyself
 iwanttokillme
 ihateme
 ihatemylife
 iamthegreatest
-
-#hating things
 ihatemyteacher
 ihatemylover
 ihatemyhusband
@@ -424,8 +350,6 @@ ihatework
 ihateeverything
 ihatenothing
 ihatemymobile
-
-#loving things
 ilovefood
 ilovechocolate
 iloveyou
@@ -450,8 +374,6 @@ ilovespending
 ilovemoney
 ilovenuts
 ilovehats
-
-#citations
 killthatdog
 killthatcat
 sameaslastyear
@@ -460,8 +382,6 @@ sameprocedureaseveryyear
 mrssoph
 iamyourfather
 iamthekingoftheworld
-
-#stars - estimating how old this thing is
 michaeljackson
 mariahcarey
 kylieminogue
@@ -478,16 +398,10 @@ thetick
 maduro
 putin
 trump
-
-
-#countries
 unitedstates
 us
 germany
 deutschland
-
-
-#brown mind
 adolfhitler
 hitler
 hitler88
@@ -499,7 +413,6 @@ hitler79
 88hitler
 88hitlerhh
 78hitlerhh
-
 88hh
 hh88
 goebbels
@@ -507,28 +420,18 @@ göbbels
 goering
 göring
 ilovehitler
-
 vernichtungslager
 killalljews
 hitlerwasright
 jewsarebad
-
 ww2wasgood
 ichliebehitler
 hitleristcool
-
-#events
 fukushima
 hiroshima
 tschernobyl
 tchernobyl
 governmentshutdown
-
-#keyboard stuff
-
-
-
-#colors
 red
 blue
 green
@@ -541,6 +444,3 @@ orange
 pink
 purple
 violet
-
-#words people easily think about
-

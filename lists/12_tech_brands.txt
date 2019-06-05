@@ -109,7 +109,6 @@ iriver
 lg
 pantech
 samsung
-
 hyundai
 cherry_mobile
 fukuda_inc_
@@ -171,7 +170,6 @@ severin_elektro
 technisat
 telefunken
 wortmann
-
 videoton
 philips
 trust
