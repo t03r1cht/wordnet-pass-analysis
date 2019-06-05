@@ -69,7 +69,7 @@ def cxc(lemma, permutator_registry):
     Combine each combinator with each other exactly one time in the sense c2(c1(lemma))
     """
     ret_list = []
-    for permutation_handler in permutator_registry[9:11]:
+    for permutation_handler in permutator_registry:
         trans = permutation_handler(lemma)
         # Create a list with all permutators except me (the current iteration of all permutatos (see outer loop))
         exc_me = []
