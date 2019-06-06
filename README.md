@@ -24,27 +24,11 @@
 - [ ] Port OpenBSD/Darwin look tool to Linux
 - [ ] Write paper about this
 
-## Word Lists
+## Alternative to 'look'
 
+`sgrep` seems to be an efficient and reliable alternative to the 64-bit 
+look utility provided MacOS.
 
-## Issues
+(Archive)[https://sourceforge.net/projects/sgrep/]
 
-## look for big files
-
-Using look on big files (bigger than 2^31-1) works fine on MacOS since MacOS supplies the user with a 64 bit look command. However, Ubuntu saddled the user with a 32 bit look utility.
-
-Fix here: https://github.com/stuartraetaylor/bsdmainutils-look
-
-# Merging to lists
-
-Universal: https://github.com/danielmiessler/SecLists
-
-Names: https://github.com/dominictarr/random-name
-
-See: https://unix.stackexchange.com/questions/50103/merge-two-lists-while-removing-duplicates
-
-# Plot Ideas
-
-- Average hits per passwords depending on the root synset (animals, vehicles etc.) in a scatter plot
-- Distribution of found passwords per class in a scatter plot
-- Pct Success/Failure distribution based on the root synset
+Compilation: `cd sgrep/ && make`
