@@ -4,6 +4,7 @@
 
 1. Install sgrep if you are running the script on a Linux-based OS (see section below)
 1. Install Python requirements: `python -m pip install -r requirements.txt`
+1. Download the WordNet corpus: `python main.py --download-wordnet`
 
 ## Alternative to 'look'
 
