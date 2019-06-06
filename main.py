@@ -481,49 +481,49 @@ def _write_lists_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
-    # with yaspin(text="Writing summary to result file...", color="cyan") as sp:
-    #     _write_to_summary_file("    *** Search Summary ***")
-    #     _write_to_summary_file("")
-    #     _write_to_summary_file("")
-    #     for word_list in hits_for_list_lemmas:
-    #         # items() returns a tuple key-value pair with index 0 being the key and index 1 being the value
-    #         # Write stats for file
-    #         list_total_hits = hits_for_list_lemmas[word_list]["_total_hits"]
-    #         list_found_count = hits_for_list_lemmas[word_list]["_found_count"]
-    #         list_not_found_count = hits_for_list_lemmas[word_list]["_not_found_count"]
-    #         pct_found = list_found_count / total_found * 100
+    with yaspin(text="Writing summary to result file...", color="cyan") as sp:
+        _write_to_summary_file("    *** Search Summary ***")
+        _write_to_summary_file("")
+        _write_to_summary_file("")
+        for word_list in hits_for_list_lemmas:
+            # items() returns a tuple key-value pair with index 0 being the key and index 1 being the value
+            # Write stats for file
+            list_total_hits = hits_for_list_lemmas[word_list]["_total_hits"]
+            list_found_count = hits_for_list_lemmas[word_list]["_found_count"]
+            list_not_found_count = hits_for_list_lemmas[word_list]["_not_found_count"]
+            pct_found = list_found_count / total_found * 100
 
-    #         _write_to_summary_file(
-    #             "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
-    #                 word_list,
-    #                 pct_found,
-    #                 list_total_hits,
-    #                 list_found_count,
-    #                 list_not_found_count))
+            _write_to_summary_file(
+                "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
+                    word_list,
+                    pct_found,
+                    list_total_hits,
+                    list_found_count,
+                    list_not_found_count))
 
-    #         # Write stats for each word of the file
+            # Write stats for each word of the file
 
-    #         # create list without the fields that start with "_" containing values used for the file stats entry (see above)
-    #         lemma_only_list = []
+            # create list without the fields that start with "_" containing values used for the file stats entry (see above)
+            lemma_only_list = []
 
-    #         for item in hits_for_list_lemmas[word_list].items():
-    #             if not item[0].startswith("_"):
-    #                 lemma_only_list.append(item)
+            for item in hits_for_list_lemmas[word_list].items():
+                if not item[0].startswith("_"):
+                    lemma_only_list.append(item)
 
-    #         for dict_item in lemma_only_list:
-    #             lemma_name = dict_item[0]
-    #             value_array = dict_item[1]
-    #             total_hits_loc = value_array[0]
-    #             found_count_loc = value_array[1]
-    #             not_found_count_loc = value_array[2]
-    #             pct_found_lemma = found_count_loc / total_found * 100
-    #             _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|searched={5}|found={2}|not_found={3}]".format(
-    #                 lemma_name,
-    #                 total_hits_loc,
-    #                 found_count_loc,
-    #                 not_found_count_loc,
-    #                 pct_found_lemma,
-    #                 found_count_loc + not_found_count_loc))
+            for dict_item in lemma_only_list:
+                lemma_name = dict_item[0]
+                value_array = dict_item[1]
+                total_hits_loc = value_array[0]
+                found_count_loc = value_array[1]
+                not_found_count_loc = value_array[2]
+                pct_found_lemma = found_count_loc / total_found * 100
+                _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|searched={5}|found={2}|not_found={3}]".format(
+                    lemma_name,
+                    total_hits_loc,
+                    found_count_loc,
+                    not_found_count_loc,
+                    pct_found_lemma,
+                    found_count_loc + not_found_count_loc))
 
     _write_to_summary_file("")
     _write_to_summary_file("")
@@ -751,8 +751,6 @@ def option_permutate_from_lists():
         lemmas_to_process += int(result)
     print("Total lemmas to process: %d" % lemmas_to_process)
     print("Starting: %s" % started_time)
-    # Track the finished lists
-    finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
         try:
@@ -790,43 +788,6 @@ def option_permutate_from_lists():
                 total_processed,
                 finished_lists,
                 len(dir_txt_content)))
-
-        finished_lists += 1
-        # === WRITE STATS AFTER FINISHED LIST ===
-        # Test: Write list results after each finished list
-        list_total_hits = hits_for_list_lemmas[pass_list]["_total_hits"]
-        list_found_count = hits_for_list_lemmas[pass_list]["_found_count"]
-        list_not_found_count = hits_for_list_lemmas[pass_list]["_not_found_count"]
-        pct_found = list_found_count / total_found * 100
-
-        _write_to_summary_file(
-            "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
-                pass_list,
-                pct_found,
-                list_total_hits,
-                list_found_count,
-                list_not_found_count))
-
-        # create list without the fields that start with "_" containing values used for the file stats entry (see above)
-        lemma_only_list = []
-        for item in hits_for_list_lemmas[pass_list].items():
-            if not item[0].startswith("_"):
-                lemma_only_list.append(item)
-
-        for dict_item in lemma_only_list:
-            lemma_name = dict_item[0]
-            value_array = dict_item[1]
-            total_hits_loc = value_array[0]
-            found_count_loc = value_array[1]
-            not_found_count_loc = value_array[2]
-            pct_found_lemma = found_count_loc / total_found * 100
-            _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|searched={5}|found={2}|not_found={3}]".format(
-                lemma_name,
-                total_hits_loc,
-                found_count_loc,
-                not_found_count_loc,
-                pct_found_lemma,
-                found_count_loc + not_found_count_loc))
 
     _write_lists_summary_to_result_file(opts)
     print()
