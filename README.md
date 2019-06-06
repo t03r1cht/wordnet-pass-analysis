@@ -21,7 +21,6 @@
 - [X] Show estimated time / progress
 - [ ] Somehow manage to print classification on runtime and not only after the program has finished working
 - [ ] Catch all errors so program doesn't terminate somewhere within execution
-- [ ] Port OpenBSD/Darwin look tool to Linux
 - [ ] Write paper about this
 
 ## Alternative to 'look'
