@@ -790,18 +790,18 @@ def option_permutate_from_lists():
                 total_processed,
                 finished_lists,
                 len(dir_txt_content)))
-        
+
         finished_lists += 1
         # === WRITE STATS AFTER FINISHED LIST ===
         # Test: Write list results after each finished list
-        list_total_hits = hits_for_list_lemmas[curr_pass_list]["_total_hits"]
-        list_found_count = hits_for_list_lemmas[curr_pass_list]["_found_count"]
-        list_not_found_count = hits_for_list_lemmas[curr_pass_list]["_not_found_count"]
+        list_total_hits = hits_for_list_lemmas[pass_list]["_total_hits"]
+        list_found_count = hits_for_list_lemmas[pass_list]["_found_count"]
+        list_not_found_count = hits_for_list_lemmas[pass_list]["_not_found_count"]
         pct_found = list_found_count / total_found * 100
 
         _write_to_summary_file(
             "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
-                curr_pass_list,
+                pass_list,
                 pct_found,
                 list_total_hits,
                 list_found_count,
@@ -809,7 +809,7 @@ def option_permutate_from_lists():
 
         # create list without the fields that start with "_" containing values used for the file stats entry (see above)
         lemma_only_list = []
-        for item in hits_for_list_lemmas[curr_pass_list].items():
+        for item in hits_for_list_lemmas[pass_list].items():
             if not item[0].startswith("_"):
                 lemma_only_list.append(item)
 
