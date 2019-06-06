@@ -843,11 +843,11 @@ if __name__ == "__main__":
             print("Error: Missing parameters.")
             parser.print_usage()
             sys.exit(0)
-        print("Running platform pre-check...")
-        if "Linux" in platform.platform():
-            print(
-                "You are running this script on Linux (%s). Due to currently unresolved bugs, the graph feature can only be used on Windows and MacOS." % platform.platform())
-            sys.exit(0)
+        # print("Running platform pre-check...")
+        # if "Linux" in platform.platform():
+        #     print(
+        #         "You are running this script on Linux (%s). Due to currently unresolved bugs, the graph feature can only be used on Windows and MacOS." % platform.platform())
+        #     sys.exit(0)
         option_draw_graph()
     # Draw the hyperbolic tree
     # elif args.draw_hypertree:
