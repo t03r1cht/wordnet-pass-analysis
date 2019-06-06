@@ -39,12 +39,14 @@ parser.add_argument("--result-file", type=str,
                     help="Name of the result file.", dest="result_file_name")
 parser.add_argument("--summary-file", type=str,
                     help="Name of the summary file.", dest="summary_file_name")
-parser.add_argument("-t", "--hyperbolic-tree", action="store_true",
-                    help="Draw a hyperbolic tree from WordNet.", dest="draw_hypertree")
+# parser.add_argument("-t", "--hyperbolic-tree", action="store_true",
+#                     help="Draw a hyperbolic tree from WordNet.", dest="draw_hypertree")
 parser.add_argument("-l", "--from-lists", type=str,
                     help="Path to the folder containing self-created password lists.", dest="from_lists")
 parser.add_argument("-z", "--download-wordnet", action="store_true",
                     help="Download WordNet.", dest="dl_wordnet")
+parser.add_argument("-t", "--lookup-utility", action="store_true",
+                    help="If set, use sgrep instead of the look utility.", dest="lookup_utility")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -200,8 +202,12 @@ def _lookup_in_hash_file(hash):
     Implements actual file access.
     """
     try:
-        result = subprocess.check_output(
-            ["look", "-f", hash, args.pass_db_path])
+        if args.lookup_utility:
+            result = subprocess.check_output(
+                ["sgrep", "-i", "-b", hash, args.pass_db_path])
+        else:
+            result = subprocess.check_output(
+                ["look", "-f", hash, args.pass_db_path])
     except CalledProcessError as e:
         return None
     return result.decode("utf-8").strip("\n").strip("\r")
@@ -718,7 +724,7 @@ def option_permutate_from_lists():
 
     if len(dir_txt_content) > 0:
         print("Found %d text files in %s" %
-                           (len(dir_txt_content), args.from_lists))
+              (len(dir_txt_content), args.from_lists))
     else:
         print("Could not find any textfiles")
         print("💥")
@@ -822,9 +828,13 @@ if __name__ == "__main__":
 
     if args.dl_wordnet:
         _download_wordnet()
-    
-    from nltk.corpus import wordnet as wn
 
+    if args.lookup_utility:
+        print("NOTE: Make sure you have sgrep installed and added to PATH.")
+        print()
+        print()
+
+    from nltk.corpus import wordnet as wn
 
     # WordNet graph
     if args.draw_dag:
