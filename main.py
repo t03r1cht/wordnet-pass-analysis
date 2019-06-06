@@ -862,9 +862,9 @@ if __name__ == "__main__":
             parser.print_usage()
             sys.exit(0)
 
-        print("Running platform pre-check...")
-        if "Darwin" not in platform.platform():
-            print(
-                "You are running this script on %s. Looking up passwords is currently only working on MacOS (Darwin) (and probably BSD-based systems). This is due to the fact that any OS other than the aforementioned are shipped with the 32-bit 'look' utility, whereas the BSD-based 'look' utility (e.g. MacOS) is 64-bit. This allows using the look utility on very large files." % platform.platform())
-            sys.exit(0)
+        # print("Running platform pre-check...")
+        # if "Darwin" not in platform.platform():
+        #     print(
+        #         "You are running this script on %s. Looking up passwords is currently only working on MacOS (Darwin) (and probably BSD-based systems). This is due to the fact that any OS other than the aforementioned are shipped with the 32-bit 'look' utility, whereas the BSD-based 'look' utility (e.g. MacOS) is 64-bit. This allows using the look utility on very large files." % platform.platform())
+        #     sys.exit(0)
         option_lookup_passwords()
