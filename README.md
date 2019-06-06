@@ -1,3 +1,20 @@
+## Introduction
+
+## Installation
+
+1. Install sgrep if you are running the script on a Linux-based OS (see section below)
+1. Install Python requirements: `python -m pip install -r requirements.txt`
+
+## Alternative to 'look'
+
+`sgrep` seems to be an efficient and reliable alternative to the 64-bit 
+look utility provided MacOS.
+
+(Archive)[https://sourceforge.net/projects/sgrep/]
+
+Compilation: `cd sgrep/ && make`
+
+
 ## To Do
 
 - [x] Permutations of each lemma
@@ -23,11 +40,3 @@
 - [ ] Catch all errors so program doesn't terminate somewhere within execution
 - [ ] Write paper about this
 
-## Alternative to 'look'
-
-`sgrep` seems to be an efficient and reliable alternative to the 64-bit 
-look utility provided MacOS.
-
-(Archive)[https://sourceforge.net/projects/sgrep/]
-
-Compilation: `cd sgrep/ && make`

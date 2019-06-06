@@ -850,8 +850,8 @@ if __name__ == "__main__":
             sys.exit(0)
         option_draw_graph()
     # Draw the hyperbolic tree
-    elif args.draw_hypertree:
-        option_hypertree()
+    # elif args.draw_hypertree:
+    #     option_hypertree()
     # Lookup words from self-created lists
     elif args.from_lists:
         option_permutate_from_lists()
