@@ -751,6 +751,8 @@ def option_permutate_from_lists():
         lemmas_to_process += int(result)
     print("Total lemmas to process: %d" % lemmas_to_process)
     print("Starting: %s" % started_time)
+    # Track finished lists
+    finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
         try:
@@ -789,6 +791,7 @@ def option_permutate_from_lists():
                 finished_lists,
                 len(dir_txt_content)))
 
+    finished_lists += 1
     _write_lists_summary_to_result_file(opts)
     print()
     cleanup()
