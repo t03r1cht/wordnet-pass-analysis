@@ -780,7 +780,7 @@ def option_permutate_from_lists():
             remaining_time_est = remaining_lemmas * curr_lemma_time
 
             clear_terminal()
-            print("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
+            print("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
                 pass_list,
                 total_base_lemmas,
                 lemmas_to_process,
