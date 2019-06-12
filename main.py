@@ -248,6 +248,18 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     #           9 - 5 = 4,
     if (root_syn.min_depth() - start_depth) >= rel_depth:
         return 0, 0, 0
+    global glob_started_time
+    curr_time = get_curr_time()
+    time_diff = curr_time - glob_started_time
+
+    clear_terminal()
+    log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3:2f}/{4:2f} (s/m)".format(
+        total_base_lemmas,
+        total_processed,
+        hypo,
+        time_diff.seconds,
+        time_diff.seconds / 60,
+    ))
     curr_root_syn = root_syn
     hits_below = 0
     total_hits_for_current_synset = 0
@@ -284,18 +296,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             append_with_hits(hypo, total_hits, hits_below,
                              not_found, not_found_below, found, found_below)
         total_base_lemmas += 1
-        global glob_started_time
-        curr_time = get_curr_time()
-        time_diff = curr_time - glob_started_time
 
-        clear_terminal()
-        log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3:2f}/{4:2f} (s/m)".format(
-            total_base_lemmas,
-            total_processed,
-            hypo,
-            time_diff.seconds,
-            time_diff.seconds / 60,
-        ))
     return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
 
 
