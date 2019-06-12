@@ -65,6 +65,7 @@ pwned_pw_amount = 551509767
 counter = 0
 total_base_lemmas = 0  # track the total number of base lemmas
 lemmas_to_process = 0
+glob_started_time = None
 
 
 def log_ok(s):
@@ -282,6 +283,20 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         if args.subsume_for_classes:
             append_with_hits(hypo, total_hits, hits_below,
                              not_found, not_found_below, found, found_below)
+        global total_base_lemmas
+        total_base_lemmas += 1
+
+        curr_time = get_curr_time()
+        time_diff = curr_time - started_time
+
+        clear_terminal()
+        log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3:2f}/{4:2f} (s/m)".format(
+            total_base_lemmas,
+            total_processed,
+            hypo,
+            time_diff.seconds,
+            time_diff.seconds / 60,
+        ))
     return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
 
 
@@ -571,6 +586,7 @@ def _write_lists_summary_to_result_file(opts):
     log_ok("Writing summary to %s" % outfile_summary.name)
     log_ok("Writing tested passwords to %s" % outfile_passwords.name)
 
+
 def _write_to_summary_file(s):
     """
     Writes generic data to the result file.
@@ -681,6 +697,8 @@ def option_lookup_passwords():
     opts = {}
     opts["root_syn"] = choice_root_syn
     opts["started_time"] = started_time
+    global glob_started_time
+    glob_started_time = started_time
     opts["hits_below_root"] = hits_below
     opts["start_depth"] = choice_root_syn.min_depth()
     _write_summary_to_result_file(opts)
