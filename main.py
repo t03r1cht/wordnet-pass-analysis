@@ -257,7 +257,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3:2f}/{4:2f} (s/m)".format(
         total_base_lemmas,
         total_processed,
-        hypo,
+        root_syn,
         time_diff.seconds,
         time_diff.seconds / 60,
     ))
