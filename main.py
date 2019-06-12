@@ -67,6 +67,18 @@ total_base_lemmas = 0  # track the total number of base lemmas
 lemmas_to_process = 0
 
 
+def log_ok(s):
+    print("[  {0}][+] {1}".format(get_curr_time_str(), s))
+
+
+def log_err(s):
+    print("[  {0}][-] {1}".format(get_curr_time_str(), s))
+
+
+def log_status(s):
+    print("[  {0}][*] {1}".format(get_curr_time_str(), s))
+
+
 def sigint_handler(sig, frame):
     """
     Register the handler for the SIGINT signal.
@@ -382,51 +394,49 @@ def _write_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
-    print()
-    with yaspin(text="Writing summary to result file...", color="cyan") as sp:
+    log_ok("Writing summary to result file...")
+    # If we set the -c flag, instead of logging the single passwords that were searched,
+    # we print only their respective classes to the result file
+    if args.subsume_for_classes:
+        _write_to_summary_file("")
+        _write_to_summary_file(40 * "=")
+        _write_to_summary_file("")
+        _write_to_summary_file("    *** Synset Distribution ***")
+        _write_to_summary_file("")
 
-        # If we set the -c flag, instead of logging the single passwords that were searched,
-        # we print only their respective classes to the result file
-        if args.subsume_for_classes:
-            _write_to_summary_file("")
-            _write_to_summary_file(40 * "=")
-            _write_to_summary_file("")
-            _write_to_summary_file("    *** Synset Distribution ***")
-            _write_to_summary_file("")
+        global hits_for_lemmas
+        reversed_dict = collections.OrderedDict(
+            reversed(list(hits_for_lemmas.items())))
 
-            global hits_for_lemmas
-            reversed_dict = collections.OrderedDict(
-                reversed(list(hits_for_lemmas.items())))
-
-            # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
-            for k, v in reversed_dict.items():
-                synset_id = v[0].name()
-                this_hits = v[1]
-                below_hits = v[2]
-                total_hits = v[1] + v[2]
-                this_not_found = v[3]
-                below_not_found = v[4]
-                total_not_found_loc = v[3] + v[4]
-                this_found = v[5]
-                below_found = v[6]
-                total_found_loc = v[5] + v[6]
-                pct_total_of_total = (total_found_loc / total_found) * 100
-                pct_this_of_total = (this_found / total_found) * 100
-                _write_to_summary_file("{0}{1}  pct_total={2:.2f}|pct_this={12:.2f}|total_hits={3}|this_hits={4}|below_hits={5}|total_found={6}|this_found={7}|below_found={8}|total_not_found={9}|this_not_found={10}|below_not_found={11}".format(
-                    (v[0].min_depth() - opts["start_depth"]) *
-                    "  ",  # indendation
-                    synset_id,  # synset id
-                    pct_total_of_total,
-                    total_hits,  # hits of each synset
-                    this_hits,
-                    below_hits,
-                    total_found_loc,
-                    this_found,
-                    below_found,
-                    total_not_found_loc,
-                    this_not_found,
-                    below_not_found,
-                    pct_this_of_total))
+        # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
+        for k, v in reversed_dict.items():
+            synset_id = v[0].name()
+            this_hits = v[1]
+            below_hits = v[2]
+            total_hits = v[1] + v[2]
+            this_not_found = v[3]
+            below_not_found = v[4]
+            total_not_found_loc = v[3] + v[4]
+            this_found = v[5]
+            below_found = v[6]
+            total_found_loc = v[5] + v[6]
+            pct_total_of_total = (total_found_loc / total_found) * 100
+            pct_this_of_total = (this_found / total_found) * 100
+            _write_to_summary_file("{0}{1}  pct_total={2:.2f}|pct_this={12:.2f}|total_hits={3}|this_hits={4}|below_hits={5}|total_found={6}|this_found={7}|below_found={8}|total_not_found={9}|this_not_found={10}|below_not_found={11}".format(
+                (v[0].min_depth() - opts["start_depth"]) *
+                "  ",  # indendation
+                synset_id,  # synset id
+                pct_total_of_total,
+                total_hits,  # hits of each synset
+                this_hits,
+                below_hits,
+                total_found_loc,
+                this_found,
+                below_found,
+                total_not_found_loc,
+                this_not_found,
+                below_not_found,
+                pct_this_of_total))
 
         _write_to_summary_file("")
         _write_to_summary_file(40 * "=")
@@ -472,58 +482,57 @@ def _write_summary_to_result_file(opts):
             "Average Time per Base Lemma: {0:.3f} s".format(time_delta.seconds / total_base_lemmas))
         _write_to_summary_file("Starting Time: %s" % started_time)
         _write_to_summary_file("Finishing Time: %s" % finished_time)
-        sp.write("Writing summary to %s" % outfile_summary.name)
-        sp.write("Writing tested passwords to %s" % outfile_passwords.name)
-        sp.ok("✔")
+        log_ok("Writing summary to %s" % outfile_summary.name)
+        log_ok("Writing tested passwords to %s" % outfile_passwords.name)
 
 
 def _write_lists_summary_to_result_file(opts):
     """
     Writes the bottom lines containing the summary to the result file.
     """
-    with yaspin(text="Writing summary to result file...", color="cyan") as sp:
-        _write_to_summary_file("    *** Search Summary ***")
-        _write_to_summary_file("")
-        _write_to_summary_file("")
-        for word_list in hits_for_list_lemmas:
-            # items() returns a tuple key-value pair with index 0 being the key and index 1 being the value
-            # Write stats for file
-            list_total_hits = hits_for_list_lemmas[word_list]["_total_hits"]
-            list_found_count = hits_for_list_lemmas[word_list]["_found_count"]
-            list_not_found_count = hits_for_list_lemmas[word_list]["_not_found_count"]
-            pct_found = list_found_count / total_found * 100
+    log_ok("Writing summary to result file...")
+    _write_to_summary_file("    *** Search Summary ***")
+    _write_to_summary_file("")
+    _write_to_summary_file("")
+    for word_list in hits_for_list_lemmas:
+        # items() returns a tuple key-value pair with index 0 being the key and index 1 being the value
+        # Write stats for file
+        list_total_hits = hits_for_list_lemmas[word_list]["_total_hits"]
+        list_found_count = hits_for_list_lemmas[word_list]["_found_count"]
+        list_not_found_count = hits_for_list_lemmas[word_list]["_not_found_count"]
+        pct_found = list_found_count / total_found * 100
 
-            _write_to_summary_file(
-                "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
-                    word_list,
-                    pct_found,
-                    list_total_hits,
-                    list_found_count,
-                    list_not_found_count))
+        _write_to_summary_file(
+            "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
+                word_list,
+                pct_found,
+                list_total_hits,
+                list_found_count,
+                list_not_found_count))
 
-            # Write stats for each word of the file
+        # Write stats for each word of the file
 
-            # create list without the fields that start with "_" containing values used for the file stats entry (see above)
-            lemma_only_list = []
+        # create list without the fields that start with "_" containing values used for the file stats entry (see above)
+        lemma_only_list = []
 
-            for item in hits_for_list_lemmas[word_list].items():
-                if not item[0].startswith("_"):
-                    lemma_only_list.append(item)
+        for item in hits_for_list_lemmas[word_list].items():
+            if not item[0].startswith("_"):
+                lemma_only_list.append(item)
 
-            for dict_item in lemma_only_list:
-                lemma_name = dict_item[0]
-                value_array = dict_item[1]
-                total_hits_loc = value_array[0]
-                found_count_loc = value_array[1]
-                not_found_count_loc = value_array[2]
-                pct_found_lemma = found_count_loc / total_found * 100
-                _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|searched={5}|found={2}|not_found={3}]".format(
-                    lemma_name,
-                    total_hits_loc,
-                    found_count_loc,
-                    not_found_count_loc,
-                    pct_found_lemma,
-                    found_count_loc + not_found_count_loc))
+        for dict_item in lemma_only_list:
+            lemma_name = dict_item[0]
+            value_array = dict_item[1]
+            total_hits_loc = value_array[0]
+            found_count_loc = value_array[1]
+            not_found_count_loc = value_array[2]
+            pct_found_lemma = found_count_loc / total_found * 100
+            _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|searched={5}|found={2}|not_found={3}]".format(
+                lemma_name,
+                total_hits_loc,
+                found_count_loc,
+                not_found_count_loc,
+                pct_found_lemma,
+                found_count_loc + not_found_count_loc))
 
     _write_to_summary_file("")
     _write_to_summary_file("")
@@ -559,8 +568,8 @@ def _write_lists_summary_to_result_file(opts):
         "Average Time per Base Lemma: {0:.3f} s".format(time_delta.seconds / total_base_lemmas))
     _write_to_summary_file("Starting Time: %s" % started_time)
     _write_to_summary_file("Finishing Time: %s" % finished_time)
-    sp.write("Writing summary to %s" % outfile_summary.name)
-    sp.write("Writing tested passwords to %s" % outfile_passwords.name)
+    log_ok("Writing summary to %s" % outfile_summary.name)
+    log_ok("Writing tested passwords to %s" % outfile_passwords.name)
     sp.ok("✔")
 
 
@@ -605,11 +614,13 @@ def _download_wordnet():
     Download the NLTK wordnet corpus.
     """
     try:
-        import nltk
+        from nltk.corpus import wordnet as wn
     except:
-        print("Error importing nltk")
+        log_err("Error importing nltk.corpus.wordnet")
+        log_ok("Downloading WordNet...")
+        nltk.download("wordnet")
+        log_status("OK")
         sys.exit(0)
-    nltk.download("wordnet")
 
 
 def option_draw_graph():
@@ -644,23 +655,21 @@ def option_lookup_passwords():
     # Initiate the file handles for the result and summary file
     _init_file_handles(get_curr_time_str())
     global total_base_lemmas
-    with yaspin(text="Processing user-specified WordNet root level...", color="cyan") as sp:
-        first_level_hits = 0
-        first_level_not_found = 0
-        first_level_found = 0
-        for root_lemma in choice_root_syn.lemma_names():
-            total_base_lemmas += 1
-            hits, not_found, found = permutations_for_lemma_experimental(
-                root_lemma, choice_root_syn.min_depth())
-            first_level_hits += hits
-            first_level_not_found += not_found
-            first_level_found += found
-        sp.ok("✔")
+    log_ok("Processing user-specified WordNet root level...")
+    first_level_hits = 0
+    first_level_not_found = 0
+    first_level_found = 0
+    for root_lemma in choice_root_syn.lemma_names():
+        total_base_lemmas += 1
+        hits, not_found, found = permutations_for_lemma_experimental(
+            root_lemma, choice_root_syn.min_depth())
+        first_level_hits += hits
+        first_level_not_found += not_found
+        first_level_found += found
 
-    with yaspin(text="Processing WordNet subtrees...", color="cyan") as sp:
-        hits_below, not_found_below, found_below = recurse_nouns_from_root(
-            root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
-        sp.ok("✔")
+    log_ok("Processing WordNet subtrees...")
+    hits_below, not_found_below, found_below = recurse_nouns_from_root(
+        root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
     # Append the dict with the root synset after we processed the subtrees, since we are going to reverse
     # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
@@ -696,22 +705,18 @@ def option_permutate_from_lists():
     # Initialize the file handles to write to
     _init_file_handles(get_curr_time_str())
     # Check if the specified directory is valid
-    print("Checking prerequisites...")
+    log_ok("Checking prerequisites...")
     if not args.from_lists:
-        print(
-            "ERROR: Please enter a path to a directory containing password base lists.")
-        print("💥")
+        log_err("Please enter a path to a directory containing password base lists.")
         return
     # Check if directory exists and is a directory
     if not os.path.isdir(args.from_lists):
-        print("ERROR: Not a directory")
-        print("💥")
+        log_err("Not a directory")
         return
 
     # Check if directory contains at least 1 file
     if len(os.listdir(args.from_lists)) == 0:
-        print("ERROR: Directory is empty.")
-        print("💥")
+        log_err("Directory is empty.")
         return
 
     # Gather filenames from dir
@@ -722,11 +727,10 @@ def option_permutate_from_lists():
             dir_txt_content.append(f)
 
     if len(dir_txt_content) > 0:
-        print("Found %d text files in %s" %
-              (len(dir_txt_content), args.from_lists))
+        log_status("Found %d text files in %s" %
+                   (len(dir_txt_content), args.from_lists))
     else:
-        print("Could not find any textfiles")
-        print("💥")
+        log_err("Could not find any textfiles")
 
     started_time = get_curr_time()
 
@@ -743,14 +747,14 @@ def option_permutate_from_lists():
             result = subprocess.check_output(
                 ["wc", "-l", "{0}/{1}".format(args.from_lists, txt_file)])
         except CalledProcessError as e:
-            print(
+            log_err(
                 "Could not count lines for destination directory! % s" % e)
             return None
         result = result.decode(
             "utf-8").strip("\n").strip("\r").lstrip().split(" ")[0]
         lemmas_to_process += int(result)
-    print("Total lemmas to process: %d" % lemmas_to_process)
-    print("Starting: %s" % started_time)
+    log_status("Total lemmas to process: %d" % lemmas_to_process)
+    log_status("Starting: %s" % started_time)
     # Track finished lists
     finished_lists = 0
     # Iterate over each list in the specified directory
@@ -760,7 +764,7 @@ def option_permutate_from_lists():
             curr_pass_list = pass_file.readlines()
             pass_file.close()
         except Exception as e:
-            print("Failed to open file '%s'" % pass_list)
+            log_err("Failed to open file '%s'" % pass_list)
             # Continue with next file instead of terminating the script
             continue
         for password_base in curr_pass_list:
@@ -780,7 +784,7 @@ def option_permutate_from_lists():
             remaining_time_est = remaining_lemmas * curr_lemma_time
 
             clear_terminal()
-            print("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
+            log_status("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
                 pass_list,
                 total_base_lemmas,
                 lemmas_to_process,
