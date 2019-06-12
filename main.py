@@ -283,7 +283,6 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         if args.subsume_for_classes:
             append_with_hits(hypo, total_hits, hits_below,
                              not_found, not_found_below, found, found_below)
-        global total_base_lemmas
         total_base_lemmas += 1
 
         curr_time = get_curr_time()
