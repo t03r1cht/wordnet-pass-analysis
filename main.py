@@ -570,8 +570,6 @@ def _write_lists_summary_to_result_file(opts):
     _write_to_summary_file("Finishing Time: %s" % finished_time)
     log_ok("Writing summary to %s" % outfile_summary.name)
     log_ok("Writing tested passwords to %s" % outfile_passwords.name)
-    sp.ok("✔")
-
 
 def _write_to_summary_file(s):
     """
