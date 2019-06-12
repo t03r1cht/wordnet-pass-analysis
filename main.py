@@ -284,9 +284,9 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             append_with_hits(hypo, total_hits, hits_below,
                              not_found, not_found_below, found, found_below)
         total_base_lemmas += 1
-
+        global glob_started_time
         curr_time = get_curr_time()
-        time_diff = curr_time - started_time
+        time_diff = curr_time - glob_started_time
 
         clear_terminal()
         log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3:2f}/{4:2f} (s/m)".format(
