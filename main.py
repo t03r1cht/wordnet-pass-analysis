@@ -653,6 +653,8 @@ def option_lookup_passwords():
     clear_terminal()
     print()
     started_time = get_curr_time()
+    global glob_started_time
+    glob_started_time = started_time
 
     root_synsets = wn.synsets(args.root_syn_name, "n")
     if len(root_synsets) == 0:
@@ -696,8 +698,7 @@ def option_lookup_passwords():
     opts = {}
     opts["root_syn"] = choice_root_syn
     opts["started_time"] = started_time
-    global glob_started_time
-    glob_started_time = started_time
+
     opts["hits_below_root"] = hits_below
     opts["start_depth"] = choice_root_syn.min_depth()
     _write_summary_to_result_file(opts)
