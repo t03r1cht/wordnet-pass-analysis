@@ -249,6 +249,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     if (root_syn.min_depth() - start_depth) >= rel_depth:
         return 0, 0, 0
     global glob_started_time
+    global total_base_lemmas
     curr_time = get_curr_time()
     time_diff = curr_time - glob_started_time
 
@@ -265,7 +266,6 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     total_hits_for_current_synset = 0
     not_found_for_current_synset = 0
     found_for_current_synset = 0
-    global total_base_lemmas
     for hypo in curr_root_syn.hyponyms():
         total_hits = 0
         not_found = 0
