@@ -776,6 +776,7 @@ def option_permutate_from_lists():
     finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
+        log_status("Processing: %s" % pass_list)
         try:
             pass_file = open("%s/%s" % (args.from_lists, pass_list))
             curr_pass_list = pass_file.readlines()
@@ -784,9 +785,11 @@ def option_permutate_from_lists():
             log_err("Failed to open file '%s'" % pass_list)
             # Continue with next file instead of terminating the script
             continue
+        log_status("Read all entries for: %s" % pass_list)
         for password_base in curr_pass_list:
             if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
                 continue
+                log_status("[%s] is a non-lemma. Skipping!" % password_base)
             else:
                 total_base_lemmas += 1
                 password_base = password_base.strip("\n").strip("\r")
@@ -794,25 +797,26 @@ def option_permutate_from_lists():
                     password_base, 0)
                 append_list_lemma_to_list(
                     pass_list, password_base, total_hits, found_cnt, not_found_cnt)
+                log_status("Finished Lemma [%s]" % password_base)
             curr_time = get_curr_time()
             time_diff = curr_time - started_time
             curr_lemma_time = time_diff.seconds / total_base_lemmas
             remaining_lemmas = lemmas_to_process - total_base_lemmas
             remaining_time_est = remaining_lemmas * curr_lemma_time
-
-            clear_terminal()
-            log_status("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
-                pass_list,
-                total_base_lemmas,
-                lemmas_to_process,
-                time_diff.seconds,
-                remaining_time_est / 60,
-                remaining_time_est / 60 / 60,
-                curr_lemma_time,
-                total_processed,
-                finished_lists,
-                len(dir_txt_content),
-                password_base))
+            log_ok("(SIMULATION) Updating status...")
+            # clear_terminal()
+            # log_status("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
+            #     pass_list,
+            #     total_base_lemmas,
+            #     lemmas_to_process,
+            #     time_diff.seconds,
+            #     remaining_time_est / 60,
+            #     remaining_time_est / 60 / 60,
+            #     curr_lemma_time,
+            #     total_processed,
+            #     finished_lists,
+            #     len(dir_txt_content),
+            #     password_base))
 
     finished_lists += 1
     _write_lists_summary_to_result_file(opts)
