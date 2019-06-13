@@ -903,11 +903,10 @@ if __name__ == "__main__":
                "Note that this is going to slow down the script a lot, since file I/O is slow. This flag can increase " +
                "the overall runtime of the script by a factor of 20-25 (and even more).")
         if args.skip_warning:
+            pass
+        else:
             log_status("ENTER to continue.")
             temp = input()
-        else:
-            log_ok("Will resume operation in 20 seconds.")
-            time.sleep(20)
 
     if args.lookup_utility:
         print("NOTE: Make sure you have sgrep installed and added to PATH.")
