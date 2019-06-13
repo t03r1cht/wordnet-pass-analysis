@@ -37,7 +37,6 @@ Compilation: `cd sgrep/ && make`
 - [X] Add stats for each word file (for example brands.txt had 40% of all results)
 - [X] Add percentages in summary file for each word in list mode
 - [X] Show estimated time / progress
-- [ ] Somehow manage to print classification on runtime and not only after the program has finished working
-- [ ] Catch all errors so program doesn't terminate somewhere within execution
+- [ ] Transform WordNet recursion to iteration, since iterations are generally more cpu intensive than iterations (each recursion step reserves its own stack frame)
 - [ ] Write paper about this
 

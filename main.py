@@ -11,6 +11,7 @@ import subprocess
 import sys
 import time
 import timeit
+import unicodedata
 from collections import OrderedDict
 from subprocess import CalledProcessError
 
@@ -47,6 +48,10 @@ parser.add_argument("-z", "--download-wordnet", action="store_true",
                     help="Download WordNet.", dest="dl_wordnet")
 parser.add_argument("-t", "--lookup-utility", action="store_true",
                     help="If set, use sgrep instead of the look utility.", dest="lookup_utility")
+parser.add_argument("-v", "--verbose", action="store_true",
+                    help="Verbose output.", dest="verbose")
+parser.add_argument("-e", "--extensive", action="store_true",
+                    help="Print all tested password to a separate result file. Use --result-file option to set custom file name..", dest="extensive")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -78,6 +83,17 @@ def log_err(s):
 
 def log_status(s):
     print("[  {0}][*] {1}".format(get_curr_time_str(), s))
+
+
+def flush_passwords():
+    log_ok("==> Flushing to disk...")
+    outfile_passwords.flush()
+    os.fsync(outfile_passwords.fileno())
+    log_status("OK")
+
+
+def remove_control_characters(s):
+    return "".join(ch for ch in s if unicodedata.category(ch)[0] != "C")
 
 
 def sigint_handler(sig, frame):
@@ -254,13 +270,15 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     time_diff = curr_time - glob_started_time
 
     clear_terminal()
-    log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3:2f}/{4:2f} (s/m)".format(
+    log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3}/{4:.2f} (s/m)".format(
         total_base_lemmas,
         total_processed,
         root_syn,
         time_diff.seconds,
         time_diff.seconds / 60,
     ))
+    if args.extensive:
+        flush_passwords()
     curr_root_syn = root_syn
     hits_below = 0
     total_hits_for_current_synset = 0
@@ -342,11 +360,16 @@ def permutations_for_lemma_experimental(lemma, depth):
     for combination_handler in combinator.all:
         # Generate all permutations
         permutations = combination_handler(lemma, permutator.all)
+        if args.verbose:
+            log_status("Permutations for [%s]: %d" %
+                       (lemma, len(permutations)))
         if permutations == None:
             continue
         # Combinators always return a list of permutations
         if type(permutations) == list:
             for p in permutations:
+                if args.verbose:
+                    log_status("Looking up [%s]" % p)
                 trans_hits = lookup(p, depth)
                 total_hits += trans_hits
                 if trans_hits == 0:
@@ -354,6 +377,8 @@ def permutations_for_lemma_experimental(lemma, depth):
                 else:
                     found_cnt += 1
         else:
+            if args.verbose:
+                log_status("Looking up [%s]" % permutations)
             trans_hits = lookup(permutations, depth)
             if trans_hits == 0:
                 not_found_cnt += 1
@@ -380,7 +405,9 @@ def lookup(permutation, depth):
         inc_total_found()
 
     # Print the permutations to the result file.
-    _write_result_to_passwords_file(permutation, depth, occurrences)
+    # Slows the script down EXTREMELY due to slow file I/O
+    if args.extensive:
+        _write_result_to_passwords_file(permutation, depth, occurrences)
     # Return occurrences in order to be able to subsume them for each class.
     global total_hits_sum
     total_hits_sum += occurrences
@@ -627,14 +654,8 @@ def _download_wordnet():
     """
     Download the NLTK wordnet corpus.
     """
-    try:
-        from nltk.corpus import wordnet as wn
-    except:
-        log_err("Error importing nltk.corpus.wordnet")
-        log_ok("Downloading WordNet...")
-        nltk.download("wordnet")
-        log_status("OK")
-        sys.exit(0)
+    nltk.download("wordnet")
+    sys.exit(0)
 
 
 def option_draw_graph():
@@ -682,6 +703,8 @@ def option_lookup_passwords():
         first_level_hits += hits
         first_level_not_found += not_found
         first_level_found += found
+    if args.extensive:
+        flush_passwords()
 
     log_ok("Processing WordNet subtrees...")
     hits_below, not_found_below, found_below = recurse_nouns_from_root(
@@ -776,7 +799,8 @@ def option_permutate_from_lists():
     finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
-        log_status("Processing: %s" % pass_list)
+        if args.verbose:
+            log_status("Processing: %s" % pass_list)
         try:
             pass_file = open("%s/%s" % (args.from_lists, pass_list))
             curr_pass_list = pass_file.readlines()
@@ -785,40 +809,52 @@ def option_permutate_from_lists():
             log_err("Failed to open file '%s'" % pass_list)
             # Continue with next file instead of terminating the script
             continue
-        log_status("Read all entries for: %s" % pass_list)
+        if args.verbose:
+            log_status("Read all entries for: %s" % pass_list)
         for password_base in curr_pass_list:
             if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
+                if args.verbose:
+                    log_status("[%s] is a non-lemma. Skipping!" %
+                               password_base)
                 continue
-                log_status("[%s] is a non-lemma. Skipping!" % password_base)
             else:
+                password_base = remove_control_characters(password_base)
+                if args.verbose:
+                    log_status(
+                        "Creating permutations for [%s]" % password_base)
                 total_base_lemmas += 1
-                password_base = password_base.strip("\n").strip("\r")
+                # password_base = password_base.strip("\n").strip("\r")
                 total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
                     password_base, 0)
                 append_list_lemma_to_list(
                     pass_list, password_base, total_hits, found_cnt, not_found_cnt)
-                log_status("Finished Lemma [%s]" % password_base)
+                if args.verbose:
+                    log_status("Finished Lemma [%s]" % password_base)
             curr_time = get_curr_time()
             time_diff = curr_time - started_time
             curr_lemma_time = time_diff.seconds / total_base_lemmas
             remaining_lemmas = lemmas_to_process - total_base_lemmas
             remaining_time_est = remaining_lemmas * curr_lemma_time
-            log_ok("(SIMULATION) Updating status...")
-            # clear_terminal()
-            # log_status("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
-            #     pass_list,
-            #     total_base_lemmas,
-            #     lemmas_to_process,
-            #     time_diff.seconds,
-            #     remaining_time_est / 60,
-            #     remaining_time_est / 60 / 60,
-            #     curr_lemma_time,
-            #     total_processed,
-            #     finished_lists,
-            #     len(dir_txt_content),
-            #     password_base))
+            # log_ok("(SIMULATION) Updating status...")
+            clear_terminal()
+            log_status("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
+                pass_list,
+                total_base_lemmas,
+                lemmas_to_process,
+                time_diff.seconds,
+                remaining_time_est / 60,
+                remaining_time_est / 60 / 60,
+                curr_lemma_time,
+                total_processed,
+                finished_lists,
+                len(dir_txt_content),
+                password_base))
+            if args.extensive:
+                flush_passwords()
 
     finished_lists += 1
+    # Initialize the file handles to write to
+    # _init_file_handles(get_curr_time_str())
     _write_lists_summary_to_result_file(opts)
     print()
     cleanup()
@@ -859,6 +895,13 @@ if __name__ == "__main__":
 
     if args.dl_wordnet:
         _download_wordnet()
+
+    if args.extensive:
+        log_ok("WARNING: You set the -e (--extensive) flag writes EVERY tested password to a seperate file. " +
+               "Note that this is going to slow down the script a lot, since file I/O is slow. This flag can increase " +
+               "the overall runtime of the script by a factor of 20-25 (and even more).")
+        log_ok("Hit ENTER to continue.")
+        temp = input()
 
     if args.lookup_utility:
         print("NOTE: Make sure you have sgrep installed and added to PATH.")
