@@ -1,5 +1,3 @@
-from main import log_err, log_status, log_ok
-
 DISABLED_PERMUTATORS = [
     "no_permutator",
     "year_long",

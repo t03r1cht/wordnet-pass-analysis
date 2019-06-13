@@ -1,24 +1,30 @@
     *** Search Summary ***
 
 
-15_en_food.txt [pct_found=100.00%|total_hits=10377|found=175|not_found=3429]
-  hersheys [pct_found=100.00%|total_hits=10377|searched=3604|found=175|not_found=3429]
+15_en_food.txt [pct_found=100.00%|total_hits=316661|found=2219|not_found=23009]
+  m&ms [pct_found=8.92%|total_hits=1132|searched=3604|found=198|not_found=3406]
+  hersheys [pct_found=7.89%|total_hits=10377|searched=3604|found=175|not_found=3429]
+  reeses [pct_found=17.26%|total_hits=25991|searched=3604|found=383|not_found=3221]
+  quaker [pct_found=15.50%|total_hits=13829|searched=3604|found=344|not_found=3260]
+  ritz [pct_found=14.29%|total_hits=6632|searched=3604|found=317|not_found=3287]
+  snickers [pct_found=20.55%|total_hits=246984|searched=3604|found=456|not_found=3148]
+  lays [pct_found=15.59%|total_hits=11716|searched=3604|found=346|not_found=3258]
 
 
     *** Stats ***
 
 
-Total Passwords Searched: 3604 (100.00%)
-Total Passwords (Success): 175 (4.86%)
-Total Passwords (Failure): 3429 (95.14%)
-Total hits for password searches: 10377 (2.88 hits per password)
+Total Passwords Searched: 25228 (100.00%)
+Total Passwords (Success): 2219 (8.80%)
+Total Passwords (Failure): 23009 (91.20%)
+Total hits for password searches: 316661 (12.55 hits per password)
 
-Pct Found Passwords (Total): 0.00188%
-Pct Not Found Passwords (Total): 99.99812%
+Pct Found Passwords (Total): 0.05742%
+Pct Not Found Passwords (Total): 99.94258%
 
-Base Lemmas (Total): 1 (3604.00 permutations per base lemma)
+Base Lemmas (Total): 7 (3604.00 permutations per base lemma)
 
 
-Average Time per Base Lemma: 52.000 s
-Starting Time: 2019-06-13 16:29:19.433654
-Finishing Time: 2019-06-13 16:30:11.667751
+Average Time per Base Lemma: 51.571 s
+Starting Time: 2019-06-13 17:07:07.586498
+Finishing Time: 2019-06-13 17:13:09.077392
