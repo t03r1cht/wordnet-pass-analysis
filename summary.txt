@@ -1,0 +1,24 @@
+    *** Search Summary ***
+
+
+15_en_food.txt [pct_found=100.00%|total_hits=10377|found=175|not_found=3429]
+  hersheys [pct_found=100.00%|total_hits=10377|searched=3604|found=175|not_found=3429]
+
+
+    *** Stats ***
+
+
+Total Passwords Searched: 3604 (100.00%)
+Total Passwords (Success): 175 (4.86%)
+Total Passwords (Failure): 3429 (95.14%)
+Total hits for password searches: 10377 (2.88 hits per password)
+
+Pct Found Passwords (Total): 0.00188%
+Pct Not Found Passwords (Total): 99.99812%
+
+Base Lemmas (Total): 1 (3604.00 permutations per base lemma)
+
+
+Average Time per Base Lemma: 52.000 s
+Starting Time: 2019-06-13 16:29:19.433654
+Finishing Time: 2019-06-13 16:30:11.667751

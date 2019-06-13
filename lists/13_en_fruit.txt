@@ -14,7 +14,6 @@ acai
 apple
 akee
 apricot
-avocado
 banana
 bilberry
 blackberry
@@ -31,7 +30,6 @@ chico_fruit
 cloudberry
 coconut
 cranberry
-cucumber
 damson
 date
 dragonfruit

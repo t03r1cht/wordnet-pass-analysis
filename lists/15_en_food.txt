@@ -5,7 +5,6 @@ reeses
 peanut_butter
 quaker
 ritz
-reeses
 snickers
 lays
 pillsbury
@@ -102,3 +101,4 @@ hamburger_helper
 ortega
 fiber_one
 reeses_puffs
+

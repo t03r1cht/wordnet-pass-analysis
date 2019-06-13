@@ -1,4 +1,4 @@
-
+from main import log_err, log_status, log_ok
 
 DISABLED_PERMUTATORS = [
     "no_permutator",
@@ -73,6 +73,7 @@ def cxc(lemma, permutator_registry):
         trans = permutation_handler(lemma)
         # Create a list with all permutators except me (the current iteration of all permutatos (see outer loop))
         exc_me = []
+        perm_me = permutation_handler.__name__
         for c in permutator_registry:
             # If a function name is the same as myself, skip, since that would produce a combination
             # with myself

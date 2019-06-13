@@ -138,7 +138,6 @@ hamoud_boualem
 hamoud
 selecto
 slim
-slim
 orange_blaze
 national_beverage
 faygo
@@ -182,10 +181,7 @@ julmust
 kinnie
 lucozade
 monster_energy
-moxie
-nehi
 oronamin_c_drink
-orangina
 pocari_sweat
 sangria_señorial
 sidral_mundet
