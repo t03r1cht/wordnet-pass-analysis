@@ -52,6 +52,8 @@ parser.add_argument("-v", "--verbose", action="store_true",
                     help="Verbose output.", dest="verbose")
 parser.add_argument("-e", "--extensive", action="store_true",
                     help="Print all tested password to a separate result file. Use --result-file option to set custom file name..", dest="extensive")
+parser.add_argument("--skip-warning", action="store_true",
+                    help="Skip the warning when using the -e (--extensive) flag.", dest="skip_warning")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -900,8 +902,12 @@ if __name__ == "__main__":
         log_ok("WARNING: You set the -e (--extensive) flag writes EVERY tested password to a seperate file. " +
                "Note that this is going to slow down the script a lot, since file I/O is slow. This flag can increase " +
                "the overall runtime of the script by a factor of 20-25 (and even more).")
-        log_ok("Hit ENTER to continue.")
-        temp = input()
+        if args.skip_warning:
+            log_status("ENTER to continue.")
+            temp = input()
+        else:
+            log_ok("Will resume operation in 20 seconds.")
+            time.sleep(20)
 
     if args.lookup_utility:
         print("NOTE: Make sure you have sgrep installed and added to PATH.")
