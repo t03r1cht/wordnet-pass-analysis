@@ -22,6 +22,8 @@ from yaspin import yaspin
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
+from list_caching import WordList, Lemma, decode_from_tmp_files
+
 # pip installation über py binary: py -m pip install nltk
 
 parser = argparse.ArgumentParser(
@@ -136,6 +138,24 @@ def _init_file_handles(started_time):
 
     global outfile_passwords
     outfile_passwords = open(outfile_passwords_name, "w+")
+
+    # Create the folder for the list caches
+    d_name = "cache"
+    if os.path.isdir(d_name):
+        if len(os.listdir(d_name)) != 0:
+            log_status("%s/ is not empty. Clearing directory..." % d_name)
+            for f in os.listdir(d_name):
+                f_path = os.path.join(d_name, f)
+                try:
+                    if os.path.isfile(f_path):
+                        os.unlink(f_path)
+                    elif os.path.isdir(f_path):
+                        shutil.rmtree(f_path)
+                except Excepction as e:
+                    log_err("Could not delete {0}: {1}".format(f_path, e))
+    else:
+        os.mkdir("cache")
+    log_status("Created cache directory")
 
 
 def get_shell_width():
@@ -801,6 +821,10 @@ def option_permutate_from_lists():
     finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
+        wl = WordList()
+        wl.filename = pass_list
+        wl.start_date = get_curr_time()
+
         if args.verbose:
             log_status("Processing: %s" % pass_list)
         try:
@@ -832,6 +856,16 @@ def option_permutate_from_lists():
                     pass_list, password_base, total_hits, found_cnt, not_found_cnt)
                 if args.verbose:
                     log_status("Finished Lemma [%s]" % password_base)
+            # Create the Lemma required to cash the word lists
+            l = Lemma()
+            l.name = password_base
+            l.total_hits = total_hits
+            l.searched = found_cnt + not_found_cnt
+            l.found = found_cnt
+            l.not_found = not_found_cnt
+            l.end_date = get_curr_time()
+            wl.add_lemma(l)
+
             curr_time = get_curr_time()
             time_diff = curr_time - started_time
             curr_lemma_time = time_diff.seconds / total_base_lemmas
@@ -854,9 +888,13 @@ def option_permutate_from_lists():
             if args.extensive:
                 flush_passwords()
 
+        # Write the finished word list to the cache file
+        wl.write_to_file()
+
     finished_lists += 1
     # Initialize the file handles to write to
     # _init_file_handles(get_curr_time_str())
+    decode_from_tmp_files()
     _write_lists_summary_to_result_file(opts)
     print()
     cleanup()

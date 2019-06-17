@@ -1,7 +1,6 @@
-m&ms
 hersheys
-reeses
-quaker
-ritz
-snickers
-lays
+#reeses
+#quaker
+#ritz
+#snickers
+#lays

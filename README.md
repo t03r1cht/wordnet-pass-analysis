@@ -37,6 +37,7 @@ Compilation: `cd sgrep/ && make`
 - [X] Add stats for each word file (for example brands.txt had 40% of all results)
 - [X] Add percentages in summary file for each word in list mode
 - [X] Show estimated time / progress
+- [ ] When using -c flag, flush "collector" dict to disk in re-usable format (maybe JSON?) so it doesn't fill up memory completely
 - [ ] Transform WordNet recursion to iteration, since iterations are generally more cpu intensive than iterations (each recursion step reserves its own stack frame)
 - [ ] Write paper about this
 
