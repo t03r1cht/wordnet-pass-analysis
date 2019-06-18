@@ -11,9 +11,10 @@
 `sgrep` seems to be an efficient and reliable alternative to the 64-bit 
 look utility provided MacOS.
 
-(Archive)[https://sourceforge.net/projects/sgrep/]
+[Archive](https://sourceforge.net/projects/sgrep/)
 
-Compilation: `cd sgrep/ && make`
+Compiling: `cd sgrep/ && make`
+Add sgrep to PATH: `PATH=$PATH:/opt/sgrep`
 
 
 ## To Do
