@@ -18,6 +18,13 @@ Compilation: `cd sgrep/ && make`
 
 ## To Do
 
+- [ ] Write finished lists to intermediate files (Intermediate Lemma List Format `.ill`) so we don't need to lookup those lists again. New lists can be appended as `.ill` files.
+  - [ ] Also store the file hash in the `.ill` file so we can detect modifications in already existing lists. If lists that already have corresponding `.ill` files were appended with new lemmas, reload and decode the `.ill` file and only lookup the diff (appended lemmas)
+- [ ] Write proposition on how to classify Synsets in WordNet (is a cat and dog an animal (level + 1) or rather a vertebrae (level + 2)?)
+- [ ] Transform WordNet recursion to iteration, since iterations are generally more CPU intensive than iterations (each recursion step reserves its own stack frame)
+
+## Done
+
 - [x] Permutations of each lemma
 - [x] Plot the results
 - [x] Subsume the hit results for each class. Subsume only the "vanilla" lemmas or also their translations?
@@ -37,7 +44,3 @@ Compilation: `cd sgrep/ && make`
 - [X] Add stats for each word file (for example brands.txt had 40% of all results)
 - [X] Add percentages in summary file for each word in list mode
 - [X] Show estimated time / progress
-- [ ] When using -c flag, flush "collector" dict to disk in re-usable format (maybe JSON?) so it doesn't fill up memory completely
-- [ ] Transform WordNet recursion to iteration, since iterations are generally more cpu intensive than iterations (each recursion step reserves its own stack frame)
-- [ ] Write paper about this
-
