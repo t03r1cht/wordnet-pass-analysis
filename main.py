@@ -14,6 +14,7 @@ import timeit
 import unicodedata
 from collections import OrderedDict
 from subprocess import CalledProcessError
+import jsonpickle
 
 import nltk
 from colorama import Back, Fore, Style, init
@@ -22,9 +23,14 @@ from yaspin import yaspin
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
-from list_caching import WordList, Lemma, decode_from_tmp_files
+from intermediate_lists import Lemma, WordList, decode_from_ill_files
+from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal
+
+
+
 
 # pip installation über py binary: py -m pip install nltk
+
 
 parser = argparse.ArgumentParser(
     description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
@@ -56,6 +62,9 @@ parser.add_argument("-e", "--extensive", action="store_true",
                     help="Print all tested password to a separate result file. Use --result-file option to set custom file name..", dest="extensive")
 parser.add_argument("--skip-warning", action="store_true",
                     help="Skip the warning when using the -e (--extensive) flag.", dest="skip_warning")
+parser.add_argument("--decode-ill", action="store_true",
+                    help="Create stats from ill files in intermediate_lists/.", dest="decode_ill")
+
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -77,28 +86,30 @@ lemmas_to_process = 0
 glob_started_time = None
 
 
-def log_ok(s):
-    print("[  {0}][+] {1}".format(get_curr_time_str(), s))
+def test_pickle():
+    o = WordList()
+    o.filename = "this is a filename"
+    o.lemmas_total = 20
+    encoded = jsonpickle.encode(o)
+    print(encoded)
+    print("===================")
+    decoded = jsonpickle.decode(encoded)
+    print(decoded.filename)
+    
 
-
-def log_err(s):
-    print("[  {0}][-] {1}".format(get_curr_time_str(), s))
-
-
-def log_status(s):
-    print("[  {0}][*] {1}".format(get_curr_time_str(), s))
-
-
-def flush_passwords():
-    log_ok("==> Flushing to disk...")
-    outfile_passwords.flush()
-    os.fsync(outfile_passwords.fileno())
-    log_status("OK")
-
-
-def remove_control_characters(s):
-    return "".join(ch for ch in s if unicodedata.category(ch)[0] != "C")
-
+def decode_from_ill_files():
+    d_name = "intermediate_lists/"
+    dir_content = os.listdir(d_name)
+    if len(dir_content) == 0:
+        log_err("%s is empty. Nothing to restore" % d_name)
+        sys.exit(0)
+    log_status("Restoring from %d .ill files" % (len(dir_content)))
+    for ill_file in dir_content:
+        with open(os.path.join(d_name, ill_file), "r") as f:
+            ill_content = f.read()
+            o = jsonpickle.decode(ill_content)
+            log_status(o.lemmas)
+    log_ok("Done")
 
 def sigint_handler(sig, frame):
     """
@@ -111,6 +122,21 @@ def sigint_handler(sig, frame):
     print("Caught Ctrl+C, shutting down...")
     cleanup()
     sys.exit(0)
+
+
+def cleanup():
+    """
+    Some cleanup work like closing the file handler.
+    """
+    outfile_summary.close()
+    outfile_passwords.close()
+
+
+def flush_passwords():
+    log_ok("==> Flushing to disk...")
+    outfile_passwords.flush()
+    os.fsync(outfile_passwords.fileno())
+    log_status("OK")
 
 
 def _init_file_handles(started_time):
@@ -140,7 +166,7 @@ def _init_file_handles(started_time):
     outfile_passwords = open(outfile_passwords_name, "w+")
 
     # Create the folder for the list caches
-    d_name = "cache"
+    d_name = "intermediate_lists"
     if os.path.isdir(d_name):
         if len(os.listdir(d_name)) != 0:
             log_status("%s/ is not empty. Clearing directory..." % d_name)
@@ -154,54 +180,8 @@ def _init_file_handles(started_time):
                 except Excepction as e:
                     log_err("Could not delete {0}: {1}".format(f_path, e))
     else:
-        os.mkdir("cache")
-    log_status("Created cache directory")
-
-
-def get_shell_width():
-    """
-    Return the number of colums in the current shell view.
-    """
-    cols, _ = shutil.get_terminal_size((80, 20))
-    return cols
-
-
-def get_curr_time():
-    """
-    Return the current time as a string.
-    """
-    # return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
-    return datetime.datetime.now()
-
-
-def get_curr_time_str():
-    return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
-
-
-def clear_terminal():
-    """
-    Clear the terminal. This is required to properly display the stats while running.
-    """
-    os.system("clear") if platform.system(
-    ) == "Linux" or platform.system() == "Darwin" else os.system("cls")
-
-
-def update_stats(current, finished):
-    """
-    Print out the stats while the program is running.
-    """
-    if not args.subsume_for_classes:
-        clear_terminal()
-        print()
-        print()
-        c_t = get_curr_time()
-        print("  WordNet Password Analysis // Time: %s" % c_t)
-        print()
-        global started
-        print("  Started: \t%s" % started)
-        print("  Processing: \t%s" % current)
-        print("  Done: \t%d" % finished)
-        print()
+        os.mkdir("intermediate_lists")
+    log_status("Created intermediate_lists directory")
 
 
 def inc_total_processed():
@@ -226,14 +206,6 @@ def inc_total_not_found():
     """
     global total_not_found
     total_not_found += 1
-
-
-def cleanup():
-    """
-    Some cleanup work like closing the file handler.
-    """
-    outfile_summary.close()
-    outfile_passwords.close()
 
 
 def lookup_pass(hash):
@@ -894,7 +866,7 @@ def option_permutate_from_lists():
     finished_lists += 1
     # Initialize the file handles to write to
     # _init_file_handles(get_curr_time_str())
-    decode_from_tmp_files()
+    # decode_from_ill_files()
     _write_lists_summary_to_result_file(opts)
     print()
     cleanup()
@@ -972,6 +944,9 @@ if __name__ == "__main__":
     # Lookup words from self-created lists
     elif args.from_lists:
         option_permutate_from_lists()
+    elif args.decode_ill:
+        # decode_from_ill_files()
+        test_pickle()
     else:
         # Evaluate command line parameters
         if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:

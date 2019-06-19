@@ -1,28 +1,52 @@
     *** Search Summary ***
 
 
-15_en_food.txt [pct_found=7.24%|total_hits=10377|found=175|not_found=3429]
-  hersheys [pct_found=7.24%|total_hits=10377|searched=3604|found=175|not_found=3429]
-names.txt [pct_found=92.76%|total_hits=234078|found=2243|not_found=8569]
-  marc [pct_found=39.21%|total_hits=91673|searched=3604|found=948|not_found=2656]
-  fabio [pct_found=34.90%|total_hits=85859|searched=3604|found=844|not_found=2760]
-  matthias [pct_found=18.65%|total_hits=56546|searched=3604|found=451|not_found=3153]
+04_tech_brands.txt [pct_found=46.69%|total_hits=1928531|found=1862|not_found=418]
+  iiyama [pct_found=3.94%|total_hits=10660|searched=228|found=157|not_found=71]
+  samsung [pct_found=5.44%|total_hits=590205|searched=228|found=217|not_found=11]
+  ibm [pct_found=3.16%|total_hits=8885|searched=228|found=126|not_found=102]
+  apple [pct_found=5.47%|total_hits=625401|searched=228|found=218|not_found=10]
+  nokia [pct_found=5.37%|total_hits=211254|searched=228|found=214|not_found=14]
+  blackberry [pct_found=4.61%|total_hits=54710|searched=228|found=184|not_found=44]
+  fujitsu [pct_found=4.04%|total_hits=16519|searched=228|found=161|not_found=67]
+  cherry [pct_found=5.32%|total_hits=365444|searched=228|found=212|not_found=16]
+  lenovo [pct_found=4.66%|total_hits=24031|searched=228|found=186|not_found=42]
+  hp [pct_found=4.69%|total_hits=21422|searched=228|found=187|not_found=41]
+13_en_fruit.txt [pct_found=35.31%|total_hits=497396|found=1408|not_found=1355]
+  avocado [pct_found=3.31%|total_hits=8429|searched=228|found=132|not_found=96]
+  bell_pepper [pct_found=0.08%|total_hits=6|searched=237|found=3|not_found=234]
+  chili_pepper [pct_found=0.10%|total_hits=48|searched=237|found=4|not_found=233]
+  corn_kernel [pct_found=0.00%|total_hits=0|searched=237|found=0|not_found=237]
+  cucumber [pct_found=4.06%|total_hits=25354|searched=228|found=162|not_found=66]
+  eggplant [pct_found=3.41%|total_hits=15118|searched=228|found=136|not_found=92]
+  olive [pct_found=5.12%|total_hits=39496|searched=228|found=204|not_found=24]
+  pea [pct_found=3.03%|total_hits=107585|searched=228|found=121|not_found=107]
+  pumpkin [pct_found=5.22%|total_hits=231410|searched=228|found=208|not_found=20]
+  squash [pct_found=4.49%|total_hits=18741|searched=228|found=179|not_found=49]
+  tomato [pct_found=4.69%|total_hits=49363|searched=228|found=187|not_found=41]
+  zucchini [pct_found=1.81%|total_hits=1846|searched=228|found=72|not_found=156]
+15_en_food.txt [pct_found=2.98%|total_hits=9264|found=119|not_found=109]
+  hersheys [pct_found=2.98%|total_hits=9264|searched=228|found=119|not_found=109]
+names.txt [pct_found=15.02%|total_hits=157266|found=599|not_found=85]
+  marc [pct_found=5.12%|total_hits=64720|searched=228|found=204|not_found=24]
+  fabio [pct_found=5.24%|total_hits=56663|searched=228|found=209|not_found=19]
+  matthias [pct_found=4.66%|total_hits=35883|searched=228|found=186|not_found=42]
 
 
     *** Stats ***
 
 
-Total Passwords Searched: 14416 (100.00%)
-Total Passwords (Success): 2418 (16.77%)
-Total Passwords (Failure): 11998 (83.23%)
-Total hits for password searches: 244455 (16.96 hits per password)
+Total Passwords Searched: 5955 (100.00%)
+Total Passwords (Success): 3988 (66.97%)
+Total Passwords (Failure): 1967 (33.03%)
+Total hits for password searches: 2592457 (435.34 hits per password)
 
-Pct Found Passwords (Total): 0.04432%
-Pct Not Found Passwords (Total): 99.95568%
+Pct Found Passwords (Total): 0.47007%
+Pct Not Found Passwords (Total): 99.52993%
 
-Base Lemmas (Total): 4 (3604.00 permutations per base lemma)
+Base Lemmas (Total): 26 (229.04 permutations per base lemma)
 
 
-Average Time per Base Lemma: 20.500 s
-Starting Time: 2019-06-17 14:45:47.497260
-Finishing Time: 2019-06-17 14:47:10.003719
+Average Time per Base Lemma: 1.154 s
+Starting Time: 2019-06-19 10:20:45.217558
+Finishing Time: 2019-06-19 10:21:15.970930
