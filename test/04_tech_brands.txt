@@ -1,11 +1,5 @@
 #tech
 iiyama
 samsung
-ibm
 apple
 nokia
-blackberry
-fujitsu
-cherry
-lenovo
-hp

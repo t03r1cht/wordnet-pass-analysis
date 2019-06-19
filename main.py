@@ -15,6 +15,7 @@ import unicodedata
 from collections import OrderedDict
 from subprocess import CalledProcessError
 import jsonpickle
+from pymongo import MongoClient
 
 import nltk
 from colorama import Back, Fore, Style, init
@@ -23,10 +24,9 @@ from yaspin import yaspin
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
-from intermediate_lists import Lemma, WordList, decode_from_ill_files
+from intermediate_lists import Lemma, WordList
+from mongo import db_ill, db_pws
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal
-
-
 
 
 # pip installation über py binary: py -m pip install nltk
@@ -48,8 +48,6 @@ parser.add_argument("--result-file", type=str,
                     help="Name of the result file.", dest="result_file_name")
 parser.add_argument("--summary-file", type=str,
                     help="Name of the summary file.", dest="summary_file_name")
-# parser.add_argument("-t", "--hyperbolic-tree", action="store_true",
-#                     help="Draw a hyperbolic tree from WordNet.", dest="draw_hypertree")
 parser.add_argument("-l", "--from-lists", type=str,
                     help="Path to the folder containing self-created password lists.", dest="from_lists")
 parser.add_argument("-z", "--download-wordnet", action="store_true",
@@ -62,8 +60,8 @@ parser.add_argument("-e", "--extensive", action="store_true",
                     help="Print all tested password to a separate result file. Use --result-file option to set custom file name..", dest="extensive")
 parser.add_argument("--skip-warning", action="store_true",
                     help="Skip the warning when using the -e (--extensive) flag.", dest="skip_warning")
-parser.add_argument("--decode-ill", action="store_true",
-                    help="Create stats from ill files in intermediate_lists/.", dest="decode_ill")
+parser.add_argument("--test", action="store_true",
+                    help="Test", dest="test")
 
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
@@ -86,30 +84,16 @@ lemmas_to_process = 0
 glob_started_time = None
 
 
-def test_pickle():
-    o = WordList()
-    o.filename = "this is a filename"
-    o.lemmas_total = 20
-    encoded = jsonpickle.encode(o)
-    print(encoded)
-    print("===================")
-    decoded = jsonpickle.decode(encoded)
-    print(decoded.filename)
-    
 
-def decode_from_ill_files():
-    d_name = "intermediate_lists/"
-    dir_content = os.listdir(d_name)
-    if len(dir_content) == 0:
-        log_err("%s is empty. Nothing to restore" % d_name)
-        sys.exit(0)
-    log_status("Restoring from %d .ill files" % (len(dir_content)))
-    for ill_file in dir_content:
-        with open(os.path.join(d_name, ill_file), "r") as f:
-            ill_content = f.read()
-            o = jsonpickle.decode(ill_content)
-            log_status(o.lemmas)
-    log_ok("Done")
+
+
+def test_pickle():
+    for i in range(10000):
+        o = WordList()
+        o.lemmas_total = i
+        insert_id = db_ill.insert_one(o.__dict__)
+        log_status("%s" % insert_id.inserted_id)
+
 
 def sigint_handler(sig, frame):
     """
@@ -390,6 +374,11 @@ def lookup(permutation, depth):
     # Hash and lookup translated lemma
     hashed_lemma = hash_sha1(permutation)
     occurrences = lookup_pass(hashed_lemma)
+    lookup_result = {
+        "name": hashed_lemma,
+        "occurrences" = occurrences
+    }
+    db_pws.insert_one(lookup_result)
     # Increment "total" counter
     inc_total_processed()
     # Track found/not found
@@ -793,9 +782,10 @@ def option_permutate_from_lists():
     finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
-        wl = WordList()
-        wl.filename = pass_list
-        wl.start_date = get_curr_time()
+        wl = {}
+        wl["filename"] = pass_list
+        wl["start_date"] = get_curr_time()
+        wl["lemmas"] = []
 
         if args.verbose:
             log_status("Processing: %s" % pass_list)
@@ -829,14 +819,15 @@ def option_permutate_from_lists():
                 if args.verbose:
                     log_status("Finished Lemma [%s]" % password_base)
             # Create the Lemma required to cash the word lists
-            l = Lemma()
-            l.name = password_base
-            l.total_hits = total_hits
-            l.searched = found_cnt + not_found_cnt
-            l.found = found_cnt
-            l.not_found = not_found_cnt
-            l.end_date = get_curr_time()
-            wl.add_lemma(l)
+            l = {}
+            l["name"] = password_base
+            l["total_hits"] = total_hits
+            l["searched"] = found_cnt + not_found_cnt
+            l["found"] = found_cnt
+            l["not_found"] = not_found_cnt
+            l["end_date"] = get_curr_time()
+            wl["lemmas"].append(l)
+            
 
             curr_time = get_curr_time()
             time_diff = curr_time - started_time
@@ -861,9 +852,10 @@ def option_permutate_from_lists():
                 flush_passwords()
 
         # Write the finished word list to the cache file
-        wl.write_to_file()
-
-    finished_lists += 1
+        # wl.write_to_file()
+        inserted_id = db_ill.insert_one(wl).inserted_id
+        log_ok("Inserted into database: %s" % inserted_id)
+        finished_lists += 1
     # Initialize the file handles to write to
     # _init_file_handles(get_curr_time_str())
     # decode_from_ill_files()
@@ -944,7 +936,7 @@ if __name__ == "__main__":
     # Lookup words from self-created lists
     elif args.from_lists:
         option_permutate_from_lists()
-    elif args.decode_ill:
+    elif args.test:
         # decode_from_ill_files()
         test_pickle()
     else:

@@ -1,12 +1,6 @@
 avocado
-bell_pepper
-chili_pepper
-corn_kernel
 cucumber
 eggplant
 olive
 pea
 pumpkin
-squash
-tomato
-zucchini
