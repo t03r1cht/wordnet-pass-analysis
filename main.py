@@ -19,13 +19,12 @@ from pymongo import MongoClient
 
 import nltk
 from colorama import Back, Fore, Style, init
-from yaspin import yaspin
 
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
 from intermediate_lists import Lemma, WordList
-from mongo import db_ill, db_pws
+from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal
 
 
@@ -62,6 +61,8 @@ parser.add_argument("--skip-warning", action="store_true",
                     help="Skip the warning when using the -e (--extensive) flag.", dest="skip_warning")
 parser.add_argument("--test", action="store_true",
                     help="Test", dest="test")
+parser.add_argument("--purge-db", action="store_true",
+                    help="Purge Database before writing", dest="purge_db")
 
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
@@ -84,11 +85,8 @@ lemmas_to_process = 0
 glob_started_time = None
 
 
-
-
-
 def test_pickle():
-    for i in range(10000):
+    for i in range(100):
         o = WordList()
         o.lemmas_total = i
         insert_id = db_ill.insert_one(o.__dict__)
@@ -149,23 +147,23 @@ def _init_file_handles(started_time):
     global outfile_passwords
     outfile_passwords = open(outfile_passwords_name, "w+")
 
-    # Create the folder for the list caches
-    d_name = "intermediate_lists"
-    if os.path.isdir(d_name):
-        if len(os.listdir(d_name)) != 0:
-            log_status("%s/ is not empty. Clearing directory..." % d_name)
-            for f in os.listdir(d_name):
-                f_path = os.path.join(d_name, f)
-                try:
-                    if os.path.isfile(f_path):
-                        os.unlink(f_path)
-                    elif os.path.isdir(f_path):
-                        shutil.rmtree(f_path)
-                except Excepction as e:
-                    log_err("Could not delete {0}: {1}".format(f_path, e))
-    else:
-        os.mkdir("intermediate_lists")
-    log_status("Created intermediate_lists directory")
+    # # Create the folder for the list caches
+    # d_name = "intermediate_lists"
+    # if os.path.isdir(d_name):
+    #     if len(os.listdir(d_name)) != 0:
+    #         log_status("%s/ is not empty. Clearing directory..." % d_name)
+    #         for f in os.listdir(d_name):
+    #             f_path = os.path.join(d_name, f)
+    #             try:
+    #                 if os.path.isfile(f_path):
+    #                     os.unlink(f_path)
+    #                 elif os.path.isdir(f_path):
+    #                     shutil.rmtree(f_path)
+    #             except Excepction as e:
+    #                 log_err("Could not delete {0}: {1}".format(f_path, e))
+    # else:
+    #     os.mkdir("intermediate_lists")
+    # log_status("Created intermediate_lists directory")
 
 
 def inc_total_processed():
@@ -374,11 +372,6 @@ def lookup(permutation, depth):
     # Hash and lookup translated lemma
     hashed_lemma = hash_sha1(permutation)
     occurrences = lookup_pass(hashed_lemma)
-    lookup_result = {
-        "name": hashed_lemma,
-        "occurrences" = occurrences
-    }
-    db_pws.insert_one(lookup_result)
     # Increment "total" counter
     inc_total_processed()
     # Track found/not found
@@ -390,7 +383,13 @@ def lookup(permutation, depth):
     # Print the permutations to the result file.
     # Slows the script down EXTREMELY due to slow file I/O
     if args.extensive:
-        _write_result_to_passwords_file(permutation, depth, occurrences)
+        # _write_result_to_passwords_file(permutation, depth, occurrences)
+        if args.from_lists:
+            status = store_tested_pass_lists(permutation, occurrences)
+        else:
+            status = store_tested_pass_wn(permutation, occurrences)
+        if not status:
+            log_err("Could not insert password into DB")
     # Return occurrences in order to be able to subsume them for each class.
     global total_hits_sum
     total_hits_sum += occurrences
@@ -656,6 +655,9 @@ def option_lookup_passwords():
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
+    if args.purge_db:
+        clear_mongo()
+        log_ok("Database was cleared!")
     print()
     started_time = get_curr_time()
     global glob_started_time
@@ -725,6 +727,9 @@ def option_hypertree():
 def option_permutate_from_lists():
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
+    if args.purge_db:
+        clear_mongo()
+        log_ok("Database was cleared!")
     # Initialize the file handles to write to
     _init_file_handles(get_curr_time_str())
     # Check if the specified directory is valid
@@ -782,6 +787,10 @@ def option_permutate_from_lists():
     finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
+        if db_ill.count_documents({"filename": pass_list}) > 0:
+            log_status("%s already exists in database, will append results to this document" % pass_list)
+        else:
+            init_word_list_object(pass_list)
         wl = {}
         wl["filename"] = pass_list
         wl["start_date"] = get_curr_time()
@@ -827,7 +836,6 @@ def option_permutate_from_lists():
             l["not_found"] = not_found_cnt
             l["end_date"] = get_curr_time()
             wl["lemmas"].append(l)
-            
 
             curr_time = get_curr_time()
             time_diff = curr_time - started_time
@@ -851,10 +859,7 @@ def option_permutate_from_lists():
             if args.extensive:
                 flush_passwords()
 
-        # Write the finished word list to the cache file
-        # wl.write_to_file()
-        inserted_id = db_ill.insert_one(wl).inserted_id
-        log_ok("Inserted into database: %s" % inserted_id)
+        # TODO Append the finished lemma to the ill collection
         finished_lists += 1
     # Initialize the file handles to write to
     # _init_file_handles(get_curr_time_str())

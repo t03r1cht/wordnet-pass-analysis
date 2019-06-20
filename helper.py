@@ -22,9 +22,6 @@ def remove_control_characters(s):
     return "".join(ch for ch in s if unicodedata.category(ch)[0] != "C")
 
 
-
-
-
 def get_curr_time():
     """
     Return the current time as a string.
@@ -51,6 +48,3 @@ def clear_terminal():
     """
     os.system("clear") if platform.system(
     ) == "Linux" or platform.system() == "Darwin" else os.system("cls")
-
-
-

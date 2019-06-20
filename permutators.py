@@ -234,7 +234,7 @@ def duplicate(lemma):
     return "%s%s" % (lemma, lemma)
 
 
-@permutator
+#@permutator
 def pad_with_characters(lemma):
     """
     Separate each character in the lemma with an underscore, e.g. h_e_l_l_o (dot, hyphen, hash etc.).
