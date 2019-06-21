@@ -1,24 +1,109 @@
-File created: 20190621_14.14.50
+File created: 20190621_15.15.04
 
-***13_en_fruit.txt
+***13_en_fruit.txt (Total occurrences: 8.429)
 
-	avocado (8429)
+	+ avocado
+	|-Total Occurrences: 8.429
+	|-Generated Permutations: 221
+	|-Found Permutations: 132
+	|-Not Found Permutations: 89
+	|-Occurrences in this list: 100.00%
 
-***12_tech_brands.txt
 
-	apple (625384)
-	samsung (590198)
-	nokia (211212)
-	iiyama (10660)
-	huawei (5027)
+***12_tech_brands.txt (Total occurrences: 1.538.053)
 
-***15_en_food.txt
+	+ apple
+	|-Total Occurrences: 625.384
+	|-Generated Permutations: 221
+	|-Found Permutations: 216
+	|-Not Found Permutations: 5
+	|-Occurrences in this list: 40.66%
 
-	snickers (211967)
-	mars (60531)
-	bounty (29557)
-	reeses (19872)
-	quaker (10473)
-	twix (9636)
-	hersheys (9264)
+	+ samsung
+	|-Total Occurrences: 590.198
+	|-Generated Permutations: 221
+	|-Found Permutations: 214
+	|-Not Found Permutations: 7
+	|-Occurrences in this list: 38.37%
+
+	+ nokia
+	|-Total Occurrences: 211.212
+	|-Generated Permutations: 221
+	|-Found Permutations: 212
+	|-Not Found Permutations: 9
+	|-Occurrences in this list: 13.73%
+
+	+ microsoft
+	|-Total Occurrences: 95.572
+	|-Generated Permutations: 221
+	|-Found Permutations: 191
+	|-Not Found Permutations: 30
+	|-Occurrences in this list: 6.21%
+
+	+ iiyama
+	|-Total Occurrences: 10.660
+	|-Generated Permutations: 221
+	|-Found Permutations: 157
+	|-Not Found Permutations: 64
+	|-Occurrences in this list: 0.69%
+
+	+ huawei
+	|-Total Occurrences: 5.027
+	|-Generated Permutations: 221
+	|-Found Permutations: 136
+	|-Not Found Permutations: 85
+	|-Occurrences in this list: 0.33%
+
+
+***15_en_food.txt (Total occurrences: 351.300)
+
+	+ snickers
+	|-Total Occurrences: 211.967
+	|-Generated Permutations: 221
+	|-Found Permutations: 202
+	|-Not Found Permutations: 19
+	|-Occurrences in this list: 60.34%
+
+	+ mars
+	|-Total Occurrences: 60.531
+	|-Generated Permutations: 221
+	|-Found Permutations: 201
+	|-Not Found Permutations: 20
+	|-Occurrences in this list: 17.23%
+
+	+ bounty
+	|-Total Occurrences: 29.557
+	|-Generated Permutations: 221
+	|-Found Permutations: 183
+	|-Not Found Permutations: 38
+	|-Occurrences in this list: 8.41%
+
+	+ reeses
+	|-Total Occurrences: 19.872
+	|-Generated Permutations: 221
+	|-Found Permutations: 157
+	|-Not Found Permutations: 64
+	|-Occurrences in this list: 5.66%
+
+	+ quaker
+	|-Total Occurrences: 10.473
+	|-Generated Permutations: 221
+	|-Found Permutations: 168
+	|-Not Found Permutations: 53
+	|-Occurrences in this list: 2.98%
+
+	+ twix
+	|-Total Occurrences: 9.636
+	|-Generated Permutations: 221
+	|-Found Permutations: 172
+	|-Not Found Permutations: 49
+	|-Occurrences in this list: 2.74%
+
+	+ hersheys
+	|-Total Occurrences: 9.264
+	|-Generated Permutations: 221
+	|-Found Permutations: 119
+	|-Not Found Permutations: 102
+	|-Occurrences in this list: 2.64%
+
 

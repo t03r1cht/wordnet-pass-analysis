@@ -4,6 +4,7 @@ import sys
 import unicodedata
 import os
 import platform
+import re
 
 
 def log_ok(s):
@@ -49,6 +50,7 @@ def clear_terminal():
     os.system("clear") if platform.system(
     ) == "Linux" or platform.system() == "Darwin" else os.system("cls")
 
+
 def get_txt_files_from_dir(path):
     """
     Return all txt filenames from a given directory.
@@ -59,3 +61,7 @@ def get_txt_files_from_dir(path):
         if f.endswith(".txt"):
             dir_txt_content.append(f)
     return dir_txt_content
+
+
+def format_number(n):
+    return re.sub(r'(?<!^)(?=(\d{3})+$)', r'.', str(n))

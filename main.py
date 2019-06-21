@@ -26,7 +26,7 @@ from permutators import permutator, permutator_registrar
 
 from intermediate_lists import Lemma, WordList
 from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl
-from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir
+from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
 
 parser = argparse.ArgumentParser(
@@ -378,8 +378,10 @@ def lookup(permutation, depth):
         # _write_result_to_passwords_file(permutation, depth, occurrences)
         if args.from_lists:
             status = store_tested_pass_lists(permutation, occurrences)
-        else:
+        elif args.root_syn_name:
             status = store_tested_pass_wn(permutation, occurrences)
+        else:
+            pass
         if not status:
             log_err("Could not insert password into DB")
     # Return occurrences in order to be able to subsume them for each class.
@@ -871,21 +873,43 @@ def create_classification(word_lists=None):
             log_err(
                 "Could not find any text files in %s to create classifications from" % args.from_lists)
             sys.exit(0)
-    # Create summary file to write to
-    _init_file_handles(ILL_TAG, of_summary=True)
+        # We only need to manually create the summary file if this function is not called from "permutate_from_lists".
+        # When this function is called first, it already created the file handles, so we don't need to do that again
+        _init_file_handles(ILL_TAG, of_summary=True)
+
     _write_to_summary_file("File created: %s" % ILL_TAG)
     _write_to_summary_file("")
+    # Iterate over each word list stored in the database
     for filename in word_lists:
         doc = db_ill.find_one({"filename": filename})
         if doc is None:
             continue
         all_lemmas = doc["lemmas"]
-        all_lemmas = sorted(all_lemmas, key=lambda k: k["occurrences"], reverse=True)
-        _write_to_summary_file("***%s" % filename)
-        _write_to_summary_file("")
+        if len(all_lemmas) == 0:
+            _write_to_summary_file("\t <no lemmas stored for this list>")
+        # Get the total sum of hits of all hits for all permutations for this list
+        total_occurrences_list = 0
         for lemma in all_lemmas:
-            _write_to_summary_file("\t%s (%d)" % (
-                lemma["name"], lemma["occurrences"]))
+            total_occurrences_list += lemma["occurrences"]
+        all_lemmas = sorted(
+            all_lemmas, key=lambda k: k["occurrences"], reverse=True)
+        _write_to_summary_file("***%s (Total occurrences: %s)" %
+                               (filename, format_number(total_occurrences_list)))
+        _write_to_summary_file("")
+        # Iterate over each lemma of each list
+        for lemma in all_lemmas:
+            _write_to_summary_file("\t+ %s" % (lemma["name"]))
+            _write_to_summary_file(
+                "\t|-Total Occurrences: %s" % format_number(lemma["occurrences"]))
+            _write_to_summary_file(
+                "\t|-Generated Permutations: %s" % (format_number(lemma["found_cnt"] + lemma["not_found_cnt"])))
+            _write_to_summary_file(
+                "\t|-Found Permutations: %s" % format_number(lemma["found_cnt"]))
+            _write_to_summary_file(
+                "\t|-Not Found Permutations: %s" % format_number(lemma["not_found_cnt"]))
+            _write_to_summary_file("\t|-Occurrences in this list: {:.2f}%".format(
+                lemma["occurrences"] / total_occurrences_list * 100))
+            _write_to_summary_file("")
         _write_to_summary_file("")
     log_ok("Classification written to the summary file.")
 

@@ -4,3 +4,4 @@ samsung
 apple
 nokia
 huawei
+microsoft
