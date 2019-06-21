@@ -24,7 +24,7 @@ from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
 from intermediate_lists import Lemma, WordList
-from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object
+from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal
 
 
@@ -787,9 +787,11 @@ def option_permutate_from_lists():
     finished_lists = 0
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
+        # Check if a ill document for this list name already exists
         if db_ill.count_documents({"filename": pass_list}) > 0:
             log_status("%s already exists in database, will append results to this document" % pass_list)
         else:
+            # Create new document "frame"
             init_word_list_object(pass_list)
         wl = {}
         wl["filename"] = pass_list
@@ -809,7 +811,7 @@ def option_permutate_from_lists():
         if args.verbose:
             log_status("Read all entries for: %s" % pass_list)
         for password_base in curr_pass_list:
-            if password_base.startswith("#") or password_base == "" or password_base == " " or password_base == "\n":
+            if password_base[0] == "#" or password_base == "" or password_base == " " or password_base == "\n":
                 if args.verbose:
                     log_status("[%s] is a non-lemma. Skipping!" %
                                password_base)
@@ -859,11 +861,10 @@ def option_permutate_from_lists():
             if args.extensive:
                 flush_passwords()
 
-        # TODO Append the finished lemma to the ill collection
+            # TODO Append the finished lemma to the ill collection
+            append_lemma_to_wl(password_base, total_hits, pass_list)
+        
         finished_lists += 1
-    # Initialize the file handles to write to
-    # _init_file_handles(get_curr_time_str())
-    # decode_from_ill_files()
     _write_lists_summary_to_result_file(opts)
     print()
     cleanup()

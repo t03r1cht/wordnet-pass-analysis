@@ -35,7 +35,8 @@ def store_tested_pass_wn(name, occurrences):
 def init_word_list_object(filename):
     o = {
         "filename": filename,
-        "created": get_curr_time()
+        "created": get_curr_time(),
+        "lemmas": []
     }
     try:
         db_ill.insert_one(o)
@@ -43,8 +44,15 @@ def init_word_list_object(filename):
         return False
 
 
-def store_lemma_in_wl(lemma, wl):
-    pass
+def append_lemma_to_wl(lemma, occurrences, wl):
+    # Check if the lemma already exists in the list
+    if db_ill.count_documents({"name": lemma}) > 0:
+        return
+    o = {
+        "name": lemma,
+        "occurrences": occurrences
+    }
+    db_ill.update_one({"filename": wl}, {"$push": {"lemmas": o}})
 
 
 def clear_mongo():

@@ -1,0 +1,31 @@
+    *** Search Summary ***
+
+
+04_tech_brands.txt [pct_found=64.28%|total_hits=1437454|found=799|not_found=85]
+  iiyama [pct_found=12.63%|total_hits=10660|searched=221|found=157|not_found=64]
+  samsung [pct_found=17.22%|total_hits=590198|searched=221|found=214|not_found=7]
+  apple [pct_found=17.38%|total_hits=625384|searched=221|found=216|not_found=5]
+  nokia [pct_found=17.06%|total_hits=211212|searched=221|found=212|not_found=9]
+15_en_food.txt [pct_found=35.72%|total_hits=39609|found=444|not_found=219]
+  hersheys [pct_found=9.57%|total_hits=9264|searched=221|found=119|not_found=102]
+  reeses [pct_found=12.63%|total_hits=19872|searched=221|found=157|not_found=64]
+  quaker [pct_found=13.52%|total_hits=10473|searched=221|found=168|not_found=53]
+
+
+    *** Stats ***
+
+
+Total Passwords Searched: 1547 (100.00%)
+Total Passwords (Success): 1243 (80.35%)
+Total Passwords (Failure): 304 (19.65%)
+Total hits for password searches: 1477063 (954.79 hits per password)
+
+Pct Found Passwords (Total): 0.26782%
+Pct Not Found Passwords (Total): 99.73218%
+
+Base Lemmas (Total): 7 (221.00 permutations per base lemma)
+
+
+Average Time per Base Lemma: 0.857 s
+Starting Time: 2019-06-21 09:25:43.080371
+Finishing Time: 2019-06-21 09:25:49.489078
