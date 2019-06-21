@@ -612,6 +612,10 @@ def option_lookup_passwords():
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
     # Update this root synset with its respective stats
+    print(choice_root_syn.lemma_names())
+    print(hits)
+    print(found)
+    print(not_found)
     update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
                              found_below, hits, found, not_found)
     # Append the dict with the root synset after we processed the subtrees, since we are going to reverse

@@ -49,6 +49,7 @@ Add sgrep to PATH: `PATH=$PATH:/opt/sgrep`
 ## To Do
 
 - [ ] Create option to iterate over entire WordNet
+- [ ] Testlauf starten und Ergebnisse überprüfen
 - [ ] Write proposition on how to classify Synsets in WordNet (is a cat and dog an animal (level + 1) or rather a vertebrae (level + 2)?)
 - [ ] Transform WordNet recursion to iteration, since iterations are generally more CPU intensive than iterations (each recursion step reserves its own stack frame)
 
