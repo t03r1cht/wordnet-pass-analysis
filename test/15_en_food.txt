@@ -1,7 +1,7 @@
 hersheys
 reeses
 quaker
-snickers
-mars
-bounty
-twix
+#snickers
+#mars
+#bounty
+#twix

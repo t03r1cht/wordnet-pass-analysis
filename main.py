@@ -25,7 +25,7 @@ from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
 from intermediate_lists import Lemma, WordList
-from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl
+from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
 
@@ -268,9 +268,14 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             found += found_cnt
             not_found_for_current_synset += not_found_cnt
             found_for_current_synset += found_cnt
+        # Create this synset in the database and save its relatives (hypernym and hyponyms)
+        store_synset_with_relatives(hypo, curr_root_syn.name())
         # Execute the function again with the new root synset being each hyponym we just found.
         hits_below, not_found_below, found_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
+        # Update the synset with these stats
+        update_synset_with_stats(
+            hypo, hits_below, not_found_below, found_below, lemma_hits, found_cnt, not_found_cnt)
         # Add the sum of all hits below the current synset to the hits list of the current synset so
         # below hits are automatically included (not included in the terminal output, we separate both these
         # numbers into total_hits and hits_below so we can distinguis how many hits we found below and how
@@ -504,92 +509,6 @@ def _write_summary_to_result_file(opts):
         log_ok("Writing tested passwords to %s" % outfile_passwords.name)
 
 
-def _write_lists_summary_to_result_file(opts):
-    """
-    Writes the bottom lines containing the summary to the result file.
-    """
-    log_ok("Writing summary to result file...")
-    _write_to_summary_file("    *** Search Summary ***")
-    _write_to_summary_file("")
-    _write_to_summary_file("")
-    for word_list in hits_for_list_lemmas:
-        # items() returns a tuple key-value pair with index 0 being the key and index 1 being the value
-        # Write stats for file
-        list_total_hits = hits_for_list_lemmas[word_list]["_total_hits"]
-        list_found_count = hits_for_list_lemmas[word_list]["_found_count"]
-        list_not_found_count = hits_for_list_lemmas[word_list]["_not_found_count"]
-        pct_found = list_found_count / total_found * 100
-
-        _write_to_summary_file(
-            "{0} [pct_found={1:.2f}%|total_hits={2}|found={3}|not_found={4}]".format(
-                word_list,
-                pct_found,
-                list_total_hits,
-                list_found_count,
-                list_not_found_count))
-
-        # Write stats for each word of the file
-
-        # create list without the fields that start with "_" containing values used for the file stats entry (see above)
-        lemma_only_list = []
-
-        for item in hits_for_list_lemmas[word_list].items():
-            if not item[0].startswith("_"):
-                lemma_only_list.append(item)
-
-        for dict_item in lemma_only_list:
-            lemma_name = dict_item[0]
-            value_array = dict_item[1]
-            total_hits_loc = value_array[0]
-            found_count_loc = value_array[1]
-            not_found_count_loc = value_array[2]
-            pct_found_lemma = found_count_loc / total_found * 100
-            _write_to_summary_file("  {0} [pct_found={4:.2f}%|total_hits={1}|searched={5}|found={2}|not_found={3}]".format(
-                lemma_name,
-                total_hits_loc,
-                found_count_loc,
-                not_found_count_loc,
-                pct_found_lemma,
-                found_count_loc + not_found_count_loc))
-
-    _write_to_summary_file("")
-    _write_to_summary_file("")
-    _write_to_summary_file("    *** Stats ***")
-    _write_to_summary_file("")
-    _write_to_summary_file("")
-    _write_to_summary_file(
-        "Total Passwords Searched: {0} ({1:.2f}%)".format(total_processed,
-                                                          (total_processed / total_processed * 100)))
-    _write_to_summary_file(
-        "Total Passwords (Success): {0} ({1:.2f}%)".format(total_found,
-                                                           (total_found / total_processed * 100)))
-    _write_to_summary_file(
-        "Total Passwords (Failure): {0} ({1:.2f}%)".format(total_not_found,
-                                                           (total_not_found / total_processed * 100)))
-    _write_to_summary_file(
-        "Total hits for password searches: {0} ({1:.2f} hits per password)".format(
-            total_hits_sum, total_hits_sum / total_processed))
-    _write_to_summary_file("")
-    _write_to_summary_file("Pct Found Passwords (Total): {0:.5f}%".format(
-        (total_hits_sum / pwned_pw_amount * 100)))
-    _write_to_summary_file("Pct Not Found Passwords (Total): {0:.5f}%".format(
-        ((1 - (total_hits_sum / pwned_pw_amount)) * 100)))
-    _write_to_summary_file("")
-    _write_to_summary_file("Base Lemmas (Total): {0} ({1:.2f} permutations per base lemma)".format(
-        total_base_lemmas, total_processed / total_base_lemmas))
-    _write_to_summary_file("")
-    _write_to_summary_file("")
-    started_time = opts["started_time"]
-    finished_time = get_curr_time()
-    time_delta = finished_time - started_time
-    _write_to_summary_file(
-        "Average Time per Base Lemma: {0:.3f} s".format(time_delta.seconds / total_base_lemmas))
-    _write_to_summary_file("Starting Time: %s" % started_time)
-    _write_to_summary_file("Finishing Time: %s" % finished_time)
-    log_ok("Writing summary to %s" % outfile_summary.name)
-    log_ok("Writing tested passwords to %s" % outfile_passwords.name)
-
-
 def _write_to_summary_file(s):
     """
     Writes generic data to the result file.
@@ -686,9 +605,15 @@ def option_lookup_passwords():
         flush_passwords()
 
     log_ok("Processing WordNet subtrees...")
+    # Store this synset including all of its hyponyms.
+    # By emitting the parent parameter, we declare this synset the root
+    store_synset_with_relatives(choice_root_syn, parent="root")
     hits_below, not_found_below, found_below = recurse_nouns_from_root(
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
+    # Update this root synset with its respective stats
+    update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
+                             found_below, hits, found, not_found)
     # Append the dict with the root synset after we processed the subtrees, since we are going to reverse
     # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
     # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
@@ -855,13 +780,13 @@ def option_permutate_from_lists():
         finished_lists += 1
 
     if args.subsume_for_classes:
-        create_classification(dir_txt_content)
+        create_classification_for_lists(dir_txt_content)
         # _write_lists_summary_to_result_file(opts)
     print()
     cleanup()
 
 
-def create_classification(word_lists=None):
+def create_classification_for_lists(word_lists=None):
     """
     Use the data stored in the database to create a classification (and summary).
     """
@@ -973,7 +898,7 @@ if __name__ == "__main__":
         if args.from_lists is None:
             log_err("Missing parameters.")
             sys.exit(0)
-        create_classification()
+        create_classification_for_lists()
     elif args.from_lists:
         option_permutate_from_lists()
     else:

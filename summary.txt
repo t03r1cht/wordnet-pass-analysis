@@ -1,109 +1,52 @@
-File created: 20190621_15.15.04
 
-***13_en_fruit.txt (Total occurrences: 8.429)
+========================================
 
-	+ avocado
-	|-Total Occurrences: 8.429
-	|-Generated Permutations: 221
-	|-Found Permutations: 132
-	|-Not Found Permutations: 89
-	|-Occurrences in this list: 100.00%
+    *** Synset Distribution ***
 
+cat.n.01  pct_total=100.00|pct_this=7.61|total_hits=1732922|this_hits=174023|below_hits=1558899|total_found=2656|this_found=202|below_found=2454|total_not_found=6129|this_not_found=249|below_not_found=5880
+  wildcat.n.03  pct_total=7.27|pct_this=7.27|total_hits=94459|this_hits=94459|below_hits=0|total_found=193|this_found=193|below_found=0|total_not_found=28|this_not_found=28|below_not_found=0
+domestic_cat.n.01  pct_total=85.13|pct_this=0.41|total_hits=1464440|this_hits=32|below_hits=1464408|total_found=2261|this_found=11|below_found=2250|total_not_found=5852|this_not_found=909|below_not_found=4943
+tortoiseshell.n.03  pct_total=0.34|pct_this=0.34|total_hits=67|this_hits=67|below_hits=0|total_found=9|this_found=9|below_found=0|total_not_found=665|this_not_found=665|below_not_found=0
+tom.n.02  pct_total=18.64|pct_this=14.65|total_hits=220042|this_hits=193664|below_hits=26378|total_found=495|this_found=389|below_found=106|total_not_found=168|this_not_found=53|below_not_found=115
+gib.n.02  pct_total=3.99|pct_this=3.99|total_hits=26378|this_hits=26378|below_hits=0|total_found=106|this_found=106|below_found=0|total_not_found=115|this_not_found=115|below_not_found=0
+tiger_cat.n.02  pct_total=0.38|pct_this=0.38|total_hits=172|this_hits=172|below_hits=0|total_found=10|this_found=10|below_found=0|total_not_found=220|this_not_found=220|below_not_found=0
+tabby.n.02  pct_total=15.21|pct_this=15.21|total_hits=195243|this_hits=195243|below_hits=0|total_found=404|this_found=404|below_found=0|total_not_found=38|this_not_found=38|below_not_found=0
+tabby.n.01  pct_total=7.72|pct_this=7.72|total_hits=41305|this_hits=41305|below_hits=0|total_found=205|this_found=205|below_found=0|total_not_found=246|this_not_found=246|below_not_found=0
+siamese_cat.n.01  pct_total=1.77|pct_this=1.77|total_hits=752|this_hits=752|below_hits=0|total_found=47|this_found=47|below_found=0|total_not_found=634|this_not_found=404|below_not_found=230
+blue_point_siamese.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=230|this_not_found=230|below_not_found=0
+persian_cat.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=230|this_not_found=230|below_not_found=0
+mouser.n.01  pct_total=5.76|pct_this=5.76|total_hits=11239|this_hits=11239|below_hits=0|total_found=153|this_found=153|below_found=0|total_not_found=68|this_not_found=68|below_not_found=0
+manx.n.02  pct_total=0.72|pct_this=0.72|total_hits=72|this_hits=72|below_hits=0|total_found=19|this_found=19|below_found=0|total_not_found=432|this_not_found=432|below_not_found=0
+maltese.n.03  pct_total=1.77|pct_this=1.77|total_hits=651|this_hits=651|below_hits=0|total_found=47|this_found=47|below_found=0|total_not_found=404|this_not_found=404|below_not_found=0
+kitty.n.04  pct_total=30.35|pct_this=30.35|total_hits=994294|this_hits=994294|below_hits=0|total_found=806|this_found=806|below_found=0|total_not_found=301|this_not_found=301|below_not_found=0
+egyptian_cat.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=230|this_not_found=230|below_not_found=0
+burmese_cat.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=230|this_not_found=230|below_not_found=0
+angora.n.04  pct_total=1.28|pct_this=1.28|total_hits=352|this_hits=352|below_hits=0|total_found=34|this_found=34|below_found=0|total_not_found=417|this_not_found=417|below_not_found=0
+alley_cat.n.01  pct_total=0.49|pct_this=0.49|total_hits=171|this_hits=171|below_hits=0|total_found=13|this_found=13|below_found=0|total_not_found=217|this_not_found=217|below_not_found=0
+abyssinian.n.01  pct_total=0.30|pct_this=0.30|total_hits=48|this_hits=48|below_hits=0|total_found=8|this_found=8|below_found=0|total_not_found=443|this_not_found=443|below_not_found=0
 
-***12_tech_brands.txt (Total occurrences: 1.538.053)
+========================================
 
-	+ apple
-	|-Total Occurrences: 625.384
-	|-Generated Permutations: 221
-	|-Found Permutations: 216
-	|-Not Found Permutations: 5
-	|-Occurrences in this list: 40.66%
+    *** Searched Lemma ***
 
-	+ samsung
-	|-Total Occurrences: 590.198
-	|-Generated Permutations: 221
-	|-Found Permutations: 214
-	|-Not Found Permutations: 7
-	|-Occurrences in this list: 38.37%
+Identifier: cat.n.01
+Synonyms: ['cat', 'true_cat']
+Definition: feline mammal usually having thick soft fur and no ability to roar: domestic cats; wildcats
+Examples: []
 
-	+ nokia
-	|-Total Occurrences: 211.212
-	|-Generated Permutations: 221
-	|-Found Permutations: 212
-	|-Not Found Permutations: 9
-	|-Occurrences in this list: 13.73%
+    *** Stats ***
 
-	+ microsoft
-	|-Total Occurrences: 95.572
-	|-Generated Permutations: 221
-	|-Found Permutations: 191
-	|-Not Found Permutations: 30
-	|-Occurrences in this list: 6.21%
+Total Passwords Searched: 8785 (100.00%)
+Total Passwords (Success): 2656 (30.23%)
+Total Passwords (Failure): 6129 (69.77%)
+Total hits for password searches: 1732922 (197.26 hits per password)
 
-	+ iiyama
-	|-Total Occurrences: 10.660
-	|-Generated Permutations: 221
-	|-Found Permutations: 157
-	|-Not Found Permutations: 64
-	|-Occurrences in this list: 0.69%
+Pct Found Passwords (Total): 0.31421%
+Pct Not Found Passwords (Total): 99.68579%
 
-	+ huawei
-	|-Total Occurrences: 5.027
-	|-Generated Permutations: 221
-	|-Found Permutations: 136
-	|-Not Found Permutations: 85
-	|-Occurrences in this list: 0.33%
+Base Lemmas (Total): 59 (148.90 permutations per base lemma)
 
 
-***15_en_food.txt (Total occurrences: 351.300)
-
-	+ snickers
-	|-Total Occurrences: 211.967
-	|-Generated Permutations: 221
-	|-Found Permutations: 202
-	|-Not Found Permutations: 19
-	|-Occurrences in this list: 60.34%
-
-	+ mars
-	|-Total Occurrences: 60.531
-	|-Generated Permutations: 221
-	|-Found Permutations: 201
-	|-Not Found Permutations: 20
-	|-Occurrences in this list: 17.23%
-
-	+ bounty
-	|-Total Occurrences: 29.557
-	|-Generated Permutations: 221
-	|-Found Permutations: 183
-	|-Not Found Permutations: 38
-	|-Occurrences in this list: 8.41%
-
-	+ reeses
-	|-Total Occurrences: 19.872
-	|-Generated Permutations: 221
-	|-Found Permutations: 157
-	|-Not Found Permutations: 64
-	|-Occurrences in this list: 5.66%
-
-	+ quaker
-	|-Total Occurrences: 10.473
-	|-Generated Permutations: 221
-	|-Found Permutations: 168
-	|-Not Found Permutations: 53
-	|-Occurrences in this list: 2.98%
-
-	+ twix
-	|-Total Occurrences: 9.636
-	|-Generated Permutations: 221
-	|-Found Permutations: 172
-	|-Not Found Permutations: 49
-	|-Occurrences in this list: 2.74%
-
-	+ hersheys
-	|-Total Occurrences: 9.264
-	|-Generated Permutations: 221
-	|-Found Permutations: 119
-	|-Not Found Permutations: 102
-	|-Occurrences in this list: 2.64%
-
-
+Average Time per Base Lemma: 0.712 s
+Starting Time: 2019-06-21 17:21:45.964398
+Finishing Time: 2019-06-21 17:22:28.321934

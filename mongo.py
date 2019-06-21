@@ -4,6 +4,7 @@ from helper import get_curr_time
 mongo = MongoClient("mongodb://localhost:27017")
 db = mongo["passwords"]
 db_ill = db["ill"]
+db_wn = db["wn_synsets"]
 db_pws_wn = db["passwords_wn"]
 db_pws_lists = db["passwords_lists"]
 
@@ -75,3 +76,23 @@ def clear_mongo():
     db_ill.remove({})
     db_pws_wn.remove({})
     db_pws_lists.remove({})
+    db_wn.remove({})
+
+
+def store_synset_with_relatives(synset, parent="root"):
+    childs = []
+    for child in synset.hyponyms():
+        childs.append(child.name())
+    o = {
+        "id": synset.name(),
+        "level": synset.min_depth(),
+        "parent": parent,
+        "childs": childs
+    }
+    db_wn.insert_one(o)
+
+
+def update_synset_with_stats(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
+    db_wn.update_one({"id": synset.name()}, {"$set": {"hits_below": hits_below,
+                                                       "not_found_below": not_found_below, "found_below": found_below, "this_hits": this_hits,
+                                                       "this_found_cnt": this_found, "this_not_found_cnt": this_not_found}})

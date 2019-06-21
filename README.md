@@ -48,9 +48,7 @@ Add sgrep to PATH: `PATH=$PATH:/opt/sgrep`
 
 ## To Do
 
-- [ ] Write finished lists to intermediate files (Intermediate Lemma List Format `.ill`) so we don't need to lookup those lists again. New lists can be appended as `.ill` files.
-  - [ ] Also store the file hash in the `.ill` file so we can detect modifications in already existing lists. If lists that already have corresponding `.ill` files were appended with new lemmas, reload and decode the `.ill` file and only lookup the diff (appended lemmas)
-- [ ] Which permutators are never found and can be removed?
+- [ ] Create option to iterate over entire WordNet
 - [ ] Write proposition on how to classify Synsets in WordNet (is a cat and dog an animal (level + 1) or rather a vertebrae (level + 2)?)
 - [ ] Transform WordNet recursion to iteration, since iterations are generally more CPU intensive than iterations (each recursion step reserves its own stack frame)
 

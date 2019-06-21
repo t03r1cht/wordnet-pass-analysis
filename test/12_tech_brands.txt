@@ -3,5 +3,5 @@ iiyama
 samsung
 apple
 nokia
-huawei
-microsoft
+#huawei
+#microsoft
