@@ -16,6 +16,7 @@ from collections import OrderedDict
 from subprocess import CalledProcessError
 import jsonpickle
 from pymongo import MongoClient
+import operator
 
 import nltk
 from colorama import Back, Fore, Style, init
@@ -25,10 +26,7 @@ from permutators import permutator, permutator_registrar
 
 from intermediate_lists import Lemma, WordList
 from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl
-from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal
-
-
-# pip installation über py binary: py -m pip install nltk
+from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir
 
 
 parser = argparse.ArgumentParser(
@@ -63,6 +61,8 @@ parser.add_argument("--test", action="store_true",
                     help="Test", dest="test")
 parser.add_argument("--purge-db", action="store_true",
                     help="Purge Database before writing", dest="purge_db")
+parser.add_argument("--classify-only", action="store_true",
+                    help="Classify lists. -l param is required!", dest="classify_only")
 
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
@@ -124,49 +124,39 @@ def flush_passwords():
     log_status("OK")
 
 
-def _init_file_handles(started_time):
+def _init_file_handles(started_time, of_summary=None):
     # Open the file handler for a file with the starting time
-    if args.summary_file_name is not None:
-        outfile_summary_name = args.summary_file_name
-    elif args.root_syn_name:
-        outfile_summary_name = "{0}_{1}_summary.txt".format(
-            started_time, args.root_syn_name)
+    global outfile_summary, outfile_passwords
+
+    if of_summary:
+        # of_summary option is used by the --classify-only handler so we can create only the summary file
+        if args.summary_file_name is not None:
+            outfile_summary_name = args.summary_file_name
+        else:
+            outfile_summary_name = "{0}_summary.txt".format(started_time)
+
+        outfile_summary = open(outfile_summary_name, "w+")
     else:
-        outfile_summary_name = "{0}_summary.txt".format(
-            started_time)
+        if args.summary_file_name is not None:
+            outfile_summary_name = args.summary_file_name
+        elif args.root_syn_name:
+            outfile_summary_name = "{0}_{1}_summary.txt".format(
+                started_time, args.root_syn_name)
+        else:
+            outfile_summary_name = "{0}_summary.txt".format(
+                started_time)
 
-    if args.result_file_name is not None:
-        outfile_passwords_name = args.result_file_name
-    elif args.root_syn_name:
-        outfile_passwords_name = "{0}_{1}_passwords.txt".format(
-            started_time, args.root_syn_name)
-    else:
-        outfile_passwords_name = "{0}_passwords.txt".format(
-            started_time)
+        if args.result_file_name is not None:
+            outfile_passwords_name = args.result_file_name
+        elif args.root_syn_name:
+            outfile_passwords_name = "{0}_{1}_passwords.txt".format(
+                started_time, args.root_syn_name)
+        else:
+            outfile_passwords_name = "{0}_passwords.txt".format(
+                started_time)
 
-    global outfile_summary
-    outfile_summary = open(outfile_summary_name, "w+")
-
-    global outfile_passwords
-    outfile_passwords = open(outfile_passwords_name, "w+")
-
-    # # Create the folder for the list caches
-    # d_name = "intermediate_lists"
-    # if os.path.isdir(d_name):
-    #     if len(os.listdir(d_name)) != 0:
-    #         log_status("%s/ is not empty. Clearing directory..." % d_name)
-    #         for f in os.listdir(d_name):
-    #             f_path = os.path.join(d_name, f)
-    #             try:
-    #                 if os.path.isfile(f_path):
-    #                     os.unlink(f_path)
-    #                 elif os.path.isdir(f_path):
-    #                     shutil.rmtree(f_path)
-    #             except Excepction as e:
-    #                 log_err("Could not delete {0}: {1}".format(f_path, e))
-    # else:
-    #     os.mkdir("intermediate_lists")
-    # log_status("Created intermediate_lists directory")
+        outfile_summary = open(outfile_summary_name, "w+")
+        outfile_passwords = open(outfile_passwords_name, "w+")
 
 
 def inc_total_processed():
@@ -383,8 +373,7 @@ def lookup(permutation, depth):
     else:
         inc_total_found()
 
-    # Print the permutations to the result file.
-    # Slows the script down EXTREMELY due to slow file I/O
+    # Store each permutation of the lemma in the database
     if args.extensive:
         # _write_result_to_passwords_file(permutation, depth, occurrences)
         if args.from_lists:
@@ -751,12 +740,19 @@ def option_permutate_from_lists():
         return
 
     # Gather filenames from dir
-    dir_content = os.listdir(args.from_lists)
-    dir_txt_content = []
-    for f in dir_content:
-        if f.endswith(".txt"):
-            dir_txt_content.append(f)
+    # dir_content = os.listdir(args.from_lists)
+    # dir_txt_content = []
+    # for f in dir_content:
+    #     if f.endswith(".txt"):
+    #         dir_txt_content.append(f)
 
+    # if len(dir_txt_content) > 0:
+    #     log_status("Found %d text files in %s" %
+    #                (len(dir_txt_content), args.from_lists))
+    # else:
+    #     log_err("Could not find any textfiles")
+
+    dir_txt_content = get_txt_files_from_dir(args.from_lists)
     if len(dir_txt_content) > 0:
         log_status("Found %d text files in %s" %
                    (len(dir_txt_content), args.from_lists))
@@ -797,10 +793,6 @@ def option_permutate_from_lists():
         else:
             # Create new document "frame"
             init_word_list_object(pass_list)
-        wl = {}
-        wl["filename"] = pass_list
-        wl["start_date"] = get_curr_time()
-        wl["lemmas"] = []
 
         if args.verbose:
             log_status("Processing: %s" % pass_list)
@@ -826,22 +818,12 @@ def option_permutate_from_lists():
                     log_status(
                         "Creating permutations for [%s]" % password_base)
                 total_base_lemmas += 1
-                # password_base = password_base.strip("\n").strip("\r")
                 total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
                     password_base, 0)
                 append_list_lemma_to_list(
                     pass_list, password_base, total_hits, found_cnt, not_found_cnt)
                 if args.verbose:
                     log_status("Finished Lemma [%s]" % password_base)
-            # Create the Lemma required to cash the word lists
-            l = {}
-            l["name"] = password_base
-            l["total_hits"] = total_hits
-            l["searched"] = found_cnt + not_found_cnt
-            l["found"] = found_cnt
-            l["not_found"] = not_found_cnt
-            l["end_date"] = get_curr_time()
-            wl["lemmas"].append(l)
 
             curr_time = get_curr_time()
             time_diff = curr_time - started_time
@@ -864,14 +846,48 @@ def option_permutate_from_lists():
             if args.extensive:
                 flush_passwords()
 
-            # TODO Append the finished lemma to the ill collection
+            # Append the finished lemma to the ill collection
             append_lemma_to_wl(password_base, total_hits,
-                               pass_list, tag=ILL_TAG)
+                               found_cnt, not_found_cnt, pass_list, tag=ILL_TAG)
 
         finished_lists += 1
-    _write_lists_summary_to_result_file(opts)
+
+    if args.subsume_for_classes:
+        create_classification(dir_txt_content)
+        # _write_lists_summary_to_result_file(opts)
     print()
     cleanup()
+
+
+def create_classification(word_lists=None):
+    """
+    Use the data stored in the database to create a classification (and summary).
+    """
+    # If no word list was passed, e.g. if this function was not called by another function, we need to get our list names from a directory
+    if word_lists is None:
+        # We use the -l parameter to pass a destination directory containing the lists
+        word_lists = get_txt_files_from_dir(args.from_lists)
+        if len(word_lists) == 0:
+            log_err(
+                "Could not find any text files in %s to create classifications from" % args.from_lists)
+            sys.exit(0)
+    # Create summary file to write to
+    _init_file_handles(ILL_TAG, of_summary=True)
+    _write_to_summary_file("File created: %s" % ILL_TAG)
+    _write_to_summary_file("")
+    for filename in word_lists:
+        doc = db_ill.find_one({"filename": filename})
+        if doc is None:
+            continue
+        all_lemmas = doc["lemmas"]
+        all_lemmas = sorted(all_lemmas, key=lambda k: k["occurrences"], reverse=True)
+        _write_to_summary_file("***%s" % filename)
+        _write_to_summary_file("")
+        for lemma in all_lemmas:
+            _write_to_summary_file("\t%s (%d)" % (
+                lemma["name"], lemma["occurrences"]))
+        _write_to_summary_file("")
+    log_ok("Classification written to the summary file.")
 
 
 def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_found_count):
@@ -900,13 +916,6 @@ def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_fou
 
 
 if __name__ == "__main__":
-    # try:
-    #     from nltk.corpus import wordnet as wn
-    #     print("import ok")
-    # except ImportError:
-    #     print("ERROR IMPORT")
-    #     _download_wordnet()
-
     if args.dl_wordnet:
         _download_wordnet()
 
@@ -921,7 +930,7 @@ if __name__ == "__main__":
             temp = input()
 
     if args.lookup_utility:
-        print("NOTE: Make sure you have sgrep installed and added to PATH.")
+        log_status("NOTE: Make sure you have sgrep installed and added to PATH.")
         print()
         print()
 
@@ -931,34 +940,22 @@ if __name__ == "__main__":
     if args.draw_dag:
         # Evaluate command line parameters
         if args.dag_depth is None or args.root_syn_name is None:
-            print("Error: Missing parameters.")
+            log_err("Missing parameters.")
             parser.print_usage()
             sys.exit(0)
-        # print("Running platform pre-check...")
-        # if "Linux" in platform.platform():
-        #     print(
-        #         "You are running this script on Linux (%s). Due to currently unresolved bugs, the graph feature can only be used on Windows and MacOS." % platform.platform())
-        #     sys.exit(0)
         option_draw_graph()
-    # Draw the hyperbolic tree
-    # elif args.draw_hypertree:
-    #     option_hypertree()
     # Lookup words from self-created lists
+    elif args.classify_only:
+        if args.from_lists is None:
+            log_err("Missing parameters.")
+            sys.exit(0)
+        create_classification()
     elif args.from_lists:
         option_permutate_from_lists()
-    elif args.test:
-        # decode_from_ill_files()
-        test_pickle()
     else:
         # Evaluate command line parameters
         if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:
-            print("Error: Missing parameters.")
+            log_err("Missing parameters.")
             parser.print_usage()
             sys.exit(0)
-
-        # print("Running platform pre-check...")
-        # if "Darwin" not in platform.platform():
-        #     print(
-        #         "You are running this script on %s. Looking up passwords is currently only working on MacOS (Darwin) (and probably BSD-based systems). This is due to the fact that any OS other than the aforementioned are shipped with the 32-bit 'look' utility, whereas the BSD-based 'look' utility (e.g. MacOS) is 64-bit. This allows using the look utility on very large files." % platform.platform())
-        #     sys.exit(0)
         option_lookup_passwords()

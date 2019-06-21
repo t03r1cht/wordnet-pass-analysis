@@ -1,37 +1,24 @@
-    *** Search Summary ***
+File created: 20190621_14.14.50
 
+***13_en_fruit.txt
 
-13_en_fruit.txt [pct_found=6.29%|total_hits=8429|found=132|not_found=89]
-  avocado [pct_found=6.29%|total_hits=8429|searched=221|found=132|not_found=89]
-04_tech_brands.txt [pct_found=44.59%|total_hits=1442481|found=935|not_found=170]
-  iiyama [pct_found=7.49%|total_hits=10660|searched=221|found=157|not_found=64]
-  samsung [pct_found=10.21%|total_hits=590198|searched=221|found=214|not_found=7]
-  apple [pct_found=10.30%|total_hits=625384|searched=221|found=216|not_found=5]
-  nokia [pct_found=10.11%|total_hits=211212|searched=221|found=212|not_found=9]
-  huawei [pct_found=6.49%|total_hits=5027|searched=221|found=136|not_found=85]
-15_en_food.txt [pct_found=49.12%|total_hits=341664|found=1030|not_found=296]
-  hersheys [pct_found=5.67%|total_hits=9264|searched=221|found=119|not_found=102]
-  reeses [pct_found=7.49%|total_hits=19872|searched=221|found=157|not_found=64]
-  quaker [pct_found=8.01%|total_hits=10473|searched=221|found=168|not_found=53]
-  snickers [pct_found=9.63%|total_hits=211967|searched=221|found=202|not_found=19]
-  mars [pct_found=9.59%|total_hits=60531|searched=221|found=201|not_found=20]
-  bounty [pct_found=8.73%|total_hits=29557|searched=221|found=183|not_found=38]
+	avocado (8429)
 
+***12_tech_brands.txt
 
-    *** Stats ***
+	apple (625384)
+	samsung (590198)
+	nokia (211212)
+	iiyama (10660)
+	huawei (5027)
 
+***15_en_food.txt
 
-Total Passwords Searched: 2652 (100.00%)
-Total Passwords (Success): 2097 (79.07%)
-Total Passwords (Failure): 555 (20.93%)
-Total hits for password searches: 1792574 (675.93 hits per password)
+	snickers (211967)
+	mars (60531)
+	bounty (29557)
+	reeses (19872)
+	quaker (10473)
+	twix (9636)
+	hersheys (9264)
 
-Pct Found Passwords (Total): 0.32503%
-Pct Not Found Passwords (Total): 99.67497%
-
-Base Lemmas (Total): 12 (221.00 permutations per base lemma)
-
-
-Average Time per Base Lemma: 0.917 s
-Starting Time: 2019-06-21 11:59:14.935068
-Finishing Time: 2019-06-21 11:59:26.407191

@@ -9,6 +9,9 @@ db_pws_lists = db["passwords_lists"]
 
 
 def store_tested_pass_lists(name, occurrences):
+    """
+    Save permutation to the "lists" collection
+    """
     o = {
         "name": name,
         "occurrences": occurrences
@@ -21,6 +24,9 @@ def store_tested_pass_lists(name, occurrences):
 
 
 def store_tested_pass_wn(name, occurrences):
+    """
+    Save permutation to the "wn" (WordNet) collection
+    """
     o = {
         "name": name,
         "occurrences": occurrences
@@ -33,6 +39,9 @@ def store_tested_pass_wn(name, occurrences):
 
 
 def init_word_list_object(filename):
+    """
+    Create an initial object to store processed lemmas.
+    """
     o = {
         "filename": filename,
         "created": get_curr_time(),
@@ -44,13 +53,19 @@ def init_word_list_object(filename):
         return False
 
 
-def append_lemma_to_wl(lemma, occurrences, wl, tag="NOT_TAGGED"):
+def append_lemma_to_wl(lemma, occurrences, found_cnt, not_found_count, wl, tag="NOT_TAGGED"):
+    """
+    Insert a processed lemma to the "ill" collection. Checks if a lemma with the same name already exists.
+    """
     # Check if the lemma already exists in the list
     if db_ill.count_documents({"filename": wl, "lemmas.name": lemma}) > 0:
         return
     o = {
         "name": lemma,
         "occurrences": occurrences,
+        "total_cnt": found_cnt + not_found_count,
+        "found_cnt": found_cnt,
+        "not_found_cnt": not_found_count,
         "tag": tag
     }
     db_ill.update_one({"filename": wl}, {"$push": {"lemmas": o}})
