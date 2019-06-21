@@ -1,3 +1,6 @@
 hersheys
 reeses
 quaker
+snickers
+mars
+bounty

@@ -84,6 +84,8 @@ total_base_lemmas = 0  # track the total number of base lemmas
 lemmas_to_process = 0
 glob_started_time = None
 
+ILL_TAG = get_curr_time_str()
+
 
 def test_pickle():
     for i in range(100):
@@ -115,6 +117,7 @@ def cleanup():
 
 
 def flush_passwords():
+    return
     log_ok("==> Flushing to disk...")
     outfile_passwords.flush()
     os.fsync(outfile_passwords.fileno())
@@ -789,7 +792,8 @@ def option_permutate_from_lists():
     for pass_list in dir_txt_content:
         # Check if a ill document for this list name already exists
         if db_ill.count_documents({"filename": pass_list}) > 0:
-            log_status("%s already exists in database, will append results to this document" % pass_list)
+            log_status(
+                "%s already exists in database, will append results to this document" % pass_list)
         else:
             # Create new document "frame"
             init_word_list_object(pass_list)
@@ -844,7 +848,6 @@ def option_permutate_from_lists():
             curr_lemma_time = time_diff.seconds / total_base_lemmas
             remaining_lemmas = lemmas_to_process - total_base_lemmas
             remaining_time_est = remaining_lemmas * curr_lemma_time
-            # log_ok("(SIMULATION) Updating status...")
             clear_terminal()
             log_status("Current list: {0}\nProcessed Lemmas: {1}/{2}\nTested Passwords: {7}\nFinished Lists: {8}/{9}\nCurrent Lemma: {10}\nElapsed Time (seconds): {3:.2f}\nEstimated Remaining Time (m/h): {4:.2f}/{5:.2f}\nCurrent Average Time per Lemma (s): {6:.2f}\n".format(
                 pass_list,
@@ -862,8 +865,9 @@ def option_permutate_from_lists():
                 flush_passwords()
 
             # TODO Append the finished lemma to the ill collection
-            append_lemma_to_wl(password_base, total_hits, pass_list)
-        
+            append_lemma_to_wl(password_base, total_hits,
+                               pass_list, tag=ILL_TAG)
+
         finished_lists += 1
     _write_lists_summary_to_result_file(opts)
     print()

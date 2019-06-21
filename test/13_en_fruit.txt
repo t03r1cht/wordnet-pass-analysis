@@ -1,4 +1,4 @@
-#avocado
+avocado
 #cucumber
 #eggplant
 #olive

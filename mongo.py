@@ -44,13 +44,14 @@ def init_word_list_object(filename):
         return False
 
 
-def append_lemma_to_wl(lemma, occurrences, wl):
+def append_lemma_to_wl(lemma, occurrences, wl, tag="NOT_TAGGED"):
     # Check if the lemma already exists in the list
-    if db_ill.count_documents({"name": lemma}) > 0:
+    if db_ill.count_documents({"filename": wl, "lemmas.name": lemma}) > 0:
         return
     o = {
         "name": lemma,
-        "occurrences": occurrences
+        "occurrences": occurrences,
+        "tag": tag
     }
     db_ill.update_one({"filename": wl}, {"$push": {"lemmas": o}})
 

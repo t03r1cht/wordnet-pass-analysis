@@ -3,3 +3,4 @@ iiyama
 samsung
 apple
 nokia
+huawei
