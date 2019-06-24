@@ -82,9 +82,10 @@ def clear_mongo():
 
 
 def store_synset_with_relatives(synset, parent="root"):
-    # TODO Check if this synset already exists.
-    # If it does, check differences (same parent/childs? If not, update with the newest values)
-    # if db_wn.count_documents({""})
+    # Check if this synset already exists.
+    if db_wn.count_documents({"id": synset.name()}) > 0:
+        return
+    
     childs = []
     for child in synset.hyponyms():
         childs.append(child.name())

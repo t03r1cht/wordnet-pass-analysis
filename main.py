@@ -60,8 +60,10 @@ parser.add_argument("--test", action="store_true",
                     help="Test", dest="test")
 parser.add_argument("--purge-db", action="store_true",
                     help="Purge Database before writing", dest="purge_db")
-parser.add_argument("--classify-only", action="store_true",
-                    help="Classify lists. -l param is required!", dest="classify_only")
+parser.add_argument("--classify-lists", action="store_true",
+                    help="Classify lists. -l param is required!", dest="classify_lists")
+parser.add_argument("--classify-wn", action="store_true",
+                    help="Classify wordnet synsets.", dest="classify_wn")
 
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
@@ -567,14 +569,40 @@ def option_lookup_passwords():
     log_ok("Processing WordNet subtrees...")
     # Store this synset including all of its hyponyms.
     # By emitting the parent parameter, we declare this synset the root
-    store_synset_with_relatives(choice_root_syn, parent="root")
+    # We will only declare entity.n.01 as root since it is the actual root object of the wordnet tree
+    if choice_root_syn.name() == "entity.n.01":
+        store_synset_with_relatives(choice_root_syn, parent="root")
+    else:
+        # If we run the script starting from somewhere within the wordnet,
+        # we still need to find its parent (hypernym). Therefore, we call hypernyms()
+        # on the synset and check if one of the returned hypernyms already exists
+        # in our database. If it does, we connect it by setting this synset's parent
+        # to the found parent. Note that the first occurence of the hypernym
+        # will be specified its parent (even if there might be more valid hypernyms existing in
+        # the database)
+        root_hypernyms = choice_root_syn.hypernyms()
+        root_hypernym = None
+        for hypernym in root_hypernyms:
+            if db_wn.count_documents({"id": hypernym.name()}) == 0:
+                continue
+            else:
+                root_hypernym = hypernym
+        if root_hypernym is None:
+            log_err(
+                "Could not find a single hypernym of [%s] in the database to link to" % choice_root_syn.name())
+            log_err("\t Hypernyms for [%s]: %s" % (
+                choice_root_syn.name(), choice_root_syn.hypernyms()))
+            sys.exit(0)
+        _write_to_passwords_file("found root_hypernym for %s is %s" % (
+            choice_root_syn.name(), root_hypernym))
+        store_synset_with_relatives(choice_root_syn, parent=root_hypernym.name())
     hits_below, not_found_below, found_below = recurse_nouns_from_root(
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
     # Update this root synset with its respective stats
     update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
                              found_below, hits, found, not_found)
-    # Append the dict with the root synset after we processed the subtrees, since we are going to reverse
+    # we processed the subtrees, since we are going to reverse
     # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
     # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
     if args.subsume_for_classes:
@@ -591,6 +619,8 @@ def option_lookup_passwords():
     opts["start_depth"] = choice_root_syn.min_depth()
     _write_summary_to_result_file(opts)
     cleanup()
+
+    # Append the dict with the root synset after
 
 
 def option_hypertree():
@@ -799,6 +829,15 @@ def create_classification_for_lists(word_lists=None):
     log_ok("Classification written to the summary file.")
 
 
+def create_complete_classification_for_wn():
+    # Check if we have synsets to iterate over
+    if db_wn.count_documents({}) == 0:
+        log_err("No synsets found in database. Nothing to process.")
+        sys.exit(0)
+
+    # Get the root object
+
+
 def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_found_count):
     global hits_for_list_lemmas
     content = [total_hits, found_count, not_found_count]
@@ -854,11 +893,13 @@ if __name__ == "__main__":
             sys.exit(0)
         option_draw_graph()
     # Lookup words from self-created lists
-    elif args.classify_only:
+    elif args.classify_lists:
         if args.from_lists is None:
             log_err("Missing parameters.")
             sys.exit(0)
         create_classification_for_lists()
+    elif args.classify_wn:
+        create_complete_classification_for_wn()
     elif args.from_lists:
         option_permutate_from_lists()
     else:
