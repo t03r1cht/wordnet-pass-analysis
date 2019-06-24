@@ -25,7 +25,7 @@ from colorama import Back, Fore, Style, init
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
-from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats, store_permutations_for_lemma, new_permutation_for_lemma, db_wn_lemma_permutations
+from mongo import db_lists, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats, store_permutations_for_lemma, new_permutation_for_lemma, db_wn_lemma_permutations
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
 
@@ -61,7 +61,7 @@ parser.add_argument("--test", action="store_true",
                     help="Test", dest="test")
 parser.add_argument("--purge-db", action="store_true",
                     help="Purge Database before writing", dest="purge_db")
-parser.add_argument("--classify-lists", action="store_true",
+parser.add_argument("--classify-lists", type=str,
                     help="Classify lists. -l param is required!", dest="classify_lists")
 parser.add_argument("--classify-wn", type=str,
                     help="Classify wordnet synsets.", dest="classify_wn")
@@ -298,8 +298,12 @@ def permutations_for_lemma(lemma, depth, source):
                 if args.verbose:
                     log_status("Looking up [%s]" % p)
                 trans_hits = lookup(p, depth, source, lemma)
-                all_permutations.append(
-                    new_permutation_for_lemma(p, trans_hits))
+                if args.root_syn_name:
+                    # Store each permutations under this lemma object in the database
+                    all_permutations.append(
+                        new_permutation_for_lemma(p, trans_hits))
+                if args.from_lists:
+                    store_tested_pass_lists(p, trans_hits, source, lemma)
                 total_hits += trans_hits
                 if trans_hits == 0:
                     not_found_cnt += 1
@@ -309,22 +313,28 @@ def permutations_for_lemma(lemma, depth, source):
             if args.verbose:
                 log_status("Looking up [%s]" % permutations)
             trans_hits = lookup(permutations, depth, source, lemma)
-            all_permutations.append(
-                new_permutation_for_lemma(permutation, trans_hits))
+            if args.root_syn_name:
+                all_permutations.append(
+                    new_permutation_for_lemma(permutation, trans_hits))
+            if args.from_lists:
+                store_tested_pass_lists(permutation, trans_hits, source, lemma)
+
             if trans_hits == 0:
                 not_found_cnt += 1
             else:
                 found_cnt += 1
             total_hits += trans_hits
 
-    permutations_for_lemma = {
-        "word_base": lemma,
-        "permutations": all_permutations,
-        "total_permutations": len(all_permutations),
-        "total_hits": total_hits,
-        "synset": source
-    }
-    store_permutations_for_lemma(permutations_for_lemma)
+    if args.root_syn_name:
+        permutations_for_lemma = {
+            "word_base": lemma,
+            "permutations": all_permutations,
+            "total_permutations": len(all_permutations),
+            "total_hits": total_hits,
+            "synset": source
+        }
+        store_permutations_for_lemma(permutations_for_lemma)
+
     return total_hits, not_found_cnt, found_cnt
 
 
@@ -640,19 +650,6 @@ def option_permutate_from_lists():
         log_err("Directory is empty.")
         return
 
-    # Gather filenames from dir
-    # dir_content = os.listdir(args.from_lists)
-    # dir_txt_content = []
-    # for f in dir_content:
-    #     if f.endswith(".txt"):
-    #         dir_txt_content.append(f)
-
-    # if len(dir_txt_content) > 0:
-    #     log_status("Found %d text files in %s" %
-    #                (len(dir_txt_content), args.from_lists))
-    # else:
-    #     log_err("Could not find any textfiles")
-
     dir_txt_content = get_txt_files_from_dir(args.from_lists)
     if len(dir_txt_content) > 0:
         log_status("Found %d text files in %s" %
@@ -688,7 +685,7 @@ def option_permutate_from_lists():
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
         # Check if a ill document for this list name already exists
-        if db_ill.count_documents({"filename": pass_list}) > 0:
+        if db_lists.count_documents({"filename": pass_list}) > 0:
             log_status(
                 "%s already exists in database, will append results to this document" % pass_list)
         else:
@@ -720,7 +717,7 @@ def option_permutate_from_lists():
                         "Creating permutations for [%s]" % password_base)
                 total_base_lemmas += 1
                 total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
-                    password_base, 0, password_base)
+                    password_base, 0, pass_list)
                 append_list_lemma_to_list(
                     pass_list, password_base, total_hits, found_cnt, not_found_cnt)
                 if args.verbose:
@@ -776,39 +773,52 @@ def create_classification_for_lists(word_lists=None):
 
     _write_to_summary_file("File created: %s" % ILL_TAG)
     _write_to_summary_file("")
-    # Iterate over each word list stored in the database
-    for filename in word_lists:
-        doc = db_ill.find_one({"filename": filename})
-        if doc is None:
-            continue
-        all_lemmas = doc["lemmas"]
-        if len(all_lemmas) == 0:
-            _write_to_summary_file("\t <no lemmas stored for this list>")
-        # Get the total sum of hits of all hits for all permutations for this list
-        total_occurrences_list = 0
-        for lemma in all_lemmas:
-            total_occurrences_list += lemma["occurrences"]
-        all_lemmas = sorted(
-            all_lemmas, key=lambda k: k["occurrences"], reverse=True)
-        _write_to_summary_file("***%s (Total occurrences: %s)" %
-                               (filename, format_number(total_occurrences_list)))
-        _write_to_summary_file("")
-        # Iterate over each lemma of each list
-        for lemma in all_lemmas:
-            _write_to_summary_file("\t+ %s" % (lemma["name"]))
-            _write_to_summary_file(
-                "\t|-Total Occurrences: %s" % format_number(lemma["occurrences"]))
-            _write_to_summary_file(
-                "\t|-Generated Permutations: %s" % (format_number(lemma["found_cnt"] + lemma["not_found_cnt"])))
-            _write_to_summary_file(
-                "\t|-Found Permutations: %s" % format_number(lemma["found_cnt"]))
-            _write_to_summary_file(
-                "\t|-Not Found Permutations: %s" % format_number(lemma["not_found_cnt"]))
-            _write_to_summary_file("\t|-Occurrences in this list: {:.2f}%".format(
-                lemma["occurrences"] / total_occurrences_list * 100))
+
+    if args.top == None:
+        # limit = 0 does not limit the query
+        query_limit = 0
+    else:
+        query_limit = args.top
+
+    if args.classify_lists == "all":
+        # Iterate over each word list stored in the database
+        for filename in word_lists:
+            doc = db_lists.find_one({"filename": filename})
+            if doc is None:
+                continue
+            all_lemmas = doc["lemmas"]
+            if len(all_lemmas) == 0:
+                _write_to_summary_file("\t <no lemmas stored for this list>")
+            # Get the total sum of hits of all hits for all permutations for this list
+            total_occurrences_list = 0
+            for lemma in all_lemmas:
+                total_occurrences_list += lemma["occurrences"]
+            all_lemmas = sorted(
+                all_lemmas, key=lambda k: k["occurrences"], reverse=True)
+            _write_to_summary_file("***%s (Total occurrences: %s)" %
+                                   (filename, format_number(total_occurrences_list)))
             _write_to_summary_file("")
-        _write_to_summary_file("")
-    log_ok("Classification written to the summary file.")
+            # Iterate over each lemma of each list
+            for lemma in all_lemmas:
+                _write_to_summary_file("\t+ %s" % (lemma["name"]))
+                _write_to_summary_file(
+                    "\t|-Total Occurrences: %s" % format_number(lemma["occurrences"]))
+                _write_to_summary_file(
+                    "\t|-Generated Permutations: %s" % (format_number(lemma["found_cnt"] + lemma["not_found_cnt"])))
+                _write_to_summary_file(
+                    "\t|-Found Permutations: %s" % format_number(lemma["found_cnt"]))
+                _write_to_summary_file(
+                    "\t|-Not Found Permutations: %s" % format_number(lemma["not_found_cnt"]))
+                _write_to_summary_file("\t|-Occurrences in this list: {:.2f}%".format(
+                    lemma["occurrences"] / total_occurrences_list * 100))
+                _write_to_summary_file("")
+            _write_to_summary_file("")
+        log_ok("Classification written to the summary file.")
+    elif args.classify_lists == "sort_password_desc":
+        for password in db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
+            print("{}\t{}".format(password["occurrences"], password["name"]))
+    else:
+        log_err("Unrecognized classification option [%s]" % args.classify_wn)
 
 
 def create_complete_classification_for_wn():
@@ -824,6 +834,12 @@ def create_complete_classification_for_wn():
     _write_to_summary_file("File created: %s" % ILL_TAG)
     _write_to_summary_file("")
 
+    if args.top == None:
+        # limit = 0 does not limit the query
+        query_limit = 0
+    else:
+        query_limit = args.top
+
     if args.classify_wn == "sort_synset_desc":
         # Sort all stored synsets based on their total_hits field (so their hits as well as their hyponym hits) in descending order
         for synset in db_wn.find().sort("total_hits", pymongo.DESCENDING):
@@ -831,18 +847,10 @@ def create_complete_classification_for_wn():
             print("{}\t\t{}".format(synset["total_hits"], synset["id"]))
     elif args.classify_wn == "sort_lemma_desc":
         # Sort all lemmas (word bases) based on their hits in descending order
-        if args.top == None:
-            # limit = 0 does not limit the query
-            query_limit = 0
-        else:
-            query_limit = args.top
+
         for lemma in db_wn_lemma_permutations.find().sort("total_hits", pymongo.DESCENDING).limit(query_limit):
             print("{}\t\t{}".format(lemma["total_hits"], lemma["word_base"]))
     elif args.classify_wn == "sort_password_desc":
-        if args.top == None:
-            query_limit = 0
-        else:
-            query_limit = args.top
         for password in db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
             print("{}\t{}".format(
                 password["occurrences"], password["name"], password["synset"]))
@@ -906,9 +914,9 @@ if __name__ == "__main__":
         option_draw_graph()
     # Lookup words from self-created lists
     elif args.classify_lists:
-        if args.from_lists is None:
-            log_err("Missing parameters.")
-            sys.exit(0)
+        # if args.from_lists is None:
+        #     log_err("Missing parameters.")
+        #     sys.exit(0)
         create_classification_for_lists()
     elif args.classify_wn:
         create_complete_classification_for_wn()

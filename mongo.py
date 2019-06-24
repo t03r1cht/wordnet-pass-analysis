@@ -3,7 +3,7 @@ from helper import get_curr_time, get_curr_time_str
 
 mongo = MongoClient("mongodb://localhost:27017")
 db = mongo["passwords"]
-db_ill = db["ill"]
+db_lists = db["lists"]
 db_wn = db["wn_synsets"]
 db_pws_wn = db["passwords_wn"]
 db_wn_lemma_permutations = db["wn_lemma_permutations"]
@@ -19,7 +19,7 @@ def store_tested_pass_lists(name, occurrences, source, word_base):
     o = {
         "name": name,
         "occurrences": occurrences,
-        "synset": source,
+        "source": source,
         "word_base": word_base,
         "tag": TAG
     }
@@ -59,7 +59,7 @@ def init_word_list_object(filename):
         "tag": TAG
     }
     try:
-        db_ill.insert_one(o)
+        db_lists.insert_one(o)
     except Exception as e:
         return False
 
@@ -69,7 +69,7 @@ def append_lemma_to_wl(lemma, occurrences, found_cnt, not_found_count, wl, tag="
     Insert a processed lemma to the "ill" collection. Checks if a lemma with the same name already exists.
     """
     # Check if the lemma already exists in the list
-    if db_ill.count_documents({"filename": wl, "lemmas.name": lemma}) > 0:
+    if db_lists.count_documents({"filename": wl, "lemmas.name": lemma}) > 0:
         return
     o = {
         "name": lemma,
@@ -79,11 +79,11 @@ def append_lemma_to_wl(lemma, occurrences, found_cnt, not_found_count, wl, tag="
         "not_found_cnt": not_found_count,
         "tag": TAG
     }
-    db_ill.update_one({"filename": wl}, {"$push": {"lemmas": o}})
+    db_lists.update_one({"filename": wl}, {"$push": {"lemmas": o}})
 
 
 def clear_mongo():
-    db_ill.remove({})
+    db_lists.remove({})
     db_pws_wn.remove({})
     db_pws_lists.remove({})
     db_wn.remove({})

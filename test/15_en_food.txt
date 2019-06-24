@@ -1,6 +1,6 @@
 hersheys
 reeses
-quaker
+#quaker
 #snickers
 #mars
 #bounty

@@ -1,7 +1,6 @@
-#tech
 iiyama
 samsung
-apple
-nokia
+#apple
+#nokia
 #huawei
 #microsoft
