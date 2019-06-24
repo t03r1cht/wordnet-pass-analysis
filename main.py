@@ -24,7 +24,6 @@ from colorama import Back, Fore, Style, init
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
-from intermediate_lists import Lemma, WordList
 from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
@@ -85,14 +84,6 @@ lemmas_to_process = 0
 glob_started_time = None
 
 ILL_TAG = get_curr_time_str()
-
-
-def test_pickle():
-    for i in range(100):
-        o = WordList()
-        o.lemmas_total = i
-        insert_id = db_ill.insert_one(o.__dict__)
-        log_status("%s" % insert_id.inserted_id)
 
 
 def sigint_handler(sig, frame):
@@ -261,7 +252,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             total_base_lemmas += 1
             # Apply a set of permutations to each lemma
             lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
-                lemma, hypo.min_depth())
+                lemma, hypo.min_depth(), hypo.name())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
             not_found += not_found_cnt
@@ -273,9 +264,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         # Execute the function again with the new root synset being each hyponym we just found.
         hits_below, not_found_below, found_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
-        # Update the synset with these stats
-        update_synset_with_stats(
-            hypo, hits_below, not_found_below, found_below, lemma_hits, found_cnt, not_found_cnt)
+
         # Add the sum of all hits below the current synset to the hits list of the current synset so
         # below hits are automatically included (not included in the terminal output, we separate both these
         # numbers into total_hits and hits_below so we can distinguis how many hits we found below and how
@@ -284,6 +273,9 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         total_hits_for_current_synset += hits_below
         not_found_for_current_synset += not_found_below
         found_for_current_synset += found_below
+        # Update the synset with these stats
+        update_synset_with_stats(
+            hypo, hits_below, not_found_below, found_below, total_hits, found_cnt, not_found_cnt)
         if args.subsume_for_classes:
             append_with_hits(hypo, total_hits, hits_below,
                              not_found, not_found_below, found, found_below)
@@ -292,42 +284,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
 
 
-def permutations_for_lemma(lemma, depth):
-    """
-    Create all permutatuons by using the registered permutator using the lemma as base.
-    """
-    total_hits = 0
-    not_found_cnt = 0
-    found_cnt = 0
-    for permutation_handler in permutator.all:
-        # The permutator returns the permutated lemma.
-        trans = permutation_handler(lemma)
-        # In case some permutators could not be applied to the lemma
-        # For example when a lemma solely consists of vowels and one permutator strips vowels.
-        # That would leave us with a NoneType password.
-        if trans == None:
-            continue
-        # In some cases, permutator may return a variable list of permutations.
-        if type(trans) == list:
-            for p in trans:
-                trans_hits = lookup(p, depth)
-                total_hits += trans_hits
-                if trans_hits == 0:
-                    not_found_cnt += 1
-                else:
-                    found_cnt += 1
-        else:
-            trans_hits = lookup(trans, depth)
-            if trans_hits == 0:
-                not_found_cnt += 1
-            else:
-                found_cnt += 1
-            total_hits += trans_hits
-
-    return total_hits, not_found_cnt, found_cnt
-
-
-def permutations_for_lemma_experimental(lemma, depth):
+def permutations_for_lemma_experimental(lemma, depth, source):
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
@@ -344,7 +301,7 @@ def permutations_for_lemma_experimental(lemma, depth):
             for p in permutations:
                 if args.verbose:
                     log_status("Looking up [%s]" % p)
-                trans_hits = lookup(p, depth)
+                trans_hits = lookup(p, depth, source)
                 total_hits += trans_hits
                 if trans_hits == 0:
                     not_found_cnt += 1
@@ -353,7 +310,7 @@ def permutations_for_lemma_experimental(lemma, depth):
         else:
             if args.verbose:
                 log_status("Looking up [%s]" % permutations)
-            trans_hits = lookup(permutations, depth)
+            trans_hits = lookup(permutations, depth, source)
             if trans_hits == 0:
                 not_found_cnt += 1
             else:
@@ -363,7 +320,7 @@ def permutations_for_lemma_experimental(lemma, depth):
     return total_hits, not_found_cnt, found_cnt
 
 
-def lookup(permutation, depth):
+def lookup(permutation, depth, source):
     """
     Hashes the (translated) lemma and looks it up in  the HIBP password file.
     """
@@ -382,9 +339,9 @@ def lookup(permutation, depth):
     if args.extensive:
         # _write_result_to_passwords_file(permutation, depth, occurrences)
         if args.from_lists:
-            status = store_tested_pass_lists(permutation, occurrences)
+            status = store_tested_pass_lists(permutation, occurrences, source)
         elif args.root_syn_name:
-            status = store_tested_pass_wn(permutation, occurrences)
+            status = store_tested_pass_wn(permutation, occurrences, source)
         else:
             pass
         if not status:
@@ -427,6 +384,9 @@ def _write_summary_to_result_file(opts):
         _write_to_summary_file("    *** Synset Distribution ***")
         _write_to_summary_file("")
 
+        # Reverse the list to restore the "natural" tree order.
+        # Due to the nature of a recursion, thing, physical entity and abstraction get added before entity, however when we print this dict,
+        # we want entity to be before its childs
         global hits_for_lemmas
         reversed_dict = collections.OrderedDict(
             reversed(list(hits_for_lemmas.items())))
@@ -597,7 +557,7 @@ def option_lookup_passwords():
     for root_lemma in choice_root_syn.lemma_names():
         total_base_lemmas += 1
         hits, not_found, found = permutations_for_lemma_experimental(
-            root_lemma, choice_root_syn.min_depth())
+            root_lemma, choice_root_syn.min_depth(), choice_root_syn.name())
         first_level_hits += hits
         first_level_not_found += not_found
         first_level_found += found
@@ -612,10 +572,6 @@ def option_lookup_passwords():
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
     # Update this root synset with its respective stats
-    print(choice_root_syn.lemma_names())
-    print(hits)
-    print(found)
-    print(not_found)
     update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
                              found_below, hits, found, not_found)
     # Append the dict with the root synset after we processed the subtrees, since we are going to reverse
@@ -750,7 +706,7 @@ def option_permutate_from_lists():
                         "Creating permutations for [%s]" % password_base)
                 total_base_lemmas += 1
                 total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
-                    password_base, 0)
+                    password_base, 0, password_base)
                 append_list_lemma_to_list(
                     pass_list, password_base, total_hits, found_cnt, not_found_cnt)
                 if args.verbose:
