@@ -48,8 +48,7 @@ Add sgrep to PATH: `PATH=$PATH:/opt/sgrep`
 
 ## To Do
 
-- [ ] Create option to iterate over entire WordNet
-- [ ] Testlauf starten und Ergebnisse überprüfen
+- [ ] If inserting a list lemma into its list "class", also save each permutation separately, so we can find the most popular passwords as well
 - [ ] Write proposition on how to classify Synsets in WordNet (is a cat and dog an animal (level + 1) or rather a vertebrae (level + 2)?)
 - [ ] Transform WordNet recursion to iteration, since iterations are generally more CPU intensive than iterations (each recursion step reserves its own stack frame)
 

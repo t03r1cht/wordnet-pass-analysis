@@ -1,22 +1,27 @@
 from pymongo import MongoClient
-from helper import get_curr_time
+from helper import get_curr_time, get_curr_time_str
 
 mongo = MongoClient("mongodb://localhost:27017")
 db = mongo["passwords"]
 db_ill = db["ill"]
 db_wn = db["wn_synsets"]
 db_pws_wn = db["passwords_wn"]
+db_wn_lemma_permutations = db["wn_lemma_permutations"]
 db_pws_lists = db["passwords_lists"]
 
+TAG = get_curr_time_str()
 
-def store_tested_pass_lists(name, occurrences, source):
+
+def store_tested_pass_lists(name, occurrences, source, word_base):
     """
     Save permutation to the "lists" collection
     """
     o = {
         "name": name,
         "occurrences": occurrences,
-        "source": source
+        "synset": source,
+        "word_base": word_base,
+        "tag": TAG
     }
     try:
         db_pws_lists.insert_one(o)
@@ -25,14 +30,16 @@ def store_tested_pass_lists(name, occurrences, source):
     return True
 
 
-def store_tested_pass_wn(name, occurrences, source):
+def store_tested_pass_wn(name, occurrences, source, word_base):
     """
     Save permutation to the "wn" (WordNet) collection
     """
     o = {
         "name": name,
         "occurrences": occurrences,
-        "source": source
+        "synset": source,
+        "word_base": word_base,
+        "tag": TAG
     }
     try:
         db_pws_wn.insert_one(o)
@@ -48,7 +55,8 @@ def init_word_list_object(filename):
     o = {
         "filename": filename,
         "created": get_curr_time(),
-        "lemmas": []
+        "lemmas": [],
+        "tag": TAG
     }
     try:
         db_ill.insert_one(o)
@@ -69,7 +77,7 @@ def append_lemma_to_wl(lemma, occurrences, found_cnt, not_found_count, wl, tag="
         "total_cnt": found_cnt + not_found_count,
         "found_cnt": found_cnt,
         "not_found_cnt": not_found_count,
-        "tag": tag
+        "tag": TAG
     }
     db_ill.update_one({"filename": wl}, {"$push": {"lemmas": o}})
 
@@ -79,13 +87,34 @@ def clear_mongo():
     db_pws_wn.remove({})
     db_pws_lists.remove({})
     db_wn.remove({})
+    db_wn_lemma_permutations.remove({})
+
+
+def store_permutations_for_lemma(permutations):
+    # In case it already exists
+    if db_wn_lemma_permutations.count_documents({"word_base": permutations["word_base"]}) > 0:
+        return
+    db_wn_lemma_permutations.insert_one(permutations)
+    # Also store each separate permutation so we can search for the most popular permutations
+    for p in permutations["permutations"]:
+        store_tested_pass_wn(p["permutation"], p["occurrences"],
+                             permutations["synset"], permutations["word_base"])
+
+
+def new_permutation_for_lemma(permutation, occurrences):
+    o = {
+        "permutation": permutation,
+        "occurrences": occurrences,
+        "tag": TAG
+    }
+    return o
 
 
 def store_synset_with_relatives(synset, parent="root"):
     # Check if this synset already exists.
     if db_wn.count_documents({"id": synset.name()}) > 0:
         return
-    
+
     childs = []
     for child in synset.hyponyms():
         childs.append(child.name())
@@ -93,7 +122,8 @@ def store_synset_with_relatives(synset, parent="root"):
         "id": synset.name(),
         "level": synset.min_depth(),
         "parent": parent,
-        "childs": childs
+        "childs": childs,
+        "tag": TAG
     }
     db_wn.insert_one(o)
 
@@ -109,5 +139,6 @@ def update_synset_with_stats(synset, hits_below, not_found_below, found_below, t
         "this_not_found_cnt": this_not_found,
         "this_permutations": this_found + this_not_found,
         "below_permutations": found_below + not_found_below,
+        "tag": TAG
     }
     db_wn.update_one({"id": synset.name()}, {"$set": o})

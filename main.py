@@ -16,6 +16,7 @@ from collections import OrderedDict
 from subprocess import CalledProcessError
 import jsonpickle
 from pymongo import MongoClient
+import pymongo
 import operator
 
 import nltk
@@ -24,7 +25,7 @@ from colorama import Back, Fore, Style, init
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
-from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats
+from mongo import db_ill, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats, store_permutations_for_lemma, new_permutation_for_lemma, db_wn_lemma_permutations
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
 
@@ -62,8 +63,10 @@ parser.add_argument("--purge-db", action="store_true",
                     help="Purge Database before writing", dest="purge_db")
 parser.add_argument("--classify-lists", action="store_true",
                     help="Classify lists. -l param is required!", dest="classify_lists")
-parser.add_argument("--classify-wn", action="store_true",
+parser.add_argument("--classify-wn", type=str,
                     help="Classify wordnet synsets.", dest="classify_wn")
+parser.add_argument("--top", type=int,
+                    help="Limit output for --classify-x queries.", dest="top")
 
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
@@ -107,14 +110,6 @@ def cleanup():
     """
     outfile_summary.close()
     outfile_passwords.close()
-
-
-def flush_passwords():
-    return
-    log_ok("==> Flushing to disk...")
-    outfile_passwords.flush()
-    os.fsync(outfile_passwords.fileno())
-    log_status("OK")
 
 
 def _init_file_handles(started_time, of_summary=None):
@@ -239,8 +234,6 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         time_diff.seconds,
         time_diff.seconds / 60,
     ))
-    if args.extensive:
-        flush_passwords()
     curr_root_syn = root_syn
     hits_below = 0
     total_hits_for_current_synset = 0
@@ -253,7 +246,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         for lemma in hypo.lemma_names():
             total_base_lemmas += 1
             # Apply a set of permutations to each lemma
-            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
+            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                 lemma, hypo.min_depth(), hypo.name())
             total_hits += lemma_hits
             total_hits_for_current_synset += lemma_hits
@@ -286,10 +279,11 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
 
 
-def permutations_for_lemma_experimental(lemma, depth, source):
+def permutations_for_lemma(lemma, depth, source):
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
+    all_permutations = []
     for combination_handler in combinator.all:
         # Generate all permutations
         permutations = combination_handler(lemma, permutator.all)
@@ -303,7 +297,9 @@ def permutations_for_lemma_experimental(lemma, depth, source):
             for p in permutations:
                 if args.verbose:
                     log_status("Looking up [%s]" % p)
-                trans_hits = lookup(p, depth, source)
+                trans_hits = lookup(p, depth, source, lemma)
+                all_permutations.append(
+                    new_permutation_for_lemma(p, trans_hits))
                 total_hits += trans_hits
                 if trans_hits == 0:
                     not_found_cnt += 1
@@ -312,17 +308,27 @@ def permutations_for_lemma_experimental(lemma, depth, source):
         else:
             if args.verbose:
                 log_status("Looking up [%s]" % permutations)
-            trans_hits = lookup(permutations, depth, source)
+            trans_hits = lookup(permutations, depth, source, lemma)
+            all_permutations.append(
+                new_permutation_for_lemma(permutation, trans_hits))
             if trans_hits == 0:
                 not_found_cnt += 1
             else:
                 found_cnt += 1
             total_hits += trans_hits
 
+    permutations_for_lemma = {
+        "word_base": lemma,
+        "permutations": all_permutations,
+        "total_permutations": len(all_permutations),
+        "total_hits": total_hits,
+        "synset": source
+    }
+    store_permutations_for_lemma(permutations_for_lemma)
     return total_hits, not_found_cnt, found_cnt
 
 
-def lookup(permutation, depth, source):
+def lookup(permutation, depth, source, word_base):
     """
     Hashes the (translated) lemma and looks it up in  the HIBP password file.
     """
@@ -337,17 +343,6 @@ def lookup(permutation, depth, source):
     else:
         inc_total_found()
 
-    # Store each permutation of the lemma in the database
-    if args.extensive:
-        # _write_result_to_passwords_file(permutation, depth, occurrences)
-        if args.from_lists:
-            status = store_tested_pass_lists(permutation, occurrences, source)
-        elif args.root_syn_name:
-            status = store_tested_pass_wn(permutation, occurrences, source)
-        else:
-            pass
-        if not status:
-            log_err("Could not insert password into DB")
     # Return occurrences in order to be able to subsume them for each class.
     global total_hits_sum
     total_hits_sum += occurrences
@@ -558,13 +553,11 @@ def option_lookup_passwords():
     first_level_found = 0
     for root_lemma in choice_root_syn.lemma_names():
         total_base_lemmas += 1
-        hits, not_found, found = permutations_for_lemma_experimental(
+        hits, not_found, found = permutations_for_lemma(
             root_lemma, choice_root_syn.min_depth(), choice_root_syn.name())
         first_level_hits += hits
         first_level_not_found += not_found
         first_level_found += found
-    if args.extensive:
-        flush_passwords()
 
     log_ok("Processing WordNet subtrees...")
     # Store this synset including all of its hyponyms.
@@ -595,7 +588,8 @@ def option_lookup_passwords():
             sys.exit(0)
         _write_to_passwords_file("found root_hypernym for %s is %s" % (
             choice_root_syn.name(), root_hypernym))
-        store_synset_with_relatives(choice_root_syn, parent=root_hypernym.name())
+        store_synset_with_relatives(
+            choice_root_syn, parent=root_hypernym.name())
     hits_below, not_found_below, found_below = recurse_nouns_from_root(
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
@@ -621,16 +615,6 @@ def option_lookup_passwords():
     cleanup()
 
     # Append the dict with the root synset after
-
-
-def option_hypertree():
-    # import igraph instead of jgraph
-    import jgraph
-    from h3.tree import Tree
-    edges = jgraph.Graph.Barabasi(
-        n=500, m=3, directed=True).spanning_tree(None, True).get_edgelist()
-    tree = Tree(edges)
-    tree.scatter_plot(equators=False, tagging=False)
 
 
 def option_permutate_from_lists():
@@ -735,7 +719,7 @@ def option_permutate_from_lists():
                     log_status(
                         "Creating permutations for [%s]" % password_base)
                 total_base_lemmas += 1
-                total_hits, not_found_cnt, found_cnt = permutations_for_lemma_experimental(
+                total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                     password_base, 0, password_base)
                 append_list_lemma_to_list(
                     pass_list, password_base, total_hits, found_cnt, not_found_cnt)
@@ -760,8 +744,6 @@ def option_permutate_from_lists():
                 finished_lists,
                 len(dir_txt_content),
                 password_base))
-            if args.extensive:
-                flush_passwords()
 
             # Append the finished lemma to the ill collection
             append_lemma_to_wl(password_base, total_hits,
@@ -835,7 +817,37 @@ def create_complete_classification_for_wn():
         log_err("No synsets found in database. Nothing to process.")
         sys.exit(0)
 
+    _init_file_handles(ILL_TAG, of_summary=True)
     # Get the root object
+    tree_root = db_wn.find_one({"parent": "root"})
+
+    _write_to_summary_file("File created: %s" % ILL_TAG)
+    _write_to_summary_file("")
+
+    if args.classify_wn == "sort_synset_desc":
+        # Sort all stored synsets based on their total_hits field (so their hits as well as their hyponym hits) in descending order
+        for synset in db_wn.find().sort("total_hits", pymongo.DESCENDING):
+            # o = wn.synset(synset["id"])
+            print("{}\t\t{}".format(synset["total_hits"], synset["id"]))
+    elif args.classify_wn == "sort_lemma_desc":
+        # Sort all lemmas (word bases) based on their hits in descending order
+        if args.top == None:
+            # limit = 0 does not limit the query
+            query_limit = 0
+        else:
+            query_limit = args.top
+        for lemma in db_wn_lemma_permutations.find().sort("total_hits", pymongo.DESCENDING).limit(query_limit):
+            print("{}\t\t{}".format(lemma["total_hits"], lemma["word_base"]))
+    elif args.classify_wn == "sort_password_desc":
+        if args.top == None:
+            query_limit = 0
+        else:
+            query_limit = args.top
+        for password in db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
+            print("{}\t{}".format(
+                password["occurrences"], password["name"], password["synset"]))
+    else:
+        log_err("Unrecognized classification option [%s]" % args.classify_wn)
 
 
 def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_found_count):
