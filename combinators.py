@@ -61,7 +61,7 @@ def no_combinations(lemma, permutator_registry):
     return ret_list
 
 
-@combinator
+#@combinator
 def cxc(lemma, permutator_registry):
     """
     Combine each combinator with each other exactly one time in the sense c2(c1(lemma))
