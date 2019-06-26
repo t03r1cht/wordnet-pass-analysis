@@ -87,6 +87,7 @@ counter = 0
 total_base_lemmas = 0  # track the total number of base lemmas
 lemmas_to_process = 0
 glob_started_time = None
+synset_cnt = 0
 
 ILL_TAG = get_curr_time_str()
 
@@ -227,12 +228,15 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     time_diff = curr_time - glob_started_time
 
     clear_terminal()
-    log_status("Processed Lemmas: {0}\nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3}/{4:.2f} (s/m)".format(
+    global synset_cnt
+    synset_cnt += 1
+    log_status("Processed Lemmas: {0}\nProcessed Synsets: {5} \nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3}/{4:.2f} (s/m)".format(
         total_base_lemmas,
         total_processed,
         root_syn,
         time_diff.seconds,
         time_diff.seconds / 60,
+        synset_cnt
     ))
     curr_root_syn = root_syn
     hits_below = 0

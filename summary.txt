@@ -3,10 +3,32 @@
 
     *** Synset Distribution ***
 
-entity.n.01  pct_total=100.00|pct_this=31.03|total_hits=23255|this_hits=2674|below_hits=20581|total_found=319|this_found=99|below_found=220|total_not_found=3040|this_not_found=562|below_not_found=2478
-  thing.n.08  pct_total=62.38|pct_this=62.38|total_hits=20294|this_hits=20294|below_hits=0|total_found=199|this_found=199|below_found=0|total_not_found=462|this_not_found=462|below_not_found=0
-  physical_entity.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=688|this_not_found=688|below_not_found=0
-  abstraction.n.06  pct_total=6.58|pct_this=6.58|total_hits=287|this_hits=287|below_hits=0|total_found=21|this_found=21|below_found=0|total_not_found=1328|this_not_found=1328|below_not_found=0
+entity.n.01  pct_total=100.00|pct_this=3.25|total_hits=306823|this_hits=2391|below_hits=304432|total_found=2772|this_found=90|below_found=2682|total_not_found=5477|this_not_found=131|below_not_found=5346
+  thing.n.08  pct_total=41.56|pct_this=6.02|total_hits=209611|this_hits=19862|below_hits=189749|total_found=1152|this_found=167|below_found=985|total_not_found=1509|this_not_found=54|below_not_found=1455
+    whacker.n.01  pct_total=7.00|pct_this=7.00|total_hits=11270|this_hits=11270|below_hits=0|total_found=194|this_found=194|below_found=0|total_not_found=248|this_not_found=248|below_not_found=0
+    stinker.n.02  pct_total=6.82|pct_this=6.82|total_hits=31574|this_hits=31574|below_hits=0|total_found=189|this_found=189|below_found=0|total_not_found=32|this_not_found=32|below_not_found=0
+    security_blanket.n.01  pct_total=0.04|pct_this=0.04|total_hits=3|this_hits=3|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=229|this_not_found=229|below_not_found=0
+    pacifier.n.02  pct_total=2.60|pct_this=2.60|total_hits=1687|this_hits=1687|below_hits=0|total_found=72|this_found=72|below_found=0|total_not_found=149|this_not_found=149|below_not_found=0
+    jimdandy.n.02  pct_total=5.30|pct_this=5.30|total_hits=4736|this_hits=4736|below_hits=0|total_found=147|this_found=147|below_found=0|total_not_found=516|this_not_found=516|below_not_found=0
+    horror.n.02  pct_total=6.02|pct_this=6.02|total_hits=20218|this_hits=20218|below_hits=0|total_found=167|this_found=167|below_found=0|total_not_found=54|this_not_found=54|below_not_found=0
+    freshener.n.01  pct_total=0.32|pct_this=0.32|total_hits=59|this_hits=59|below_hits=0|total_found=9|this_found=9|below_found=0|total_not_found=212|this_not_found=212|below_not_found=0
+    change.n.06  pct_total=7.43|pct_this=7.43|total_hits=120202|this_hits=120202|below_hits=0|total_found=206|this_found=206|below_found=0|total_not_found=15|this_not_found=15|below_not_found=0
+  physical_entity.n.01  pct_total=25.97|pct_this=0.00|total_hits=46761|this_hits=0|below_hits=46761|total_found=720|this_found=0|below_found=720|total_not_found=1756|this_not_found=230|below_not_found=1526
+    thing.n.12  pct_total=6.02|pct_this=6.02|total_hits=19862|this_hits=19862|below_hits=0|total_found=167|this_found=167|below_found=0|total_not_found=54|this_not_found=54|below_not_found=0
+    substance.n.04  pct_total=2.67|pct_this=2.67|total_hits=2654|this_hits=2654|below_hits=0|total_found=74|this_found=74|below_found=0|total_not_found=147|this_not_found=147|below_not_found=0
+    process.n.06  pct_total=4.26|pct_this=4.26|total_hits=7325|this_hits=7325|below_hits=0|total_found=118|this_found=118|below_found=0|total_not_found=333|this_not_found=333|below_not_found=0
+    object.n.01  pct_total=3.93|pct_this=3.93|total_hits=1969|this_hits=1969|below_hits=0|total_found=109|this_found=109|below_found=0|total_not_found=342|this_not_found=342|below_not_found=0
+    matter.n.03  pct_total=5.52|pct_this=5.52|total_hits=12384|this_hits=12384|below_hits=0|total_found=153|this_found=153|below_found=0|total_not_found=68|this_not_found=68|below_not_found=0
+    causal_agent.n.01  pct_total=3.57|pct_this=3.57|total_hits=2567|this_hits=2567|below_hits=0|total_found=99|this_found=99|below_found=0|total_not_found=582|this_not_found=582|below_not_found=0
+  abstraction.n.06  pct_total=29.22|pct_this=0.58|total_hits=48060|this_hits=239|below_hits=47821|total_found=810|this_found=16|below_found=794|total_not_found=2081|this_not_found=435|below_not_found=1646
+    set.n.02  pct_total=5.52|pct_this=5.52|total_hits=16522|this_hits=16522|below_hits=0|total_found=153|this_found=153|below_found=0|total_not_found=68|this_not_found=68|below_not_found=0
+    relation.n.01  pct_total=3.82|pct_this=3.82|total_hits=3540|this_hits=3540|below_hits=0|total_found=106|this_found=106|below_found=0|total_not_found=115|this_not_found=115|below_not_found=0
+    psychological_feature.n.01  pct_total=0.00|pct_this=0.00|total_hits=0|this_hits=0|below_hits=0|total_found=0|this_found=0|below_found=0|total_not_found=230|this_not_found=230|below_not_found=0
+    otherworld.n.01  pct_total=0.90|pct_this=0.90|total_hits=477|this_hits=477|below_hits=0|total_found=25|this_found=25|below_found=0|total_not_found=196|this_not_found=196|below_not_found=0
+    measure.n.02  pct_total=7.65|pct_this=7.65|total_hits=4046|this_hits=4046|below_hits=0|total_found=212|this_found=212|below_found=0|total_not_found=451|this_not_found=451|below_not_found=0
+    group.n.01  pct_total=6.64|pct_this=6.64|total_hits=15369|this_hits=15369|below_hits=0|total_found=184|this_found=184|below_found=0|total_not_found=258|this_not_found=258|below_not_found=0
+    communication.n.02  pct_total=3.46|pct_this=3.46|total_hits=7569|this_hits=7569|below_hits=0|total_found=96|this_found=96|below_found=0|total_not_found=125|this_not_found=125|below_not_found=0
+    attribute.n.02  pct_total=0.65|pct_this=0.65|total_hits=298|this_hits=298|below_hits=0|total_found=18|this_found=18|below_found=0|total_not_found=203|this_not_found=203|below_not_found=0
 
 ========================================
 
@@ -19,17 +41,17 @@ Examples: []
 
     *** Stats ***
 
-Total Passwords Searched: 3359 (100.00%)
-Total Passwords (Success): 319 (9.50%)
-Total Passwords (Failure): 3040 (90.50%)
-Total hits for password searches: 23255 (6.92 hits per password)
+Total Passwords Searched: 8249 (100.00%)
+Total Passwords (Success): 2772 (33.60%)
+Total Passwords (Failure): 5477 (66.40%)
+Total hits for password searches: 306823 (37.20 hits per password)
 
-Pct Found Passwords (Total): 0.00422%
-Pct Not Found Passwords (Total): 99.99578%
+Pct Found Passwords (Total): 0.05563%
+Pct Not Found Passwords (Total): 99.94437%
 
-Base Lemmas (Total): 8 (419.88 permutations per base lemma)
+Base Lemmas (Total): 62 (133.05 permutations per base lemma)
 
 
-Average Time per Base Lemma: 7.750 s
-Starting Time: 2019-06-26 13:57:52.083543
-Finishing Time: 2019-06-26 13:58:54.588108
+Average Time per Base Lemma: 1.194 s
+Starting Time: 2019-06-26 15:24:20.534586
+Finishing Time: 2019-06-26 15:25:35.072083
