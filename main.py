@@ -27,7 +27,7 @@ from permutators import permutator, permutator_registrar
 
 from mongo import db_lists, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats, store_permutations_for_lemma, new_permutation_for_lemma, db_wn_lemma_permutations
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
-
+import plots
 
 parser = argparse.ArgumentParser(
     description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
@@ -67,6 +67,7 @@ parser.add_argument("--classify-wn", type=str,
                     help="Classify wordnet synsets.", dest="classify_wn")
 parser.add_argument("--top", type=int,
                     help="Limit output for --classify-x queries.", dest="top")
+parser.add_argument("--plot", type=str, help="Plot graph.", dest="plot")
 
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
@@ -787,6 +788,7 @@ def create_classification_for_lists(word_lists=None):
     if args.classify_lists == "all":
         # Iterate over each word list stored in the database
         for filename in word_lists:
+            print(filename)
             doc = db_lists.find_one({"filename": filename})
             if doc is None:
                 continue
@@ -821,6 +823,9 @@ def create_classification_for_lists(word_lists=None):
     elif args.classify_lists == "sort_password_desc":
         for password in db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
             print("{}\t{}".format(password["occurrences"], password["name"]))
+    elif args.classify_lists == "sort_list_desc":
+        for l in db_lists.find().sort("total_hits", pymongo.DESCENDING).limit(query_limit):
+            print("{}\t{}".format(l["total_hits"], l["filename"]))
     else:
         log_err("Unrecognized classification option [%s]" % args.classify_wn)
 
@@ -926,6 +931,11 @@ if __name__ == "__main__":
         create_complete_classification_for_wn()
     elif args.from_lists:
         option_permutate_from_lists()
+    elif args.plot:
+        if args.plot == "bar":
+            opts = {}
+            opts["top"] = args.top
+            plots.bar_graph(opts)
     else:
         # Evaluate command line parameters
         if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:

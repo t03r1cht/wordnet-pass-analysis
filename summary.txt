@@ -52,6 +52,6 @@ Pct Not Found Passwords (Total): 99.94437%
 Base Lemmas (Total): 62 (133.05 permutations per base lemma)
 
 
-Average Time per Base Lemma: 1.194 s
-Starting Time: 2019-06-26 15:24:20.534586
-Finishing Time: 2019-06-26 15:25:35.072083
+Average Time per Base Lemma: 0.919 s
+Starting Time: 2019-06-27 09:08:42.244876
+Finishing Time: 2019-06-27 09:09:40.102682

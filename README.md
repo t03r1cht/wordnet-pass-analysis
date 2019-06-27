@@ -35,6 +35,14 @@ Open Mongo shell
 mongo
 ```
 
+## Matplotlib and Ubuntu
+
+When running something using `matplotlib` on Ubuntu, make sure you set the display environment variable properly.
+
+```x
+export DISPLAY=localhost:0.0
+```
+
 ## Alternative to 'look'
 
 `sgrep` seems to be an efficient and reliable alternative to the 64-bit 

@@ -56,6 +56,7 @@ def init_word_list_object(filename):
         "filename": filename,
         "created": get_curr_time(),
         "lemmas": [],
+        "total_hits": 0,
         "tag": TAG
     }
     try:
@@ -80,6 +81,9 @@ def append_lemma_to_wl(lemma, occurrences, found_cnt, not_found_count, wl, tag="
         "tag": TAG
     }
     db_lists.update_one({"filename": wl}, {"$push": {"lemmas": o}})
+    # Also increment the lists total hits by the number of occurrences of this lemma
+    db_lists.update_one({"filename": wl}, {
+                        "$inc": {"total_hits": occurrences}})
 
 
 def clear_mongo():
@@ -142,3 +146,7 @@ def update_synset_with_stats(synset, hits_below, not_found_below, found_below, t
         "tag": TAG
     }
     db_wn.update_one({"id": synset.name()}, {"$set": o})
+
+def get_wn_permutations(top=0):
+    res = db_pws_wn.find().sort("occurrences").limit(top)
+    return res
