@@ -901,6 +901,10 @@ def plot_data():
         plots.wn_top_passwords_bar(opts)
     elif args.plot == "lists_bar_passwords":
         plots.lists_top_passwords_bar(opts)
+    elif args.plot == "wn_bar_passwords_ticks":
+        plots.wn_top_passwords_mark_ticks(opts)
+    elif args.plot == "wn_bar_passwords_line":
+        plots.wn_top_passwords_line(opts)
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
