@@ -891,6 +891,19 @@ def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_fou
     else:
         hits_for_list_lemmas[list_name]["_not_found_count"] += not_found_count
 
+def plot_data():
+    opts = {}
+    if not args.top:
+        opts["top"] = 10
+    else:
+        opts["top"] = args.top
+    if args.plot == "wn_bar_passwords":
+        plots.wn_top_passwords_bar(opts)
+    elif args.plot == "lists_bar_passwords":
+        plots.lists_top_passwords_bar(opts)
+    else:
+        log_err("Unrecognized plotting option option [%s]" % args.plot)
+
 
 if __name__ == "__main__":
     if args.dl_wordnet:
@@ -932,10 +945,7 @@ if __name__ == "__main__":
     elif args.from_lists:
         option_permutate_from_lists()
     elif args.plot:
-        if args.plot == "bar":
-            opts = {}
-            opts["top"] = args.top
-            plots.bar_graph(opts)
+        plot_data()
     else:
         # Evaluate command line parameters
         if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:

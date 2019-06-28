@@ -1,15 +1,33 @@
-import matplotlib
-# Force matplotlib to not use any Xwindows backend.
-matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
+import mongo
+import pymongo
 
 
-def bar_graph(opts):
-    print("===", matplotlib.get_backend())
-    t = np.arange(0.0, 2.0, 0.01)
-    s = 1 + np.sin(2*np.pi*t)
-    plt.plot(t, s)
+def wn_top_passwords_bar(opts):
+    labels = []
+    occurrences = []
+    for password in mongo.db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
+        labels.append(password["name"])
+        occurrences.append(password["occurrences"])
+    index = np.arange(len(labels))
+    plt.bar(index, occurrences)
+    plt.xlabel('Password', fontsize=10)
+    plt.ylabel('Occurrences', fontsize=10)
+    plt.xticks(index, labels, fontsize=7, rotation=30)
+    plt.title('Top %d WordNet Passwords' % opts["top"])
+    plt.show()
 
-    plt.title('About as simple as it gets, folks')
+def lists_top_passwords_bar(opts):
+    labels = []
+    occurrences = []
+    for password in mongo.db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
+        labels.append(password["name"])
+        occurrences.append(password["occurrences"])
+    index = np.arange(len(labels))
+    plt.bar(index, occurrences)
+    plt.xlabel('Password', fontsize=10)
+    plt.ylabel('Occurrences', fontsize=10)
+    plt.xticks(index, labels, fontsize=7, rotation=30)
+    plt.title('Top %d Word List Passwords' % opts["top"])
     plt.show()
