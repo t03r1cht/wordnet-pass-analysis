@@ -1,6 +1,7 @@
 avocado
-#cucumber
-#eggplant
-#olive
-#pea
-#pumpkin
+cucumber
+eggplant
+olive
+pumpkin
+orange
+banana

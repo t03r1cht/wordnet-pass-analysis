@@ -14,7 +14,6 @@ import timeit
 import unicodedata
 from collections import OrderedDict
 from subprocess import CalledProcessError
-import jsonpickle
 from pymongo import MongoClient
 import pymongo
 import operator
@@ -27,7 +26,6 @@ from permutators import permutator, permutator_registrar
 
 from mongo import db_lists, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats, store_permutations_for_lemma, new_permutation_for_lemma, db_wn_lemma_permutations
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
-import plots
 
 parser = argparse.ArgumentParser(
     description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
@@ -753,8 +751,8 @@ def option_permutate_from_lists():
 
         finished_lists += 1
 
-    if args.subsume_for_classes:
-        create_classification_for_lists(dir_txt_content)
+    # if args.subsume_for_classes:
+    #     create_classification_for_lists(dir_txt_content)
         # _write_lists_summary_to_result_file(opts)
     print()
     cleanup()
@@ -891,12 +889,21 @@ def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_fou
     else:
         hits_for_list_lemmas[list_name]["_not_found_count"] += not_found_count
 
+
 def plot_data():
+    import plots
+    # evaluate the arguments
     opts = {}
     if not args.top:
         opts["top"] = 10
     else:
         opts["top"] = args.top
+
+    if not args.from_lists:
+        opts["ref_list"] = None
+    else:
+        opts["ref_list"] = args.from_lists
+
     if args.plot == "wn_passwords_bar":
         plots.wn_top_passwords_bar(opts)
     elif args.plot == "lists_passwords_bar":
@@ -907,6 +914,14 @@ def plot_data():
         plots.lists_top_passwords_line(opts)
     elif args.plot == "test_plot":
         plots.test_plot(opts)
+    elif args.plot == "top_1k_wn":
+        plots.wn_top_1k(opts)
+    elif args.plot == "top_1k_wn_bar":
+        plots.wn_top_1k_bar(opts)
+    elif args.plot == "top_1k_wn_bar_test":
+        plots.wn_top_1k_bar_test(opts)
+    elif args.plot == "wn_line":
+        plots.wn_line_plot(opts)
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
@@ -948,7 +963,7 @@ if __name__ == "__main__":
         create_classification_for_lists()
     elif args.classify_wn:
         create_complete_classification_for_wn()
-    elif args.from_lists:
+    elif args.from_lists and not args.plot:
         option_permutate_from_lists()
     elif args.plot:
         plot_data()
