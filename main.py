@@ -920,8 +920,10 @@ def plot_data():
         plots.wn_top_1k_bar(opts)
     elif args.plot == "top_1k_wn_bar_test":
         plots.wn_top_1k_bar_test(opts)
-    elif args.plot == "wn_line":
-        plots.wn_line_plot(opts)
+    elif args.plot == "wn_line_noteable_pws":
+        plots.wn_line_plot_noteable_pws(opts)
+    elif args.plot == "wn_line_list_categories":
+        plots.wn_line_plot_categories(opts)
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 

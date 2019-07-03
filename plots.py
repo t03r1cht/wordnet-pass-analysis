@@ -4,6 +4,7 @@ import numpy as np
 import mongo
 import pymongo
 from helper import log_err
+import operator
 
 
 def wn_top_passwords_bar(opts):
@@ -425,8 +426,20 @@ def autolabel(rects, ax, xpos="center"):
                     textcoords="offset points",  # in both directions
                     ha=ha[xpos], va='bottom')
 
+def autolabel_custom(rects, ax, xpos="center"):
+    ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+    offset = {'center': 0, 'right': 1, 'left': -1}
 
-def wn_line_plot(opts):
+    for rect in rects:
+        height = rect.get_height()
+        ax.annotate('{}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+
+
+def wn_line_plot_noteable_pws(opts):
     labels = []
     occurrences = []
     exclude_terms = {
@@ -455,7 +468,99 @@ def wn_line_plot(opts):
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
     plt.ticklabel_format(style='plain', axis='y')
-    plt.xlabel("Passwords")
+    plt.xlabel("Passwords (including all of its permutations)")
+    plt.ylabel("Occurrences")
+    plt.title("Top %d WordNet Passwords" % opts["top"])
+    plt.show(f)
+
+
+def wn_line_plot_categories(opts):
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 100:
+            log_err("--top value too high. Select Value between 5 and 100")
+            return
+        limit_val = opts["top"]
+
+    ref_list = None
+    if opts["ref_list"] == None:
+        log_err(
+            "No ref list specified. Use the -l flag to specify a list to use for passwords")
+        return
+    # ref_list == "alL" looks at all lists and not a specific one
+    ref_list = opts["ref_list"]
+
+    labels = []
+    occurrences = []
+    exclude_terms = {
+        "word_base": {"$nin": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "0",
+        ]}
+    }
+
+    for password in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(39):
+        labels.append("%s" % (password["word_base"]))
+        occurrences.append(password["total_hits"])
+    # Get top 10 from some list
+    if ref_list == "all":
+        pw_list = mongo.db_lists.find_one({})
+    else:
+        pw_list = mongo.db_lists.find_one({"filename": ref_list})
+
+    # We now need to sort the dictionary by "occurrences" in descending order
+    # Contains all word bases ("lemmas") for a given list plus its occurrences
+    o = pw_list["lemmas"]
+    sorted_o = sorted(o, key=lambda k: k["occurrences"], reverse=True)
+
+    # We now need to insert the reference passwords based on their occurrences
+    ref_indices = []
+    ref_labels = []
+    ref_occs = []
+    rev_occs = occurrences
+    for pw in sorted_o:
+        for idx, occ in enumerate(occurrences[::-1]):
+            if pw["occurrences"] >= occ:
+                print(pw["name"], "(", pw["occurrences"], ") is bigger than ", labels[idx], "(", occurrences[idx], ")")
+            else:
+                # If the name of the current word list lemma is the same as from the wordnet lemma, skip
+                if pw["name"] == labels[idx]:
+                    continue
+                ref_indices.append(idx)
+                ref_labels.append(pw["name"])
+                ref_occs.append(pw["occurrences"])
+
+
+    f, ax = plt.subplots(1)
+    ax.plot(np.arange(len(labels)), occurrences, "-")
+    rect1 = ax.bar([10, 20], [100000, 500000])
+
+    # Label the bar diagram
+    i = 0
+    for rect in rect1:
+        height = rect.get_height()
+        ax.annotate('{}'.format(ref_labels[i]),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha="center", va='bottom')
+        i += 1
+
+    plt.xticks([0, 19, 38], [labels[0], labels[19], labels[38]])
+
+    ax.set_ylim(bottom=0)
+    ax.set_xlim(left=0)
+    plt.ticklabel_format(style='plain', axis='y')
+    plt.xlabel("Passwords (including all of its permutations)")
     plt.ylabel("Occurrences")
     plt.title("Top %d WordNet Passwords" % opts["top"])
     plt.show(f)
