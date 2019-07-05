@@ -3,7 +3,7 @@ import matplotlib.patches as mpatches
 import numpy as np
 import mongo
 import pymongo
-from helper import log_err, format_number
+from helper import log_err, format_number, log_status
 import operator
 
 
@@ -512,9 +512,9 @@ def wn_line_plot_categories(opts):
 
     # We now need to sort the dictionary by "occurrences" in descending order
     # Contains all word bases ("lemmas") for a given list plus its occurrences
-    o = pw_list
     # Cut the sorted result list based on the --top flag. --top defaults to 10
-    sorted_o = sorted(o, key=lambda k: k["occurrences"], reverse=True)[:opts["top"]]
+    sorted_o = sorted(pw_list, key=lambda k: k["occurrences"], reverse=True)[
+        :opts["top"]]
 
     # print("...........")
     # print(ref_list)
@@ -561,7 +561,8 @@ def wn_line_plot_categories(opts):
             log_err("Invalid left bound: %s (index: %d)" % (labels[i], i))
             pass
         elif labels[wn_limit-1+i] in wl_lemmas or labels[wn_limit-1+i].isdigit() or len(labels[wn_limit-1+i]) <= 3:
-            log_err("Invalid right bound: %s (index: %d)" % (labels[wn_limit-1+i], wn_limit-1+i))
+            log_err("Invalid right bound: %s (index: %d)" %
+                    (labels[wn_limit-1+i], wn_limit-1+i))
             pass
 
         else:
@@ -583,61 +584,93 @@ def wn_line_plot_categories(opts):
     wn_pos_1000_label = r_bound
     wn_pos_1000_occs = occurrences[wn_limit-1+i]
 
-    # TODO simple sequence from 0 to n is wrong! we need the x coords to match with the relative occurrences of the wordnet in-between values
-    # so if "apple" from word lists is smaller than wn[20] and bigger than wn[21] is is going to take index 21
-
     # We now need to trim the list to have the new left and right bound to be index 0 and 999 (for both the labels and the occurrences)
     cut_wn_labels = labels[i:wn_limit-1+i+1]
     cut_wn_occs = occurrences[i:wn_limit-1+i+1]
 
-
-    # Create the xticks for the wn 1 and 1000 labels
-    plt.xticks([0, wn_limit], [cut_wn_labels[0], cut_wn_labels[wn_limit-1]], rotation=45)
-
-
-    ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-")
-    ax.bar(np.arange(len(sorted_o)), [x["occurrences"] for x in sorted_o])
-    plt.show(f)
+    # TODO ordering is somehow messed up!
+    t = [print(x["name"], format_number(x["occurrences"])) for x in sorted_o]
     return
 
-    # We now need to insert the reference passwords based on their occurrences
-    ref_indices = []
-    ref_labels = []
-    ref_occs = []
-    rev_occs = occurrences
-    for pw in sorted_o:
-        for idx, occ in enumerate(occurrences[::-1]):
-            if pw["occurrences"] >= occ:
-                print(pw["occurrences"], occ)
-            else:
-                # If the name of the current word list lemma is the same as from the wordnet lemma, skip
-                if pw["name"] == labels[idx]:
-                    print("same name")
-                    continue
-                ref_indices.append(idx)
-                ref_labels.append(pw["name"])
-                ref_occs.append(pw["occurrences"])
+    # Create a list that has the wn values but they are just for orientation/comparison of occurrences. The values of the "original" list are not going to used
+    # for bar plotting. Instead, they will be saved under a key, that is ignored when drawing the bar plot.
+    new_occs_inserted = [{"orig": x, "list": -1} for x in cut_wn_occs]
+    new_labels_inserted = [{"orig": x, "list": None} for x in cut_wn_labels]
 
-    ax.plot(np.arange(len(labels)), occurrences, "-")
-    rect1 = ax.bar([10, 20], [100000, 500000])
+    # Insert the sorted word list items at the right x coords
+    idx_behind_last_wn = len(cut_wn_labels)
+    xcoords_bar = []
+    for item in sorted_o:
+        occs = item["occurrences"]
+        # Determine first if this elements occs are lower than the last wn element. If thats the case, append it behind the last wn element
+        if occs < cut_wn_occs[-1]:
+            # If the current item occurrences was lower than the last wordnet element, append it with the index last_wn + 1 and increment this counter
+            # xcoords_bar.append(idx_behind_last_wn)
+            new_occs_inserted.append({"orig": -1, "list": occs})
+            new_labels_inserted.append({"orig": "", "list": item["name"]})
+            idx_behind_last_wn += 1
+        else:
+            # At this point we know the current elements occs are not lower than the last wn element
+            # Now we just need to find out where (within the first and last wn element frame) it will be drawn
+            for idx, wn_occs in enumerate(cut_wn_occs):
+                # Run until occs is NOT lower than wn_occs
+                if occs < wn_occs:
+                    pass
+                elif occs >= wn_occs:
+                    # cut_wn_occs is stored from most to least occurrences, so if val a is bigger than the current value from cut_wn_occs it must automatically
+                    # be bigger than the rest of the list (since it is ordererd in a decending order)
+                    new_occs_inserted.insert(idx, {"orig": -1, "list": occs})
+                    new_labels_inserted.insert(idx, {"orig": "", "list": item["name"]})
+                    break
+                else:
+                    pass
 
-    # Label the bar diagram
+    # Transform the dict to a flat list. List dict items with orig = -1 are going to be 0 in the flattened list, else the "list" value
+    flat_occs_inserted = []
+    for x in new_occs_inserted:
+        if x["list"] == -1:
+            flat_occs_inserted.append(0)
+        else:
+            flat_occs_inserted.append(x["list"])
+    # ... also transform the label list so we have a consistent mapping again (mind the zeros)
+    flat_labels_inserted = []
+    for x in new_labels_inserted:
+        if x["list"] == None:
+            flat_labels_inserted.append("")
+        else:
+            flat_labels_inserted.append(x["list"])
+
+    print(flat_occs_inserted)
+    print(flat_labels_inserted)
+    # return
+
+    # Draw the bar plot
+    rect1 = ax.bar(np.arange(len(flat_occs_inserted)),
+                   flat_occs_inserted, alpha=0.7, color="red")
+
     i = 0
     for rect in rect1:
         height = rect.get_height()
-        ax.annotate('{}'.format(ref_labels[i]),
+        ax.annotate('{}'.format(flat_labels_inserted[i]),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
                     xytext=(0*3, 3),  # use 3 points offset
                     textcoords="offset points",  # in both directions
+                    # rotation=90,
                     ha="center", va='bottom')
         i += 1
 
-    plt.xticks([0, 19, 38], [labels[0], labels[19], labels[38]])
+    # Create the xticks for the wn 1 and 1000 labels
+    plt.xticks([0, wn_limit], [cut_wn_labels[0],
+                               cut_wn_labels[wn_limit-1]])
+    # Draw the line plot
+    ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-")
 
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
     plt.ticklabel_format(style='plain', axis='y')
-    plt.xlabel("Passwords (including all of its permutations)")
+    plt.xlabel(
+        "WordNet Top 1 and 1000 Passwords (including all of its permutations)")
     plt.ylabel("Occurrences")
     plt.title("Top %d WordNet Passwords" % opts["top"])
     plt.show(f)
+    return
