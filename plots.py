@@ -3,7 +3,7 @@ import matplotlib.patches as mpatches
 import numpy as np
 import mongo
 import pymongo
-from helper import log_err
+from helper import log_err, format_number
 import operator
 
 
@@ -426,6 +426,7 @@ def autolabel(rects, ax, xpos="center"):
                     textcoords="offset points",  # in both directions
                     ha=ha[xpos], va='bottom')
 
+
 def autolabel_custom(rects, ax, xpos="center"):
     ha = {'center': 'center', 'right': 'left', 'left': 'right'}
     offset = {'center': 0, 'right': 1, 'left': -1}
@@ -475,6 +476,9 @@ def wn_line_plot_noteable_pws(opts):
 
 
 def wn_line_plot_categories(opts):
+    wn_limit = 100
+    f, ax = plt.subplots(1)
+
     limit_val = 20
     # We can set the number of top passwords with the --top flag
     if opts["top"]:
@@ -490,6 +494,33 @@ def wn_line_plot_categories(opts):
         return
     # ref_list == "alL" looks at all lists and not a specific one
     ref_list = opts["ref_list"]
+
+    # Get top n from some list
+    if ref_list == "all":
+        all_word_lists_list = mongo.db_lists.find({})
+        lemma_list = []
+        for item in list(all_word_lists_list):
+            lemma_list.extend(item["lemmas"])
+
+        pw_list = []
+        for item in lemma_list:
+            o = {"name": item["name"], "occurrences": item["occurrences"]}
+            pw_list.append(o)
+    else:
+        word_lists = mongo.db_lists.find_one({"filename": ref_list})
+        pw_list = word_lists["lemmas"]
+
+    # We now need to sort the dictionary by "occurrences" in descending order
+    # Contains all word bases ("lemmas") for a given list plus its occurrences
+    o = pw_list
+    # Cut the sorted result list based on the --top flag. --top defaults to 10
+    sorted_o = sorted(o, key=lambda k: k["occurrences"], reverse=True)[:opts["top"]]
+
+    # print("...........")
+    # print(ref_list)
+    # print("...........")
+    # for x in sorted_o:
+    #     print(x["name"], format_number(x["occurrences"]))
 
     labels = []
     occurrences = []
@@ -508,19 +539,66 @@ def wn_line_plot_categories(opts):
         ]}
     }
 
-    for password in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(39):
+    # Get the top 1000 wordnet passwords (used as a reference for the word list passwords)
+    for password in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(wn_limit + 10):
         labels.append("%s" % (password["word_base"]))
         occurrences.append(password["total_hits"])
-    # Get top 10 from some list
-    if ref_list == "all":
-        pw_list = mongo.db_lists.find_one({})
-    else:
-        pw_list = mongo.db_lists.find_one({"filename": ref_list})
 
-    # We now need to sort the dictionary by "occurrences" in descending order
-    # Contains all word bases ("lemmas") for a given list plus its occurrences
-    o = pw_list["lemmas"]
-    sorted_o = sorted(o, key=lambda k: k["occurrences"], reverse=True)
+    # Get all passwords from the word lists as array so we can check if the top 1 or top 1000 password from the wordnet is contained in int
+    # if it is contained, increment the top 1 and top 1000 index by one to create some kind of sliding window
+    # the goal is to have a top 1 and 1000 password that is not contained by the word list passwords so they don't overlap on the boundaries
+    wl_lemmas = [x["name"] for x in pw_list]
+
+    i = 0
+    while True:
+        # Exit if bounds could not be found after 10 tries
+        if i >= 10:
+            log_err(
+                "Too many duplicates in word list lemmas and WordNet. Could not determine left bound and right bound.")
+            return
+        # fitting boundaries are no numbers and contain more than 3 characters
+        if labels[i] in wl_lemmas or labels[i].isdigit() or len(labels[i]) <= 3:
+            log_err("Invalid left bound: %s (index: %d)" % (labels[i], i))
+            pass
+        elif labels[wn_limit-1+i] in wl_lemmas or labels[wn_limit-1+i].isdigit() or len(labels[wn_limit-1+i]) <= 3:
+            log_err("Invalid right bound: %s (index: %d)" % (labels[wn_limit-1+i], wn_limit-1+i))
+            pass
+
+        else:
+            break
+        i += 1
+
+    # left boundary equal to labels[0] (or labels[0] + i in case sliding window) so the top 1 password
+    l_bound = labels[i]
+
+    # right boundary equal to labels[999] (or labels[999] + i in case sliding window) so the top 1000 password
+    r_bound = labels[wn_limit-1+i]
+
+    # print("Left bound found:", l_bound)
+    # print("Right bound found:", r_bound)
+
+    wn_pos_1_label = l_bound
+    wn_pos_1_occs = occurrences[i]
+
+    wn_pos_1000_label = r_bound
+    wn_pos_1000_occs = occurrences[wn_limit-1+i]
+
+    # TODO simple sequence from 0 to n is wrong! we need the x coords to match with the relative occurrences of the wordnet in-between values
+    # so if "apple" from word lists is smaller than wn[20] and bigger than wn[21] is is going to take index 21
+
+    # We now need to trim the list to have the new left and right bound to be index 0 and 999 (for both the labels and the occurrences)
+    cut_wn_labels = labels[i:wn_limit-1+i+1]
+    cut_wn_occs = occurrences[i:wn_limit-1+i+1]
+
+
+    # Create the xticks for the wn 1 and 1000 labels
+    plt.xticks([0, wn_limit], [cut_wn_labels[0], cut_wn_labels[wn_limit-1]], rotation=45)
+
+
+    ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-")
+    ax.bar(np.arange(len(sorted_o)), [x["occurrences"] for x in sorted_o])
+    plt.show(f)
+    return
 
     # We now need to insert the reference passwords based on their occurrences
     ref_indices = []
@@ -530,17 +608,16 @@ def wn_line_plot_categories(opts):
     for pw in sorted_o:
         for idx, occ in enumerate(occurrences[::-1]):
             if pw["occurrences"] >= occ:
-                print(pw["name"], "(", pw["occurrences"], ") is bigger than ", labels[idx], "(", occurrences[idx], ")")
+                print(pw["occurrences"], occ)
             else:
                 # If the name of the current word list lemma is the same as from the wordnet lemma, skip
                 if pw["name"] == labels[idx]:
+                    print("same name")
                     continue
                 ref_indices.append(idx)
                 ref_labels.append(pw["name"])
                 ref_occs.append(pw["occurrences"])
 
-
-    f, ax = plt.subplots(1)
     ax.plot(np.arange(len(labels)), occurrences, "-")
     rect1 = ax.bar([10, 20], [100000, 500000])
 
