@@ -613,24 +613,32 @@ def wn_line_plot_categories(opts):
                 elif occs >= wn_occs:
                     # cut_wn_occs is stored from most to least occurrences, so if val a is bigger than the current value from cut_wn_occs it must automatically
                     # be bigger than the rest of the list (since it is ordererd in a decending order)
+                    print(item["name"], occs, "is bigger than", cut_wn_labels[idx],
+                          cut_wn_occs[idx], "inserting at idx", idx)
                     # Before we insert, there may already be an element that was previously compared against the same element, so we need to determine if we insert before or
                     # after this index
                     if new_occs_inserted[idx]["list"] < occs:
                         # The current occs value is bigger than what is already in there
                         new_occs_inserted.insert(
                             idx, {"orig": -1, "list": occs})
-                        new_labels_inserted.insert(
-                            idx, {"orig": "", "list": item["name"]})
+                    new_labels_inserted.insert(
+                        idx, {"orig": "", "list": item["name"]})
                     else:
                         # If the value is bigger, we insert occs after this index
                         new_occs_inserted.insert(
                             idx+1, {"orig": -1, "list": occs})
-                        new_labels_inserted.insert(
-                            idx+1, {"orig": "", "list": item["name"]})
+                    new_labels_inserted.insert(
+                        idx+1, {"orig": "", "list": item["name"]})
 
                     break
                 else:
                     pass
+
+    # for idx, x in enumerate(new_occs_inserted):
+    #     if new_occs_inserted[idx]["list"] != -1:
+    #         print(new_labels_inserted[idx]["list"], new_occs_inserted[idx]["list"])
+
+    return
 
     # Transform the dict to a flat list. List dict items with orig = -1 are going to be 0 in the flattened list, else the "list" value
     flat_occs_inserted = []
@@ -667,7 +675,7 @@ def wn_line_plot_categories(opts):
         i += 1
 
     # Create the xticks for the wn 1 and 1000 labels
-    plt.xticks([0, wn_limit-1], [cut_wn_labels[0],
+    plt.xticks([0, wn_limit], [cut_wn_labels[0],
                                cut_wn_labels[wn_limit-1]])
     # Draw the line plot
     ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-")
@@ -678,9 +686,6 @@ def wn_line_plot_categories(opts):
     plt.xlabel(
         "WordNet Top 1 and 1000 Passwords (including all of its permutations)")
     plt.ylabel("Occurrences")
-    plt.title("Top %d Reference List Passwords" % opts["top"])
-    blue_patch = mpatches.Patch(color="blue", label="WordNet occurrences")
-    red_patch = mpatches.Patch(color="red", label="Ref data set occurrences")
-    plt.legend(handles=[blue_patch, red_patch], loc="best")
+    plt.title("Top %d WordNet Passwords" % opts["top"])
     plt.show(f)
     return
