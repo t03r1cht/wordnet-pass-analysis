@@ -669,7 +669,7 @@ def wn_line_plot_categories(opts):
     sorted_no_zeros = sorted(flat_occs_inserted_no_zeros, reverse=True)
     log_status("Unsorted xcoords list: \n{}".format(flat_occs_inserted))
 
-    # restore 0 states
+    # restore 0 states, i.e. insert zeros at the indices saved in the zero_pos list
     sorted_with_zeros = sorted_no_zeros[:]
     for idx in zero_pos:
         sorted_with_zeros.insert(idx, 0)
@@ -678,7 +678,7 @@ def wn_line_plot_categories(opts):
 
     # Draw the bar plot
     rect1 = ax.bar(np.arange(len(sorted_with_zeros)),
-                   sorted_with_zeros, alpha=0.7, color="red")
+                   sorted_with_zeros, alpha=0.7, color="gray")
 
     i = 0
     for rect in rect1:
@@ -687,7 +687,8 @@ def wn_line_plot_categories(opts):
                     xy=(rect.get_x() + rect.get_width() / 2, height),
                     xytext=(0*3, 3),  # use 3 points offset
                     textcoords="offset points",  # in both directions
-                    # rotation=90,
+                    rotation=90,
+                    fontsize="x-small",
                     ha="center", va='bottom')
         i += 1
 
@@ -695,17 +696,18 @@ def wn_line_plot_categories(opts):
     plt.xticks([0, wn_limit-1], [cut_wn_labels[0],
                                  cut_wn_labels[wn_limit-1]])
     # Draw the line plot
-    ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-")
+    ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-", color="black")
 
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
+    ax.set_ylim([0, sorted_no_zeros[0] + sorted_no_zeros[0] / 4])
     plt.ticklabel_format(style='plain', axis='y')
     plt.xlabel(
         "WordNet Top 1 and 1000 Passwords (including all of its permutations)")
     plt.ylabel("Occurrences")
     plt.title("Top %d Reference List Passwords" % opts["top"])
-    blue_patch = mpatches.Patch(color="blue", label="WordNet occurrences")
-    red_patch = mpatches.Patch(color="red", label="Ref data set occurrences")
+    blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
+    red_patch = mpatches.Patch(color="gray", label="Ref data set occurrences (incl permutations)")
     plt.legend(handles=[blue_patch, red_patch], loc="best")
     log_ok("Drawing plot...")
     plt.show(f)
