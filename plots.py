@@ -2,9 +2,12 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 import mongo
+from mongo import db_wn
 import pymongo
 from helper import log_err, format_number, log_status, log_ok
 import operator
+from hpie import HPie, stringvalues_to_pv
+from nltk.corpus import wordnet as wn
 
 
 def wn_top_passwords_bar(opts):
@@ -569,9 +572,6 @@ def wn_line_plot_categories(opts):
     # right boundary equal to labels[999] (or labels[999] + i in case sliding window) so the top 1000 password
     r_bound = labels[wn_limit-1+i]
 
-    # print("Left bound found:", l_bound)
-    # print("Right bound found:", r_bound)
-
     wn_pos_1_label = l_bound
     wn_pos_1_occs = occurrences[i]
 
@@ -629,7 +629,6 @@ def wn_line_plot_categories(opts):
                 else:
                     pass
 
-
     # Transform the dict to a flat list. List dict items with orig = -1 are going to be 0 in the flattened list, else the "list" value
     flat_occs_inserted = []
     for x in new_occs_inserted:
@@ -650,7 +649,7 @@ def wn_line_plot_categories(opts):
         log_err("Something went wrong while flattening the lists (lengths are not equal). flat_occs_inserted: %d, flat_labels_inserted: %d" % (
             len(flat_occs_inserted), len(flat_labels_inserted)))
         return
-    
+
     # store labels with occs as keys
     labels_for_occs = {}
     for idx, val in enumerate(flat_occs_inserted):
@@ -673,7 +672,7 @@ def wn_line_plot_categories(opts):
     sorted_with_zeros = sorted_no_zeros[:]
     for idx in zero_pos:
         sorted_with_zeros.insert(idx, 0)
-    
+
     log_status("Sorted xcoords list: \n{}".format(sorted_with_zeros))
 
     # Draw the bar plot
@@ -707,8 +706,85 @@ def wn_line_plot_categories(opts):
     plt.ylabel("Occurrences")
     plt.title("Top %d Reference List Passwords" % opts["top"])
     blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
-    red_patch = mpatches.Patch(color="gray", label="Ref data set occurrences (incl permutations)")
+    red_patch = mpatches.Patch(
+        color="gray", label="Ref data set occurrences (incl permutations)")
     plt.legend(handles=[blue_patch, red_patch], loc="best")
     log_ok("Drawing plot...")
     plt.show(f)
     return
+
+
+def wn_display(opts):
+    limit_ss = 5
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 18:
+            log_err("--top value too high. Select Value between 1 and 18")
+            return
+        limit_val = opts["top"]
+
+    fix, ax = plt.subplots()
+
+    # Get synsets from the database on the user-specified level
+    # current max level is 18
+    ss_for_level = db_wn.find({"level": limit_val})
+
+    # data_map contains the hierarchies, e.g. a/b/c: 1
+    data_map = {}
+
+    # fill the data map
+    for ss_obj in ss_for_level:
+        ss = wn.synset(ss_obj["id"])
+        print(ss.hypernym_paths())
+        ss_root_path = "/".join([x.lemma_names()[0]
+                                 for x in ss.hypernym_paths()[0]])
+        data_map[ss_root_path] = 1
+        print(ss_root_path)
+
+    return
+
+    data = stringvalues_to_pv(data_map)
+
+    # synset = wn.synset("cat.n.01")
+    # synset1 = wn.synset("dog.n.01")
+    # synset2 = wn.synset("car.n.01")
+    # # print(synset.hypernym_paths())
+    # p_path = "/".join([x.lemma_names()[0] for x in synset.hypernym_paths()[0]])
+    # p_path1 = "/".join([x.lemma_names()[0] for x in synset1.hypernym_paths()[0]])
+    # p_path2 = "/".join([x.lemma_names()[0] for x in synset2.hypernym_paths()[0]])
+    # print(p_path)
+    # print()
+    # print(p_path1)
+    # print()
+    # print(p_path2)
+    # datax = stringvalues_to_pv({
+    #     p_path: 1,
+    #     p_path1: 1,
+    #     p_path2: 1,
+    # })
+
+    # If the whole graph should be filled out (not blank space on horizontal lines) only the hierarchically lowest elements can have the value 1, all other items need to be 0
+    # data1 = stringvalues_to_pv({
+    #     # 'ipsum':                      1,
+    #     # 'lorem':                      1,
+    #     # 'ipsum/eirmod':               1,
+    #     'ipsum/eirmod/dolor':         1,
+    #     'lorem/sadipscing/dolor':     1,
+    #     'lorem/sadipscing/lorem':     1,
+    #     'lorem/sadipscing/nonumy':    1,
+    #     # 'lorem/eirmod':               1,
+    #     'lorem/eirmod/lorem':         1,
+    #     'lorem/eirmod/bla':           1,
+    #     # 'lorem/sadipscing':           1,
+    # })
+
+    # do the magic
+    hp = HPie(data, ax)
+
+    # set plot attributes
+    hp.plot(setup_axes=True)
+    ax.set_title('WordNet')
+
+    # save/show plot
+    plt.show()

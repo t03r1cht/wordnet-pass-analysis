@@ -924,6 +924,8 @@ def plot_data():
         plots.wn_line_plot_noteable_pws(opts)
     elif args.plot == "wn_line_list_categories":
         plots.wn_line_plot_categories(opts)
+    elif args.plot == "wn_display":
+        plots.wn_display(opts)
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
