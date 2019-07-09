@@ -3,7 +3,7 @@ import matplotlib.patches as mpatches
 import numpy as np
 import mongo
 import pymongo
-from helper import log_err, format_number, log_status
+from helper import log_err, format_number, log_status, log_ok
 import operator
 
 
@@ -582,10 +582,6 @@ def wn_line_plot_categories(opts):
     cut_wn_labels = labels[i:wn_limit-1+i+1]
     cut_wn_occs = occurrences[i:wn_limit-1+i+1]
 
-    # TODO ordering is somehow messed up!
-    # t = [print(x["name"], format_number(x["occurrences"])) for x in sorted_o]
-    # return
-
     # Create a list that has the wn values but they are just for orientation/comparison of occurrences. The values of the "original" list are not going to used
     # for bar plotting. Instead, they will be saved under a key, that is ignored when drawing the bar plot.
     new_occs_inserted = [{"orig": x, "list": -1} for x in cut_wn_occs]
@@ -611,6 +607,7 @@ def wn_line_plot_categories(opts):
                 if occs < wn_occs:
                     pass
                 elif occs >= wn_occs:
+
                     # cut_wn_occs is stored from most to least occurrences, so if val a is bigger than the current value from cut_wn_occs it must automatically
                     # be bigger than the rest of the list (since it is ordererd in a decending order)
                     # Before we insert, there may already be an element that was previously compared against the same element, so we need to determine if we insert before or
@@ -632,6 +629,7 @@ def wn_line_plot_categories(opts):
                 else:
                     pass
 
+
     # Transform the dict to a flat list. List dict items with orig = -1 are going to be 0 in the flattened list, else the "list" value
     flat_occs_inserted = []
     for x in new_occs_inserted:
@@ -647,13 +645,40 @@ def wn_line_plot_categories(opts):
         else:
             flat_labels_inserted.append(x["list"])
 
-    print(flat_occs_inserted)
-    print(flat_labels_inserted)
-    # return
+    # Check lengths (the next step will raise an exception if the lengths of both flat lists are not equal since we want to merge them into a dict)
+    if len(flat_labels_inserted) != len(flat_occs_inserted):
+        log_err("Something went wrong while flattening the lists (lengths are not equal). flat_occs_inserted: %d, flat_labels_inserted: %d" % (
+            len(flat_occs_inserted), len(flat_labels_inserted)))
+        return
+    
+    # store labels with occs as keys
+    labels_for_occs = {}
+    for idx, val in enumerate(flat_occs_inserted):
+        labels_for_occs[idx] = flat_labels_inserted[idx]
+
+    # save 0 states in flat lists
+    zero_pos = []
+    flat_occs_inserted_no_zeros = []
+    for idx, val in enumerate(flat_occs_inserted):
+        if val == 0:
+            zero_pos.append(idx)
+        else:
+            flat_occs_inserted_no_zeros.append(val)
+
+    # sort lists
+    sorted_no_zeros = sorted(flat_occs_inserted_no_zeros, reverse=True)
+    log_status("Unsorted xcoords list: \n{}".format(flat_occs_inserted))
+
+    # restore 0 states
+    sorted_with_zeros = sorted_no_zeros[:]
+    for idx in zero_pos:
+        sorted_with_zeros.insert(idx, 0)
+    
+    log_status("Sorted xcoords list: \n{}".format(sorted_with_zeros))
 
     # Draw the bar plot
-    rect1 = ax.bar(np.arange(len(flat_occs_inserted)),
-                   flat_occs_inserted, alpha=0.7, color="red")
+    rect1 = ax.bar(np.arange(len(sorted_with_zeros)),
+                   sorted_with_zeros, alpha=0.7, color="red")
 
     i = 0
     for rect in rect1:
@@ -668,7 +693,7 @@ def wn_line_plot_categories(opts):
 
     # Create the xticks for the wn 1 and 1000 labels
     plt.xticks([0, wn_limit-1], [cut_wn_labels[0],
-                               cut_wn_labels[wn_limit-1]])
+                                 cut_wn_labels[wn_limit-1]])
     # Draw the line plot
     ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-")
 
@@ -682,5 +707,6 @@ def wn_line_plot_categories(opts):
     blue_patch = mpatches.Patch(color="blue", label="WordNet occurrences")
     red_patch = mpatches.Patch(color="red", label="Ref data set occurrences")
     plt.legend(handles=[blue_patch, red_patch], loc="best")
+    log_ok("Drawing plot...")
     plt.show(f)
     return
