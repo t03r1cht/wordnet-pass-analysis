@@ -504,7 +504,9 @@ def wn_line_plot_categories(opts):
 
     # Get top n from some list
     if ref_list == "all":
-        all_word_lists_list = mongo.db_lists.find({})
+        # we exclude the keyboard patterns txt file since it has a lot of duplicates with 99_unsortiert
+        all_word_lists_list = mongo.db_lists.find(
+            {"filename": {"$nin": ["03_keyboard_patterns.txt"]}})
         lemma_list = []
         for item in list(all_word_lists_list):
             lemma_list.extend(item["lemmas"])
@@ -544,6 +546,7 @@ def wn_line_plot_categories(opts):
     for password in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(wn_limit + 10):
         labels.append("%s" % (password["word_base"]))
         occurrences.append(password["total_hits"])
+        # print(password["word_base"], password["total_hits"])
 
     # Get all passwords from the word lists as array so we can check if the top 1 or top 1000 password from the wordnet is contained in int
     # if it is contained, increment the top 1 and top 1000 index by one to create some kind of sliding window
@@ -594,6 +597,7 @@ def wn_line_plot_categories(opts):
     # Insert the sorted word list items at the right x coords
     idx_behind_last_wn = len(cut_wn_labels)
     xcoords_bar = []
+
     for item in sorted_o:
         occs = item["occurrences"]
         # Determine first if this elements occs are lower than the last wn element. If thats the case, append it behind the last wn element
@@ -686,6 +690,9 @@ def wn_line_plot_categories(opts):
     i = 0
     for rect in rect1:
         height = rect.get_height()
+        if flat_labels_inserted[i] != "":
+            print("using label",
+                  flat_labels_inserted[i], flat_occs_inserted[i])
         ax.annotate('{}'.format(flat_labels_inserted[i]),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
                     xytext=(0*3, 3),  # use 3 points offset
@@ -732,17 +739,17 @@ def wn_display(opts):
     else:
         limit_depth_flag = 3
 
-
     if opts["top"]:
         limit_synsets_flag = opts["top"]
     else:
-        limit_synsets_flag = 0 # 0 = no limit
+        limit_synsets_flag = 0  # 0 = no limit
 
     fix, ax = plt.subplots()
 
     # Get synsets from the database on the user-specified level
     # current max level is 18
-    ss_for_level = db_wn.find({"level": limit_depth_flag}).limit(limit_synsets_flag)
+    ss_for_level = db_wn.find(
+        {"level": limit_depth_flag}).limit(limit_synsets_flag)
 
     # data_map contains the hierarchies, e.g. a/b/c: 1
     data_map = {}
@@ -753,8 +760,8 @@ def wn_display(opts):
         ss_root_path = "/".join([x.lemma_names()[0]
                                  for x in ss.hypernym_paths()[0]])
         data_map[ss_root_path] = 1
-        print(ss_root_path)
-
+        print(ss_root_path, ss.min_depth())
+    print("==> data preparation done")
     data = stringvalues_to_pv(data_map)
 
     # synset = wn.synset("cat.n.01")
@@ -795,7 +802,7 @@ def wn_display(opts):
 
     # set plot attributes
     hp.plot(setup_axes=True)
-    ax.set_title('WordNet')
+    ax.set_title('Hierarchical WordNet Structure')
 
     # save/show plot
     plt.show()
