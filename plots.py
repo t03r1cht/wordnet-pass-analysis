@@ -9,6 +9,8 @@ import operator
 from hpie import HPie, stringvalues_to_pv
 from nltk.corpus import wordnet as wn
 
+# https://github.com/klieret/pyplot-hierarchical-pie
+
 
 def wn_top_passwords_bar(opts):
     labels = []
