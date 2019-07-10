@@ -895,7 +895,7 @@ def plot_data():
     # evaluate the arguments
     opts = {}
     if not args.top:
-        opts["top"] = 10
+        opts["top"] = None
     else:
         opts["top"] = args.top
 
@@ -903,6 +903,11 @@ def plot_data():
         opts["ref_list"] = None
     else:
         opts["ref_list"] = args.from_lists
+
+    if not args.dag_depth:
+        opts["depth"] = None
+    else:
+        opts["depth"] = args.dag_depth
 
     if args.plot == "wn_passwords_bar":
         plots.wn_top_passwords_bar(opts)

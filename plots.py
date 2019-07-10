@@ -491,6 +491,8 @@ def wn_line_plot_categories(opts):
             log_err("--top value too high. Select Value between 5 and 100")
             return
         limit_val = opts["top"]
+    else:
+        limit_val = 10
 
     ref_list = None
     if opts["ref_list"] == None:
@@ -519,7 +521,7 @@ def wn_line_plot_categories(opts):
     # Contains all word bases ("lemmas") for a given list plus its occurrences
     # Cut the sorted result list based on the --top flag. --top defaults to 10
     sorted_o = sorted(pw_list, key=lambda k: k["occurrences"], reverse=True)[
-        :opts["top"]]
+        :limit_val]
 
     labels = []
     occurrences = []
@@ -706,7 +708,7 @@ def wn_line_plot_categories(opts):
     plt.xlabel(
         "WordNet Top 1 and 1000 Passwords (including all of its permutations)")
     plt.ylabel("Occurrences")
-    plt.title("Top %d Reference List Passwords" % opts["top"])
+    plt.title("Top %d Reference List Passwords" % limit_val)
     blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
     red_patch = mpatches.Patch(
         color="gray", label="Ref data set occurrences (incl permutations)")
@@ -718,19 +720,29 @@ def wn_line_plot_categories(opts):
 
 def wn_display(opts):
     limit_ss = 5
-    limit_val = 20
-    # We can set the number of top passwords with the --top flag
-    if opts["top"]:
-        if opts["top"] > 18:
-            log_err("--top value too high. Select Value between 1 and 18")
+    limit_synsets_flag = 20
+    limit_depth_flag = 20
+
+    # control how deep you want to go in the wordnet hierarchy
+    if opts["depth"]:
+        if opts["depth"] > 18:
+            log_err("-d value too high. Select Value between 1 and 18")
             return
-        limit_val = opts["top"]
+        limit_depth_flag = opts["depth"]
+    else:
+        limit_depth_flag = 3
+
+
+    if opts["top"]:
+        limit_synsets_flag = opts["top"]
+    else:
+        limit_synsets_flag = 0 # 0 = no limit
 
     fix, ax = plt.subplots()
 
     # Get synsets from the database on the user-specified level
     # current max level is 18
-    ss_for_level = db_wn.find({"level": limit_val})
+    ss_for_level = db_wn.find({"level": limit_depth_flag}).limit(limit_synsets_flag)
 
     # data_map contains the hierarchies, e.g. a/b/c: 1
     data_map = {}
@@ -738,13 +750,10 @@ def wn_display(opts):
     # fill the data map
     for ss_obj in ss_for_level:
         ss = wn.synset(ss_obj["id"])
-        print(ss.hypernym_paths())
         ss_root_path = "/".join([x.lemma_names()[0]
                                  for x in ss.hypernym_paths()[0]])
         data_map[ss_root_path] = 1
         print(ss_root_path)
-
-    return
 
     data = stringvalues_to_pv(data_map)
 
