@@ -690,9 +690,6 @@ def wn_line_plot_categories(opts):
     i = 0
     for rect in rect1:
         height = rect.get_height()
-        if flat_labels_inserted[i] != "":
-            print("using label",
-                  flat_labels_inserted[i], flat_occs_inserted[i])
         ax.annotate('{}'.format(flat_labels_inserted[i]),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
                     xytext=(0*3, 3),  # use 3 points offset
@@ -760,8 +757,6 @@ def wn_display(opts):
         ss_root_path = "/".join([x.lemma_names()[0]
                                  for x in ss.hypernym_paths()[0]])
         data_map[ss_root_path] = 1
-        print(ss_root_path, ss.min_depth())
-    print("==> data preparation done")
     data = stringvalues_to_pv(data_map)
 
     # synset = wn.synset("cat.n.01")
