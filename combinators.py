@@ -25,19 +25,24 @@ def combinator_registrar():
 combinator = combinator_registrar()
 
 
-def append_to_list(elem, elem_list):
+def append_to_list(elem, elem_list, permutator_name=""):
     """
     Flatten nested lists since some permutators return lists.
     If we simply append this list return value to ret_list, we have a nested list which causes trouble
     in the lookup process.
     """
+    o = {
+        "name": elem,
+        "permutator": permutator_name
+    }
+
     if type(elem) == list:
         for item in elem:
             elem_list.append(item)
     elif elem is None:
         pass
     else:
-        elem_list.append(elem)
+        elem_list.append(o)
     return elem_list
 
 
@@ -54,10 +59,10 @@ def no_combinations(lemma, permutator_registry):
         elif type(perm) == list:
             for p in perm:
                 if p != None:
-                    ret_list = append_to_list(p, ret_list)
+                    ret_list = append_to_list(p, ret_list, permutator.__name__)
         else:
             if perm != None:
-                ret_list = append_to_list(perm, ret_list)
+                ret_list = append_to_list(perm, ret_list, permutator.__name__)
     return ret_list
 
 
@@ -89,9 +94,9 @@ def cxc(lemma, permutator_registry):
                 for p in current_base_permutation:
                     comb_perm = permutator(p)
                     if comb_perm != None:
-                        ret_list = append_to_list(comb_perm, ret_list)
+                        ret_list = append_to_list(comb_perm, ret_list, permutator.__name__)
             else:  # If the permutator returned a single permutation
                 comb_perm = permutator(current_base_permutation)
                 if comb_perm != None:
-                    ret_list = append_to_list(comb_perm, ret_list)
+                    ret_list = append_to_list(comb_perm, ret_list, permutator.__name__)
     return ret_list

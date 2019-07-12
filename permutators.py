@@ -96,7 +96,7 @@ def no_permutator(lemma):
 
 
 @permutator
-def casing_(lemma):
+def casing(lemma):
     """
     Return the lemma in uppercase.
     """

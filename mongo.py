@@ -12,7 +12,7 @@ db_pws_lists = db["passwords_lists"]
 TAG = get_curr_time_str()
 
 
-def store_tested_pass_lists(name, occurrences, source, word_base):
+def store_tested_pass_lists(name, occurrences, source, word_base, permutator=""):
     """
     Save permutation to the "lists" collection
     """
@@ -21,6 +21,7 @@ def store_tested_pass_lists(name, occurrences, source, word_base):
         "occurrences": occurrences,
         "source": source,
         "word_base": word_base,
+        "permutator": permutator,
         "tag": TAG
     }
     try:

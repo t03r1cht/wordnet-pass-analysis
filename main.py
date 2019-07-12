@@ -299,14 +299,14 @@ def permutations_for_lemma(lemma, depth, source):
         if type(permutations) == list:
             for p in permutations:
                 if args.verbose:
-                    log_status("Looking up [%s]" % p)
-                trans_hits = lookup(p, depth, source, lemma)
+                    log_status("Looking up [%s]" % p["name"])
+                trans_hits = lookup(p["name"], depth, source, lemma)
                 if args.root_syn_name:
                     # Store each permutations under this lemma object in the database
                     all_permutations.append(
-                        new_permutation_for_lemma(p, trans_hits))
+                        new_permutation_for_lemma(p["name"], trans_hits))
                 if args.from_lists:
-                    store_tested_pass_lists(p, trans_hits, source, lemma)
+                    store_tested_pass_lists(p["name"], trans_hits, source, lemma, p["permutator"])
                 total_hits += trans_hits
                 if trans_hits == 0:
                     not_found_cnt += 1
@@ -314,13 +314,13 @@ def permutations_for_lemma(lemma, depth, source):
                     found_cnt += 1
         else:
             if args.verbose:
-                log_status("Looking up [%s]" % permutations)
-            trans_hits = lookup(permutations, depth, source, lemma)
+                log_status("Looking up [%s]" % permutations["name"])
+            trans_hits = lookup(permutations["name"], depth, source, lemma)
             if args.root_syn_name:
                 all_permutations.append(
-                    new_permutation_for_lemma(permutation, trans_hits))
+                    new_permutation_for_lemma(permutation["name"], trans_hits))
             if args.from_lists:
-                store_tested_pass_lists(permutation, trans_hits, source, lemma)
+                store_tested_pass_lists(permutation["name"], trans_hits, source, lemma, p["permutator"])
 
             if trans_hits == 0:
                 not_found_cnt += 1
@@ -786,7 +786,6 @@ def create_classification_for_lists(word_lists=None):
     if args.classify_lists == "all":
         # Iterate over each word list stored in the database
         for filename in word_lists:
-            print(filename)
             doc = db_lists.find_one({"filename": filename})
             if doc is None:
                 continue
