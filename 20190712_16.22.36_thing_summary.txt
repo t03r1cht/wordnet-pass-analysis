@@ -1,0 +1,32 @@
+
+========================================
+
+    *** Synset Distribution ***
+
+thing.n.01  pct_total=100.00|pct_this=100.00|total_hits=19862|this_hits=19862|below_hits=0|total_found=167|this_found=167|below_found=0|total_not_found=54|this_not_found=54|below_not_found=0
+
+========================================
+
+    *** Searched Lemma ***
+
+Identifier: thing.n.01
+Synonyms: ['thing']
+Definition: a special situation
+Examples: ['this thing has got to end', 'it is a remarkable thing']
+
+    *** Stats ***
+
+Total Passwords Searched: 221 (100.00%)
+Total Passwords (Success): 167 (75.57%)
+Total Passwords (Failure): 54 (24.43%)
+Total hits for password searches: 19862 (89.87 hits per password)
+
+Pct Found Passwords (Total): 0.00360%
+Pct Not Found Passwords (Total): 99.99640%
+
+Base Lemmas (Total): 1 (221.00 permutations per base lemma)
+
+
+Average Time per Base Lemma: 9.000 s
+Starting Time: 2019-07-12 16:22:30.480510
+Finishing Time: 2019-07-12 16:22:40.332397

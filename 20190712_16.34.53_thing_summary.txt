@@ -1,0 +1,40 @@
+
+========================================
+
+    *** Synset Distribution ***
+
+thing.n.08  pct_total=100.00|pct_this=14.50|total_hits=209611|this_hits=19862|below_hits=189749|total_found=1152|this_found=167|below_found=985|total_not_found=1509|this_not_found=54|below_not_found=1455
+  whacker.n.01  pct_total=16.84|pct_this=16.84|total_hits=11270|this_hits=11270|below_hits=0|total_found=194|this_found=194|below_found=0|total_not_found=248|this_not_found=248|below_not_found=0
+  stinker.n.02  pct_total=16.41|pct_this=16.41|total_hits=31574|this_hits=31574|below_hits=0|total_found=189|this_found=189|below_found=0|total_not_found=32|this_not_found=32|below_not_found=0
+  security_blanket.n.01  pct_total=0.09|pct_this=0.09|total_hits=3|this_hits=3|below_hits=0|total_found=1|this_found=1|below_found=0|total_not_found=229|this_not_found=229|below_not_found=0
+  pacifier.n.02  pct_total=6.25|pct_this=6.25|total_hits=1687|this_hits=1687|below_hits=0|total_found=72|this_found=72|below_found=0|total_not_found=149|this_not_found=149|below_not_found=0
+  jimdandy.n.02  pct_total=12.76|pct_this=12.76|total_hits=4736|this_hits=4736|below_hits=0|total_found=147|this_found=147|below_found=0|total_not_found=516|this_not_found=516|below_not_found=0
+  horror.n.02  pct_total=14.50|pct_this=14.50|total_hits=20218|this_hits=20218|below_hits=0|total_found=167|this_found=167|below_found=0|total_not_found=54|this_not_found=54|below_not_found=0
+  freshener.n.01  pct_total=0.78|pct_this=0.78|total_hits=59|this_hits=59|below_hits=0|total_found=9|this_found=9|below_found=0|total_not_found=212|this_not_found=212|below_not_found=0
+  change.n.06  pct_total=17.88|pct_this=17.88|total_hits=120202|this_hits=120202|below_hits=0|total_found=206|this_found=206|below_found=0|total_not_found=15|this_not_found=15|below_not_found=0
+
+========================================
+
+    *** Searched Lemma ***
+
+Identifier: thing.n.08
+Synonyms: ['thing']
+Definition: an entity that is not named specifically
+Examples: ["I couldn't tell what the thing was"]
+
+    *** Stats ***
+
+Total Passwords Searched: 2661 (100.00%)
+Total Passwords (Success): 1152 (43.29%)
+Total Passwords (Failure): 1509 (56.71%)
+Total hits for password searches: 209611 (78.77 hits per password)
+
+Pct Found Passwords (Total): 0.03801%
+Pct Not Found Passwords (Total): 99.96199%
+
+Base Lemmas (Total): 20 (133.05 permutations per base lemma)
+
+
+Average Time per Base Lemma: 2.250 s
+Starting Time: 2019-07-12 16:34:47.056861
+Finishing Time: 2019-07-12 16:35:32.394043

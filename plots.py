@@ -685,7 +685,7 @@ def wn_line_plot_categories(opts):
 
     # Draw the bar plot
     rect1 = ax.bar(np.arange(len(sorted_with_zeros)),
-                   sorted_with_zeros, alpha=0.7, color="gray")
+                   sorted_with_zeros, alpha=0.7, color="gray", width=0.3)
 
     i = 0
     for rect in rect1:
@@ -752,48 +752,76 @@ def wn_display(opts):
     data_map = {}
 
     # fill the data map
+
     for ss_obj in ss_for_level:
         ss = wn.synset(ss_obj["id"])
-        ss_root_path = "/".join([x.lemma_names()[0]
-                                 for x in ss.hypernym_paths()[0]])
-        data_map[ss_root_path] = 1
-    data = stringvalues_to_pv(data_map)
+        path_list = [x.lemma_names()[0] for x in ss.hypernym_paths()[0]]
 
-    # synset = wn.synset("cat.n.01")
-    # synset1 = wn.synset("dog.n.01")
-    # synset2 = wn.synset("car.n.01")
-    # # print(synset.hypernym_paths())
-    # p_path = "/".join([x.lemma_names()[0] for x in synset.hypernym_paths()[0]])
-    # p_path1 = "/".join([x.lemma_names()[0] for x in synset1.hypernym_paths()[0]])
-    # p_path2 = "/".join([x.lemma_names()[0] for x in synset2.hypernym_paths()[0]])
-    # print(p_path)
-    # print()
-    # print(p_path1)
-    # print()
-    # print(p_path2)
-    # datax = stringvalues_to_pv({
-    #     p_path: 1,
-    #     p_path1: 1,
-    #     p_path2: 1,
-    # })
+        # create each patch, e.g. [a,b,c] => a, a/b, a/b/c
+        for x in range(len(path_list)):
+            sub_path_list = path_list[:x+1]
+            sub_path = "/".join(sub_path_list)
+            if sub_path not in data_map:
+                data_map[sub_path] = 1
+
+
+        ss_root_path = "/".join(path_list)
+        data_map[ss_root_path] = 1
+    
+    
+    # TODO wenn wir nur aus der datenbank diejenigen synsets des angegebenen levels holen, werden diejenigen nicht berücksichtigt, die auf levels weiter oben bereits
+    # beendet werden (die hyponyme von thing.n.08 enden bereits auf level 2).
+    # aus diesem grund muss vom angegebenen level zurück bis level 1 (exklusive 0) zurückgelaufen werden und dort auch alles gesucht werden. wenn diese bereits durch hierarchisch
+    # untergeordnete pfade gezeichnet wurden, werden diese einfach übersprungen
+    # create the paths for the paths between levels 1 and n-1
+    for x in range(1, limit_depth_flag):
+        ss_for_level = db_wn.find({"level": x}).limit(limit_synsets_flag)
+        for ss_obj in ss_for_level:
+            ss = wn.synset(ss_obj["id"])
+            path_list = [x.lemma_names()[0] for x in ss.hypernym_paths()[0]]
+
+            for x in range(len(path_list)):
+                sub_path_list = path_list[:x+1]
+                sub_path = "/".join(sub_path_list)
+                if sub_path not in data_map:
+                    data_map[sub_path] = 1
+
+
+            ss_root_path = "/".join(path_list)
+            data_map[ss_root_path] = 1
+
+    
+    data = stringvalues_to_pv(data_map)
 
     # If the whole graph should be filled out (not blank space on horizontal lines) only the hierarchically lowest elements can have the value 1, all other items need to be 0
     # data1 = stringvalues_to_pv({
-    #     # 'ipsum':                      1,
-    #     # 'lorem':                      1,
-    #     # 'ipsum/eirmod':               1,
+    #     'ipsum':                      1,
+    #     'ipsum/eirmod':               1,
     #     'ipsum/eirmod/dolor':         1,
+    #     'lorem':                      1,
     #     'lorem/sadipscing/dolor':     1,
     #     'lorem/sadipscing/lorem':     1,
     #     'lorem/sadipscing/nonumy':    1,
-    #     # 'lorem/eirmod':               1,
+    #     'lorem/eirmod':               1,
     #     'lorem/eirmod/lorem':         1,
-    #     'lorem/eirmod/bla':           1,
-    #     # 'lorem/sadipscing':           1,
+    #     'lorem/sadipscing':           1,
     # })
 
+    # ss = wn.synset("thing.n.08")
+    # [Synset('thing.n.01'), Synset('thing.n.02'), Synset('thing.n.03'), Synset('thing.n.04'), Synset('thing.n.05'), 
+    # Synset('matter.n.01'), Synset('thing.n.07'), Synset('thing.n.08'), Synset('thing.n.09'), Synset('thing.n.10'), 
+    # Synset('thing.n.11'), Synset('thing.n.12')]
+    # print(ss.hyponyms())
+    # return
+
     # do the magic
-    hp = HPie(data, ax)
+    hp = HPie(data, ax, plot_center=True, 
+        cmap=plt.get_cmap("hsv"),
+        plot_minimal_angle=0,
+        label_minimal_angle=1.5
+    )
+
+    hp.format_value_text = lambda value: None
 
     # set plot attributes
     hp.plot(setup_axes=True)
