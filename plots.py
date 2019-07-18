@@ -708,7 +708,8 @@ def wn_line_plot_categories(opts):
     ax.set_ylim(bottom=0)
     ax.set_xlim(left=0)
     ax.set_ylim([0, sorted_no_zeros[0] + sorted_no_zeros[0] / 4])
-    plt.ticklabel_format(style='plain', axis='y')
+    ax.set_yscale("log", basey=10)
+    # plt.ticklabel_format(style='plain', axis='y')
     plt.xlabel(
         "WordNet Top 1 and 1000 Passwords (including all of its permutations)")
     plt.ylabel("Occurrences")
@@ -718,6 +719,8 @@ def wn_line_plot_categories(opts):
         color="gray", label="Ref data set occurrences (incl permutations)")
     plt.legend(handles=[blue_patch, red_patch], loc="best")
     log_ok("Drawing plot...")
+    # a = [ pow(10,i) for i in range(10) ]
+    # x = ax.semilogy(a)
     plt.show(f)
     return
 
@@ -830,6 +833,7 @@ def wn_display(opts):
     plt.show()
 
 def lists_plot_permutations(opts):
+
     """
     Plot permutator distribution as pie chart
     """
@@ -862,3 +866,5 @@ def lists_plot_permutations(opts):
 
     # save/show plot
     plt.show()
+
+
