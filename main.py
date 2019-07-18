@@ -930,6 +930,8 @@ def plot_data():
         plots.wn_line_plot_categories(opts)
     elif args.plot == "wn_display":
         plots.wn_display(opts)
+    elif args.plot == "perm_dist":
+        plots.lists_plot_permutations(opts)
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 

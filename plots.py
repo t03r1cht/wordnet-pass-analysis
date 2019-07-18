@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 import mongo
-from mongo import db_wn
+from mongo import db_wn, db_pws_lists
 import pymongo
 from helper import log_err, format_number, log_status, log_ok
 import operator
@@ -721,7 +721,6 @@ def wn_line_plot_categories(opts):
     plt.show(f)
     return
 
-
 def wn_display(opts):
     limit_ss = 5
     limit_synsets_flag = 20
@@ -826,6 +825,40 @@ def wn_display(opts):
     # set plot attributes
     hp.plot(setup_axes=True)
     ax.set_title('Hierarchical WordNet Structure')
+
+    # save/show plot
+    plt.show()
+
+def lists_plot_permutations(opts):
+    """
+    Plot permutator distribution as pie chart
+    """
+    
+    fix, ax = plt.subplots()
+
+    # Query, group and sum by permutators
+    # db.getCollection('passwords_lists').aggregate([{$group: {_id: "$permutator", sum: {$sum: "$occurrences"}}}])        
+    perm_dist = db_pws_lists.aggregate([{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+
+
+    data_map = {}
+    for x in perm_dist:
+        data_map[x["_id"]] = x["sum"]
+
+    data = stringvalues_to_pv(data_map)
+
+    # do the magic
+    hp = HPie(data, ax, plot_center=True, 
+        cmap=plt.get_cmap("hsv"),
+        plot_minimal_angle=0,
+        label_minimal_angle=1.5
+    )
+
+    hp.format_value_text = lambda value: None
+
+    # set plot attributes
+    hp.plot(setup_axes=True)
+    ax.set_title('Distribution of Permutators')
 
     # save/show plot
     plt.show()
