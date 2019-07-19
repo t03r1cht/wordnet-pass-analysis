@@ -940,6 +940,8 @@ def plot_data():
         plots.plot_misc_lists(opts)
     elif args.plot == "misc_lists_overlay":
         plots.plot_overlay_two_misc_lists(opts)
+    elif args.plot == "wn_misc_lists_overlay":
+        plots.plot_overlay_wn_misc_list(opts)
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 

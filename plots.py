@@ -792,27 +792,6 @@ def wn_display(opts):
 
     data = stringvalues_to_pv(data_map)
 
-    # If the whole graph should be filled out (not blank space on horizontal lines) only the hierarchically lowest elements can have the value 1, all other items need to be 0
-    # data1 = stringvalues_to_pv({
-    #     'ipsum':                      1,
-    #     'ipsum/eirmod':               1,
-    #     'ipsum/eirmod/dolor':         1,
-    #     'lorem':                      1,
-    #     'lorem/sadipscing/dolor':     1,
-    #     'lorem/sadipscing/lorem':     1,
-    #     'lorem/sadipscing/nonumy':    1,
-    #     'lorem/eirmod':               1,
-    #     'lorem/eirmod/lorem':         1,
-    #     'lorem/sadipscing':           1,
-    # })
-
-    # ss = wn.synset("thing.n.08")
-    # [Synset('thing.n.01'), Synset('thing.n.02'), Synset('thing.n.03'), Synset('thing.n.04'), Synset('thing.n.05'),
-    # Synset('matter.n.01'), Synset('thing.n.07'), Synset('thing.n.08'), Synset('thing.n.09'), Synset('thing.n.10'),
-    # Synset('thing.n.11'), Synset('thing.n.12')]
-    # print(ss.hyponyms())
-    # return
-
     # do the magic
     hp = HPie(data, ax, plot_center=True,
               cmap=plt.get_cmap("hsv"),
@@ -880,20 +859,23 @@ def plot_misc_lists(opts):
         return
     ref_list = opts["ref_list"]
     # Get passwords for the provided source list
-    words_cur = mongo.db_pws_misc_lists.find({"source": ref_list}).sort("occurrences", pymongo.DESCENDING).limit(limit_val)
+    words_cur = mongo.db_pws_misc_lists.find({"source": ref_list}).sort(
+        "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_occs = []
     ref_list_labels = []
     for word in words_cur:
         ref_list_occs.append(word["occurrences"])
         ref_list_labels.append(word["name"])
-    
-    plt.xticks([0, len(ref_list_occs)-1], [ref_list_labels[0], ref_list_labels[len(ref_list_occs)-1]])
+
+    plt.xticks([0, len(ref_list_occs)-1], [ref_list_labels[0],
+                                           ref_list_labels[len(ref_list_occs)-1]])
     ax.plot(np.arange(len(ref_list_occs)), ref_list_occs, "--", color="orange")
     ax.set_yscale("log", basey=10)
     plt.title("Password Occurrences for %s" % ref_list)
     plt.xlabel("Top %d Passwords" % limit_val)
     plt.ylabel("HaveIBeenPwned Hits for Passwords")
     plt.show(f)
+
 
 def plot_overlay_two_misc_lists(opts):
     f, ax = plt.subplots(1)
@@ -915,14 +897,16 @@ def plot_overlay_two_misc_lists(opts):
     ref_list_one = ref_list.split(",")[0]
     ref_list_two = ref_list.split(",")[1]
     # Get passwords for the provided source list 1
-    words_cur_one = mongo.db_pws_misc_lists.find({"source": ref_list_one}).sort("occurrences", pymongo.DESCENDING).limit(limit_val)
+    words_cur_one = mongo.db_pws_misc_lists.find({"source": ref_list_one}).sort(
+        "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_one_occs = []
     ref_list_one_labels = []
     for word in words_cur_one:
         ref_list_one_occs.append(word["occurrences"])
         ref_list_one_labels.append(word["name"])
     # Get passwords for the provided source list 2
-    words_cur_two = mongo.db_pws_misc_lists.find({"source": ref_list_two}).sort("occurrences", pymongo.DESCENDING).limit(limit_val)
+    words_cur_two = mongo.db_pws_misc_lists.find({"source": ref_list_two}).sort(
+        "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_two_occs = []
     ref_list_two_labels = []
     for word in words_cur_two:
@@ -934,6 +918,62 @@ def plot_overlay_two_misc_lists(opts):
     ax.plot(np.arange(len(ref_list_two_occs)), ref_list_two_occs, "--")
     ax.set_yscale("log", basey=10)
     plt.title("Direct Comparison of %s and %s" % (ref_list_one, ref_list_two))
-    plt.xlabel("Top %d Passwords of Each Respective List" % (len(ref_list_one_occs)))
+    plt.xlabel("Top %d Passwords of Each Respective List" %
+               (len(ref_list_one_occs)))
     plt.ylabel("HaveIBeenPwned Hits for Passwords")
+    plt.show(f)
+
+def plot_overlay_wn_misc_list(opts):
+    f, ax = plt.subplots(1)
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 1000 or opts["top"] < 1:
+            log_err("--top value too high. Select Value between 1 and 100")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+    if not opts["ref_list"]:
+        log_err("No list specified")
+        return
+    ref_list = opts["ref_list"]
+    # Ignore one-digit passwords
+    exclude_terms = {
+            "word_base": {"$nin": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "0",
+            ]}
+        }
+
+    # Get the top n wordnet passwords (used as a reference for the word list passwords)
+    wn_labels = []
+    wn_occurrences = []
+    wn_cur = mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(limit_val+20)
+    for password in wn_cur:
+        wn_labels.append("%s" % (password["word_base"]))
+        wn_occurrences.append(password["total_hits"])
+
+    # Get passwords for the provided source list
+    misc_list_cur = mongo.db_pws_misc_lists.find({"source": ref_list}).sort(
+        "occurrences", pymongo.DESCENDING).limit(limit_val)
+    ref_list_occs = []
+    ref_list_labels = []
+    for word in misc_list_cur:
+        ref_list_occs.append(word["occurrences"])
+        ref_list_labels.append(word["name"])
+    
+    ax.plot(np.arange(len(wn_occurrences)), wn_occurrences, "-")
+    ax.plot(np.arange(len(ref_list_occs)), ref_list_occs, "--")
+    ax.set_yscale("log", basey=10)
+    plt.title("Top %d Passwords of the WordNet and %s" % (limit_val, ref_list))
+    plt.xlabel("WordNet and %s Passwords" % ref_list)
+    plt.ylabel("HaveIBeenPwned Password Occurrences")
     plt.show(f)
