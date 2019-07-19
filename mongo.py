@@ -27,7 +27,7 @@ def store_tested_pass_lists(name, occurrences, source, word_base, permutator="")
     }
     try:
         db_pws_lists.insert_one(o)
-    except Exception as e:
+    except Exception:
         return False
     return True
 
@@ -45,7 +45,7 @@ def store_tested_pass_wn(name, occurrences, source, word_base):
     }
     try:
         db_pws_wn.insert_one(o)
-    except Exception as e:
+    except Exception:
         return False
     return True
 
@@ -60,7 +60,7 @@ def store_tested_pass_misc_list(name, occurrences, source):
 
     try:
         db_pws_misc_lists.insert_one(o)
-    except Exception as e:
+    except Exception:
         return False
     return True
 
@@ -78,7 +78,7 @@ def init_word_list_object(filename):
     }
     try:
         db_lists.insert_one(o)
-    except Exception as e:
+    except Exception:
         return False
 
 

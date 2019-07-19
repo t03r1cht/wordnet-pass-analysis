@@ -724,6 +724,7 @@ def wn_line_plot_categories(opts):
     plt.show(f)
     return
 
+
 def wn_display(opts):
     limit_ss = 5
     limit_synsets_flag = 20
@@ -766,11 +767,9 @@ def wn_display(opts):
             if sub_path not in data_map:
                 data_map[sub_path] = 1
 
-
         ss_root_path = "/".join(path_list)
         data_map[ss_root_path] = 1
-    
-    
+
     # TODO wenn wir nur aus der datenbank diejenigen synsets des angegebenen levels holen, werden diejenigen nicht berücksichtigt, die auf levels weiter oben bereits
     # beendet werden (die hyponyme von thing.n.08 enden bereits auf level 2).
     # aus diesem grund muss vom angegebenen level zurück bis level 1 (exklusive 0) zurückgelaufen werden und dort auch alles gesucht werden. wenn diese bereits durch hierarchisch
@@ -788,11 +787,9 @@ def wn_display(opts):
                 if sub_path not in data_map:
                     data_map[sub_path] = 1
 
-
             ss_root_path = "/".join(path_list)
             data_map[ss_root_path] = 1
 
-    
     data = stringvalues_to_pv(data_map)
 
     # If the whole graph should be filled out (not blank space on horizontal lines) only the hierarchically lowest elements can have the value 1, all other items need to be 0
@@ -810,18 +807,18 @@ def wn_display(opts):
     # })
 
     # ss = wn.synset("thing.n.08")
-    # [Synset('thing.n.01'), Synset('thing.n.02'), Synset('thing.n.03'), Synset('thing.n.04'), Synset('thing.n.05'), 
-    # Synset('matter.n.01'), Synset('thing.n.07'), Synset('thing.n.08'), Synset('thing.n.09'), Synset('thing.n.10'), 
+    # [Synset('thing.n.01'), Synset('thing.n.02'), Synset('thing.n.03'), Synset('thing.n.04'), Synset('thing.n.05'),
+    # Synset('matter.n.01'), Synset('thing.n.07'), Synset('thing.n.08'), Synset('thing.n.09'), Synset('thing.n.10'),
     # Synset('thing.n.11'), Synset('thing.n.12')]
     # print(ss.hyponyms())
     # return
 
     # do the magic
-    hp = HPie(data, ax, plot_center=True, 
-        cmap=plt.get_cmap("hsv"),
-        plot_minimal_angle=0,
-        label_minimal_angle=1.5
-    )
+    hp = HPie(data, ax, plot_center=True,
+              cmap=plt.get_cmap("hsv"),
+              plot_minimal_angle=0,
+              label_minimal_angle=1.5
+              )
 
     hp.format_value_text = lambda value: None
 
@@ -832,18 +829,18 @@ def wn_display(opts):
     # save/show plot
     plt.show()
 
-def lists_plot_permutations(opts):
 
+def lists_plot_permutations(opts):
     """
     Plot permutator distribution as pie chart
     """
-    
+
     fix, ax = plt.subplots()
 
     # Query, group and sum by permutators
-    # db.getCollection('passwords_lists').aggregate([{$group: {_id: "$permutator", sum: {$sum: "$occurrences"}}}])        
-    perm_dist = db_pws_lists.aggregate([{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
-
+    # db.getCollection('passwords_lists').aggregate([{$group: {_id: "$permutator", sum: {$sum: "$occurrences"}}}])
+    perm_dist = db_pws_lists.aggregate(
+        [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
 
     data_map = {}
     for x in perm_dist:
@@ -852,11 +849,11 @@ def lists_plot_permutations(opts):
     data = stringvalues_to_pv(data_map)
 
     # do the magic
-    hp = HPie(data, ax, plot_center=True, 
-        cmap=plt.get_cmap("hsv"),
-        plot_minimal_angle=0,
-        label_minimal_angle=1.5
-    )
+    hp = HPie(data, ax, plot_center=True,
+              cmap=plt.get_cmap("hsv"),
+              plot_minimal_angle=0,
+              label_minimal_angle=1.5
+              )
 
     hp.format_value_text = lambda value: None
 
@@ -868,3 +865,75 @@ def lists_plot_permutations(opts):
     plt.show()
 
 
+def plot_misc_lists(opts):
+    f, ax = plt.subplots(1)
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 1000 or opts["top"] < 1:
+            log_err("--top value too high. Select Value between 1 and 100")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+    if not opts["ref_list"]:
+        log_err("No list specified")
+        return
+    ref_list = opts["ref_list"]
+    # Get passwords for the provided source list
+    words_cur = mongo.db_pws_misc_lists.find({"source": ref_list}).sort("occurrences", pymongo.DESCENDING).limit(limit_val)
+    ref_list_occs = []
+    ref_list_labels = []
+    for word in words_cur:
+        ref_list_occs.append(word["occurrences"])
+        ref_list_labels.append(word["name"])
+    
+    plt.xticks([0, len(ref_list_occs)-1], [ref_list_labels[0], ref_list_labels[len(ref_list_occs)-1]])
+    ax.plot(np.arange(len(ref_list_occs)), ref_list_occs, "--", color="orange")
+    ax.set_yscale("log", basey=10)
+    plt.title("Password Occurrences for %s" % ref_list)
+    plt.xlabel("Top %d Passwords" % limit_val)
+    plt.ylabel("HaveIBeenPwned Hits for Passwords")
+    plt.show(f)
+
+def plot_overlay_two_misc_lists(opts):
+    f, ax = plt.subplots(1)
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 1000 or opts["top"] < 1:
+            log_err("--top value too high. Select Value between 1 and 100")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+    if not opts["ref_list"]:
+        log_err("No list specified")
+        return
+    ref_list = opts["ref_list"]
+    if not "," in ref_list:
+        log_err("Specify two word lists separated by a comma, e.g. list1.txt,list2.txt")
+        return
+    ref_list_one = ref_list.split(",")[0]
+    ref_list_two = ref_list.split(",")[1]
+    # Get passwords for the provided source list 1
+    words_cur_one = mongo.db_pws_misc_lists.find({"source": ref_list_one}).sort("occurrences", pymongo.DESCENDING).limit(limit_val)
+    ref_list_one_occs = []
+    ref_list_one_labels = []
+    for word in words_cur_one:
+        ref_list_one_occs.append(word["occurrences"])
+        ref_list_one_labels.append(word["name"])
+    # Get passwords for the provided source list 2
+    words_cur_two = mongo.db_pws_misc_lists.find({"source": ref_list_two}).sort("occurrences", pymongo.DESCENDING).limit(limit_val)
+    ref_list_two_occs = []
+    ref_list_two_labels = []
+    for word in words_cur_two:
+        ref_list_two_occs.append(word["occurrences"])
+        ref_list_two_labels.append(word["name"])
+
+    #plt.xticks([0, len(ref_list_one_occs)-1, 100, 500], [ref_list_one_labels[0], ref_list_one_labels[len(ref_list_one_occs)-1], ref_list_two_labels[0], ref_list_two_labels[len(ref_list_two_occs)-1]])
+    ax.plot(np.arange(len(ref_list_one_occs)), ref_list_one_occs, "-",)
+    ax.plot(np.arange(len(ref_list_two_occs)), ref_list_two_occs, "--")
+    ax.set_yscale("log", basey=10)
+    plt.title("Direct Comparison of %s and %s" % (ref_list_one, ref_list_two))
+    plt.xlabel("Top %d Passwords of Each Respective List" % (len(ref_list_one_occs)))
+    plt.ylabel("HaveIBeenPwned Hits for Passwords")
+    plt.show(f)

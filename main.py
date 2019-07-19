@@ -936,6 +936,10 @@ def plot_data():
         plots.wn_display(opts)
     elif args.plot == "perm_dist":
         plots.lists_plot_permutations(opts)
+    elif args.plot == "misc_lists_line":
+        plots.plot_misc_lists(opts)
+    elif args.plot == "misc_lists_overlay":
+        plots.plot_overlay_two_misc_lists(opts)
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
@@ -975,6 +979,11 @@ def option_lookup_ref_lists():
     log_ok("Words to lookup: %d" % int(word_count))
     progress_count = 0
     non_passwords = 0
+    if os.sep in args.misc_list:
+        # Split by the OS separator
+        word_list_name = args.misc_list.split(os.sep)[-1]
+    else:
+        word_list_name = args.misc_list
     for word in words:
         if list_read_limit:
             if progress_count >= list_read_limit:
@@ -993,7 +1002,7 @@ def option_lookup_ref_lists():
         else:
             result_num = int(result.split(":")[1])
         success = mongo.store_tested_pass_misc_list(
-            cleaned_word, result_num, args.misc_list)
+            cleaned_word, result_num, word_list_name)
         log_status("[%d/%d] %s (%d)" %
                    (progress_count, word_count, cleaned_word, result_num))
     log_ok("Finished. %d actual words, %d non-words (empty lines, comments, etc.)" %
