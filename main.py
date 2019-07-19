@@ -24,7 +24,7 @@ from colorama import Back, Fore, Style, init
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
 
-from mongo import db_lists, db_pws_wn, db_pws_lists, clear_mongo, store_tested_pass_lists, store_tested_pass_wn, init_word_list_object, append_lemma_to_wl, db_wn, store_synset_with_relatives, update_synset_with_stats, store_permutations_for_lemma, new_permutation_for_lemma, db_wn_lemma_permutations
+import mongo
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
 parser = argparse.ArgumentParser(
@@ -66,6 +66,8 @@ parser.add_argument("--classify-wn", type=str,
 parser.add_argument("--top", type=int,
                     help="Limit output for --classify-x queries.", dest="top")
 parser.add_argument("--plot", type=str, help="Plot graph.", dest="plot")
+parser.add_argument("--misc_list", type=str,
+                    help="Lookup miscellaneous list. Lookup will only use words in lists, not generate any permutations.", dest="misc_list")
 
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
@@ -258,7 +260,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
             not_found_for_current_synset += not_found_cnt
             found_for_current_synset += found_cnt
         # Create this synset in the database and save its relatives (hypernym and hyponyms)
-        store_synset_with_relatives(hypo, curr_root_syn.name())
+        mongo.store_synset_with_relatives(hypo, curr_root_syn.name())
         # Execute the function again with the new root synset being each hyponym we just found.
         hits_below, not_found_below, found_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
@@ -272,7 +274,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         not_found_for_current_synset += not_found_below
         found_for_current_synset += found_below
         # Update the synset with these stats
-        update_synset_with_stats(
+        mongo.update_synset_with_stats(
             hypo, hits_below, not_found_below, found_below, total_hits, found_cnt, not_found_cnt)
         if args.subsume_for_classes:
             append_with_hits(hypo, total_hits, hits_below,
@@ -304,9 +306,10 @@ def permutations_for_lemma(lemma, depth, source):
                 if args.root_syn_name:
                     # Store each permutations under this lemma object in the database
                     all_permutations.append(
-                        new_permutation_for_lemma(p["name"], trans_hits))
+                        mongo.new_permutation_for_lemma(p["name"], trans_hits))
                 if args.from_lists:
-                    store_tested_pass_lists(p["name"], trans_hits, source, lemma, p["permutator"])
+                    mongo.store_tested_pass_lists(
+                        p["name"], trans_hits, source, lemma, p["permutator"])
                 total_hits += trans_hits
                 if trans_hits == 0:
                     not_found_cnt += 1
@@ -318,9 +321,10 @@ def permutations_for_lemma(lemma, depth, source):
             trans_hits = lookup(permutations["name"], depth, source, lemma)
             if args.root_syn_name:
                 all_permutations.append(
-                    new_permutation_for_lemma(permutation["name"], trans_hits))
+                    mongo.new_permutation_for_lemma(permutation["name"], trans_hits))
             if args.from_lists:
-                store_tested_pass_lists(permutation["name"], trans_hits, source, lemma, p["permutator"])
+                mongo.store_tested_pass_lists(
+                    permutation["name"], trans_hits, source, lemma, p["permutator"])
 
             if trans_hits == 0:
                 not_found_cnt += 1
@@ -336,7 +340,7 @@ def permutations_for_lemma(lemma, depth, source):
             "total_hits": total_hits,
             "synset": source
         }
-        store_permutations_for_lemma(permutations_for_lemma)
+        mongo.store_permutations_for_lemma(permutations_for_lemma)
 
     return total_hits, not_found_cnt, found_cnt
 
@@ -539,7 +543,7 @@ def option_lookup_passwords():
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
     if args.purge_db:
-        clear_mongo()
+        mongo.clear_mongo()
         log_ok("Database was cleared!")
     print()
     started_time = get_curr_time()
@@ -577,7 +581,7 @@ def option_lookup_passwords():
     # By emitting the parent parameter, we declare this synset the root
     # We will only declare entity.n.01 as root since it is the actual root object of the wordnet tree
     if choice_root_syn.name() == "entity.n.01":
-        store_synset_with_relatives(choice_root_syn, parent="root")
+        mongo.store_synset_with_relatives(choice_root_syn, parent="root")
     else:
         # If we run the script starting from somewhere within the wordnet,
         # we still need to find its parent (hypernym). Therefore, we call hypernyms()
@@ -589,7 +593,7 @@ def option_lookup_passwords():
         root_hypernyms = choice_root_syn.hypernyms()
         root_hypernym = None
         for hypernym in root_hypernyms:
-            if db_wn.count_documents({"id": hypernym.name()}) == 0:
+            if mongo.db_wn.count_documents({"id": hypernym.name()}) == 0:
                 continue
             else:
                 root_hypernym = hypernym
@@ -601,14 +605,14 @@ def option_lookup_passwords():
             sys.exit(0)
         _write_to_passwords_file("found root_hypernym for %s is %s" % (
             choice_root_syn.name(), root_hypernym))
-        store_synset_with_relatives(
+        mongo.store_synset_with_relatives(
             choice_root_syn, parent=root_hypernym.name())
     hits_below, not_found_below, found_below = recurse_nouns_from_root(
         root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
 
     # Update this root synset with its respective stats
-    update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
-                             found_below, hits, found, not_found)
+    mongo.update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
+                                   found_below, hits, found, not_found)
     # we processed the subtrees, since we are going to reverse
     # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
     # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
@@ -634,7 +638,7 @@ def option_permutate_from_lists():
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
     if args.purge_db:
-        clear_mongo()
+        mongo.clear_mongo()
         log_ok("Database was cleared!")
     # Initialize the file handles to write to
     _init_file_handles(get_curr_time_str())
@@ -688,7 +692,7 @@ def option_permutate_from_lists():
     # Iterate over each list in the specified directory
     for pass_list in dir_txt_content:
         # Check if a ill document for this list name already exists
-        if db_lists.count_documents({"filename": pass_list}) > 0:
+        if mongo.db_lists.count_documents({"filename": pass_list}) > 0:
             log_status(
                 "%s already exists in database, will append results to this document" % pass_list)
         else:
@@ -746,8 +750,8 @@ def option_permutate_from_lists():
                 password_base))
 
             # Append the finished lemma to the ill collection
-            append_lemma_to_wl(password_base, total_hits,
-                               found_cnt, not_found_cnt, pass_list, tag=ILL_TAG)
+            mongo.append_lemma_to_wl(password_base, total_hits,
+                                     found_cnt, not_found_cnt, pass_list, tag=ILL_TAG)
 
         finished_lists += 1
 
@@ -786,7 +790,7 @@ def create_classification_for_lists(word_lists=None):
     if args.classify_lists == "all":
         # Iterate over each word list stored in the database
         for filename in word_lists:
-            doc = db_lists.find_one({"filename": filename})
+            doc = mongo.db_lists.find_one({"filename": filename})
             if doc is None:
                 continue
             all_lemmas = doc["lemmas"]
@@ -818,10 +822,10 @@ def create_classification_for_lists(word_lists=None):
             _write_to_summary_file("")
         log_ok("Classification written to the summary file.")
     elif args.classify_lists == "sort_password_desc":
-        for password in db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
+        for password in mongo.db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
             print("{}\t{}".format(password["occurrences"], password["name"]))
     elif args.classify_lists == "sort_list_desc":
-        for l in db_lists.find().sort("total_hits", pymongo.DESCENDING).limit(query_limit):
+        for l in mongo.db_lists.find().sort("total_hits", pymongo.DESCENDING).limit(query_limit):
             print("{}\t{}".format(l["total_hits"], l["filename"]))
     else:
         log_err("Unrecognized classification option [%s]" % args.classify_wn)
@@ -829,13 +833,13 @@ def create_classification_for_lists(word_lists=None):
 
 def create_complete_classification_for_wn():
     # Check if we have synsets to iterate over
-    if db_wn.count_documents({}) == 0:
+    if mongo.db_wn.count_documents({}) == 0:
         log_err("No synsets found in database. Nothing to process.")
         sys.exit(0)
 
     _init_file_handles(ILL_TAG, of_summary=True)
     # Get the root object
-    tree_root = db_wn.find_one({"parent": "root"})
+    tree_root = mongo.db_wn.find_one({"parent": "root"})
 
     _write_to_summary_file("File created: %s" % ILL_TAG)
     _write_to_summary_file("")
@@ -848,16 +852,16 @@ def create_complete_classification_for_wn():
 
     if args.classify_wn == "sort_synset_desc":
         # Sort all stored synsets based on their total_hits field (so their hits as well as their hyponym hits) in descending order
-        for synset in db_wn.find().sort("total_hits", pymongo.DESCENDING):
+        for synset in mongo.db_wn.find().sort("total_hits", pymongo.DESCENDING):
             # o = wn.synset(synset["id"])
             print("{}\t\t{}".format(synset["total_hits"], synset["id"]))
     elif args.classify_wn == "sort_lemma_desc":
         # Sort all lemmas (word bases) based on their hits in descending order
 
-        for lemma in db_wn_lemma_permutations.find().sort("total_hits", pymongo.DESCENDING).limit(query_limit):
+        for lemma in mongo.db_wn_lemma_permutations.find().sort("total_hits", pymongo.DESCENDING).limit(query_limit):
             print("{}\t\t{}".format(lemma["total_hits"], lemma["word_base"]))
     elif args.classify_wn == "sort_password_desc":
-        for password in db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
+        for password in mongo.db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(query_limit):
             print("{}\t{}".format(
                 password["occurrences"], password["name"], password["synset"]))
     else:
@@ -936,6 +940,66 @@ def plot_data():
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
 
+def option_lookup_ref_lists():
+    signal.signal(signal.SIGINT, sigint_handler)
+    if args.top == None:
+        list_read_limit = None
+    else:
+        list_read_limit = args.top
+    if not os.path.isfile(args.misc_list):
+        log_err("Not a file")
+        return
+    if not args.misc_list.endswith(".txt"):
+        log_err("Not a .txt file")
+        return
+
+    # Open word list
+    log_ok("Reading word list %s..." % args.misc_list)
+    try:
+        word_list = open(args.misc_list)
+        words = word_list.readlines()
+    except Exception as e:
+        log_err("Failed to open word list")
+        return
+    # Close after reading
+    word_list.close()
+    # Try to count lines (or at least give approximation)
+    try:
+        word_count = subprocess.check_output(
+            ["wc", "-l", "{0}".format(args.misc_list)])
+    except CalledProcessError as e:
+        log_err(
+            "Could not count lines for destination file! % s" % e)
+    word_count = int(word_count.decode(
+        "utf-8").strip("\n").strip("\r").lstrip().split(" ")[0])
+    log_ok("Words to lookup: %d" % int(word_count))
+    progress_count = 0
+    non_passwords = 0
+    for word in words:
+        if list_read_limit:
+            if progress_count >= list_read_limit:
+                log_ok("Read limit of %d reached. Stopping." % list_read_limit)
+                return
+        progress_count += 1
+        # Skip comments and empty lines
+        if word[0] == "#" or word == "" or word == " " or word == "\n":
+            non_passwords += 1
+            log_status("[%d/%d] <skipping>" % (progress_count, word_count))
+            continue
+        cleaned_word = remove_control_characters(word)
+        result = _lookup_in_hash_file(hash_sha1(cleaned_word))
+        if not result:
+            result_num = 0
+        else:
+            result_num = int(result.split(":")[1])
+        success = mongo.store_tested_pass_misc_list(
+            cleaned_word, result_num, args.misc_list)
+        log_status("[%d/%d] %s (%d)" %
+                   (progress_count, word_count, cleaned_word, result_num))
+    log_ok("Finished. %d actual words, %d non-words (empty lines, comments, etc.)" %
+           (progress_count-non_passwords, non_passwords))
+
+
 if __name__ == "__main__":
     if args.dl_wordnet:
         _download_wordnet()
@@ -977,6 +1041,8 @@ if __name__ == "__main__":
         option_permutate_from_lists()
     elif args.plot:
         plot_data()
+    elif args.misc_list:
+        option_lookup_ref_lists()
     else:
         # Evaluate command line parameters
         if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:

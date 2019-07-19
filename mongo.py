@@ -1,13 +1,14 @@
 from pymongo import MongoClient
 from helper import get_curr_time, get_curr_time_str
 
-mongo = MongoClient("mongodb://192.168.56.101:27017")
+mongo = MongoClient("mongodb://127.0.0.1:27017")
 db = mongo["passwords"]
 db_lists = db["lists"]
 db_wn = db["wn_synsets"]
 db_pws_wn = db["passwords_wn"]
 db_wn_lemma_permutations = db["wn_lemma_permutations"]
 db_pws_lists = db["passwords_lists"]
+db_pws_misc_lists = db["passwords_misc_lists"]
 
 TAG = get_curr_time_str()
 
@@ -44,6 +45,21 @@ def store_tested_pass_wn(name, occurrences, source, word_base):
     }
     try:
         db_pws_wn.insert_one(o)
+    except Exception as e:
+        return False
+    return True
+
+
+def store_tested_pass_misc_list(name, occurrences, source):
+    o = {
+        "name": name,
+        "occurrences": occurrences,
+        "source": source,
+        "tag": TAG
+    }
+
+    try:
+        db_pws_misc_lists.insert_one(o)
     except Exception as e:
         return False
     return True
@@ -147,6 +163,7 @@ def update_synset_with_stats(synset, hits_below, not_found_below, found_below, t
         "tag": TAG
     }
     db_wn.update_one({"id": synset.name()}, {"$set": o})
+
 
 def get_wn_permutations(top=0):
     res = db_pws_wn.find().sort("occurrences").limit(top)
