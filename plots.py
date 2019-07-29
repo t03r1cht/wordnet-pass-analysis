@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.lines as mlines
 import numpy as np
 import mongo
 from mongo import db_wn, db_pws_lists
@@ -711,7 +712,7 @@ def wn_line_plot_categories(opts):
     ax.set_yscale("log", basey=10)
     # plt.ticklabel_format(style='plain', axis='y')
     plt.xlabel(
-        "WordNet Top 1 and 1000 Passwords (including all of its permutations)")
+        "WordNet Top 1 and 1000 Passwords (including permutations)")
     plt.ylabel("Occurrences")
     plt.title("Top %d Reference List Passwords" % limit_val)
     blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
@@ -849,7 +850,7 @@ def plot_misc_lists(opts):
     # We can set the number of top passwords with the --top flag
     if opts["top"]:
         if opts["top"] > 1000 or opts["top"] < 1:
-            log_err("--top value too high. Select Value between 1 and 100")
+            log_err("--top value too high. Select Value between 1 and 1000")
             return
         limit_val = opts["top"]
     else:
@@ -914,14 +915,20 @@ def plot_overlay_two_misc_lists(opts):
         ref_list_two_labels.append(word["name"])
 
     #plt.xticks([0, len(ref_list_one_occs)-1, 100, 500], [ref_list_one_labels[0], ref_list_one_labels[len(ref_list_one_occs)-1], ref_list_two_labels[0], ref_list_two_labels[len(ref_list_two_occs)-1]])
-    ax.plot(np.arange(len(ref_list_one_occs)), ref_list_one_occs, "-",)
-    ax.plot(np.arange(len(ref_list_two_occs)), ref_list_two_occs, "--")
+    ax.plot(np.arange(len(ref_list_one_occs)), ref_list_one_occs, "-", color="grey")
+    ax.plot(np.arange(len(ref_list_two_occs)), ref_list_two_occs, "--", color="grey")
     ax.set_yscale("log", basey=10)
+    normal_line = mlines.Line2D(
+        [], [], color="black", label=ref_list_one, linestyle="-")
+    dotted_line = mlines.Line2D(
+        [], [], color="black", label=ref_list_two, linestyle="--")
+    plt.legend(handles=[normal_line, dotted_line], loc="best")
     plt.title("Direct Comparison of %s and %s" % (ref_list_one, ref_list_two))
     plt.xlabel("Top %d Passwords of Each Respective List" %
                (len(ref_list_one_occs)))
     plt.ylabel("HaveIBeenPwned Hits for Passwords")
     plt.show(f)
+
 
 def plot_overlay_wn_misc_list(opts):
     f, ax = plt.subplots(1)
@@ -939,24 +946,25 @@ def plot_overlay_wn_misc_list(opts):
     ref_list = opts["ref_list"]
     # Ignore one-digit passwords
     exclude_terms = {
-            "word_base": {"$nin": [
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "0",
-            ]}
-        }
+        "word_base": {"$nin": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "0",
+        ]}
+    }
 
     # Get the top n wordnet passwords (used as a reference for the word list passwords)
     wn_labels = []
     wn_occurrences = []
-    wn_cur = mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(limit_val+20)
+    wn_cur = mongo.db_wn_lemma_permutations.find(exclude_terms).sort(
+        "total_hits", pymongo.DESCENDING).limit(limit_val+20)
     for password in wn_cur:
         wn_labels.append("%s" % (password["word_base"]))
         wn_occurrences.append(password["total_hits"])
@@ -969,10 +977,15 @@ def plot_overlay_wn_misc_list(opts):
     for word in misc_list_cur:
         ref_list_occs.append(word["occurrences"])
         ref_list_labels.append(word["name"])
-    
-    ax.plot(np.arange(len(wn_occurrences)), wn_occurrences, "-")
-    ax.plot(np.arange(len(ref_list_occs)), ref_list_occs, "--")
+
+    ax.plot(np.arange(len(wn_occurrences)), wn_occurrences, "-", color="grey")
+    ax.plot(np.arange(len(ref_list_occs)), ref_list_occs, "--", color="grey")
     ax.set_yscale("log", basey=10)
+    normal_line = mlines.Line2D(
+        [], [], color="black", label="WordNet", linestyle="-")
+    dotted_line = mlines.Line2D(
+        [], [], color="black", label=ref_list, linestyle="--")
+    plt.legend(handles=[normal_line, dotted_line], loc="best")
     plt.title("Top %d Passwords of the WordNet and %s" % (limit_val, ref_list))
     plt.xlabel("WordNet and %s Passwords" % ref_list)
     plt.ylabel("HaveIBeenPwned Password Occurrences")
