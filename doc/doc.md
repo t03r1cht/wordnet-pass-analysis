@@ -40,6 +40,8 @@ Permutation p2: Leetspeak
 Ergebnis: p1(p2(w)) = p4ssw0rd123456
 ```
 
+
+
 #### Permutatoren
 
 #### Kombinatoren
