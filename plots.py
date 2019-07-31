@@ -717,7 +717,7 @@ def wn_line_plot_categories(opts):
     plt.title("Top %d Reference List Passwords" % limit_val)
     blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
     red_patch = mpatches.Patch(
-        color="gray", label="Ref data set occurrences (incl permutations)")
+        color="gray", label=ref_list)
     plt.legend(handles=[blue_patch, red_patch], loc="best")
     log_ok("Drawing plot...")
     # a = [ pow(10,i) for i in range(10) ]
