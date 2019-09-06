@@ -14,6 +14,7 @@ from nltk.corpus import wordnet as wn
 
 
 def wn_top_passwords_bar(opts):
+    f, ax = plt.subplots(1)
     labels = []
     occurrences = []
     for password in mongo.db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
@@ -23,29 +24,33 @@ def wn_top_passwords_bar(opts):
     index = np.arange(len(labels))
     # index (0..99) are the indices for the labels array
     # occurrences are the height of each tick on the x axis (so the occurrences on the y axis)
-    plt.bar(index, occurrences)
+    ax.bar(index, occurrences)
+    ax.set_yscale("log", basey=10)
     plt.xlabel('Password', fontsize=10)
     plt.ylabel('Occurrences', fontsize=10)
     # mark each tick on the x axis using the index to place each element of the labels list
     # we can "map" the index list to the label list and also represent each label x coordinate with it
-    plt.xticks(index, labels, fontsize=7, rotation=90)
+    plt.xticks(index, labels, fontsize=7, rotation=45)
     plt.title('Top %d WordNet Passwords' % opts["top"])
-    plt.show()
+    plt.show(f)
 
 
 def lists_top_passwords_bar(opts):
+    f, ax = plt.subplots(1)
     labels = []
     occurrences = []
     for password in mongo.db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
+        log_ok("{} {}".format(password["name"], password["occurrences"]))
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
     index = np.arange(len(labels))
-    plt.bar(index, occurrences)
+    ax.bar(index, occurrences)
+    ax.set_yscale("log", basey=10)
     plt.xlabel('Password', fontsize=10)
     plt.ylabel('Occurrences', fontsize=10)
     plt.xticks(index, labels, fontsize=7, rotation=30)
     plt.title('Top %d Word List Passwords' % opts["top"])
-    plt.show()
+    plt.show(f)
 
 
 def wn_top_passwords_line(opts):

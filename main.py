@@ -913,16 +913,23 @@ def plot_data():
         opts["depth"] = args.dag_depth
 
     if args.plot == "wn_passwords_bar":
+        # Bar diagram of the top N passwords of the WordNet
+        # Y axis displayed as logartihmic scale with base 10
         plots.wn_top_passwords_bar(opts)
     elif args.plot == "lists_passwords_bar":
+        # !! Not working as intended
+        # Bar diagram of the top N passwords of all ref lists
         plots.lists_top_passwords_bar(opts)
     elif args.plot == "wn_passwords_line":
+        # !! Not working as intended
+        # Line diagram of the top N passwords of the WordNet
         plots.wn_top_passwords_line(opts)
     elif args.plot == "lists_passwords_line":
+        # !! Not working as intended
         plots.lists_top_passwords_line(opts)
-    elif args.plot == "test_plot":
-        plots.test_plot(opts)
     elif args.plot == "top_1k_wn":
+        # Marked the top 1 and top 1000 password of the WordNet as well as some
+        # words in between
         plots.wn_top_1k(opts)
     elif args.plot == "top_1k_wn_bar":
         plots.wn_top_1k_bar(opts)

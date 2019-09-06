@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from helper import get_curr_time, get_curr_time_str
 
-mongo = MongoClient("mongodb://127.0.0.1:27017")
+mongo = MongoClient("mongodb://192.168.56.101:27017")
 db = mongo["passwords"]
 db_lists = db["lists"]
 db_wn = db["wn_synsets"]
