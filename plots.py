@@ -3,7 +3,7 @@ import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 import numpy as np
 import mongo
-from mongo import db_wn, db_pws_lists
+from mongo import db_wn, db_pws_lists, db_pws_wn
 import pymongo
 from helper import log_err, format_number, log_status, log_ok
 import operator
@@ -487,7 +487,7 @@ def wn_line_plot_noteable_pws(opts):
 
 
 def wn_line_plot_categories(opts):
-    wn_limit = 100
+    wn_limit = 1000
     f, ax = plt.subplots(1)
 
     limit_val = 20

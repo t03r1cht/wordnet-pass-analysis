@@ -912,43 +912,80 @@ def plot_data():
     else:
         opts["depth"] = args.dag_depth
 
+    # Bar diagram of the top N passwords of the WordNet
+    # Y axis displayed as logartihmic scale with base 10
     if args.plot == "wn_passwords_bar":
-        # Bar diagram of the top N passwords of the WordNet
-        # Y axis displayed as logartihmic scale with base 10
         plots.wn_top_passwords_bar(opts)
+    
+    
+    # !! Not working as intended
+    # Bar diagram of the top N passwords of all ref lists
     elif args.plot == "lists_passwords_bar":
-        # !! Not working as intended
-        # Bar diagram of the top N passwords of all ref lists
         plots.lists_top_passwords_bar(opts)
+    
+    
+    # !! Not working as intended
+    # Line diagram of the top N passwords of the WordNet
     elif args.plot == "wn_passwords_line":
-        # !! Not working as intended
-        # Line diagram of the top N passwords of the WordNet
         plots.wn_top_passwords_line(opts)
+    
+    
+    # !! Not working as intended
     elif args.plot == "lists_passwords_line":
-        # !! Not working as intended
         plots.lists_top_passwords_line(opts)
+    
+    
+    # Marked the top 1 and top 1000 password of the WordNet as well as some
+    # words in between
     elif args.plot == "top_1k_wn":
-        # Marked the top 1 and top 1000 password of the WordNet as well as some
-        # words in between
         plots.wn_top_1k(opts)
+    
+    
+    # Not working 
     elif args.plot == "top_1k_wn_bar":
         plots.wn_top_1k_bar(opts)
-    elif args.plot == "top_1k_wn_bar_test":
-        plots.wn_top_1k_bar_test(opts)
+        
+    # Line graph of the top N WordNet passwords with the first and last marked
     elif args.plot == "wn_line_noteable_pws":
         plots.wn_line_plot_noteable_pws(opts)
+    
+    
+    # Mix of a bar and line graph.
+    # The line graph displays the top 1000 WordNet passwords.
+    # The bar graph displays the top N (--top) lemmas of the specified reference word list (-l)
+    # "all" value for the -l parameter will determine the top passwords for all lists, not just one specific list
     elif args.plot == "wn_line_list_categories":
         plots.wn_line_plot_categories(opts)
+    
+    
+    # Display the top N levels (starting at 0) of the WordNet as a pie chart
     elif args.plot == "wn_display":
         plots.wn_display(opts)
+    
+    
+    # Display the distribution of all permutations of the WordNet as a pie chart
     elif args.plot == "perm_dist":
         plots.lists_plot_permutations(opts)
+    
+    
+    # Display the top N (--top) passwords of a misc list as a line graph
+    # The list must have been indexed/looked up in the password liste beforehand (--misc_list <name>). 
+    # The lookup will not create perform any permutations. It is implied, that each respective list already contains the necessary permutations
     elif args.plot == "misc_lists_line":
         plots.plot_misc_lists(opts)
+    
+    
+    # Overlay two misc lists as a line graph (dotted and bold).
+    # The two lists to be overlayed must be looked up beforehand and will be specified with the -l param:
+    # -l <list1>,<list2>
     elif args.plot == "misc_lists_overlay":
         plots.plot_overlay_two_misc_lists(opts)
+    
+    # Same as above but overlay one misc list with the top N (--top) passwords of the WordNet
     elif args.plot == "wn_misc_lists_overlay":
         plots.plot_overlay_wn_misc_list(opts)
+    
+    
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
