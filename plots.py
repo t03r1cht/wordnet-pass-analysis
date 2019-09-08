@@ -717,7 +717,7 @@ def wn_line_plot_categories(opts):
     ax.set_yscale("log", basey=10)
     # plt.ticklabel_format(style='plain', axis='y')
     plt.xlabel(
-        "WordNet Top 1 and 1000 Passwords (including permutations)")
+        "WordNet Top 1000 Password Generating Synsets")
     plt.ylabel("Occurrences")
     plt.title("Top %d Reference List Passwords" % limit_val)
     blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
@@ -1044,8 +1044,6 @@ def wn_ref_list_comparison(opts):
     # Cut the sorted result list based on the --top flag. --top defaults to 10
     sorted_o = sorted(pw_list, key=lambda k: k["occurrences"], reverse=True)[
         :limit_val]
-    # log_ok([format_number(x["occurrences"]) for x in sorted_o][:limit_val])
-    # return
 
     labels = []
     occurrences = []
@@ -1085,64 +1083,16 @@ def wn_ref_list_comparison(opts):
     cleaned_list_occs = []
     for i in range(len(labels)):
         curr = labels[i]
-        if curr in labels[i+1:]: # Remove following duplicates
+        if curr in labels[i+1:]:  # Remove following duplicates
             log_err("Removed {}, reason: duplicate entry".format(curr))
-        elif len(curr) < 3: # Remove passwords with less than 3 characters
+        elif len(curr) < 3:  # Remove passwords with less than 3 characters
             log_err("Removed {}, reason: too short".format(curr))
         else:
             cleaned_list_labels.append(curr)
             cleaned_list_occs.append(occurrences[i])
-    log_ok(old_len)
-    log_ok(len(cleaned_list_labels))
-    log_ok(len(cleaned_list_occs))
-    for i in range(len(cleaned_list_labels)):
-        log_ok("{}: {}".format(cleaned_list_labels[i], cleaned_list_occs[i]))
-    return
 
-    # Get all passwords from the word lists as array so we can check if the top 1 or top 1000 password from the wordnet is contained in int
-    # if it is contained, increment the top 1 and top 1000 index by one to create some kind of sliding window
-    # the goal is to have a top 1 and 1000 password that is not contained by the word list passwords so they don't overlap on the boundaries
-    wl_lemmas = [x["name"] for x in pw_list]
-
-    i = 0
-    while True:
-        # Exit if bounds could not be found after 10 tries
-        if i >= 10:
-            log_err(
-                "Too many duplicates in word list lemmas and WordNet. Could not determine left bound and right bound.")
-            return
-        # fitting boundaries are no numbers and contain more than 3 characters
-        if labels[i] in wl_lemmas or labels[i].isdigit() or len(labels[i]) <= 3:
-            log_err("Invalid left bound: %s (index: %d)" % (labels[i], i))
-            pass
-        elif labels[wn_limit-1+i] in wl_lemmas or labels[wn_limit-1+i].isdigit() or len(labels[wn_limit-1+i]) <= 3:
-            log_err("Invalid right bound: %s (index: %d)" %
-                    (labels[wn_limit-1+i], wn_limit-1+i))
-            pass
-
-        else:
-            break
-        i += 1
-
-    # left boundary equal to labels[0] (or labels[0] + i in case sliding window) so the top 1 password
-    l_bound = labels[i]
-
-    # right boundary equal to labels[999] (or labels[999] + i in case sliding window) so the top 1000 password
-    r_bound = labels[wn_limit-1+i]
-
-    wn_pos_1_label = l_bound
-    wn_pos_1_occs = occurrences[i]
-
-    wn_pos_1000_label = r_bound
-    wn_pos_1000_occs = occurrences[wn_limit-1+i]
-
-    # We now need to trim the list to have the new left and right bound to be index 0 and 999 (for both the labels and the occurrences)
-    cut_wn_labels = labels[i:wn_limit-1+i+1]
-    cut_wn_occs = occurrences[i:wn_limit-1+i+1]
-
-    log_ok(cut_wn_labels)
-    log_ok(cut_wn_occs[:5])
-    return
+    cut_wn_labels = cleaned_list_labels[:1000]
+    cut_wn_occs = cleaned_list_occs[:1000]
 
     # Create a list that has the wn values but they are just for orientation/comparison of occurrences. The values of the "original" list are not going to used
     # for bar plotting. Instead, they will be saved under a key, that is ignored when drawing the bar plot.
@@ -1266,7 +1216,7 @@ def wn_ref_list_comparison(opts):
     ax.set_yscale("log", basey=10)
     # plt.ticklabel_format(style='plain', axis='y')
     plt.xlabel(
-        "WordNet Top 1 and 1000 Passwords (including permutations)")
+        "WordNet Top 1000 Generated Passwords")
     plt.ylabel("Occurrences")
     plt.title("Top %d Reference List Passwords" % limit_val)
     blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
@@ -1274,7 +1224,5 @@ def wn_ref_list_comparison(opts):
         color="gray", label=ref_list)
     plt.legend(handles=[blue_patch, red_patch], loc="best")
     log_ok("Drawing plot...")
-    # a = [ pow(10,i) for i in range(10) ]
-    # x = ax.semilogy(a)
     plt.show(f)
     return
