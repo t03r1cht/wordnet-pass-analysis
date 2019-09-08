@@ -985,7 +985,45 @@ def plot_data():
     elif args.plot == "wn_misc_lists_overlay":
         plots.plot_overlay_wn_misc_list(opts)
     
+
+    # Draw the the top 1000 passwords of the WordNet as a line graph. The top 1k will
+    # be determined based on the occurrences of the lemmas including all their permutations
+    # Then draw a bar graph showing where in the line graph the reference list top N passwords are
+    # located
+    elif args.plot == "wn_list_comp_perm":
+        plots.wn_line_plot_categories(opts)
+
+
+    # Draw the the top 1000 passwords of the WordNet as a line graph. The top 1k will
+    # be determined by the single password mutations of the WordNet
+    # Then draw a bar graph showing where in the line graph the reference list top N passwords are
+    # located
+    elif args.plot == "wn_list_comp_no_perm":
+        plots.wn_ref_list_comparison(opts)
+
+
+    # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations
+    elif args.plot == "wn_display_occurrences":
+        pass
+
+
+    # Sorted bar graph of each synset starting at a specific level.
+    # The bars are sorted based on their sum of occurrences. The sum is calculated by determining
+    # the top 100 passwords of each synset and adding them together.
+    elif args.plot == "wn_bar":
+        pass
+
     
+    # WordNet pie chart hierarchy with some example synsets on the deeper levels
+    elif args.plot == "pie_examples":
+        pass
+
+    
+
+    
+    elif args.plot == "":
+        pass
+
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 

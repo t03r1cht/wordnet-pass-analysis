@@ -920,8 +920,10 @@ def plot_overlay_two_misc_lists(opts):
         ref_list_two_labels.append(word["name"])
 
     #plt.xticks([0, len(ref_list_one_occs)-1, 100, 500], [ref_list_one_labels[0], ref_list_one_labels[len(ref_list_one_occs)-1], ref_list_two_labels[0], ref_list_two_labels[len(ref_list_two_occs)-1]])
-    ax.plot(np.arange(len(ref_list_one_occs)), ref_list_one_occs, "-", color="grey")
-    ax.plot(np.arange(len(ref_list_two_occs)), ref_list_two_occs, "--", color="grey")
+    ax.plot(np.arange(len(ref_list_one_occs)),
+            ref_list_one_occs, "-", color="grey")
+    ax.plot(np.arange(len(ref_list_two_occs)),
+            ref_list_two_occs, "--", color="grey")
     ax.set_yscale("log", basey=10)
     normal_line = mlines.Line2D(
         [], [], color="black", label=ref_list_one, linestyle="-")
@@ -995,3 +997,284 @@ def plot_overlay_wn_misc_list(opts):
     plt.xlabel("WordNet and %s Passwords" % ref_list)
     plt.ylabel("HaveIBeenPwned Password Occurrences")
     plt.show(f)
+
+
+def wn_ref_list_comparison(opts):
+    # Read the top wn_limit passwords generated from the WordNet
+    wn_limit = 1000
+    f, ax = plt.subplots(1)
+
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 100:
+            log_err("--top value too high. Select Value between 5 and 100")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+
+    ref_list = None
+    if opts["ref_list"] == None:
+        log_err(
+            "No ref list specified. Use the -l flag to specify a list to use for passwords")
+        return
+    # ref_list == "alL" looks at all lists and not a specific one
+    ref_list = opts["ref_list"]
+
+    # Get top n from some list
+    if ref_list == "all":
+        # we exclude the keyboard patterns txt file since it has a lot of duplicates with 99_unsortiert
+        all_word_lists_list = mongo.db_lists.find(
+            {"filename": {"$nin": ["03_keyboard_patterns.txt"]}})
+        lemma_list = []
+        for item in list(all_word_lists_list):
+            lemma_list.extend(item["lemmas"])
+
+        pw_list = []
+        for item in lemma_list:
+            o = {"name": item["name"], "occurrences": item["occurrences"]}
+            pw_list.append(o)
+    else:
+        word_lists = mongo.db_lists.find_one({"filename": ref_list})
+        pw_list = word_lists["lemmas"]
+
+    # We now need to sort the dictionary by "occurrences" in descending order
+    # Contains all word bases ("lemmas") for a given list plus its occurrences
+    # Cut the sorted result list based on the --top flag. --top defaults to 10
+    sorted_o = sorted(pw_list, key=lambda k: k["occurrences"], reverse=True)[
+        :limit_val]
+    # log_ok([format_number(x["occurrences"]) for x in sorted_o][:limit_val])
+    # return
+
+    labels = []
+    occurrences = []
+
+    # Get the top 1000 wordnet passwords (used as a reference for the word list passwords)
+    # Problem: If we want to search over all WordNet passwords (ca. 26 million) we run out of RAM. So in order to just search the passwords we need to set a threshhold
+    # for minimum occurrences of a password. Our goal is to find a threshhold that yields approximately 1000 passwords after having been cleaned (since we want to show the first 1k passwords for this graph).
+    # By trial-and-error, this number was found with a threshhold of approximately 25000+ occurrences.
+    # db.getCollection('passwords_wn').find({"occurrences": {"$gt": 25000}, "word_base": {"$nin": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0",]}}).sort({"occurrences": -1}).count() => 1296
+
+    # find() criteria
+    search_filter = {
+        "occurrences": {"$gt":
+                        25000
+                        },
+        "word_base": {"$nin": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "0",
+        ]}
+    }
+
+    for password in mongo.db_pws_wn.find(search_filter).sort("occurrences", pymongo.DESCENDING):
+        labels.append("%s" % (password["name"]))
+        occurrences.append(password["occurrences"])
+
+    # First we need to clean the labels, i.e. delete all passwords that are not at least 3 characters
+    old_len = len(labels)
+    cleaned_list_labels = []
+    cleaned_list_occs = []
+    for i in range(len(labels)):
+        curr = labels[i]
+        if curr in labels[i+1:]: # Remove following duplicates
+            log_err("Removed {}, reason: duplicate entry".format(curr))
+        elif len(curr) < 3: # Remove passwords with less than 3 characters
+            log_err("Removed {}, reason: too short".format(curr))
+        else:
+            cleaned_list_labels.append(curr)
+            cleaned_list_occs.append(occurrences[i])
+    log_ok(old_len)
+    log_ok(len(cleaned_list_labels))
+    log_ok(len(cleaned_list_occs))
+    for i in range(len(cleaned_list_labels)):
+        log_ok("{}: {}".format(cleaned_list_labels[i], cleaned_list_occs[i]))
+    return
+
+    # Get all passwords from the word lists as array so we can check if the top 1 or top 1000 password from the wordnet is contained in int
+    # if it is contained, increment the top 1 and top 1000 index by one to create some kind of sliding window
+    # the goal is to have a top 1 and 1000 password that is not contained by the word list passwords so they don't overlap on the boundaries
+    wl_lemmas = [x["name"] for x in pw_list]
+
+    i = 0
+    while True:
+        # Exit if bounds could not be found after 10 tries
+        if i >= 10:
+            log_err(
+                "Too many duplicates in word list lemmas and WordNet. Could not determine left bound and right bound.")
+            return
+        # fitting boundaries are no numbers and contain more than 3 characters
+        if labels[i] in wl_lemmas or labels[i].isdigit() or len(labels[i]) <= 3:
+            log_err("Invalid left bound: %s (index: %d)" % (labels[i], i))
+            pass
+        elif labels[wn_limit-1+i] in wl_lemmas or labels[wn_limit-1+i].isdigit() or len(labels[wn_limit-1+i]) <= 3:
+            log_err("Invalid right bound: %s (index: %d)" %
+                    (labels[wn_limit-1+i], wn_limit-1+i))
+            pass
+
+        else:
+            break
+        i += 1
+
+    # left boundary equal to labels[0] (or labels[0] + i in case sliding window) so the top 1 password
+    l_bound = labels[i]
+
+    # right boundary equal to labels[999] (or labels[999] + i in case sliding window) so the top 1000 password
+    r_bound = labels[wn_limit-1+i]
+
+    wn_pos_1_label = l_bound
+    wn_pos_1_occs = occurrences[i]
+
+    wn_pos_1000_label = r_bound
+    wn_pos_1000_occs = occurrences[wn_limit-1+i]
+
+    # We now need to trim the list to have the new left and right bound to be index 0 and 999 (for both the labels and the occurrences)
+    cut_wn_labels = labels[i:wn_limit-1+i+1]
+    cut_wn_occs = occurrences[i:wn_limit-1+i+1]
+
+    log_ok(cut_wn_labels)
+    log_ok(cut_wn_occs[:5])
+    return
+
+    # Create a list that has the wn values but they are just for orientation/comparison of occurrences. The values of the "original" list are not going to used
+    # for bar plotting. Instead, they will be saved under a key, that is ignored when drawing the bar plot.
+    new_occs_inserted = [{"orig": x, "list": -1} for x in cut_wn_occs]
+    new_labels_inserted = [{"orig": x, "list": None} for x in cut_wn_labels]
+
+    # Insert the sorted word list items at the right x coords
+    idx_behind_last_wn = len(cut_wn_labels)
+    xcoords_bar = []
+
+    for item in sorted_o:
+        occs = item["occurrences"]
+        # Determine first if this elements occs are lower than the last wn element. If thats the case, append it behind the last wn element
+        if occs < cut_wn_occs[-1]:
+            # If the current item occurrences was lower than the last wordnet element, append it with the index last_wn + 1 and increment this counter
+            # xcoords_bar.append(idx_behind_last_wn)
+            new_occs_inserted.append({"orig": -1, "list": occs})
+            new_labels_inserted.append({"orig": "", "list": item["name"]})
+            idx_behind_last_wn += 1
+        else:
+            # At this point we know the current elements occs are not lower than the last wn element
+            # Now we just need to find out where (within the first and last wn element frame) it will be drawn
+            for idx, wn_occs in enumerate(cut_wn_occs):
+                # Run until occs is NOT lower than wn_occs
+                if occs < wn_occs:
+                    pass
+                elif occs >= wn_occs:
+
+                    # cut_wn_occs is stored from most to least occurrences, so if val a is bigger than the current value from cut_wn_occs it must automatically
+                    # be bigger than the rest of the list (since it is ordererd in a decending order)
+                    # Before we insert, there may already be an element that was previously compared against the same element, so we need to determine if we insert before or
+                    # after this index
+                    if new_occs_inserted[idx]["list"] < occs:
+                        # The current occs value is bigger than what is already in there
+                        new_occs_inserted.insert(
+                            idx, {"orig": -1, "list": occs})
+                        new_labels_inserted.insert(
+                            idx, {"orig": "", "list": item["name"]})
+                    else:
+                        # If the value is bigger, we insert occs after this index
+                        new_occs_inserted.insert(
+                            idx+1, {"orig": -1, "list": occs})
+                        new_labels_inserted.insert(
+                            idx+1, {"orig": "", "list": item["name"]})
+
+                    break
+                else:
+                    pass
+
+    # Transform the dict to a flat list. List dict items with orig = -1 are going to be 0 in the flattened list, else the "list" value
+    flat_occs_inserted = []
+    for x in new_occs_inserted:
+        if x["list"] == -1:
+            flat_occs_inserted.append(0)
+        else:
+            flat_occs_inserted.append(x["list"])
+    # ... also transform the label list so we have a consistent mapping again (mind the zeros)
+    flat_labels_inserted = []
+    for x in new_labels_inserted:
+        if x["list"] == None:
+            flat_labels_inserted.append("")
+        else:
+            flat_labels_inserted.append(x["list"])
+
+    # Check lengths (the next step will raise an exception if the lengths of both flat lists are not equal since we want to merge them into a dict)
+    if len(flat_labels_inserted) != len(flat_occs_inserted):
+        log_err("Something went wrong while flattening the lists (lengths are not equal). flat_occs_inserted: %d, flat_labels_inserted: %d" % (
+            len(flat_occs_inserted), len(flat_labels_inserted)))
+        return
+
+    # store labels with occs as keys
+    labels_for_occs = {}
+    for idx, val in enumerate(flat_occs_inserted):
+        labels_for_occs[idx] = flat_labels_inserted[idx]
+
+    # save 0 states in flat lists
+    zero_pos = []
+    flat_occs_inserted_no_zeros = []
+    for idx, val in enumerate(flat_occs_inserted):
+        if val == 0:
+            zero_pos.append(idx)
+        else:
+            flat_occs_inserted_no_zeros.append(val)
+
+    # sort lists
+    sorted_no_zeros = sorted(flat_occs_inserted_no_zeros, reverse=True)
+    log_status("Unsorted xcoords list: \n{}".format(flat_occs_inserted))
+
+    # restore 0 states, i.e. insert zeros at the indices saved in the zero_pos list
+    sorted_with_zeros = sorted_no_zeros[:]
+    for idx in zero_pos:
+        sorted_with_zeros.insert(idx, 0)
+
+    log_status("Sorted xcoords list: \n{}".format(sorted_with_zeros))
+
+    # Draw the bar plot
+    rect1 = ax.bar(np.arange(len(sorted_with_zeros)),
+                   sorted_with_zeros, alpha=0.7, color="gray", width=0.3)
+
+    i = 0
+    for rect in rect1:
+        height = rect.get_height()
+        ax.annotate('{}'.format(flat_labels_inserted[i]),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    rotation=90,
+                    fontsize="x-small",
+                    ha="center", va='bottom')
+        i += 1
+
+    # Create the xticks for the wn 1 and 1000 labels
+    plt.xticks([0, wn_limit-1], [cut_wn_labels[0],
+                                 cut_wn_labels[wn_limit-1]])
+    # Draw the line plot
+    ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-", color="black")
+
+    ax.set_ylim(bottom=0)
+    ax.set_xlim(left=0)
+    ax.set_ylim([0, sorted_no_zeros[0] + sorted_no_zeros[0] / 4])
+    ax.set_yscale("log", basey=10)
+    # plt.ticklabel_format(style='plain', axis='y')
+    plt.xlabel(
+        "WordNet Top 1 and 1000 Passwords (including permutations)")
+    plt.ylabel("Occurrences")
+    plt.title("Top %d Reference List Passwords" % limit_val)
+    blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
+    red_patch = mpatches.Patch(
+        color="gray", label=ref_list)
+    plt.legend(handles=[blue_patch, red_patch], loc="best")
+    log_ok("Drawing plot...")
+    # a = [ pow(10,i) for i in range(10) ]
+    # x = ax.semilogy(a)
+    plt.show(f)
+    return
