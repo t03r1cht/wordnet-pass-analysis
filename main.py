@@ -1004,7 +1004,7 @@ def plot_data():
 
     # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations
     elif args.plot == "wn_display_occurrences":
-        pass
+        plots.wn_display_occurrences(opts)
 
 
     # Sorted bar graph of each synset starting at a specific level.

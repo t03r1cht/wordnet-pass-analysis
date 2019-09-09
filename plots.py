@@ -1226,3 +1226,99 @@ def wn_ref_list_comparison(opts):
     log_ok("Drawing plot...")
     plt.show(f)
     return
+
+    pass
+
+
+def wn_display_occurrences(opts):
+    limit_ss = 5
+    limit_synsets_flag = 20
+    limit_depth_flag = 20
+
+    # control how deep you want to go in the wordnet hierarchy
+    if opts["depth"]:
+        if opts["depth"] > 18:
+            log_err("-d value too high. Select Value between 1 and 18")
+            return
+        limit_depth_flag = opts["depth"]
+    else:
+        limit_depth_flag = 3
+
+    if opts["top"]:
+        limit_synsets_flag = opts["top"]
+    else:
+        limit_synsets_flag = 0  # 0 = no limit
+
+    fix, ax = plt.subplots()
+
+    # Get synsets from the database on the user-specified level
+    # current max level is 18
+    ss_for_level = db_wn.find(
+        {"level": limit_depth_flag}).limit(limit_synsets_flag)
+
+    # data_map contains the hierarchies, e.g. a/b/c: 1
+    data_map = {}
+
+    # fill the data map
+
+    for ss_obj in ss_for_level:
+        # Retrieve synset
+        ss = wn.synset(ss_obj["id"])
+        # Get the full hypernym paths from the current synset up to the root synset (entity)
+        path_list = [x.lemma_names()[0] for x in ss.hypernym_paths()[0]]
+
+        # create each path based on the full hypernym path from above
+        # Create an individual path for each path combination [a,b,c] => a, a/b, a/b/c
+        for x in range(len(path_list)):
+            sub_path_list = path_list[:x+1]
+            sub_path = "/".join(sub_path_list)
+            if sub_path not in data_map:
+                data_map[sub_path] = 1
+
+        # Full path for the synset so for [a,b,c] the path will be a/b/c
+        ss_root_path = "/".join(path_list)
+        data_map[ss_root_path] = 1
+
+    # Now that the data map was built, we can start to query the database for the synsets occurrences
+    for k, v in data_map.items():
+        total_path_last_elem = k.split("/")[-1]
+        res = mongo.db_wn_lemma_permutations.find_one({"word_base": total_path_last_elem})
+        data_map[k] = res["total_hits"]
+
+    # wenn wir nur aus der datenbank diejenigen synsets des angegebenen levels holen, werden diejenigen nicht berücksichtigt, die auf levels weiter oben bereits
+    # beendet werden (die hyponyme von thing.n.08 enden bereits auf level 2).
+    # aus diesem grund muss vom angegebenen level zurück bis level 1 (exklusive 0) zurückgelaufen werden und dort auch alles gesucht werden. wenn diese bereits durch hierarchisch
+    # untergeordnete pfade gezeichnet wurden, werden diese einfach übersprungen
+    # create the paths for the paths between levels 1 and n-1
+    for x in range(1, limit_depth_flag):
+        ss_for_level = db_wn.find({"level": x}).limit(limit_synsets_flag)
+        for ss_obj in ss_for_level:
+            ss = wn.synset(ss_obj["id"])
+            path_list = [x.lemma_names()[0] for x in ss.hypernym_paths()[0]]
+
+            for x in range(len(path_list)):
+                sub_path_list = path_list[:x+1]
+                sub_path = "/".join(sub_path_list)
+                if sub_path not in data_map:
+                    data_map[sub_path] = 1
+
+            ss_root_path = "/".join(path_list)
+            data_map[ss_root_path] = 1
+
+    data = stringvalues_to_pv(data_map)
+
+    # do the magic
+    hp = HPie(data, ax, plot_center=True,
+              cmap=plt.get_cmap("hsv"),
+              plot_minimal_angle=0,
+              label_minimal_angle=1.5
+              )
+
+    hp.format_value_text = lambda value: None
+
+    # set plot attributes
+    hp.plot(setup_axes=True)
+    ax.set_title('Hierarchical WordNet Structure')
+
+    # save/show plot
+    plt.show()
