@@ -1234,6 +1234,8 @@ def wn_display_occurrences(opts):
     limit_ss = 5
     limit_synsets_flag = 20
     limit_depth_flag = 20
+    start_level = 0
+    max_wn_depth = 17
 
     # control how deep you want to go in the wordnet hierarchy
     if opts["depth"]:
@@ -1249,12 +1251,29 @@ def wn_display_occurrences(opts):
     else:
         limit_synsets_flag = 0  # 0 = no limit
 
+    if opts["start_level"]:
+        start_level = opts["start_level"]
+    else:
+        log_ok(
+            "Info: No start level (--start_level) specified. Drawing WordNet from root level (0).")
+        start_level = 0  # 0 = no limit
+
     fix, ax = plt.subplots()
+
+    # Based on the start level and the max depth compute the lowest level
+    # For example, start depth is 2, max depth is 3 => 2 + 3  = 5 (get all synsets from level 5, determine their root paths to level 0 and trim the start depth [2])
+    # 2 (start) + 3 (max) = 5 => a/b/c/d/e/f, trim start => c/d/e/f is the new "root path"
+    abs_path_length = limit_depth_flag + start_level
+    if abs_path_length > max_wn_depth: # Bounds check
+        log_err("Specified hierarchy window (start:{}, length: {}, end: {}) oversteps the maximum WordNet depth of {}".format(start_level, limit_depth_flag, abs_path_length, max_wn_depth))
+        return
+    
+    
 
     # Get synsets from the database on the user-specified level
     # current max level is 18
     ss_for_level = db_wn.find(
-        {"level": limit_depth_flag}).limit(limit_synsets_flag)
+        {"level": abs_path_length}).limit(limit_synsets_flag)
 
     # data_map contains the hierarchies, e.g. a/b/c: 1
     data_map = {}
@@ -1271,19 +1290,26 @@ def wn_display_occurrences(opts):
         # Create an individual path for each path combination [a,b,c] => a, a/b, a/b/c
         for x in range(len(path_list)):
             sub_path_list = path_list[:x+1]
-            sub_path = "/".join(sub_path_list)
-            if sub_path not in data_map:
-                data_map[sub_path] = 1
+            if not len(sub_path_list) > start_level:
+                continue
+            trimmed_sub_path = "/".join(sub_path_list[start_level:])
+            if trimmed_sub_path not in data_map:
+                data_map[trimmed_sub_path] = 1
 
         # Full path for the synset so for [a,b,c] the path will be a/b/c
-        ss_root_path = "/".join(path_list)
-        data_map[ss_root_path] = 1
+        if len(path_list) > start_level:
+            ss_root_path = "/".join(path_list[start_level:])
+            data_map[ss_root_path] = 1
 
     # Now that the data map was built, we can start to query the database for the synsets occurrences
     for k, v in data_map.items():
         total_path_last_elem = k.split("/")[-1]
-        res = mongo.db_wn_lemma_permutations.find_one({"word_base": total_path_last_elem})
+        res = mongo.db_wn_lemma_permutations.find_one(
+            {"word_base": total_path_last_elem})
         data_map[k] = res["total_hits"]
+
+    for k, v in data_map.items():
+        log_ok("{} {}".format(k, v))
 
     # wenn wir nur aus der datenbank diejenigen synsets des angegebenen levels holen, werden diejenigen nicht berücksichtigt, die auf levels weiter oben bereits
     # beendet werden (die hyponyme von thing.n.08 enden bereits auf level 2).
@@ -1322,3 +1348,10 @@ def wn_display_occurrences(opts):
 
     # save/show plot
     plt.show()
+
+def top_100_classes_by_top_100_pass(opts):
+    # Aggregation goal: Group by synsets, then add the the top 100 passwords for each synset. Filter by the top 100 synsets
+    # db.getCollection('passwords_lists').aggregate([{$group: {_id: "$permutator", sum: {$sum: "$occurrences"}}}])
+    # db.getCollection("passwords_wn").aggregate([{$group: {_id: "$synset"}}])
+    # group, sort, limit, sum
+    # db.getCollection('passwords_wn').aggregate([{$group: {_id: "$synset", "occs": {$push: "$occurrences"}}}, {$sort: {"occs": -1}}], {allowDiskUse:true})
