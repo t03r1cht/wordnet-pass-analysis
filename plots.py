@@ -1357,3 +1357,4 @@ def top_100_classes_by_top_100_pass(opts):
     # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}}], {allowDiskUse:true})
     # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}}, {$count: "totalCount"}], {allowDiskUse:true})
     # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}, $slice: ["$occs", 0, 99]}], {allowDiskUse:true})
+    pass

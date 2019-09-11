@@ -995,6 +995,10 @@ def plot_data():
     elif args.plot == "wn_list_comp_no_perm":
         plots.wn_ref_list_comparison(opts)
 
+    # Do the same as above instead of no WN perms display no ref list perms
+    elif args.plot == "wn_list_comp_no_ref_perm":
+        pass
+
     # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations
     # TODO Ability to specify a start level
     elif args.plot == "wn_display_occurrences":
