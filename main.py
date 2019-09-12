@@ -918,37 +918,45 @@ def plot_data():
     else:
         opts["start_level"] = args.start_level
 
+
     # Bar diagram of the top N passwords of the WordNet
     # Y axis displayed as logartihmic scale with base 10
     if args.plot == "wn_passwords_bar":
         plots.wn_top_passwords_bar(opts)
+
 
     # !! Not working as intended
     # Bar diagram of the top N passwords of all ref lists
     elif args.plot == "lists_passwords_bar":
         plots.lists_top_passwords_bar(opts)
 
+
     # !! Not working as intended
     # Line diagram of the top N passwords of the WordNet
     elif args.plot == "wn_passwords_line":
         plots.wn_top_passwords_line(opts)
 
+
     # !! Not working as intended
     elif args.plot == "lists_passwords_line":
         plots.lists_top_passwords_line(opts)
+
 
     # Marked the top 1 and top 1000 password of the WordNet as well as some
     # words in between
     elif args.plot == "top_1k_wn":
         plots.wn_top_1k(opts)
 
+
     # Not working
     elif args.plot == "top_1k_wn_bar":
         plots.wn_top_1k_bar(opts)
 
+
     # Line graph of the top N WordNet passwords with the first and last marked
     elif args.plot == "wn_line_noteable_pws":
         plots.wn_line_plot_noteable_pws(opts)
+
 
     # Mix of a bar and line graph.
     # The line graph displays the top 1000 WordNet passwords.
@@ -961,9 +969,11 @@ def plot_data():
     elif args.plot == "wn_display":
         plots.wn_display(opts)
 
+
     # Display the distribution of all permutations of the WordNet as a pie chart
     elif args.plot == "perm_dist":
         plots.lists_plot_permutations(opts)
+
 
     # Display the top N (--top) passwords of a misc list as a line graph
     # The list must have been indexed/looked up in the password liste beforehand (--misc_list <name>).
@@ -971,15 +981,18 @@ def plot_data():
     elif args.plot == "misc_lists_line":
         plots.plot_misc_lists(opts)
 
+
     # Overlay two misc lists as a line graph (dotted and bold).
     # The two lists to be overlayed must be looked up beforehand and will be specified with the -l param:
     # -l <list1>,<list2>
     elif args.plot == "misc_lists_overlay":
         plots.plot_overlay_two_misc_lists(opts)
 
+
     # Same as above but overlay one misc list with the top N (--top) passwords of the WordNet
     elif args.plot == "wn_misc_lists_overlay":
         plots.plot_overlay_wn_misc_list(opts)
+
 
     # Draw the the top 1000 passwords of the WordNet as a line graph. The top 1k will
     # be determined based on the occurrences of the lemmas including all their permutations
@@ -988,6 +1001,7 @@ def plot_data():
     elif args.plot == "wn_list_comp_perm":
         plots.wn_line_plot_categories(opts)
 
+
     # Draw the the top 1000 passwords of the WordNet as a line graph. The top 1k will
     # be determined by the single password mutations of the WordNet
     # Then draw a bar graph showing where in the line graph the reference list top N passwords are
@@ -995,14 +1009,17 @@ def plot_data():
     elif args.plot == "wn_list_comp_no_perm":
         plots.wn_ref_list_comparison(opts)
 
+
     # Do the same as above instead of no WN perms display no ref list perms
     elif args.plot == "wn_list_comp_no_ref_perm":
         pass
+
 
     # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations
     # TODO Ability to specify a start level
     elif args.plot == "wn_display_occurrences":
         plots.wn_display_occurrences(opts)
+
 
     # Sorted bar graph of each synset starting at a specific level.
     # The bars are sorted based on their sum of occurrences. The sum is calculated by determining
@@ -1010,12 +1027,21 @@ def plot_data():
     elif args.plot == "wn_bar":
         pass
 
+
     # WordNet pie chart hierarchy with some example synsets on the deeper levels
     elif args.plot == "pie_examples":
         pass
+    
 
-    elif args.plot == "":
-        pass
+    # Plot the top 10 synsets based on their total hits.
+    elif args.plot == "wn_bar_top_n":
+        plots.wn_bar_top_n(opts)
+
+
+    # Plot the top 10 synsets based on their total hits.
+    elif args.plot == "ref_list_bar_top_n":
+        plots.ref_list_bar_top_n(opts)
+    
 
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)

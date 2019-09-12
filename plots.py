@@ -9,6 +9,7 @@ from helper import log_err, format_number, log_status, log_ok
 import operator
 from hpie import HPie, stringvalues_to_pv
 from nltk.corpus import wordnet as wn
+import mongo_filter
 
 # https://github.com/klieret/pyplot-hierarchical-pie
 
@@ -1349,6 +1350,7 @@ def wn_display_occurrences(opts):
     # save/show plot
     plt.show()
 
+# TODO
 def top_100_classes_by_top_100_pass(opts):
     # Aggregation goal: Group by synsets, then add the the top 100 passwords for each synset. Filter by the top 100 synsets
     # db.getCollection('passwords_lists').aggregate([{$group: {_id: "$permutator", sum: {$sum: "$occurrences"}}}])
@@ -1358,3 +1360,68 @@ def top_100_classes_by_top_100_pass(opts):
     # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}}, {$count: "totalCount"}], {allowDiskUse:true})
     # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}, $slice: ["$occs", 0, 99]}], {allowDiskUse:true})
     pass
+
+def wn_bar_top_n(opts):
+    top_flag = 10
+
+    # control how deep you want to go in the wordnet hierarchy
+    if opts["top"]:
+        if opts["top"] > 40:
+            log_err("-d value too high. Select Value between 1 and 40")
+            return
+        top_flag = opts["top"]
+    else:
+        top_flag = 10
+
+
+    # Get the top N synsets after filtering
+    # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
+    #   1. Be alphanumeric
+    exclude_terms = {"word_base": {"$nin": mongo_filter.digit_singlechar()}}
+    top_n_labels = []
+    top_n_hits = []
+    for item in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(top_flag):
+        top_n_labels.append("{}\n({})".format(item["synset"], item["word_base"]))
+        top_n_hits.append(item["total_hits"])
+
+    f, ax = plt.subplots(1)
+    xcoords = np.arange(len(top_n_labels))
+    ax.bar(xcoords, top_n_hits, color="black")
+    plt.xticks(xcoords, top_n_labels, rotation=45)
+    plt.ylabel("Total Hits")
+    plt.xlabel("Synset")
+    plt.title("WordNet Top %d Password Generating Synsets" % top_flag)
+    plt.show()
+    return
+
+def ref_list_bar_top_n(opts):
+    top_flag = 10
+
+    # control how deep you want to go in the wordnet hierarchy
+    if opts["top"]:
+        if opts["top"] > 40:
+            log_err("-d value too high. Select Value between 1 and 40")
+            return
+        top_flag = opts["top"]
+    else:
+        top_flag = 10
+
+
+    # Get the top N synsets after filtering
+    # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
+    top_n_labels = []
+    top_n_hits = []
+    for item in mongo.db_pws_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}, {"$sort": {"sum": -1}}, {"$limit": top_flag}]):
+        top_n_labels.append(item["_id"])
+        top_n_hits.append(item["sum"])
+            
+    f, ax = plt.subplots(1)
+    xcoords = np.arange(len(top_n_labels))
+    ax.bar(xcoords, top_n_hits, color="black")
+    plt.xticks(xcoords, top_n_labels, rotation=45)
+    plt.ylabel("Total Hits")
+    plt.xlabel("List")
+    plt.title("Top %d Password Generating Password Lists" % top_flag)
+    ax.set_yscale("log", basey=10)
+    plt.show()
+    return
