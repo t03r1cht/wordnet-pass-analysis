@@ -1026,6 +1026,11 @@ def plot_data():
     elif args.plot == "misc_list_bar_top_n":
         plots.misc_list_bar_top_n(opts)
 
+
+    # Bar plot the top N misc password lists (no permutations) based on their total hits.
+    elif args.plot == "ref_list_words_bar_top_n":
+        plots.ref_list_words_top_n(opts)
+
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
