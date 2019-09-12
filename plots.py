@@ -1381,6 +1381,7 @@ def wn_bar_top_n(opts):
     top_n_labels = []
     top_n_hits = []
     for item in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(top_flag):
+        log_ok("{} {}".format(item["synset"], format_number(item["total_hits"])))
         top_n_labels.append("{}\n({})".format(item["synset"], item["word_base"]))
         top_n_hits.append(item["total_hits"])
 
@@ -1407,11 +1408,12 @@ def ref_list_bar_top_n(opts):
         top_flag = 10
 
 
-    # Get the top N synsets after filtering
+    # Get the top N password lists after filtering
     # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
     top_n_labels = []
     top_n_hits = []
     for item in mongo.db_pws_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}, {"$sort": {"sum": -1}}, {"$limit": top_flag}]):
+        log_ok("{} {}".format(item["_id"], format_number(item["sum"])))
         top_n_labels.append(item["_id"])
         top_n_hits.append(item["sum"])
             
@@ -1422,6 +1424,39 @@ def ref_list_bar_top_n(opts):
     plt.ylabel("Total Hits")
     plt.xlabel("List")
     plt.title("Top %d Password Generating Password Lists" % top_flag)
+    ax.set_yscale("log", basey=10)
+    plt.show()
+    return
+
+def misc_list_bar_top_n(opts):
+    top_flag = 10
+
+    # control how deep you want to go in the wordnet hierarchy
+    if opts["top"]:
+        if opts["top"] > 40:
+            log_err("-d value too high. Select Value between 1 and 40")
+            return
+        top_flag = opts["top"]
+    else:
+        top_flag = 10
+
+
+    # Get the top N misc password lists after filtering
+    # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
+    top_n_labels = []
+    top_n_hits = []
+    for item in mongo.db_pws_misc_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}, {"$sort": {"sum": -1}}, {"$limit": top_flag}]):
+        log_ok("{} {}".format(item["_id"], format_number(item["sum"])))
+        top_n_labels.append(item["_id"])
+        top_n_hits.append(item["sum"])
+            
+    f, ax = plt.subplots(1)
+    xcoords = np.arange(len(top_n_labels))
+    ax.bar(xcoords, top_n_hits, color="black")
+    plt.xticks(xcoords, top_n_labels, rotation=45)
+    plt.ylabel("Total Hits")
+    plt.xlabel("List")
+    plt.title("Top %d Password Generating Misc. Password Lists" % top_flag)
     ax.set_yscale("log", basey=10)
     plt.show()
     return
