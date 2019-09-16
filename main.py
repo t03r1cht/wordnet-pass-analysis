@@ -999,8 +999,8 @@ def plot_data():
     elif args.plot == "wn_list_comp_no_ref_perm":
         pass
 
-    # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations
-    # TODO Ability to specify a start level
+    # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations with the 
+    # ability to specify a start level
     elif args.plot == "wn_display_occurrences":
         plots.wn_display_occurrences(opts)
 
@@ -1019,17 +1019,31 @@ def plot_data():
         plots.wn_bar_top_n(opts)
 
     # Bar plot the top N password lists (with its permutations) based on their total hits.
+    # The ref lists are specified as self-crafted lists not downloaded from the internet.
+    # TODO Fix the duplicates issue!!!!!!
     elif args.plot == "ref_list_bar_top_n":
         plots.ref_list_bar_top_n(opts)
 
-    # Bar plot the top N misc password lists (no permutations) based on their total hits.
+    # Bar plot the top N misc password lists (no permutations, since we assume these lists already contain certain permutations) based on their total hits.
+    # The misc lists are specified as lists freely available on the internet.
+    # TODO Fix the duplicates issue!!!!!!
     elif args.plot == "misc_list_bar_top_n":
         plots.misc_list_bar_top_n(opts)
 
 
-    # Bar plot the top N misc password lists (no permutations) based on their total hits.
+
+    # Bar plot the top N ref list word_bases based on its group buckets total hits (including its permutations)
+    # TODO Fix the duplicates issue!!!!!!
     elif args.plot == "ref_list_words_bar_top_n":
         plots.ref_list_words_top_n(opts)
+
+
+
+    # Bar plot the top N misc list word_bases based on its group buckets total hits
+    elif args.plot == "misc_list_words_bar_top_n":
+        plots.misc_list_words_top_n(opts)
+
+
 
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)

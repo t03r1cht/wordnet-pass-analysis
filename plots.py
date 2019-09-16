@@ -1465,10 +1465,9 @@ def ref_list_words_top_n(opts):
     top_flag = 10
     ref_list_flag = ""
 
-    # control how deep you want to go in the wordnet hierarchy
     if opts["top"]:
         if opts["top"] > 40:
-            log_err("-d value too high. Select Value between 1 and 40")
+            log_err("--top value too high. Select Value between 1 and 40")
             return
         top_flag = opts["top"]
     else:
@@ -1481,7 +1480,7 @@ def ref_list_words_top_n(opts):
         return
 
 
-    # Get the top N misc password lists after filtering
+    # Get the top N ref password lists after filtering
     # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
     #   1. word_base is alphanumeric
     top_n_labels = []
@@ -1489,6 +1488,12 @@ def ref_list_words_top_n(opts):
     exclude_filter = mongo_filter.digits()
     special_filters = ["panda", "buffalo", "victor", "true", "pace", "kyoto", "andrew"]
     # exclude_filter.extend(special_filters)
+    # What this query does:
+    #   1. Perform a naive matching: Match only those documents whose word_base is not in the passed filter list and whose source value is equal to the passed reference list value
+    #   2. Group the result documents based on their word_base value (create buckets for each distinct ref list base word)
+    #   3. For each word_base bucket, sum the occurrences of the containing documents (so sum the occurrences of the permutations for each word_base)
+    #   4. Sort the buckets based on their occurrences sum from the previous step
+    #   5. Limit the sorted top results
     for item in mongo.db_pws_lists.aggregate([{"$match": {"$and": [ {"word_base":{"$nin": exclude_filter}}, {"source": {"$in": [ref_list_flag]}}]}}, {"$group": {"_id": "$word_base", "sum": {"$sum": "$occurrences"}}}, {"$sort": {"sum": -1}}, {"$limit": top_flag}]):
         log_ok("{} {}".format(item["_id"], format_number(item["sum"])))
         top_n_labels.append(item["_id"])
@@ -1506,4 +1511,47 @@ def ref_list_words_top_n(opts):
     return
 
 def misc_list_words_top_n(opts):
-    pass
+    top_flag = 10
+    ref_list_flag = ""
+
+    if opts["top"]:
+        if opts["top"] > 40:
+            log_err("--top value too high. Select Value between 1 and 40")
+            return
+        top_flag = opts["top"]
+    else:
+        top_flag = 10
+
+    if opts["ref_list"]:
+        ref_list_flag = opts["ref_list"]
+    else:
+        log_err("No reference (-l) specified.")
+        return
+
+
+    # Get the top N misc password lists after filtering
+    # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
+    #   1. word_base is alphanumeric
+    exclude_filter = mongo_filter.digits()
+    top_n_labels = []
+    top_n_hits = []
+    # What this query does:
+    #   1. Group the result documents based on their word_base value (create buckets for each distinct ref list base word)
+    #   2. For each word_base bucket, sum the occurrences of the containing documents (so sum the occurrences of the permutations for each word_base)
+    #   3. Sort the buckets based on their occurrences sum from the previous step
+    #   4. Limit the sorted top results
+    for item in mongo.db_pws_misc_lists.find({"$and" : [{"source": ref_list_flag}, {"name": {"$nin": exclude_filter}}]}).sort("occurrences", pymongo.DESCENDING).limit(top_flag):
+        log_ok("{} {}".format(item["name"], format_number(item["occurrences"])))
+        top_n_labels.append(item["name"])
+        top_n_hits.append(item["occurrences"])
+    
+    f, ax = plt.subplots(1)
+    xcoords = np.arange(len(top_n_labels))
+    ax.bar(xcoords, top_n_hits, color="black")
+    plt.xticks(xcoords, top_n_labels, rotation=45)
+    plt.ylabel("Total Hits")
+    plt.xlabel("List")
+    plt.title("Top %d Password Generating Misc. Password Lists" % top_flag)
+    ax.set_yscale("log", basey=10)
+    plt.show()
+    return
