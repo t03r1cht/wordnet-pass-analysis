@@ -17,6 +17,7 @@ from subprocess import CalledProcessError
 from pymongo import MongoClient
 import pymongo
 import operator
+import stats
 
 import nltk
 from colorama import Back, Fore, Style, init
@@ -70,6 +71,8 @@ parser.add_argument("--misc_list", type=str,
                     help="Lookup miscellaneous list. Lookup will only use words in lists, not generate any permutations.", dest="misc_list")
 parser.add_argument("--start_level", type=int,
                     help="Start level to draw the WordNet hierarchy in a pie chart.", dest="start_level")
+parser.add_argument("--stats", type=str,
+                    help="Print stats depending on the parameter.", dest="stats")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -999,8 +1002,9 @@ def plot_data():
     elif args.plot == "wn_list_comp_no_ref_perm":
         pass
 
-    # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations with the 
+    # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations with the
     # ability to specify a start level
+    # TODO Print out some examples for the level d+1 so they can be manually added to the graph
     elif args.plot == "wn_display_occurrences":
         plots.wn_display_occurrences(opts)
 
@@ -1017,46 +1021,50 @@ def plot_data():
     # Bar plot the top N synsets (with its permutations) based on their total hits.
     #
     # =================================================================================================================================================================================================
-    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exists for non-alphanumeric
+    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
     # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
-    # the possibility to retrieve lemmas (word bases) that might contain duplicates. 
+    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
+    #
+    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
     # =================================================================================================================================================================================================
     elif args.plot == "wn_bar_top_n":
         plots.wn_bar_top_n(opts)
-
-
-
-
 
     # Bar plot the top N password lists (with its permutations) based on their total hits.
     # The ref lists are specified as self-crafted lists not downloaded from the internet.
     #
     # =================================================================================================================================================================================================
-    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exists for non-alphanumeric
+    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
     # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
-    # the possibility to retrieve lemmas (word bases) that might contain duplicates. 
-    # =================================================================================================================================================================================================
+    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
+    #
+    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
+# =================================================================================================================================================================================================
     elif args.plot == "ref_list_bar_top_n":
         plots.ref_list_bar_top_n(opts)
-
-
-
 
     # Bar plot the top N misc password lists (no permutations, since we assume these lists already contain certain permutations) based on their total hits.
     # The misc lists are specified as lists freely available on the internet.
     #
     # =================================================================================================================================================================================================
-    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exists for non-alphanumeric
+    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
     # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
-    # the possibility to retrieve lemmas (word bases) that might contain duplicates. 
+    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
+    #
+    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
     # =================================================================================================================================================================================================
     elif args.plot == "misc_list_bar_top_n":
         plots.misc_list_bar_top_n(opts)
 
-
-
     # Bar plot the top N ref list word_bases based on its group buckets total hits (including its permutations)
-    # TODO Fix the duplicates issue!!!!!!
+    #
+    # =================================================================================================================================================================================================
+    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
+    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
+    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
+    #
+    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
+    # =================================================================================================================================================================================================
     elif args.plot == "ref_list_words_bar_top_n":
         plots.ref_list_words_top_n(opts)
 
@@ -1068,8 +1076,26 @@ def plot_data():
 
 
 
+
+    # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value 
+    elif args.plot == "wn_stats":
+        pass
+
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
+
+def get_stats():
+    if args.stats == "wordnet":
+        # Display the hits per password rate
+        # sum_all_passes / count_all_passes = hits_per_pass
+        stats.wordnet()
+
+
+    elif args.stats == "":
+        pass
+    else:
+        log_err("Parameter not recognized. Please consult the documentation and try again")
+        return
 
 
 def option_lookup_ref_lists():
@@ -1178,6 +1204,8 @@ if __name__ == "__main__":
         option_permutate_from_lists()
     elif args.plot:
         plot_data()
+    elif args.stats:
+        get_stats()
     elif args.misc_list:
         option_lookup_ref_lists()
     else:
