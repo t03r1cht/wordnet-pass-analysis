@@ -1015,18 +1015,41 @@ def plot_data():
         pass
 
     # Bar plot the top N synsets (with its permutations) based on their total hits.
+    #
+    # =================================================================================================================================================================================================
+    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exists for non-alphanumeric
+    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
+    # the possibility to retrieve lemmas (word bases) that might contain duplicates. 
+    # =================================================================================================================================================================================================
     elif args.plot == "wn_bar_top_n":
         plots.wn_bar_top_n(opts)
 
+
+
+
+
     # Bar plot the top N password lists (with its permutations) based on their total hits.
     # The ref lists are specified as self-crafted lists not downloaded from the internet.
-    # TODO Fix the duplicates issue!!!!!!
+    #
+    # =================================================================================================================================================================================================
+    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exists for non-alphanumeric
+    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
+    # the possibility to retrieve lemmas (word bases) that might contain duplicates. 
+    # =================================================================================================================================================================================================
     elif args.plot == "ref_list_bar_top_n":
         plots.ref_list_bar_top_n(opts)
 
+
+
+
     # Bar plot the top N misc password lists (no permutations, since we assume these lists already contain certain permutations) based on their total hits.
     # The misc lists are specified as lists freely available on the internet.
-    # TODO Fix the duplicates issue!!!!!!
+    #
+    # =================================================================================================================================================================================================
+    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exists for non-alphanumeric
+    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
+    # the possibility to retrieve lemmas (word bases) that might contain duplicates. 
+    # =================================================================================================================================================================================================
     elif args.plot == "misc_list_bar_top_n":
         plots.misc_list_bar_top_n(opts)
 
