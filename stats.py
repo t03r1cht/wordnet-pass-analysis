@@ -87,12 +87,14 @@ def ref_lists():
     sorted_o = collections.OrderedDict(sorted(results.items(), key=lambda x: getitem(x[1], "hpp"), reverse=True))
 
     hpp_list = []
+    total_passwords_list = []
     names_list = []
 
     for item in sorted_o:
         list_name = item
         values = sorted_o[item]
         hpp_list.append(values["hpp"])
+        total_passwords_list.append(values["total_passwords"])
         names_list.append(list_name)
         log_ok("Ref List: {},Total Passwords: {}, Total Hits: {}, Hits Per Password: {}".format(
             list_name,
@@ -106,11 +108,14 @@ def ref_lists():
     # And now also plot this
     f, ax = plt.subplots(1)
     xcoords = np.arange(len(names_list))
-    ax.bar(xcoords, hpp_list, color="black")
+    width = 0.27
+    hpps = ax.bar(xcoords, hpp_list, width, color="black")
+    total_passes = ax.bar(xcoords+width, total_passwords_list, width, color="grey")
     plt.xticks(xcoords, names_list, rotation=45)
     plt.ylabel("Hits Per Password")
     plt.xlabel("Reference List")
     plt.title("Hits Per Password for Reference Lists")
+    ax.legend((hpps, total_passes), ("Hits per Password", "Total Passwords"))
     ax.set_yscale("log", basey=10)
     plt.show()
     return
