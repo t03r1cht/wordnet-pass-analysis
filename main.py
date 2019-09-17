@@ -1091,8 +1091,8 @@ def get_stats():
         stats.wordnet()
 
 
-    elif args.stats == "":
-        pass
+    elif args.stats == "ref_lists":
+        stats.ref_lists()
     else:
         log_err("Parameter not recognized. Please consult the documentation and try again")
         return
