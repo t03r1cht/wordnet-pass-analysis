@@ -73,6 +73,8 @@ parser.add_argument("--start_level", type=int,
                     help="Start level to draw the WordNet hierarchy in a pie chart.", dest="start_level")
 parser.add_argument("--stats", type=str,
                     help="Print stats depending on the parameter.", dest="stats")
+parser.add_argument("--mongo", type=str,
+                    help="Specify mongo address.", dest="mongo")
 # parser.add_argument("-z", "--is-debug", action="store_true",
 #                     help="Debug mode.", dest="is_debug")
 args = parser.parse_args()
@@ -1085,14 +1087,26 @@ def plot_data():
         log_err("Unrecognized plotting option option [%s]" % args.plot)
 
 def get_stats():
+
+    opts = {}
+    if not args.top:
+        opts["top"] = None
+    else:
+        opts["top"] = args.top
+
+
     if args.stats == "wordnet":
         # Display the hits per password rate
         # sum_all_passes / count_all_passes = hits_per_pass
-        stats.wordnet()
+        stats.wordnet(opts)
 
 
     elif args.stats == "ref_lists":
         stats.ref_lists()
+
+
+    elif args.stats == "misc_lists":
+        stats.misc_lists()
     else:
         log_err("Parameter not recognized. Please consult the documentation and try again")
         return

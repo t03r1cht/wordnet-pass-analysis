@@ -12,7 +12,17 @@ from nltk.corpus import wordnet as wn
 import mongo_filter
 
 # https://github.com/klieret/pyplot-hierarchical-pie
+# As this project is still in development, you have to first have to clone the repository before installing the package with pip3:
 
+# git clone https://github.com/klieret/pyplot-hierarchical-pie
+
+# Alternatively click here to download the current state of the master branch. Change to the downloaded directory. To check that everything will work properly on your system, run:
+
+# python3 -m unittest discover
+
+# To install, run
+
+# sudo pip3 install .
 
 def wn_top_passwords_bar(opts):
     f, ax = plt.subplots(1)
@@ -1367,7 +1377,7 @@ def wn_bar_top_n(opts):
     # control how deep you want to go in the wordnet hierarchy
     if opts["top"]:
         if opts["top"] > 40:
-            log_err("-d value too high. Select Value between 1 and 40")
+            log_err("--top value too high. Select Value between 1 and 40")
             return
         top_flag = opts["top"]
     else:
@@ -1401,7 +1411,7 @@ def ref_list_bar_top_n(opts):
     # control how deep you want to go in the wordnet hierarchy
     if opts["top"]:
         if opts["top"] > 40:
-            log_err("-d value too high. Select Value between 1 and 40")
+            log_err("--top value too high. Select Value between 1 and 40")
             return
         top_flag = opts["top"]
     else:
@@ -1434,7 +1444,7 @@ def misc_list_bar_top_n(opts):
     # control how deep you want to go in the wordnet hierarchy
     if opts["top"]:
         if opts["top"] > 40:
-            log_err("-d value too high. Select Value between 1 and 40")
+            log_err("--top value too high. Select Value between 1 and 40")
             return
         top_flag = opts["top"]
     else:

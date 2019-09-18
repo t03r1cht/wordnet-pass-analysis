@@ -1,7 +1,12 @@
 from pymongo import MongoClient
 from helper import get_curr_time, get_curr_time_str
 
-mongo = MongoClient("mongodb://192.168.56.102:27017")
+mongo_addr = None
+if not mongo_addr:
+    mongo = MongoClient("mongodb://192.168.56.102:27017")
+else:
+    mongo = MongoClient("mongodb://{}:27017".format(mongo_addr))
+
 db = mongo["passwords"]
 db_lists = db["lists"]
 db_wn = db["wn_synsets"]
