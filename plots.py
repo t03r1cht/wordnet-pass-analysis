@@ -1289,13 +1289,22 @@ def wn_display_occurrences(opts):
     # data_map contains the hierarchies, e.g. a/b/c: 1
     data_map = {}
 
-    # fill the data map
+    
+    synset_childs = {}
 
+    # fill the data map
     for ss_obj in ss_for_level:
         # Retrieve synset
         ss = wn.synset(ss_obj["id"])
+
         # Get the full hypernym paths from the current synset up to the root synset (entity)
         path_list = [x.lemma_names()[0] for x in ss.hypernym_paths()[0]]
+
+        # ###
+        # Also get the childs for each search level synset so we can hand-draw some of them into the graph
+        # Not required for the actual drawing of the pie chart!
+        synset_childs["/".join(path_list)] = ss_obj["childs"]
+        # ###
 
         # create each path based on the full hypernym path from above
         # Create an individual path for each path combination [a,b,c] => a, a/b, a/b/c
@@ -1343,6 +1352,20 @@ def wn_display_occurrences(opts):
             data_map[ss_root_path] = 1
 
     data = stringvalues_to_pv(data_map)
+
+    # Print out the childs for each search level synset so some of them can be hand-drawn into the graph
+    log_ok("")
+    log_ok("")
+    log_ok("Child synsets (hyponyms) for the synsets for level {}".format(
+        limit_synsets_flag
+    ))
+
+    for item in synset_childs:
+        log_ok("Path: {}, Total: {}, {}".format(
+            item,
+            len(synset_childs[item]),
+            synset_childs[item]
+        ))
 
     # do the magic
     hp = HPie(data, ax, plot_center=True,
