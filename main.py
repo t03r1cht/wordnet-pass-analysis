@@ -725,7 +725,7 @@ def option_permutate_from_lists():
                 "%s already exists in database, will append results to this document" % pass_list)
         else:
             # Create new document "frame"
-            init_word_list_object(pass_list)
+            mongo.init_word_list_object(pass_list)
 
         if args.verbose:
             log_status("Processing: %s" % pass_list)
