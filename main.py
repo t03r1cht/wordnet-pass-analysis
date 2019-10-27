@@ -116,6 +116,8 @@ def cleanup():
     """
     Some cleanup work like closing the file handler.
     """
+    # disabled
+    return
     outfile_summary.close()
     outfile_passwords.close()
 
