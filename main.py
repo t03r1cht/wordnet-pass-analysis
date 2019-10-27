@@ -121,6 +121,8 @@ def cleanup():
 
 
 def _init_file_handles(started_time, of_summary=None):
+    # disabled
+    return
     # Open the file handler for a file with the starting time
     global outfile_summary, outfile_passwords
 
