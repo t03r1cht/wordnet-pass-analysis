@@ -197,6 +197,9 @@ def _lookup_in_hash_file(hash):
     """
     try:
         if args.lookup_utility:
+            # Use sgrep with -i and -b parameter to look for the searched hash.
+            # The raw output of this method is something like A283BCD8899:18287 where the first part in front of the colon is the produced hash and the last part
+            # is the number of occurrences of the hash in the HaveIBeenPwned hash file.
             result = subprocess.check_output(
                 ["sgrep", "-i", "-b", hash, args.pass_db_path])
         else:
@@ -224,7 +227,8 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     Each indented set of lemmas is the sum of all unpacked lemmas of each synset of the current graph level.
     """
 
-    # If the current depth in the DAG is reached, do not continue to iterate this path.
+    # Depth = level in the WordNet "tree"
+    # If the current depth in the DAG (directed acyclic graph) is reached, do not continue to iterate this path.
     # Example:  rel_depth = 3, curr = 9, start = 7
     #           9 - 5 = 4,
     if (root_syn.min_depth() - start_depth) >= rel_depth:
@@ -250,30 +254,40 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     total_hits_for_current_synset = 0
     not_found_for_current_synset = 0
     found_for_current_synset = 0
+    # Get the children for the current synset and iterate over them
     for hypo in curr_root_syn.hyponyms():
         total_hits = 0
         not_found = 0
         found = 0
+        # For each children of the current synset, determine all of its lemmas (lemmas = synset synonyms)
         for lemma in hypo.lemma_names():
             total_base_lemmas += 1
-            # Apply a set of permutations to each lemma
+            # For each synset lemma, apply a set of permutations to them to generate possible passwords, e.g.
+            # with the lemma "cat" possible permutations may be "Cat", "CAT", "c4t", "cat123" and so on. 
+            # This is what permutations_for_lemma() does
             lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                 lemma, hypo.min_depth(), hypo.name())
+            # 1. Total hits for the current synset (not all synsets have more than 1 synonym, but in case they do, add all hits together)
             total_hits += lemma_hits
+            # 2. Total hits for the current synset including the hits of all of THIS synsets children (the children recursion only goes as far as the desired end-level)
             total_hits_for_current_synset += lemma_hits
+            # 3. The total count of password variations that were not found in the HIBP password file
             not_found += not_found_cnt
+            # 4. The total count of password variations that were found in the HIBP password file
             found += found_cnt
+            # 5. The count of password variations for THIS synset that were not found in the HIBP password file
             not_found_for_current_synset += not_found_cnt
+            # 6. The count of password variations for THIS synset that were found in the HIBP password file
             found_for_current_synset += found_cnt
         # Create this synset in the database and save its relatives (hypernym and hyponyms)
         mongo.store_synset_with_relatives(hypo, curr_root_syn.name())
-        # Execute the function again with the new root synset being each hyponym we just found.
+        # Recursive execution of this function with the new parent synset (of which we will in turn determine its children) set to be this child.
         hits_below, not_found_below, found_below = recurse_nouns_from_root(
             root_syn=hypo, start_depth=start_depth, rel_depth=rel_depth)
 
         # Add the sum of all hits below the current synset to the hits list of the current synset so
         # below hits are automatically included (not included in the terminal output, we separate both these
-        # numbers into total_hits and hits_below so we can distinguis how many hits we found below and how
+        # numbers into total_hits and hits_below so we can distinguish how many hits we found below and how
         # many were produced by the current synset).
         # Works because of... recursion
         total_hits_for_current_synset += hits_below
@@ -291,6 +305,14 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
 
 
 def permutations_for_lemma(lemma, depth, source):
+    """
+    Applies a set of permutators to a given lemma (string) to generate possible password combinations.
+    Return:
+    - total_hits: The sum of all hits for all generated passwords from this lemma. Hits for a password is the number after the colon (:) in the HIBP password file, else 0.
+    - not_found_cnt: The number of generated passwords that were not found in the HIBP password file (i.e. the passwords with 0 hits)
+    - found_cnt: The number of generated passwords that were found in the HIBP password file (i.e. the passwords with > 0 hits)
+    """
+
     total_hits = 0
     not_found_cnt = 0
     found_cnt = 0
