@@ -1102,7 +1102,15 @@ def plot_data():
     elif args.plot == "misc_list_words_bar_top_n":
         plots.misc_list_words_top_n(opts)
 
+    # Bar chart with multiple X's comparing the top N passwords of the WordNet and a
+    # given ref word list
+    elif args.plot == "wn_ref_list_top_n_pass_comp_bar":
+        plots.wn_ref_list_top_n_pass_comp_bar(opts)
 
+    # TODO: Change name
+    elif args.plot == "wn_ref_list_pass_perm_comp":
+        # wn_bar_top_n
+        plots.wn_ref_list_pass_perm_comp(opts)
 
 
     # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value 

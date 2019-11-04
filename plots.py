@@ -11,6 +11,8 @@ from hpie import HPie, stringvalues_to_pv
 from nltk.corpus import wordnet as wn
 import mongo_filter
 
+plt.style.use('ggplot')
+
 # https://github.com/klieret/pyplot-hierarchical-pie
 # As this project is still in development, you have to first have to clone the repository before installing the package with pip3:
 
@@ -24,6 +26,17 @@ import mongo_filter
 
 # sudo pip3 install .
 
+########################################################################################
+#TODO
+#
+# * Sortierte Top N WN Passwörter -> RAM
+# * Sortierte Top N Passwort Listen Passwörter -> RAM
+# * Sortierte Top N Misc. Passwort Listen Passwörter
+# * Rechtfertigt der WN-Aufwand (Dauer) die Ausbeute der Passwörter?
+# * WordNet Dictionary Alternativen finden und verwenden
+#
+########################################################################################
+
 def wn_top_passwords_bar(opts):
     f, ax = plt.subplots(1)
     labels = []
@@ -35,7 +48,7 @@ def wn_top_passwords_bar(opts):
     index = np.arange(len(labels))
     # index (0..99) are the indices for the labels array
     # occurrences are the height of each tick on the x axis (so the occurrences on the y axis)
-    ax.bar(index, occurrences)
+    ax.bar(index, occurrences, color="black")
     ax.set_yscale("log", basey=10)
     plt.xlabel('Password', fontsize=10)
     plt.ylabel('Occurrences', fontsize=10)
@@ -1588,3 +1601,156 @@ def misc_list_words_top_n(opts):
     ax.set_yscale("log", basey=10)
     plt.show()
     return
+
+def wn_ref_list_pass_perm_comp(opts):
+    top_flag = 10
+
+    # control how deep you want to go in the wordnet hierarchy
+    if opts["top"]:
+        if opts["top"] > 40:
+            log_err("--top value too high. Select Value between 1 and 40")
+            return
+        top_flag = opts["top"]
+    else:
+        top_flag = 10
+    if not opts["ref_list"]:
+        log_err("No list specified")
+        return
+    ref_list = opts["ref_list"]
+
+    
+
+    # Get the top N synsets after filtering
+    # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
+    #   1. Be alphanumeric
+    exclude_terms = {"word_base": {"$nin": mongo_filter.digit_singlechar()}}
+    top_n_labels = []
+    top_n_hits = []
+    for item in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(top_flag):
+        log_ok("{} {}".format(item["synset"], format_number(item["total_hits"])))
+        top_n_labels.append("{}\n({})".format(item["synset"], item["word_base"]))
+        top_n_hits.append(item["total_hits"])
+
+    # Now we wanna get the top N ref list words
+
+
+    f, ax = plt.subplots(1)
+    xcoords = np.arange(len(top_n_labels))
+    ax.bar(xcoords, top_n_hits, color="black")
+    plt.xticks(xcoords, top_n_labels, rotation=45)
+    plt.ylabel("Total Hits")
+    plt.xlabel("Synset")
+    plt.title("WordNet Top %d Password Generating Alphanumeric Synsets" % top_flag)
+    plt.show()
+    return
+
+def wn_ref_list_top_n_pass_comp_bar(opts):
+    # Read the top wn_limit passwords generated from the WordNet
+    wn_limit = 1000
+    f, ax = plt.subplots(1)
+
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 100:
+            log_err("--top value too high. Select Value between 5 and 100")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+
+    ref_list = None
+    if opts["ref_list"] == None:
+        log_err(
+            "No ref list specified. Use the -l flag to specify a list to use for passwords")
+        return
+    # ref_list == "alL" looks at all lists and not a specific one
+    ref_list = opts["ref_list"]
+
+    # Get the top N WordNet passwords
+    # Since there are duplicates (originating from different word bases) we limit at the original limit plus a third of its value for some buffer
+    # The definitive limiting happens when we eliminated the duplicates
+    buf_len_wn = limit_val + (limit_val // 1)
+    top_n_wn = db_pws_wn.find({}).sort("occurrences", pymongo.DESCENDING).limit(buf_len_wn)
+    log_ok("Retrieved items (with additional buffer): %d" % buf_len_wn)
+    top_n_wn_labels = []
+    top_n_wn_occs = []
+
+    # We extract labels/occs from the result list until the original target limit of limit_val is reached
+    target_len = limit_val
+    for item in top_n_wn:
+        if len(top_n_wn_labels) == target_len:
+            break
+        if item["name"] in top_n_wn_labels:
+            continue
+        # Enfore password requirements
+        elif len(item["name"]) < 3 or item["name"].isdigit():
+            continue
+        else:
+            top_n_wn_labels.append(item["name"])
+            top_n_wn_occs.append(item["occurrences"])
+    
+    log_ok("Target len of %d is reached: %d" % (target_len, len(top_n_wn_labels)))
+    log_ok("Top %d WordNet Passwords:" % target_len)
+    for k,v in enumerate(top_n_wn_labels):
+        occs = top_n_wn_occs[k]
+        log_ok("%s %s" % (v, format_number(occs)))
+
+    # Get the top N ref list passwords
+    buf_len_ref_list = limit_val + (limit_val // 3)
+    top_n_ref_list = db_pws_lists.find({"source": ref_list}).sort("occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
+    log_ok("Retrieved items (with additional buffer): %d" % buf_len_ref_list)
+    top_n_ref_list_labels = []
+    top_n_ref_list_occs = []
+
+    # We extract labels/occs from the result list until the original target limit of limit_val is reached
+    for item in top_n_ref_list:
+        if len(top_n_ref_list_labels) == target_len:
+            break
+        if item["name"] in top_n_ref_list_labels:
+            continue
+        # Enfore password requirements
+        elif len(item["name"]) < 3 or item["name"].isdigit():
+            continue
+        else:
+            top_n_ref_list_labels.append(item["name"])
+            top_n_ref_list_occs.append(item["occurrences"])
+    
+    log_ok("Target len of %d is reached: %d" % (target_len, len(top_n_ref_list_labels)))
+    log_ok("Top %d Ref List Passwords: %s" % (target_len, ref_list))
+    for k,v in enumerate(top_n_ref_list_labels):
+        occs = top_n_ref_list_occs[k]
+        log_ok("%s %s" % (v, format_number(occs)))
+
+    # TODO !!!!!!!!!!! FIX !!!!!!!!!!!!!!
+    if len(top_n_wn_occs) != len(top_n_ref_list_occs):
+        log_err("The result list for the WordNet and Ref List lists are of different length. This is caused in case the buffer for the WordNet (or sometimes the ref_list) was not big enough. This happens if the query to the database returns too many duplicates. After sending the query to the database, we retrieve a list of results for this query. Usually, the query contains multiple duplicate results (same passwords for different word bases). To eliminate the duplicates, we pull more results than the user asked for (default: 1/3). Then we remove the duplicates and cut the result list to the original list length specified by the user.")
+        return
+
+    log_ok(top_n_wn_occs)
+    log_ok(len(top_n_wn_occs))
+    log_ok(type(top_n_wn_occs))
+    log_ok(top_n_ref_list_occs)
+    log_ok(len(top_n_ref_list_occs))
+    log_ok(type(top_n_ref_list_occs))
+
+    # return
+
+    # Plot as bar
+    N = buf_len_ref_list
+    ind = np.arange(N)
+    width = 0.35
+
+    f, ax = plt.subplots(1)
+
+    ax.bar(ind, top_n_wn_occs, width, label="WordNet")
+    ax.bar(ind + width, top_n_ref_list_occs, width, label=ref_list)
+    
+    ax.set_yscale("log", basey=10)
+
+    plt.ylabel("Password Occurrences")
+    plt.title("Direct Password Hit Rate Comparison Between WordNet and %s" % ref_list)
+
+    plt.xticks(ind + width / 2, top_n_wn_labels)
+    plt.legend(loc="best")
+    plt.show()
