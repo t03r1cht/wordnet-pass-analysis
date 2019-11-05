@@ -267,7 +267,7 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         for lemma in hypo.lemma_names():
             total_base_lemmas += 1
             # For each synset lemma, apply a set of permutations to them to generate possible passwords, e.g.
-            # with the lemma "cat" possible permutations may be "Cat", "CAT", "c4t", "cat123" and so on. 
+            # with the lemma "cat" possible permutations may be "Cat", "CAT", "c4t", "cat123" and so on.
             # This is what permutations_for_lemma() does
             lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                 lemma, hypo.min_depth(), hypo.name())
@@ -1096,8 +1096,6 @@ def plot_data():
     elif args.plot == "ref_list_words_bar_top_n":
         plots.ref_list_words_top_n(opts)
 
-
-
     # Bar plot the top N misc list word_bases based on its group buckets total hits
     elif args.plot == "misc_list_words_bar_top_n":
         plots.misc_list_words_top_n(opts)
@@ -1112,18 +1110,17 @@ def plot_data():
     elif args.plot == "wn_misc_list_top_n_pass_comp_bar":
         plots.wn_misc_list_top_n_pass_comp_bar(opts)
 
-    # TODO: Change name
-    elif args.plot == "wn_ref_list_pass_perm_comp":
-        # wn_bar_top_n
-        plots.wn_ref_list_pass_perm_comp(opts)
+    # Bar chart with multiple X's comparing the top N passwords of two different word lists.
+    elif args.plot == "ref_ref_list_top_n_pass_comp_bar":
+        plots.ref_ref_list_top_n_pass_comp_bar(opts)
 
-
-    # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value 
+    # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value
     elif args.plot == "wn_stats":
         pass
 
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
+
 
 def get_stats():
 
@@ -1133,21 +1130,19 @@ def get_stats():
     else:
         opts["top"] = args.top
 
-
     if args.stats == "wordnet":
         # Display the hits per password rate
         # sum_all_passes / count_all_passes = hits_per_pass
         stats.wordnet(opts)
 
-
     elif args.stats == "ref_lists":
         stats.ref_lists()
-
 
     elif args.stats == "misc_lists":
         stats.misc_lists()
     else:
-        log_err("Parameter not recognized. Please consult the documentation and try again")
+        log_err(
+            "Parameter not recognized. Please consult the documentation and try again")
         return
 
 
