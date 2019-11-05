@@ -2078,3 +2078,256 @@ def ref_ref_list_top_n_pass_comp_bar(opts):
     plt.legend(loc="best")
 
     plt.show()
+
+
+# TODO misc_misc
+def misc_misc_list_top_n_pass_comp_bar(opts):
+    # Read the top wn_limit passwords generated from the WordNet
+    wn_limit = 1000
+    f, ax = plt.subplots(1)
+
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 10000:
+            log_err("--top value too high. Select Value between 5 and 10000")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+
+    ref_list = None
+    if opts["ref_list"] == None:
+        log_err(
+            "No ref list specified. Use the -l flag to specify a list to use for passwords")
+        return
+    # ref_list == "alL" looks at all lists and not a specific one
+    ref_list = opts["ref_list"]
+    try:
+        ref_list_src_1 = ref_list.split(",")[0]
+        ref_list_src_2 = ref_list.split(",")[1]
+    except IndexError:
+        log_err(
+            "Argument requires two list names separated by a comma, e.g. list1.txt,list2.txt")
+        return
+
+    # Get the top N ref list passwords
+    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
+    # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
+    # (i.e. pulling way more top passwords preemptively)
+    buf_len_ref_list = limit_val * 2
+    top_n_ref_list = db_pws_lists.find({"source": ref_list_src_1}).sort(
+        "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
+    log_ok("Retrieved items for ref list (with additional buffer): %d" %
+           buf_len_ref_list)
+    top_n_ref_list_labels = []
+    top_n_ref_list_occs = []
+
+    # Just a more descriptive name... Since we pulled more results than we actually need, we need to cut the result list to the user-specified length
+    target_len = limit_val
+    # We extract labels/occs from the result list until the original target limit of limit_val is reached
+    for item in top_n_ref_list:
+        if len(top_n_ref_list_labels) == target_len:
+            break
+        if item["name"] in top_n_ref_list_labels:
+            continue
+        # Enfore password requirements
+        elif len(item["name"]) < 3 or item["name"].isdigit():
+            continue
+        else:
+            top_n_ref_list_labels.append(item["name"])
+            top_n_ref_list_occs.append(item["occurrences"])
+
+    # Get the top N WordNet passwords
+    # Since there are duplicates (originating from different word bases) we limit at the original limit plus a third of its value for some buffer
+    # The definitive limiting happens when we eliminated the duplicates
+    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
+    # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
+    # (i.e. pulling way more top passwords preemptively)
+    buf_len_ref_list_2 = limit_val * 10
+    top_n_ref_list_2 = db_pws_lists.find({"source": ref_list_src_2}).sort(
+        "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list_2)
+    log_ok("Retrieved items for WordNet (with additional buffer): %d" %
+           buf_len_ref_list_2)
+    top_n_ref_list_2_labels = []
+    top_n_ref_list_2_occs = []
+
+    # We extract labels/occs from the result list until the original target limit of limit_val is reached
+    for item in top_n_ref_list_2:
+        if len(top_n_ref_list_2_labels) == target_len:
+            break
+        if item["name"] in top_n_ref_list_2_labels:
+            continue
+        # Enfore password requirements
+        elif len(item["name"]) < 3 or item["name"].isdigit():
+            continue
+        else:
+            top_n_ref_list_2_labels.append(item["name"])
+            top_n_ref_list_2_occs.append(item["occurrences"])
+
+    if len(top_n_ref_list_2_occs) != len(top_n_ref_list_occs):
+        log_err("The result list for the WordNet and Ref List lists are of different length. This is caused in case the buffer for the WordNet (or sometimes the ref_list) was not big enough. This happens if the query to the database returns too many duplicates. After sending the query to the database, we retrieve a list of results for this query. Usually, the query contains multiple duplicate results (same passwords for different word bases). To eliminate the duplicates, we pull more results than the user asked for (default: 1/3). Then we remove the duplicates and cut the result list to the original list length specified by the user.")
+        log_err("%s results: %d" % (ref_list_src_1, len(top_n_ref_list_occs)))
+        log_err("%s results: %d" %
+                (ref_list_src_2, len(top_n_ref_list_2_occs)))
+        return
+
+    log_ok("Printing bar pairs and values for manual labelling:")
+    log_ok("")
+
+    for i in range(1, limit_val+1):
+        log_ok("%d: " % i)
+        # i-1 because we need the index and not not the label index (starting at 1)
+        log_ok("\t%s: %s %s" %
+               (ref_list_src_1, top_n_ref_list_labels[i-1], format_number(top_n_ref_list_occs[i-1])))
+        log_ok("\t%s: %s %s" %
+               (ref_list_src_2, top_n_ref_list_2_labels[i-1], format_number(top_n_ref_list_2_occs[i-1])))
+        log_ok("")
+
+    # Plot as bar
+    N = limit_val
+    ind = np.arange(N)
+    width = 0.35
+
+    plt.bar(ind, top_n_ref_list_occs, width,
+            label=ref_list_src_1, color="black")
+    plt.bar(ind + width, top_n_ref_list_2_occs,
+            width, label=ref_list_src_2, color="grey")
+
+    plt.yscale("log", basey=10)
+
+    plt.ylabel("Password Occurrences")
+    plt.xlabel("Top %d Passwords of Each Source" % limit_val)
+    plt.title(
+        "Password Hit Rate Comparison WordNet/Ref. Word List")
+
+    plt.xticks(ind + width, range(1, limit_val+1))
+    plt.legend(loc="best")
+
+    plt.show()
+
+# TODO ref_misc
+def ref_misc_list_top_n_pass_comp_bar(opts):
+    # Read the top wn_limit passwords generated from the WordNet
+    wn_limit = 1000
+    f, ax = plt.subplots(1)
+
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 10000:
+            log_err("--top value too high. Select Value between 5 and 10000")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+
+    ref_list = None
+    if opts["ref_list"] == None:
+        log_err(
+            "No ref list specified. Use the -l flag to specify a list to use for passwords")
+        return
+    # ref_list == "alL" looks at all lists and not a specific one
+    ref_list = opts["ref_list"]
+    try:
+        ref_list_src_1 = ref_list.split(",")[0]
+        misc_list_src = ref_list.split(",")[1]
+    except IndexError:
+        log_err(
+            "Argument requires two list names separated by a comma, e.g. ref_list.txt,misc_list.txt. Important note: The order is important, the name of the ref list needs to be specified before the comma, the misc list after.")
+        return
+
+    # Get the top N ref list passwords
+    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
+    # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
+    # (i.e. pulling way more top passwords preemptively)
+    buf_len_ref_list = limit_val * 2
+    top_n_ref_list = db_pws_lists.find({"source": ref_list_src_1}).sort(
+        "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
+    log_ok("Retrieved items for ref list (with additional buffer): %d" %
+           buf_len_ref_list)
+    top_n_ref_list_labels = []
+    top_n_ref_list_occs = []
+
+    # Just a more descriptive name... Since we pulled more results than we actually need, we need to cut the result list to the user-specified length
+    target_len = limit_val
+    # We extract labels/occs from the result list until the original target limit of limit_val is reached
+    for item in top_n_ref_list:
+        if len(top_n_ref_list_labels) == target_len:
+            break
+        if item["name"] in top_n_ref_list_labels:
+            continue
+        # Enfore password requirements
+        elif len(item["name"]) < 3 or item["name"].isdigit():
+            continue
+        else:
+            top_n_ref_list_labels.append(item["name"])
+            top_n_ref_list_occs.append(item["occurrences"])
+
+    # Get the top N WordNet passwords
+    # Since there are duplicates (originating from different word bases) we limit at the original limit plus a third of its value for some buffer
+    # The definitive limiting happens when we eliminated the duplicates
+    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
+    # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
+    # (i.e. pulling way more top passwords preemptively)
+    buf_len_misc_list = limit_val * 10
+    top_n_misc_list = db_pws_misc_lists.find({"source": misc_list_src}).sort(
+        "occurrences", pymongo.DESCENDING).limit(buf_len_misc_list)
+    log_ok("Retrieved items for WordNet (with additional buffer): %d" %
+           buf_len_misc_list)
+    top_n_misc_list_labels = []
+    top_n_misc_list_occs = []
+
+    # We extract labels/occs from the result list until the original target limit of limit_val is reached
+    for item in top_n_misc_list:
+        if len(top_n_misc_list_labels) == target_len:
+            break
+        if item["name"] in top_n_misc_list_labels:
+            continue
+        # Enfore password requirements
+        elif len(item["name"]) < 3 or item["name"].isdigit():
+            continue
+        else:
+            top_n_misc_list_labels.append(item["name"])
+            top_n_misc_list_occs.append(item["occurrences"])
+
+    if len(top_n_misc_list_occs) != len(top_n_ref_list_occs):
+        log_err("The result list for the WordNet and Ref List lists are of different length. This is caused in case the buffer for the WordNet (or sometimes the ref_list) was not big enough. This happens if the query to the database returns too many duplicates. After sending the query to the database, we retrieve a list of results for this query. Usually, the query contains multiple duplicate results (same passwords for different word bases). To eliminate the duplicates, we pull more results than the user asked for (default: 1/3). Then we remove the duplicates and cut the result list to the original list length specified by the user.")
+        log_err("%s results: %d" % (ref_list_src_1, len(top_n_ref_list_occs)))
+        log_err("%s results: %d" %
+                (misc_list_src, len(top_n_misc_list_occs)))
+        return
+
+    log_ok("Printing bar pairs and values for manual labelling:")
+    log_ok("")
+
+    for i in range(1, limit_val+1):
+        log_ok("%d: " % i)
+        # i-1 because we need the index and not not the label index (starting at 1)
+        log_ok("\t(Ref) %s: %s %s" %
+               (ref_list_src_1, top_n_ref_list_labels[i-1], format_number(top_n_ref_list_occs[i-1])))
+        log_ok("\t(Misc) %s: %s %s" %
+               (misc_list_src, top_n_misc_list_labels[i-1], format_number(top_n_misc_list_occs[i-1])))
+        log_ok("")
+
+    # Plot as bar
+    N = limit_val
+    ind = np.arange(N)
+    width = 0.35
+
+    plt.bar(ind, top_n_ref_list_occs, width,
+            label=ref_list_src_1, color="black")
+    plt.bar(ind + width, top_n_misc_list_occs,
+            width, label=misc_list_src, color="grey")
+
+    plt.yscale("log", basey=10)
+
+    plt.ylabel("Password Occurrences")
+    plt.xlabel("Top %d Passwords of Each Source" % limit_val)
+    plt.title(
+        "Password Hit Rate Comparison WordNet/Ref. Word List")
+
+    plt.xticks(ind + width, range(1, limit_val+1))
+    plt.legend(loc="best")
+
+    plt.show()
