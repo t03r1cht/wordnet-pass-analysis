@@ -2080,7 +2080,6 @@ def ref_ref_list_top_n_pass_comp_bar(opts):
     plt.show()
 
 
-# TODO misc_misc
 def misc_misc_list_top_n_pass_comp_bar(opts):
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
@@ -2108,7 +2107,7 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
         ref_list_src_2 = ref_list.split(",")[1]
     except IndexError:
         log_err(
-            "Argument requires two list names separated by a comma, e.g. list1.txt,list2.txt")
+            "Argument requires two list names separated by a comma, e.g. misc_list1.txt,misc_list2.txt")
         return
 
     # Get the top N ref list passwords
@@ -2116,7 +2115,7 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
     buf_len_ref_list = limit_val * 2
-    top_n_ref_list = db_pws_lists.find({"source": ref_list_src_1}).sort(
+    top_n_ref_list = db_pws_misc_lists.find({"source": ref_list_src_1}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
     log_ok("Retrieved items for ref list (with additional buffer): %d" %
            buf_len_ref_list)
@@ -2145,7 +2144,7 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
     buf_len_ref_list_2 = limit_val * 10
-    top_n_ref_list_2 = db_pws_lists.find({"source": ref_list_src_2}).sort(
+    top_n_ref_list_2 = db_pws_misc_lists.find({"source": ref_list_src_2}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list_2)
     log_ok("Retrieved items for WordNet (with additional buffer): %d" %
            buf_len_ref_list_2)
@@ -2206,7 +2205,6 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
 
     plt.show()
 
-# TODO ref_misc
 def ref_misc_list_top_n_pass_comp_bar(opts):
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
