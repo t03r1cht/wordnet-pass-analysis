@@ -7,6 +7,8 @@ from helper import log_ok, log_err, format_number
 import collections
 from operator import getitem
 
+plt.style.use('ggplot')
+
 
 def wordnet(opts):
     # We want to exclude the non-alphanumerical and single character lemmas
@@ -104,7 +106,7 @@ def wordnet(opts):
         hpp_list.append(values["hpp"])
         total_passwords_list.append(values["total_passwords"])
         names_list.append(list_name)
-        log_ok("Ref List: {}, Total Passwords: {}, Total Hits: {}, Hits Per Password: {}".format(
+        log_ok("Synset: {}, Total Passwords: {}, Total Hits: {}, Hits Per Password: {}".format(
             list_name,
             format_number(values["total_passwords"]),
             format_number(values["total_hits"]),
@@ -124,7 +126,7 @@ def wordnet(opts):
     plt.xticks(xcoords, names_list, rotation=45)
     plt.ylabel("Hits Per Password")
     plt.xlabel("Reference List")
-    plt.title("Hits Per Password for Reference Lists")
+    plt.title("Hits Per Password")
     ax.legend((global_hpps, hpps, total_passes), ("Global Average Hits per Password",
                                                   "Hits per Password per Synset", "Total Passwords"))
     ax.set_yscale("log", basey=10)
@@ -277,9 +279,9 @@ def misc_lists():
     plt.xticks(xcoords, names_list, rotation=45)
     plt.ylabel("Hits Per Password")
     plt.xlabel("Reference List")
-    plt.title("Hits Per Password for Reference Lists")
+    plt.title("Hits Per Password for Miscellaneous Lists")
     ax.legend((hpps, total_passes),
-              ("Hits per Password per Synset", "Total Passwords"))
+              ("Hits per Password", "Total Passwords"))
     ax.set_yscale("log", basey=10)
     plt.show()
     return
