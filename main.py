@@ -1107,6 +1107,11 @@ def plot_data():
     elif args.plot == "wn_ref_list_top_n_pass_comp_bar":
         plots.wn_ref_list_top_n_pass_comp_bar(opts)
 
+    # Bar chart with multiple X's comparing the top N passwords of the WordNet and a
+    # given misc word list
+    elif args.plot == "wn_misc_list_top_n_pass_comp_bar":
+        plots.wn_misc_list_top_n_pass_comp_bar(opts)
+
     # TODO: Change name
     elif args.plot == "wn_ref_list_pass_perm_comp":
         # wn_bar_top_n
