@@ -2072,7 +2072,7 @@ def ref_ref_list_top_n_pass_comp_bar(opts):
     plt.ylabel("Password Occurrences")
     plt.xlabel("Top %d Passwords of Each Source" % limit_val)
     plt.title(
-        "Password Hit Rate Comparison WordNet/Ref. Word List")
+        "Password Hit Rate Comp. Ref. Word List/Ref. Word List")
 
     plt.xticks(ind + width, range(1, limit_val+1))
     plt.legend(loc="best")
@@ -2198,7 +2198,7 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
     plt.ylabel("Password Occurrences")
     plt.xlabel("Top %d Passwords of Each Source" % limit_val)
     plt.title(
-        "Password Hit Rate Comparison WordNet/Ref. Word List")
+        "Password Hit Rate Comparison Misc. Password List/Misc. Password List", fontdict = {'fontsize' : 10})
 
     plt.xticks(ind + width, range(1, limit_val+1))
     plt.legend(loc="best")
@@ -2323,7 +2323,7 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
     plt.ylabel("Password Occurrences")
     plt.xlabel("Top %d Passwords of Each Source" % limit_val)
     plt.title(
-        "Password Hit Rate Comparison WordNet/Ref. Word List")
+        "Password Hit Rate Comparison Ref. Word List/Misc. Password List", fontdict = {'fontsize' : 10})
 
     plt.xticks(ind + width, range(1, limit_val+1))
     plt.legend(loc="best")

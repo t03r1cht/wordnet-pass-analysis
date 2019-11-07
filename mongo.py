@@ -1,11 +1,8 @@
 from pymongo import MongoClient
 from helper import get_curr_time, get_curr_time_str
 
-mongo_addr = None
-if not mongo_addr:
-    mongo = MongoClient("mongodb://192.168.56.102:27017")
-else:
-    mongo = MongoClient("mongodb://{}:27017".format(mongo_addr))
+MONGO_ADDR = "localhost"
+mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 
 db = mongo["passwords"]
 db_lists = db["lists"]
@@ -14,6 +11,7 @@ db_pws_wn = db["passwords_wn"]
 db_wn_lemma_permutations = db["wn_lemma_permutations"]
 db_pws_lists = db["passwords_lists"]
 db_pws_misc_lists = db["passwords_misc_lists"]
+db_pws_dicts = db["passwords_dicts"]
 
 TAG = get_curr_time_str()
 

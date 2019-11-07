@@ -46,6 +46,8 @@ parser.add_argument("--summary-file", type=str,
                     help="Name of the summary file.", dest="summary_file_name")
 parser.add_argument("-l", "--from-lists", type=str,
                     help="Path to the folder containing self-created password lists.", dest="from_lists")
+parser.add_argument(
+    "--wn", type=str, help="Use the WordNet as default dictionary.", dest="wn")
 parser.add_argument("-z", "--download-wordnet", action="store_true",
                     help="Download WordNet.", dest="dl_wordnet")
 parser.add_argument("-t", "--lookup-utility", action="store_true",
@@ -73,10 +75,12 @@ parser.add_argument("--start_level", type=int,
                     help="Start level to draw the WordNet hierarchy in a pie chart.", dest="start_level")
 parser.add_argument("--stats", type=str,
                     help="Print stats depending on the parameter.", dest="stats")
-parser.add_argument("--mongo", type=str,
+parser.add_argument("--mongo-addr", type=str,
                     help="Specify mongo address.", dest="mongo")
-# parser.add_argument("-z", "--is-debug", action="store_true",
-#                     help="Debug mode.", dest="is_debug")
+parser.add_argument("--dict", type=str,
+                    help="Specify dict path.", dest="dict_source")
+parser.add_argument("--dict-id", type=str,
+                    help="Specify dict ID for the database. Please use only characters.", dest="dict_id")
 args = parser.parse_args()
 
 started = ""
@@ -353,10 +357,10 @@ def permutations_for_lemma(lemma, depth, source):
             trans_hits = lookup(permutations["name"], depth, source, lemma)
             if args.root_syn_name:
                 all_permutations.append(
-                    mongo.new_permutation_for_lemma(permutation["name"], trans_hits))
+                    mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
             if args.from_lists:
                 mongo.store_tested_pass_lists(
-                    permutation["name"], trans_hits, source, lemma, p["permutator"])
+                    permutations["name"], trans_hits, source, lemma, p["permutator"])
 
             if trans_hits == 0:
                 not_found_cnt += 1
@@ -1113,11 +1117,11 @@ def plot_data():
     # Bar chart with multiple X's comparing the top N passwords of two different word lists.
     elif args.plot == "ref_ref_list_top_n_pass_comp_bar":
         plots.ref_ref_list_top_n_pass_comp_bar(opts)
-    
+
     # Bar chart with multiple X's comparing the top N passwords of two misc lists.
     elif args.plot == "misc_misc_list_top_n_pass_comp_bar":
         plots.misc_misc_list_top_n_pass_comp_bar(opts)
-    
+
     # Bar chart with multiple X's comparing the top N passwords of a ref list and a misc list.
     elif args.plot == "ref_misc_list_top_n_pass_comp_bar":
         plots.ref_misc_list_top_n_pass_comp_bar(opts)
@@ -1219,7 +1223,113 @@ def option_lookup_ref_lists():
            (progress_count-non_passwords, non_passwords))
 
 
+def option_lookup_new_dict():
+    signal.signal(signal.SIGINT, sigint_handler)
+    if not os.path.isfile(args.dict_source):
+        log_err("%s is not a file" % args.dict_source)
+        return
+
+    # Open dictionary
+    log_ok("Opening dictionary %s..." % args.dict_source)
+    try:
+        word_list = open(args.dict_source)
+        words = word_list.readlines()
+    except Exception as e:
+        log_err("Failed to open dictionary")
+        return
+    # Close after reading
+    word_list.close()
+    # Try to count lines (or at least give approximation)
+    try:
+        word_count = subprocess.check_output(
+            ["wc", "-l", "{0}".format(args.dict_source)])
+    except CalledProcessError as e:
+        log_err(
+            "Could not count lines for destination file! % s" % e)
+    word_count = int(word_count.decode(
+        "utf-8").strip("\n").strip("\r").lstrip().split(" ")[0])
+    log_ok("No. of words to permutate: %d" % int(word_count))
+
+    def lookup_perm(perm):
+        result = _lookup_in_hash_file(hash_sha1(perm))
+        if not result:
+            result_num = 0
+        else:
+            result_num = int(result.split(":")[1])
+        return result_num
+
+    progress_count = 0
+    non_passwords = 0
+
+    # We create a separate collection for each dictionary we process. Tread carefully!
+    mongo_coll = mongo.db["passwords_dicts_{}".format(args.dict_id)]
+
+    def store_dict_perm(perm, hits, word_base, permutator, source, tag):
+        o = {
+            "name": perm,
+            "occurrences": hits,
+            "source": source,
+            "word_base": word_base,
+            "permutator": permutator,
+            "tag": tag
+        }
+
+        try:
+            mongo_coll.insert_one(o)
+        except Exception as e:
+            return False, e
+        return True, None
+
+    tag = get_curr_time_str()
+
+    for word in words:
+        progress_count += 1
+        # Skip comments and empty lines
+        if word[0] == "#" or word == "" or word == " " or word == "\n":
+            non_passwords += 1
+            log_status("[%d/%d] <skipping>" % (progress_count, word_count))
+            continue
+        # Clean the word from control chars
+        cleaned_word = remove_control_characters(word)
+
+        # Create permutations for a given base word
+        for combination_handler in combinator.all:
+            permutations = combination_handler(cleaned_word, permutator.all)
+            # Special case if no permutation could be created
+            if permutations == None:
+                continue
+            elif type(permutations) == list:
+                for item in permutations:
+                    hit_result = lookup_perm(item["name"])
+                    # Store in db...
+                    insert_status, ex = store_dict_perm(item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
+                    if not insert_status:
+                        log_err("Error inserting '{}': {}".format(item["name"], ex))
+                    else:                    
+                        log_ok("%s  %d  %s" %
+                            (item["name"], hit_result, item["permutator"]))
+            else:
+                hit_result = lookup_perm(item["name"])
+                log_ok("%s  %d  %s" %
+                       (item["name"], hit_result, item["permutator"]))
+                # Store in db...
+                insert_status, ex = store_dict_perm(item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
+                if not insert_status:
+                    log_err("Error inserting '{}': {}".format(item["name"], ex))
+                else:                    
+                    log_ok("%s  %d  %s" %
+                        (item["name"], hit_result, item["permutator"]))
+        
+
+        continue
+        log_status("[%d/%d] %s (%d)" %
+                   (progress_count, word_count, cleaned_word, result_num))
+    log_ok("Finished. %d actual words, %d non-words (empty lines, comments, etc.)" %
+           (progress_count-non_passwords, non_passwords))
+
+
 if __name__ == "__main__":
+
     if args.dl_wordnet:
         _download_wordnet()
 
@@ -1266,8 +1376,17 @@ if __name__ == "__main__":
         option_lookup_ref_lists()
     else:
         # Evaluate command line parameters
-        if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:
-            log_err("Missing parameters.")
-            parser.print_usage()
-            sys.exit(0)
-        option_lookup_passwords()
+        if args.wn:
+            if args.pass_db_path is None or args.dag_depth is None or args.root_syn_name is None:
+                log_err("Missing parameters.")
+                parser.print_usage()
+                sys.exit(0)
+            option_lookup_passwords()
+        elif args.dict_source:
+            if args.dict_id:
+                option_lookup_new_dict()
+            else:
+                log_err("No dict ID. Please specify an ID using only characters with the --dict-id parameter.")
+                sys.exit(0)
+        else:
+            log_err("Unrecognized option.")
