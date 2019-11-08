@@ -25,13 +25,15 @@ def remove_control_characters(s):
 
 def get_curr_time():
     """
-    Return the current time as a string.
+    Return the current time in datetime format.
     """
-    # return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
     return datetime.datetime.now()
 
 
 def get_curr_time_str():
+    """
+    Return the current time as a string.
+    """
     return datetime.datetime.now().strftime("%Y%m%d_%H.%M.%S")
 
 

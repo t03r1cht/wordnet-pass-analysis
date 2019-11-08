@@ -1071,7 +1071,7 @@ def plot_data():
     # the possibility to retrieve lemmas (word bases) that might contain duplicates.
     #
     # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
-# =================================================================================================================================================================================================
+    # =================================================================================================================================================================================================
     elif args.plot == "ref_list_bar_top_n":
         plots.ref_list_bar_top_n(opts)
 
@@ -1258,8 +1258,6 @@ def option_lookup_new_dict():
             result_num = int(result.split(":")[1])
         return result_num
 
-    progress_count = 0
-    non_passwords = 0
 
     # We create a separate collection for each dictionary we process. Tread carefully!
     mongo_coll = mongo.db["passwords_dicts_{}".format(args.dict_id)]
@@ -1281,34 +1279,40 @@ def option_lookup_new_dict():
         return True, None
 
     tag = get_curr_time_str()
+    started_time = get_curr_time()
+    total_base_lemmas = 0
+    non_passwords = 0
+    tested_passwords = 0
 
     for word in words:
-        progress_count += 1
         # Skip comments and empty lines
         if word[0] == "#" or word == "" or word == " " or word == "\n":
             non_passwords += 1
-            log_status("[%d/%d] <skipping>" % (progress_count, word_count))
+            log_status("<skipping> (control character)")
             continue
         # Clean the word from control chars
         cleaned_word = remove_control_characters(word)
 
         # Create permutations for a given base word
         for combination_handler in combinator.all:
+            total_base_lemmas += 1
             permutations = combination_handler(cleaned_word, permutator.all)
             # Special case if no permutation could be created
             if permutations == None:
                 continue
             elif type(permutations) == list:
                 for item in permutations:
+                    tested_passwords += 1
                     hit_result = lookup_perm(item["name"])
                     # Store in db...
                     insert_status, ex = store_dict_perm(item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
                     if not insert_status:
                         log_err("Error inserting '{}': {}".format(item["name"], ex))
-                    else:                    
-                        log_ok("%s  %d  %s" %
-                            (item["name"], hit_result, item["permutator"]))
+                    # else:                    
+                        # log_ok("%s  %d  %s" %
+                            # (item["name"], hit_result, item["permutator"]))
             else:
+                tested_passwords += 1
                 hit_result = lookup_perm(item["name"])
                 log_ok("%s  %d  %s" %
                        (item["name"], hit_result, item["permutator"]))
@@ -1316,16 +1320,38 @@ def option_lookup_new_dict():
                 insert_status, ex = store_dict_perm(item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
                 if not insert_status:
                     log_err("Error inserting '{}': {}".format(item["name"], ex))
-                else:                    
-                    log_ok("%s  %d  %s" %
-                        (item["name"], hit_result, item["permutator"]))
+                # else:                    
+                #     log_ok("%s  %d  %s" %
+                #         (item["name"], hit_result, item["permutator"]))
         
-
+        # Display progress
+        curr_time = get_curr_time()
+        time_diff = curr_time - started_time
+        curr_lemma_time = time_diff.seconds / total_base_lemmas
+        remaining_lemmas = word_count - total_base_lemmas
+        remaining_time_est = remaining_lemmas * curr_lemma_time
+        clear_terminal()
+        log_status("Processing dictionary: {0}\nProcessed Base Words (approx.): {1}/{2}\nTested Passwords: {3}\nCurrent Word Base: {4}\nElapsed Time (seconds): {5:.2f}\nEstimated Remaining Time (m/h): {6:.2f}/{7:.2f}\nCurrent Average Time per Lemma (s): {8:.2f}\n".format(
+            args.dict_source,
+            total_base_lemmas,
+            word_count,
+            tested_passwords,
+            cleaned_word,
+            time_diff.seconds,
+            remaining_time_est / 60,
+            remaining_time_est / 60 / 60,
+            curr_lemma_time))
+        
         continue
-        log_status("[%d/%d] %s (%d)" %
-                   (progress_count, word_count, cleaned_word, result_num))
-    log_ok("Finished. %d actual words, %d non-words (empty lines, comments, etc.)" %
-           (progress_count-non_passwords, non_passwords))
+    
+    clear_terminal()
+    curr_time = get_curr_time()
+    time_diff = curr_time - started_time
+    log_ok("Finished. \nActual Word Bases Processed: {0}\nControl Characters: {1}\nTook: {2}s/{3}m".format(
+        total_base_lemmas, 
+        non_passwords,
+        time_diff.seconds,
+        time_diff.minutes))
 
 
 if __name__ == "__main__":

@@ -2329,3 +2329,9 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
     plt.legend(loc="best")
 
     plt.show()
+
+
+def dict_wn_top_n_pass_comp_bar(opts):
+    # Sort with a lot of docs: 
+    # db.getCollection('passwords_dicts_cracklib-small').find({"occurrences": {"$gt": 1}}).sort({"occurrences": -1})
+    pass
