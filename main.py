@@ -1130,10 +1130,22 @@ def plot_data():
     # Bar chart with multiple X's comparing the top N passwords of a ref list and a misc list.
     elif args.plot == "ref_misc_list_top_n_pass_comp_bar":
         plots.ref_misc_list_top_n_pass_comp_bar(opts)
-    
+
     # Bar chart with multiple X's comparing a different dictionary with WordNet.
     elif args.plot == "dict_wn_top_n_pass_comp_bar":
         plots.dict_wn_top_n_pass_comp_bar(opts)
+
+    # TODO Bar chart with multiple X's comparing a different dictionary with a ref list.
+    elif args.plot == "dict_ref_list_top_n_pass_comp_bar":
+        plots.dict_ref_list_top_n_pass_comp_bar(opts)
+
+    # TODO Bar chart with multiple X's comparing a different dictionary with a misc list.
+    elif args.plot == "dict_misc_list_top_n_pass_comp_bar":
+        plots.dict_misc_list_top_n_pass_comp_bar(opts)
+
+    # TODO Bar chart with multiple X's comparing a different dictionary with another dictionary.
+    elif args.plot == "dict_dict_top_n_pass_comp_bar":
+        plots.dict_dict_top_n_pass_comp_bar(opts)
 
     # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value
     elif args.plot == "wn_stats":
@@ -1267,7 +1279,6 @@ def option_lookup_new_dict():
             result_num = int(result.split(":")[1])
         return result_num
 
-
     # We create a separate collection for each dictionary we process. Tread carefully!
     mongo_coll = mongo.db["passwords_dicts_{}".format(args.dict_id)]
 
@@ -1314,25 +1325,29 @@ def option_lookup_new_dict():
                     tested_passwords += 1
                     hit_result = lookup_perm(item["name"])
                     # Store in db...
-                    insert_status, ex = store_dict_perm(item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
+                    insert_status, ex = store_dict_perm(
+                        item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
                     if not insert_status:
-                        log_err("Error inserting '{}': {}".format(item["name"], ex))
-                    # else:                    
+                        log_err("Error inserting '{}': {}".format(
+                            item["name"], ex))
+                    # else:
                         # log_ok("%s  %d  %s" %
-                            # (item["name"], hit_result, item["permutator"]))
+                        # (item["name"], hit_result, item["permutator"]))
             else:
                 tested_passwords += 1
                 hit_result = lookup_perm(item["name"])
                 log_ok("%s  %d  %s" %
                        (item["name"], hit_result, item["permutator"]))
                 # Store in db...
-                insert_status, ex = store_dict_perm(item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
+                insert_status, ex = store_dict_perm(
+                    item["name"], hit_result, cleaned_word, item["permutator"], args.dict_source, tag)
                 if not insert_status:
-                    log_err("Error inserting '{}': {}".format(item["name"], ex))
-                # else:                    
+                    log_err("Error inserting '{}': {}".format(
+                        item["name"], ex))
+                # else:
                 #     log_ok("%s  %d  %s" %
                 #         (item["name"], hit_result, item["permutator"]))
-        
+
         # Display progress
         curr_time = get_curr_time()
         time_diff = curr_time - started_time
@@ -1350,14 +1365,14 @@ def option_lookup_new_dict():
             remaining_time_est / 60,
             remaining_time_est / 60 / 60,
             curr_lemma_time))
-        
+
         continue
-    
+
     clear_terminal()
     curr_time = get_curr_time()
     time_diff = curr_time - started_time
     log_ok("Finished. \nActual Word Bases Processed: {0}\nControl Characters: {1}\nTook: {2}s/{3}m".format(
-        total_base_lemmas, 
+        total_base_lemmas,
         non_passwords,
         time_diff.seconds,
         time_diff.minutes))
@@ -1421,7 +1436,8 @@ if __name__ == "__main__":
             if args.dict_id:
                 option_lookup_new_dict()
             else:
-                log_err("No dict ID. Please specify an ID using only characters with the --dict-id parameter.")
+                log_err(
+                    "No dict ID. Please specify an ID using only characters with the --dict-id parameter.")
                 sys.exit(0)
         else:
             log_err("Unrecognized option.")
