@@ -1135,7 +1135,7 @@ def plot_data():
     elif args.plot == "dict_wn_top_n_pass_comp_bar":
         plots.dict_wn_top_n_pass_comp_bar(opts)
 
-    # TODO Bar chart with multiple X's comparing a different dictionary with a ref list.
+    # Bar chart with multiple X's comparing a different dictionary with a ref list.
     elif args.plot == "dict_ref_list_top_n_pass_comp_bar":
         plots.dict_ref_list_top_n_pass_comp_bar(opts)
 
