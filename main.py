@@ -953,6 +953,11 @@ def plot_data():
     else:
         opts["start_level"] = args.start_level
 
+    if not args.dict_id:
+        opts["dict_id"] = "null"
+    else:
+        opts["dict_id"] = args.dict_id
+
     # Bar diagram of the top N passwords of the WordNet
     # Y axis displayed as logartihmic scale with base 10
     if args.plot == "wn_passwords_bar":
@@ -1125,6 +1130,10 @@ def plot_data():
     # Bar chart with multiple X's comparing the top N passwords of a ref list and a misc list.
     elif args.plot == "ref_misc_list_top_n_pass_comp_bar":
         plots.ref_misc_list_top_n_pass_comp_bar(opts)
+    
+    # Bar chart with multiple X's comparing a different dictionary with WordNet.
+    elif args.plot == "dict_wn_top_n_pass_comp_bar":
+        plots.dict_wn_top_n_pass_comp_bar(opts)
 
     # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value
     elif args.plot == "wn_stats":
