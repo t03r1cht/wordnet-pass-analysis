@@ -963,10 +963,13 @@ def plot_data():
     if args.plot == "wn_passwords_bar":
         plots.wn_top_passwords_bar(opts)
 
-    # !! Not working as intended
     # Bar diagram of the top N passwords of all ref lists
     elif args.plot == "lists_passwords_bar":
         plots.lists_top_passwords_bar(opts)
+
+    # Bar diagram of the origin lists of the top N passwords of all ref lists
+    elif args.plot == "lists_passwords_origin_bar":
+        plots.lists_top_password_origin_bar(opts)
 
     # !! Not working as intended
     # Line diagram of the top N passwords of the WordNet

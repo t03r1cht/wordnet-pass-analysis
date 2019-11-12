@@ -42,21 +42,51 @@ def wn_top_passwords_bar(opts):
     f, ax = plt.subplots(1)
     labels = []
     occurrences = []
-    for password in mongo.db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
+    # Get double the amount of passwords because we still need to remove doubles and need some buffer
+    limit = opts["top"] * 2
+    for password in mongo.db_pws_wn.find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
+    
+    # Remove doubles
+    target_len = opts["top"]
+    l = []
+    o = []
+
+    for k,v in enumerate(labels):
+        # If all doubles were removed and the new list is the target length
+        if len(l) == target_len:
+            break
+        # Enforce password policy
+        if len(v) < 3 or v.isdigit():
+            continue
+        else:
+            # Check if label already exists in l list. If yes, skip
+            if v in l:
+                continue
+            else:
+                l.append(v)
+                o.append(occurrences[k])
+    
+    if len(l) != target_len:
+        log_err("Could not fill target list after removing doubles. Increase 'limit' and try again.")
+        return
+    log_ok("For manual labelling:\n")
+    for k, v in enumerate(l):
+        log_ok("(%s)\t%s: %d" % (k+1, v, o[k]))
+
     # Create a sequence from 0 - len(labels) - 1 (will be the x coordinates)
-    index = np.arange(len(labels))
+    index = np.arange(len(l))
     # index (0..99) are the indices for the labels array
     # occurrences are the height of each tick on the x axis (so the occurrences on the y axis)
-    ax.bar(index, occurrences, color="black")
+    ax.bar(index, o, color="black")
     ax.set_yscale("log", basey=10)
     plt.xlabel('Password', fontsize=10)
     plt.ylabel('Occurrences', fontsize=10)
     # mark each tick on the x axis using the index to place each element of the labels list
     # we can "map" the index list to the label list and also represent each label x coordinate with it
-    plt.xticks(index, labels, fontsize=7, rotation=45)
-    plt.title('Top %d WordNet Passwords' % opts["top"])
+    plt.xticks(index, l, fontsize=7, rotation=45)
+    plt.title('Top %d WordNet Passwords' % target_len)
     plt.show(f)
 
 
@@ -64,19 +94,132 @@ def lists_top_passwords_bar(opts):
     f, ax = plt.subplots(1)
     labels = []
     occurrences = []
-    for password in mongo.db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
-        log_ok("{} {}".format(password["name"], password["occurrences"]))
+    origin_list = []
+    limit = opts["top"] * 10
+    for password in mongo.db_pws_lists.find({"occurrences": {"$gt": 100000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
-    index = np.arange(len(labels))
-    ax.bar(index, occurrences)
+        origin_list.append(password["source"])
+    
+    # Remove doubles
+    target_len = opts["top"]
+    l = []
+    o = []
+    orig = []
+
+    for k,v in enumerate(labels):
+        # If all doubles were removed and the new list is the target length
+        if len(l) == target_len:
+            break
+        # Enforce password policy
+        if len(v) < 3 or v.isdigit():
+            continue
+        else:
+            # Check if label already exists in l list. If yes, skip
+            if v in l:
+                continue
+            else:
+                l.append(v)
+                o.append(occurrences[k])
+                orig.append(origin_list[k])
+    
+    if len(l) != target_len:
+        log_err("Could not fill target list after removing doubles. Increase 'limit' and try again.")
+        log_ok(l)
+        return
+    log_ok("For manual labelling:\n")
+    for k, v in enumerate(l):
+        log_ok("(%s)\t%s: %d %s" % (k+1, v, o[k], orig[k]))
+    
+    
+    index = np.arange(len(l))
+    ax.bar(index, o, color="black")
     ax.set_yscale("log", basey=10)
     plt.xlabel('Password', fontsize=10)
     plt.ylabel('Occurrences', fontsize=10)
-    plt.xticks(index, labels, fontsize=7, rotation=30)
+    plt.xticks(index, l, fontsize=7, rotation=30)
     plt.title('Top %d Word List Passwords' % opts["top"])
     plt.show(f)
 
+def lists_top_password_origin_bar(opts):
+    f, ax = plt.subplots(1)
+    labels = []
+    occurrences = []
+    origin_list = []
+    limit = opts["top"] * 2
+    for password in mongo.db_pws_lists.find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
+        labels.append(password["name"])
+        occurrences.append(password["occurrences"])
+        origin_list.append(password["source"])
+    
+    # Remove doubles
+    target_len = opts["top"]
+    l = []
+    o = []
+    orig = []
+    double_cnt = 0
+    policy_violation_cnt = 0
+    for k,v in enumerate(labels):
+        # If all doubles were removed and the new list is the target length
+        if len(l) == target_len:
+            break
+        # Enforce password policy
+        if len(v) < 3 or v.isdigit():
+            policy_violation_cnt += 1
+            continue
+        else:
+            # Check if label already exists in l list. If yes, skip
+            if v in l:
+                double_cnt += 1
+                continue
+            else:
+                l.append(v)
+                o.append(occurrences[k])
+                orig.append(origin_list[k])
+    
+    if len(l) != target_len:
+        log_err("Could not fill target list after removing doubles. Increase 'limit' or decrease the '$gt' filter value and try again.")
+        log_err("Total passwords checked: %d" % limit)
+        log_err("Policy violations: %d" % policy_violation_cnt)
+        log_err("Doubles: %d" % double_cnt)
+        return
+
+    # Count the origin lists
+    orig_lists_counts = []
+    for item in orig:
+        # Check if key already exists in list of dicts
+        exists = False
+        for obj in orig_lists_counts:
+            # If one object contains the string in item we are looking for
+            # we increment the found count of this object
+            if obj["source"] == item:
+                obj["count"] += 1
+                # Set this to True. If the code after the loop sees that the key does not yet exists (exists = False), it will be created
+                exists = True
+        # If the string is not yet known in the list, we create the object and init its counter with 1
+        if not exists:
+            o = {"source": item, "count": 1}
+            orig_lists_counts.append(o)
+    
+    sorted_origs = sorted(orig_lists_counts, key=lambda k: k["count"], reverse=True)
+    
+    sorted_l = [x["source"] for x in sorted_origs]
+    sorted_o = [x["count"] for x in sorted_origs]
+
+
+
+    log_ok("For manual labelling:\n")
+    for k, v in enumerate(sorted_l):
+        log_ok("(%s)\t%s: %d" % (k+1, v, sorted_o[k]))
+    
+    index = np.arange(len(sorted_l))
+    ax.bar(index, sorted_o, color="black")
+    # ax.set_yscale("log", basey=10)
+    plt.xlabel('Password', fontsize=10)
+    plt.ylabel('Occurrences', fontsize=10)
+    plt.xticks(index, sorted_l, fontsize=7, rotation=30)
+    plt.title('Top %d Word List Passwords List Distribution' % opts["top"])
+    plt.show(f)
 
 def wn_top_passwords_line(opts):
     labels = []
