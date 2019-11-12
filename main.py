@@ -966,6 +966,10 @@ def plot_data():
     # Bar diagram of the top N passwords of all ref lists
     elif args.plot == "lists_passwords_bar":
         plots.lists_top_passwords_bar(opts)
+    
+    # Bar diagram of the top N passwords of a given ref list
+    elif args.plot == "list_top_n_passwords_bar":
+        plots.list_top_n_passwords_bar(opts)
 
     # Bar diagram of the origin lists of the top N passwords of all ref lists
     elif args.plot == "lists_passwords_origin_bar":
@@ -1013,6 +1017,10 @@ def plot_data():
     # The lookup will not create perform any permutations. It is implied, that each respective list already contains the necessary permutations
     elif args.plot == "misc_lists_line":
         plots.plot_misc_lists(opts)
+
+    # Bar diagram of the top N passwords of a given ref list
+    elif args.plot == "misc_lists_top_n_passwords_bar":
+        plots.misc_lists_top_n_passwords_bar(opts)
 
     # Overlay two misc lists as a line graph (dotted and bold).
     # The two lists to be overlayed must be looked up beforehand and will be specified with the -l param:
@@ -1142,13 +1150,17 @@ def plot_data():
     elif args.plot == "dict_ref_list_top_n_pass_comp_bar":
         plots.dict_ref_list_top_n_pass_comp_bar(opts)
 
-    # TODO Bar chart with multiple X's comparing a different dictionary with a misc list.
+    # Bar chart with multiple X's comparing a different dictionary with a misc list.
     elif args.plot == "dict_misc_list_top_n_pass_comp_bar":
         plots.dict_misc_list_top_n_pass_comp_bar(opts)
 
-    # TODO Bar chart with multiple X's comparing a different dictionary with another dictionary.
+    # Bar chart with multiple X's comparing a different dictionary with another dictionary.
     elif args.plot == "dict_dict_top_n_pass_comp_bar":
         plots.dict_dict_top_n_pass_comp_bar(opts)
+
+    # Compare the total hits of everything. WordNet, Ref Lists, Misc Lists, Alt. Dicts etc.
+    elif args.plot == "comp_all":
+        plots.comp_all(opts)
 
     # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value
     elif args.plot == "wn_stats":
