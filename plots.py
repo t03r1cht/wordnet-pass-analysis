@@ -3134,15 +3134,32 @@ def comp_all(opts):
             "sum": item["total_hits"] + item["this_hits"]
         }
         total_sum.append(o)
-    
-
-
 
     # Get the sum for all dicts
+    # First get the dict collection names starting with passwords_dicts_
+    dict_collection_names = []
+    query_result4 = mongo.db.list_collection_names()
+    for item in query_result4:
+        if item.startswith("passwords_dicts_"):
+            dict_collection_names.append(item)
 
-    for k,v in enumerate(total_sum):
+    # Query the collections
+    for collection_name in dict_collection_names:
+        query_resultn = mongo.db[collection_name].aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
+        for item in query_resultn:
+            o = {
+                "type": "dict",
+                "name": item["_id"],
+                "sum": item["sum"]
+            }
+            total_sum.append(o)
+
+
+
+    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
+    for k,v in enumerate(sorted_sums):
         log_ok("%d %s %s %s" % (k, v["type"], v["name"], format_number(v["sum"])))
-
+    
     return
 
 
