@@ -8,8 +8,11 @@ mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 db = mongo["passwords"]
 db_lists = db["lists"]
 db_wn = db["wn_synsets"]
+db_wn_verb = db["wn_synsets_verb"]
 db_pws_wn = db["passwords_wn"]
+db_pws_wn_verb = db["passwords_wn_verb"]
 db_wn_lemma_permutations = db["wn_lemma_permutations"]
+db_wn_lemma_permutations_verb = db["wn_lemma_permutations_verb"]
 db_pws_lists = db["passwords_lists"]
 db_pws_misc_lists = db["passwords_misc_lists"]
 db_pws_dicts = db["passwords_dicts"]
@@ -49,6 +52,24 @@ def store_tested_pass_wn(name, occurrences, source, word_base):
     }
     try:
         db_pws_wn.insert_one(o)
+    except Exception:
+        return False
+    return True
+
+
+def store_tested_pass_wn_verb(name, occurrences, source, word_base):
+    """
+    Save permutation to the "wn" (WordNet) collection
+    """
+    o = {
+        "name": name,
+        "occurrences": occurrences,
+        "synset": source,
+        "word_base": word_base,
+        "tag": TAG
+    }
+    try:
+        db_pws_wn_verb.insert_one(o)
     except Exception:
         return False
     return True
@@ -126,6 +147,17 @@ def store_permutations_for_lemma(permutations):
                              permutations["synset"], permutations["word_base"])
 
 
+def store_permutations_for_lemma_verb(permutations):
+    # In case it already exists
+    if db_wn_lemma_permutations_verb.count_documents({"word_base": permutations["word_base"]}) > 0:
+        return
+    db_wn_lemma_permutations_verb.insert_one(permutations)
+    # Also store each separate permutation so we can search for the most popular permutations
+    for p in permutations["permutations"]:
+        store_tested_pass_wn_verb(p["permutation"], p["occurrences"],
+                                  permutations["synset"], permutations["word_base"])
+
+
 def new_permutation_for_lemma(permutation, occurrences):
     o = {
         "permutation": permutation,
@@ -153,6 +185,24 @@ def store_synset_with_relatives(synset, parent="root"):
     db_wn.insert_one(o)
 
 
+def store_synset_with_relatives_verb(synset, parent="root"):
+    # Check if this synset already exists.
+    if db_wn_verb.count_documents({"id": synset.name()}) > 0:
+        return
+
+    childs = []
+    for child in synset.hyponyms():
+        childs.append(child.name())
+    o = {
+        "id": synset.name(),
+        "level": synset.min_depth(),
+        "parent": parent,
+        "childs": childs,
+        "tag": TAG
+    }
+    db_wn_verb.insert_one(o)
+
+
 def update_synset_with_stats(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
     o = {
         "total_hits": this_hits + hits_below,
@@ -167,6 +217,21 @@ def update_synset_with_stats(synset, hits_below, not_found_below, found_below, t
         "tag": TAG
     }
     db_wn.update_one({"id": synset.name()}, {"$set": o})
+
+def update_synset_with_stats_verb(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
+    o = {
+        "total_hits": this_hits + hits_below,
+        "hits_below": hits_below,
+        "this_hits": this_hits,
+        "not_found_below": not_found_below,
+        "found_below": found_below,
+        "this_found_cnt": this_found,
+        "this_not_found_cnt": this_not_found,
+        "this_permutations": this_found + this_not_found,
+        "below_permutations": found_below + not_found_below,
+        "tag": TAG
+    }
+    db_wn_verb.update_one({"id": synset.name()}, {"$set": o})
 
 
 def get_wn_permutations(top=0):
