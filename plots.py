@@ -10,6 +10,7 @@ import operator
 from hpie import HPie, stringvalues_to_pv
 from nltk.corpus import wordnet as wn
 import mongo_filter
+from textwrap import wrap
 
 plt.style.use('ggplot')
 
@@ -3130,7 +3131,8 @@ def comp_all(opts):
     for item in query_result3:
         o = {
             "type": "wordnet",
-            "name": item["id"],
+            # "name": item["id"],
+            "name": "WordNet",
             "sum": item["total_hits"] + item["this_hits"]
         }
         total_sum.append(o)
@@ -3156,107 +3158,31 @@ def comp_all(opts):
 
 
 
+    log_ok("Printing values for manual labelling:")
+    log_ok("")
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k,v in enumerate(sorted_sums):
-        log_ok("%d %s %s %s" % (k, v["type"], v["name"], format_number(v["sum"])))
+        log_ok("(%d)\t%s\t%s\t%s" % (k, v["type"], v["name"], format_number(v["sum"])))
     
-    return
-
-
-    # Get the top N ref list passwords
-    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
-    # In order to still be able to process that list, just increase the buf_len_dict_id value (by a lot), so there is enough buffer
-    # (i.e. pulling way more top passwords preemptively)
-    buf_len_new_dict = limit_val * 10
-    mongo_dict_coll = mongo.db["passwords_dicts_{}".format(dict_id_src_1)]
-    top_n_new_dict = mongo_dict_coll.find({"occurrences": {"$gt": 10}}).sort(
-        "occurrences", pymongo.DESCENDING).limit(buf_len_new_dict)
-    log_ok("Retrieved items for comparison dict (with additional buffer): %d" %
-           buf_len_new_dict)
-    top_n_new_dict_labels = []
-    top_n_new_dict_occs = []
-
-    # We extract labels/occs from the result list until the original target limit of limit_val is reached
-    target_len = limit_val
-    for item in top_n_new_dict:
-        # If the labels dict has the preferred lengt (i.e. is filled)
-        if len(top_n_new_dict_labels) == target_len:
-            break
-        if item["name"] in top_n_new_dict_labels:
-            continue
-        # Enfore password requirements
-        elif len(item["name"]) < 3 or item["name"].isdigit():
-            continue
-        else:
-            top_n_new_dict_labels.append(item["name"])
-            top_n_new_dict_occs.append(item["occurrences"])
-
-    # Get the top N WordNet passwords
-    # Since there are duplicates (originating from different word bases) we limit at the original limit plus a third of its value for some buffer
-    # The definitive limiting happens when we eliminated the duplicates
-    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
-    # In order to still be able to process that list, just increase the buf_len_dict_id value (by a lot), so there is enough buffer
-    # (i.e. pulling way more top passwords preemptively)
-    buf_len_new_dict2 = limit_val * 10
-    mongo_dict_coll2 = mongo.db["passwords_dicts_{}".format(dict_id_src_2)]
-    top_n_new_dict2 = mongo_dict_coll2.find({"occurrences": {"$gt": 10}}).sort(
-        "occurrences", pymongo.DESCENDING).limit(buf_len_new_dict2)
-    log_ok("Retrieved items for comparison dict (with additional buffer): %d" %
-           buf_len_new_dict2)
-    top_n_new_dict_labels2 = []
-    top_n_new_dict_occs2 = []
-
-    # We extract labels/occs from the result list until the original target limit of limit_val is reached
-    for item in top_n_new_dict2:
-        # If the labels dict has the preferred lengt (i.e. is filled)
-        if len(top_n_new_dict_labels2) == target_len:
-            break
-        if item["name"] in top_n_new_dict_labels2:
-            continue
-        # Enfore password requirements
-        elif len(item["name"]) < 3 or item["name"].isdigit():
-            continue
-        else:
-            top_n_new_dict_labels2.append(item["name"])
-            top_n_new_dict_occs2.append(item["occurrences"])
-
-    if len(top_n_new_dict_occs2) != len(top_n_new_dict_occs):
-        log_err("The result list for the WordNet and Ref List lists are of different length. This is caused in case the buffer for the WordNet (or sometimes the dict_id) was not big enough. This happens if the query to the database returns too many duplicates. After sending the query to the database, we retrieve a list of results for this query. Usually, the query contains multiple duplicate results (same passwords for different word bases). To eliminate the duplicates, we pull more results than the user asked for (default: 1/3). Then we remove the duplicates and cut the result list to the original list length specified by the user.")
-        log_err("%s results: %d" % (dict_id_src_1, len(top_n_new_dict_occs)))
-        log_err("%s results: %d" %
-                (dict_id_src_2, len(top_n_new_dict_occs2)))
-        return
-
-    log_ok("Printing bar pairs and values for manual labelling:")
-    log_ok("")
-
-    for i in range(1, limit_val+1):
-        log_ok("%d: " % i)
-        # i-1 because we need the index and not not the label index (starting at 1)
-        log_ok("\t%s: %s %s" %
-               (dict_id_src_1, top_n_new_dict_labels2[i-1], format_number(top_n_new_dict_occs[i-1])))
-        log_ok("\t%s: %s %s" %
-               (dict_id_src_2, top_n_new_dict_labels2[i-1], format_number(top_n_new_dict_occs2[i-1])))
-        log_ok("")
+    sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    sorted_o = [x["sum"] for x in sorted_sums]
 
     # Plot as bar
-    N = limit_val
+    N = len(sorted_l)
     ind = np.arange(N)
     width = 0.35
 
-    plt.bar(ind, top_n_new_dict_occs, width,
-            label=dict_id_src_1, color="black")
-    plt.bar(ind + width, top_n_new_dict_occs2,
-            width, label=dict_id_src_2, color="grey")
+    plt.bar(ind, sorted_o, width,
+            label="Password Collections", color="black")
 
     plt.yscale("log", basey=10)
 
-    plt.ylabel("Password Occurrences")
-    plt.xlabel("Top %d Passwords of Each Source" % limit_val)
+    plt.ylabel("Total Hits")
+    plt.xlabel("Password Source")
     plt.title(
-        "Password Hit Rate Comparison Dictionary/Dictionary", fontdict = {'fontsize' : 10})
+        "Total Hits Count for Each Password Source", fontdict = {'fontsize' : 10})
 
-    plt.xticks(ind + width, range(1, limit_val+1))
+    plt.xticks(ind, sorted_l, rotation=90, fontsize=7)
     plt.legend(loc="best")
 
     plt.show()

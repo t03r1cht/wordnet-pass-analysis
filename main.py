@@ -81,6 +81,8 @@ parser.add_argument("--dict", type=str,
                     help="Specify dict path.", dest="dict_source")
 parser.add_argument("--dict-id", type=str,
                     help="Specify dict ID for the database. Please use only characters.", dest="dict_id")
+parser.add_argument("--wn-type", type=str,
+                    help="Specify the part of speech of the WordNet you want to recurse.", dest="wn_pos")
 args = parser.parse_args()
 
 started = ""
@@ -99,6 +101,9 @@ total_base_lemmas = 0  # track the total number of base lemmas
 lemmas_to_process = 0
 glob_started_time = None
 synset_cnt = 0
+# We need this dictionary to track which verb synsets were iterated over by the recursion.
+# We will then lookup those still unprocessed manually by getting the diff
+wn_verbs_check_map = {}
 
 ILL_TAG = get_curr_time_str()
 
@@ -227,7 +232,7 @@ def hash_sha1(s):
 
 def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
     """
-    Iterates over each hyponym synset until the desired depth in the DAG is reached.
+    Iterates over each noun hyponym synset until the desired depth in the DAG is reached.
 
     For each level of hyponyms in the DAG, this function will unpack each lemma of each
     synset of said depth level, which can be confusing when looking at results.txt.
@@ -310,6 +315,126 @@ def recurse_nouns_from_root(root_syn, start_depth, rel_depth=1):
         total_base_lemmas += 1
 
     return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
+
+
+def recurse_verbs_from_root(root_syn):
+    """
+    Iterates over each verb hyponym synset until the desired depth in the DAG is reached.
+
+    For each level of hyponyms in the DAG, this function will unpack each lemma of each
+    synset of said depth level, which can be confusing when looking at results.txt.
+
+    Each indented set of lemmas is the sum of all unpacked lemmas of each synset of the current graph level.
+    """
+
+    global glob_started_time
+    global total_base_lemmas
+    curr_time = get_curr_time()
+    time_diff = curr_time - glob_started_time
+
+    clear_terminal()
+    global synset_cnt
+    synset_cnt += 1
+    log_status("Processed Lemmas: {0}\nProcessed Synsets: {5} \nTested Passwords: {1}\nCurrent Lemma: {2}\nElapsed Time: {3}/{4:.2f} (s/m)".format(
+        total_base_lemmas,
+        total_processed,
+        root_syn,
+        time_diff.seconds,
+        time_diff.seconds / 60,
+        synset_cnt
+    ))
+    curr_root_syn = root_syn
+    hits_below = 0
+    total_hits_for_current_synset = 0
+    not_found_for_current_synset = 0
+    found_for_current_synset = 0
+    # Get the children for the current synset and iterate over them
+    for hypo in curr_root_syn.hyponyms():
+        total_hits = 0
+        not_found = 0
+        found = 0
+        # For each children of the current synset, determine all of its lemmas (lemmas = synset synonyms)
+        for lemma in hypo.lemma_names():
+            total_base_lemmas += 1
+            # For each synset lemma, apply a set of permutations to them to generate possible passwords, e.g.
+            # with the lemma "cat" possible permutations may be "Cat", "CAT", "c4t", "cat123" and so on.
+            # This is what permutations_for_lemma() does
+            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+                lemma, hypo.min_depth(), hypo.name())
+            # 1. Total hits for the current synset (not all synsets have more than 1 synonym, but in case they do, add all hits together)
+            total_hits += lemma_hits
+            # 2. Total hits for the current synset including the hits of all of THIS synsets children (the children recursion only goes as far as the desired end-level)
+            total_hits_for_current_synset += lemma_hits
+            # 3. The total count of password variations that were not found in the HIBP password file
+            not_found += not_found_cnt
+            # 4. The total count of password variations that were found in the HIBP password file
+            found += found_cnt
+            # 5. The count of password variations for THIS synset that were not found in the HIBP password file
+            not_found_for_current_synset += not_found_cnt
+            # 6. The count of password variations for THIS synset that were found in the HIBP password file
+            found_for_current_synset += found_cnt
+        # Create this synset in the database and save its relatives (hypernym and hyponyms)
+        mongo.store_synset_with_relatives(hypo, curr_root_syn.name())
+        # Recursive execution of this function with the new parent synset (of which we will in turn determine its children) set to be this child.
+        hits_below, not_found_below, found_below = recurse_verbs_from_root(
+            root_syn=hypo)
+
+        # Add the sum of all hits below the current synset to the hits list of the current synset so
+        # below hits are automatically included (not included in the terminal output, we separate both these
+        # numbers into total_hits and hits_below so we can distinguish how many hits we found below and how
+        # many were produced by the current synset).
+        # Works because of... recursion
+        total_hits_for_current_synset += hits_below
+        not_found_for_current_synset += not_found_below
+        found_for_current_synset += found_below
+        # Update the synset with these stats
+        mongo.update_synset_with_stats(
+            hypo, hits_below, not_found_below, found_below, total_hits, found_cnt, not_found_cnt)
+        if args.subsume_for_classes:
+            append_with_hits(hypo, total_hits, hits_below,
+                             not_found, not_found_below, found, found_below)
+        total_base_lemmas += 1
+
+    return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
+
+
+def option_verb_wordnet():
+    init()
+    signal.signal(signal.SIGINT, sigint_handler)
+    clear_terminal()
+    started_time = get_curr_time()
+    global glob_started_time
+    glob_started_time = started_time
+
+    # Will contain all synsets starting at level 0
+    lvl_0_synsets = []
+
+    for syn in list(wn.all_synsets("v")):
+        # Store all synset names and check which ones haven't been touched by
+        # the recursion
+        # We will init all dict values with 0. They are set to 1 once they have been processed by the recursion
+        wn_verbs_check_map[syn.name()] = 0
+        # Filter all synsets out that start on the level 0 (root of the tree)
+        if syn.min_depth() == 0:
+            lvl_0_synsets.append(syn)
+
+    log_ok("Synsets starting at Level 0: %d" % len(lvl_0_synsets))
+
+    # Start the recursion
+    for syn in lvl_0_synsets:
+        hits_below, not_found_below, found_below = recurse_verbs_from_root(syn)
+    
+    # After we finished the recursion, check still unprocessed synsets, i.e. those in the wn_verbs_check_map with their value still set to 0
+    not_found_check_map = [] # Contains all synsets that still need to be processed
+    for k, v in wn_verbs_check_map.items():
+        if v == 0:
+            not_found_check_map.append(k)
+        
+    # Lookup the rest of the synsets
+    for item in not_found_check_map:
+        syn = wn.synset(item)
+        # print(syn.name(), syn.min_depth(), syn.hypernyms(), syn.hyponyms(), syn.lemma_names())
+        # TODO Add to the proper collections (passwords_wn_v, wn_lemma_permutations_v and wn_synsets_v)
 
 
 def permutations_for_lemma(lemma, depth, source):
@@ -572,7 +697,7 @@ def option_draw_graph():
 
 
 def option_lookup_passwords():
-    """
+    """"
     Lookup the passwords in the pwned passwords list.
     """
     init()
@@ -966,7 +1091,7 @@ def plot_data():
     # Bar diagram of the top N passwords of all ref lists
     elif args.plot == "lists_passwords_bar":
         plots.lists_top_passwords_bar(opts)
-    
+
     # Bar diagram of the top N passwords of a given ref list
     elif args.plot == "list_top_n_passwords_bar":
         plots.list_top_n_passwords_bar(opts)
@@ -1439,6 +1564,9 @@ if __name__ == "__main__":
         get_stats()
     elif args.misc_list:
         option_lookup_ref_lists()
+    elif args.wn_pos:
+        if args.wn_pos == "v":
+            recurse_verbs_from_root()
     else:
         # Evaluate command line parameters
         if args.wn:
