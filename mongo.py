@@ -142,9 +142,15 @@ def store_permutations_for_lemma(permutations):
         return
     db_wn_lemma_permutations.insert_one(permutations)
     # Also store each separate permutation so we can search for the most popular permutations
-    for p in permutations["permutations"]:
-        store_tested_pass_wn(p["permutation"], p["occurrences"],
-                             permutations["synset"], permutations["word_base"])
+    # for p in permutations["permutations"]:
+    #     store_tested_pass_wn(p["permutation"], p["occurrences"],
+    #                          permutations["synset"], permutations["word_base"])
+    # Replace with bulk insert. Should generally increase performance
+    try:
+        db_pws_wn.insert_many(permutations["permutations"])
+    except Exception:
+        return False
+    return True
 
 
 def store_permutations_for_lemma_verb(permutations):
@@ -153,9 +159,15 @@ def store_permutations_for_lemma_verb(permutations):
         return
     db_wn_lemma_permutations_verb.insert_one(permutations)
     # Also store each separate permutation so we can search for the most popular permutations
-    for p in permutations["permutations"]:
-        store_tested_pass_wn_verb(p["permutation"], p["occurrences"],
-                                  permutations["synset"], permutations["word_base"])
+    # for p in permutations["permutations"]:
+    #     store_tested_pass_wn_verb(p["permutation"], p["occurrences"],
+    #                               permutations["synset"], permutations["word_base"])
+    # Replace with bulk insert. Should generally increase performance
+    try:
+        db_pws_wn_verb.insert_many(permutations["permutations"])
+    except Exception:
+        return False
+    return True
 
 
 def new_permutation_for_lemma(permutation, occurrences):
@@ -218,6 +230,7 @@ def update_synset_with_stats(synset, hits_below, not_found_below, found_below, t
     }
     db_wn.update_one({"id": synset.name()}, {"$set": o})
 
+
 def update_synset_with_stats_verb(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
     o = {
         "total_hits": this_hits + hits_below,
@@ -237,3 +250,15 @@ def update_synset_with_stats_verb(synset, hits_below, not_found_below, found_bel
 def get_wn_permutations(top=0):
     res = db_pws_wn.find().sort("occurrences").limit(top)
     return res
+
+
+def add_values_to_existing_verb(id, total_hits, found, not_found):
+    db_wn_verb.update({"id": id}, {
+        "$inc": {
+            "hits_below": total_hits,
+            "found_below": found,
+            "not_found_below": not_found,
+            # If the hits below were increased we also have to increase the value of total_hits (this_hits + below_hits)
+            "total_hits": total_hits
+        }
+    })

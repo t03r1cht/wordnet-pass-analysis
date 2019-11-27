@@ -348,6 +348,11 @@ def recurse_verbs_from_root(root_syn):
     total_hits_for_current_synset = 0
     not_found_for_current_synset = 0
     found_for_current_synset = 0
+
+    # Set the dict entry to 1 to signify that we have "touched" this synset via the recursion
+    global wn_verbs_check_map
+    wn_verbs_check_map[curr_root_syn.name()] = 1
+
     # Get the children for the current synset and iterate over them
     for hypo in curr_root_syn.hyponyms():
         total_hits = 0
@@ -405,29 +410,40 @@ def option_verb_wordnet():
 
     # Will contain all synsets starting at level 0
     lvl_0_synsets = []
+    lvl_0_synsets_labels = []
+    global wn_verbs_check_map
 
+    # Get all verb synsets and init the wn_verbs_check_map dict with each verb synset as key and initialized with the 0 value.
+    # While recursing over the WordNet, we will gradually set each dictionary record to 1 to signify that we have processed this synset. After we finished the recursion, we know which synset are still unprocessed
+    # by searching in the dict for all records still set to 0.
     for syn in list(wn.all_synsets("v")):
-        # Store all synset names and check which ones haven't been touched by
-        # the recursion
+        # Store all synset names
         # We will init all dict values with 0. They are set to 1 once they have been processed by the recursion
         wn_verbs_check_map[syn.name()] = 0
-        # Filter all synsets out that start on the level 0 (root of the tree)
+        # Filter all synsets out that start on the level 0 (root of the wordnet synset verb "tree")
         if syn.min_depth() == 0:
             lvl_0_synsets.append(syn)
+            lvl_0_synsets_labels.append(syn.name())
 
     log_ok("Synsets starting at Level 0: %d" % len(lvl_0_synsets))
 
     global total_base_lemmas
-    first_level_hits = 0
-    first_level_not_found = 0
-    first_level_found = 0
     log_ok("Processing level 0 verb synsets...")
     # Before starting the actual recursion, we need to process all synsets on level 0 (recursion method always looks up the passed synsets hyponyms and not the synset itself)
     finish_cnt = 0
     lvl_0_len = len(lvl_0_synsets)
-    # for syn in lvl_0_synsets:
-    for syn in lvl_0_synsets[:3]: # !! For testing purposes only !!
+    lvl_0_perm_values = {}
+    for syn in lvl_0_synsets:
+        # Contains the sum of the lemmas in case a synset consists of more than one lemma
+        first_level_hits = 0
+        first_level_not_found = 0
+        first_level_found = 0
+        # Set the dict entry to 1 to signify that we have "touched" this synset via the recursion
+        wn_verbs_check_map[syn.name()] = 1
+
+        # Create the synset in the database
         mongo.store_synset_with_relatives_verb(syn, parent="root")
+
         for syn_lemma in syn.lemma_names():
             total_base_lemmas += 1
             hits, not_found, found = permutations_for_lemma_verb(
@@ -435,16 +451,37 @@ def option_verb_wordnet():
             first_level_hits += hits
             first_level_not_found += not_found
             first_level_found += found
+
+        # Store these values for later when we need to update the lvl 0 synset stats
+        o = {
+            "first_level_hits": first_level_hits,
+            "first_level_not_found": first_level_not_found,
+            "first_level_found": first_level_found
+        }
+        lvl_0_perm_values[syn.name()] = o
+
         finish_cnt += 1
         log_ok("[%d/%d] Finished: %s" % (finish_cnt, lvl_0_len, syn.name()))
 
-    log_status("Test OK")
-    return
+    log_status("Test 'root syns' OK")
 
     log_ok("Processing verb synset subtrees...")
     for syn in lvl_0_synsets:
         # Start the recursion
         hits_below, not_found_below, found_below = recurse_verbs_from_root(syn)
+
+        # After the recursion is finished the function returns the hits from the child synsets we
+        # started the recursion from. We can now update the lvl 0 synsets with the hits of their respective
+        # children and subchildren and so on.
+        hits = lvl_0_perm_values.get(syn.name(), {}).get("first_level_hits", 0)
+        found = lvl_0_perm_values.get(
+            syn.name(), {}).get("first_level_found", 0)
+        not_found = lvl_0_perm_values.get(
+            syn.name(), {}).get("first_level_not_found", 0)
+        mongo.update_synset_with_stats_verb(
+            syn, hits_below, not_found_below, found_below, hits, found, not_found)
+
+    log_status("Test 'tree recursion' OK")
 
     # After we finished the recursion, check still unprocessed synsets, i.e. those in the wn_verbs_check_map with their value still set to 0
     not_found_check_map = []  # Contains all synsets that still need to be processed
@@ -453,10 +490,58 @@ def option_verb_wordnet():
             not_found_check_map.append(k)
 
     # Lookup the rest of the synsets
+    log_ok("Processing verb synsets not iterated over by recursion...")
+    finish_cnt = 0
+    total_other_syn_len = len(not_found_check_map)
+
     for item in not_found_check_map:
         syn = wn.synset(item)
-        # print(syn.name(), syn.min_depth(), syn.hypernyms(), syn.hyponyms(), syn.lemma_names())
-        # TODO Add to the proper collections (passwords_wn_v, wn_lemma_permutations_v and wn_synsets_v)
+
+        total_hits = 0
+        not_found = 0
+        found = 0
+
+        # Will be populated with stats after the lookup has been finished
+        if syn.hypernyms() == []:
+            log_status("{}, parent={}".format(syn.name(), syn.hypernyms()))
+            mongo.store_synset_with_relatives_verb(
+                syn, parent="no_parent")
+        else:
+            log_status("{}, parent={}".format(syn.name(), syn.hypernyms()))
+            mongo.store_synset_with_relatives_verb(
+                syn, parent=syn.hypernyms()[0].name())
+
+        for syn_lemma in syn.lemma_names():
+            lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma_verb(
+                syn_lemma, syn.min_depth(), syn.name())
+            total_hits += lemma_hits
+            not_found += not_found_cnt
+            found += found_cnt
+        # Update the manually "crawled" synsets with their respective hits
+        mongo.update_synset_with_stats_verb(
+            syn, 0, 0, 0, total_hits, found, not_found)
+
+        # Determine to which lvl 0 synset this synset belongs and add the hits of this synset to its
+        # respective lvl 0 synset
+
+        # Get the hypernyms and check which lvl 0 synset is found in the root path (hypernyms_path() returns all hypernyms until the root synset is reached)
+        linked_lvl0_syn = "no_linked_lvl0_syn"
+        hypernym_paths_labels = [
+            syn.name() for hyper_lists in syn.hypernym_paths() for syn in hyper_lists]
+        for lvl0 in lvl_0_synsets_labels:
+            if lvl0 in hypernym_paths_labels:
+                linked_lvl0_syn = lvl0
+
+        # Add total_hits, found and not_found to the lvl0 synset the current synset is indirectly linked to (we update the respective level 0 synset since
+        # we now know that the current synset is an indirect child of the determined lvl 0 synset)
+        mongo.add_values_to_existing_verb(
+            linked_lvl0_syn, total_hits, found, not_found)
+
+        finish_cnt += 1
+        log_status("[%d/%d] %s" %
+                   (finish_cnt, total_other_syn_len, syn.name()))
+
+    log_status("Test 'other syns' OK")
 
 
 def permutations_for_lemma(lemma, depth, source):
@@ -488,8 +573,18 @@ def permutations_for_lemma(lemma, depth, source):
                 trans_hits = lookup(p["name"], depth, source, lemma)
                 if args.root_syn_name:
                     # Store each permutations under this lemma object in the database
-                    all_permutations.append(
-                        mongo.new_permutation_for_lemma(p["name"], trans_hits))
+                    o = {
+                        "name": p["name"],
+                        "occurrences": trans_hits,
+                        "synset": source,
+                        "word_base": lemma,
+                        "tag": ILL_TAG
+                    }
+
+                    # all_permutations.append(
+                    #     mongo.new_permutation_for_lemma(p["name"], trans_hits))
+                    all_permutations.append(o)
+                    
                 if args.from_lists:
                     mongo.store_tested_pass_lists(
                         p["name"], trans_hits, source, lemma, p["permutator"])
@@ -503,8 +598,17 @@ def permutations_for_lemma(lemma, depth, source):
                 log_status("Looking up [%s]" % permutations["name"])
             trans_hits = lookup(permutations["name"], depth, source, lemma)
             if args.root_syn_name:
-                all_permutations.append(
-                    mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
+                o = {
+                    "name": permutations["name"],
+                    "occurrences": trans_hits,
+                    "synset": source,
+                    "word_base": lemma,
+                    "tag": ILL_TAG
+                }
+                # all_permutations.append(
+                #     mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
+                all_permutations.append(o)
+
             if args.from_lists:
                 mongo.store_tested_pass_lists(
                     permutations["name"], trans_hits, source, lemma, p["permutator"])
@@ -541,6 +645,7 @@ def permutations_for_lemma_verb(lemma, depth, source):
     not_found_cnt = 0
     found_cnt = 0
     all_permutations = []
+
     for combination_handler in combinator.all:
         # Generate all permutations
         permutations = combination_handler(lemma, permutator.all)
@@ -559,8 +664,18 @@ def permutations_for_lemma_verb(lemma, depth, source):
                 # Store each permutations under this lemma object in the database
                 # new_permutation_for_lemma() returns a new JSON object with the fields permutation, occurrences and tag
                 # All permutations of a lemma will be stored for each lemma
-                all_permutations.append(
-                    mongo.new_permutation_for_lemma(p["name"], trans_hits))
+                
+                o = {
+                    "name": p["name"],
+                    "occurrences": trans_hits,
+                    "synset": source,
+                    "word_base": lemma,
+                    "tag": ILL_TAG
+                }
+
+                # all_permutations.append(
+                #     mongo.new_permutation_for_lemma(p["name"], trans_hits))
+                all_permutations.append(o)
                 total_hits += trans_hits
                 if trans_hits == 0:
                     not_found_cnt += 1
@@ -570,8 +685,18 @@ def permutations_for_lemma_verb(lemma, depth, source):
             if args.verbose:
                 log_status("Looking up [%s]" % permutations["name"])
             trans_hits = lookup(permutations["name"], depth, source, lemma)
-            all_permutations.append(
-                mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
+            
+            o = {
+                "name": permutations["name"],
+                "occurrences": trans_hits,
+                "synset": source,
+                "word_base": lemma,
+                "tag": ILL_TAG
+            }
+
+            # all_permutations.append(
+            #     mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
+            all_permutations.append(o)
 
             if trans_hits == 0:
                 not_found_cnt += 1
@@ -587,6 +712,10 @@ def permutations_for_lemma_verb(lemma, depth, source):
         "total_hits": total_hits,
         "synset": source
     }
+
+    # store_permutations_for_lemma_verb() has 2 main functions:
+    # 1. Store the JSON object in wn_lemma_permutations_verb (lemma and each of its permutations, total hits and corresponding synset)
+    # 2. Store each permutation in passwords_wn_verb (permutation name, hits, word base, corresponding synset)
     mongo.store_permutations_for_lemma_verb(permutations_for_lemma)
 
     return total_hits, not_found_cnt, found_cnt
@@ -859,7 +988,9 @@ def option_lookup_passwords():
 
     # Update this root synset with its respective stats
     mongo.update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
-                                   found_below, hits, found, not_found)
+                                   found_below, first_level_hits, first_level_found, first_level_not_found)
+    # mongo.update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
+    #                                found_below, hits, found, not_found)
     # we processed the subtrees, since we are going to reverse
     # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
     # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.

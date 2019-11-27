@@ -13,6 +13,7 @@ check_map_not_found_cnt = 0
 def main():
 
     lvl_0_synsets = []
+    lvl_0_synsets_labels = []
 
     for syn in list(wn.all_synsets("v")):
         # Store all synset names and check which ones haven't been touched by
@@ -20,6 +21,7 @@ def main():
         check_map[syn.name()] = 0
         if syn.min_depth() == 0:
             lvl_0_synsets.append(syn)
+            lvl_0_synsets_labels.append(syn.name())
 
     print("Synsets starting at Level 0: ", len(lvl_0_synsets))
 
@@ -46,7 +48,15 @@ def main():
     # Get the diff synsets
     for item in not_found_check_map:
         syn = wn.synset(item)
-        print(syn.name(), syn.min_depth(), syn.hypernyms(), syn.hyponyms(), syn.lemma_names())
+        # print(syn.name(), syn.min_depth(), syn.hypernyms(), syn.hyponyms(), syn.lemma_names())
+        hypernym_paths_labels = [syn.name() for hyper_lists in syn.hypernym_paths() for syn in hyper_lists]
+        found_lvl0_in_hypernyms = []
+        for lvl0 in lvl_0_synsets_labels:
+            if lvl0 in hypernym_paths_labels:
+                found_lvl0_in_hypernyms.append(lvl0)
+
+        print(syn.name(), syn.min_depth(), "LVL 0 PARENTS:", found_lvl0_in_hypernyms)
+        print()
 
 
 def rec(syn, parent):
