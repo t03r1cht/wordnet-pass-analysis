@@ -1,5 +1,9 @@
 ## Introduction
 
+## About
+
+Systematic password generation and analysis of the HaveIBeenPwned password hash collection to approximate user password generation patterns.
+
 ## Installation
 
 1. Install sgrep if you are running the script on a Linux-based OS (see section below)
