@@ -15,13 +15,30 @@ def main():
     lvl_0_synsets = []
     lvl_0_synsets_labels = []
 
-    for syn in list(wn.all_synsets("v")):
+    lvl0 = 0
+    not_lvl0 = 0
+
+    wn_len = len(list(wn.all_synsets("r")))
+    for syn in list(wn.all_synsets("r")):
+        if syn.min_depth() == 0:
+            lvl0 += 1
+        else:
+            not_lvl0 += 1
+
+        continue
+
         # Store all synset names and check which ones haven't been touched by
         # the recursion
         check_map[syn.name()] = 0
         if syn.min_depth() == 0:
             lvl_0_synsets.append(syn)
             lvl_0_synsets_labels.append(syn.name())
+    
+
+    print("lvl0", lvl0)
+    print("not_lvl0", not_lvl0)
+    print(wn_len)
+    return
 
     print("Synsets starting at Level 0: ", len(lvl_0_synsets))
 
@@ -33,8 +50,9 @@ def main():
         if v == 0:
             not_found_check_map.append(k)
 
-    print("WN Verb len: ", len(list(wn.all_synsets("v"))))
-    print("Counted: ", len(known_keys.keys()))
+    print("WN Verb len: ", len(list(wn.all_synsets("a"))))
+    # print("Counted: ", len(known_keys.keys()))
+    print("Counted: ", total_cnt)
     print("diff_key_cnt: ", diff_key_cnt)
     print("key_exists_cnt: ", key_exists_cnt)
     print("check_map_not_found_cnt: ", check_map_not_found_cnt)
@@ -68,6 +86,8 @@ def rec(syn, parent):
 
     total_cnt += 1
 
+    
+
     # Flag syn name in check_map for found (1)
     if syn.name() in check_map:
         check_map[syn.name()] = 1
@@ -75,20 +95,20 @@ def rec(syn, parent):
         print("Not found in check_map: ", syn.name())
         check_map_not_found_cnt += 1
 
-    if syn.name() in known_keys:
-        key_exists_cnt += 1
-        print("")
-        print(syn.name(), "already exists")
-        print("Existing: Key=", syn.name(), "Value=", known_keys[syn.name()])
-        print("New: Key=", syn.name(), "Value=", parent)
-        # If the new value is the same as the existing value
-        if known_keys[syn.name()] == parent:
-            print("Values are the same!")
-        else:
-            print("Values are different, old={}, new={}".format(
-                known_keys[syn.name()], parent))
-            diff_key_cnt += 1
-    known_keys[syn.name()] = parent
+    # if syn.name() in known_keys:
+    #     key_exists_cnt += 1
+    #     print("")
+    #     print(syn.name(), "already exists")
+    #     print("Existing: Key=", syn.name(), "Value=", known_keys[syn.name()])
+    #     print("New: Key=", syn.name(), "Value=", parent)
+    #     # If the new value is the same as the existing value
+    #     if known_keys[syn.name()] == parent:
+    #         print("Values are the same!")
+    #     else:
+    #         print("Values are different, old={}, new={}".format(
+    #             known_keys[syn.name()], parent))
+    #         diff_key_cnt += 1
+    # known_keys[syn.name()] = parent
     hypos = syn.hyponyms()
 
     # print("level: ", syn.min_depth())
@@ -96,6 +116,7 @@ def rec(syn, parent):
         pass
         # print(syn.name(), "has no hypos")
     else:
+        # print(syn.name(), "has hypos [", [h.name() for h in hypos], "]")
         if not parent:
             pass
             # print(syn, "(parent: None) has", len(hypos),

@@ -28,6 +28,8 @@ from permutators import permutator, permutator_registrar
 import mongo
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
+# ADJ, ADJ_SAT, ADV, NOUN, VERB = 'a', 's', 'r', 'n', 'v'
+
 parser = argparse.ArgumentParser(
     description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
 parser.add_argument("-p", "--pass-database", type=str,
@@ -404,6 +406,10 @@ def option_verb_wordnet():
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
+
+    mongo.purge_verb()
+    log_ok("Deleted old MongoDB verb collections...")
+
     started_time = get_curr_time()
     global glob_started_time
     glob_started_time = started_time
@@ -502,14 +508,15 @@ def option_verb_wordnet():
         found = 0
 
         # Will be populated with stats after the lookup has been finished
+        parent = ""
         if syn.hypernyms() == []:
+            parent = "no_parent"
             log_status("{}, parent={}".format(syn.name(), syn.hypernyms()))
-            mongo.store_synset_with_relatives_verb(
-                syn, parent="no_parent")
         else:
+            parent = syn.hypernyms()[0].name()
             log_status("{}, parent={}".format(syn.name(), syn.hypernyms()))
-            mongo.store_synset_with_relatives_verb(
-                syn, parent=syn.hypernyms()[0].name())
+
+        mongo.store_synset_with_relatives_verb(syn, parent=parent)
 
         for syn_lemma in syn.lemma_names():
             lemma_hits, not_found_cnt, found_cnt = permutations_for_lemma_verb(
@@ -517,6 +524,7 @@ def option_verb_wordnet():
             total_hits += lemma_hits
             not_found += not_found_cnt
             found += found_cnt
+
         # Update the manually "crawled" synsets with their respective hits
         mongo.update_synset_with_stats_verb(
             syn, 0, 0, 0, total_hits, found, not_found)
@@ -527,10 +535,12 @@ def option_verb_wordnet():
         # Get the hypernyms and check which lvl 0 synset is found in the root path (hypernyms_path() returns all hypernyms until the root synset is reached)
         linked_lvl0_syn = "no_linked_lvl0_syn"
         hypernym_paths_labels = [
-            syn.name() for hyper_lists in syn.hypernym_paths() for syn in hyper_lists]
+            ss.name() for hyper_lists in syn.hypernym_paths() for ss in hyper_lists]
         for lvl0 in lvl_0_synsets_labels:
             if lvl0 in hypernym_paths_labels:
+                log_ok("Root parent for {} is {}".format(syn.name(), lvl0))
                 linked_lvl0_syn = lvl0
+                break
 
         # Add total_hits, found and not_found to the lvl0 synset the current synset is indirectly linked to (we update the respective level 0 synset since
         # we now know that the current synset is an indirect child of the determined lvl 0 synset)
@@ -541,7 +551,91 @@ def option_verb_wordnet():
         log_status("[%d/%d] %s" %
                    (finish_cnt, total_other_syn_len, syn.name()))
 
-    log_status("Test 'other syns' OK")
+    log_ok("Finished!")
+
+
+def option_adjective_wordnet():
+    # Problem: Adjectives in the WordNet are not hierarchically structured. All adjective synsets are on level 0 (flat list)
+    init()
+    signal.signal(signal.SIGINT, sigint_handler)
+    clear_terminal()
+
+    mongo.purge_adjective()
+    log_ok("Deleted old MongoDB adjective collections...")
+
+    started_time = get_curr_time()
+    global glob_started_time
+    glob_started_time = started_time
+    global total_base_lemmas
+    finish_cnt = 0
+
+    # Since the adjectives are represented as a flat list, iterating over it is fairly easy
+    total_synsets = len(list(wn.all_synsets("a")))
+    for syn in list(wn.all_synsets("a")):
+        syn_hits = 0
+        syn_not_found = 0
+        syn_found = 0
+
+        mongo.store_synset_with_relatives_adjective(syn, parent="root")
+
+        for syn_lemma in syn.lemma_names():
+            total_base_lemmas += 1
+            lemma_hits, lemma_not_found, lemma_found = permutations_for_lemma_adjective(
+                syn_lemma, syn.min_depth(), syn.name())
+            syn_hits += lemma_hits
+            syn_not_found += lemma_not_found
+            syn_found += lemma_found
+
+        mongo.update_synset_with_stats_adjective(
+            syn, 0, 0, 0, syn_hits, syn_found, syn_not_found)
+
+        # Progress indicator
+        finish_cnt += 1
+        log_ok("[%d/%d]Finished: %s,\tHits: %d, Found: %d, Not Found: %d" % (
+            finish_cnt, total_synsets, syn.name(), syn_hits, syn_found, syn_not_found))
+    log_ok("Finished!")
+
+
+def option_adverb_wordnet():
+    # Problem: Adverbs in the WordNet are not hierarchically structured. All adjective synsets are on level 0 (flat list)
+    init()
+    signal.signal(signal.SIGINT, sigint_handler)
+    clear_terminal()
+
+    mongo.purge_adverb()
+    log_ok("Deleted old MongoDB adverb collections...")
+
+    started_time = get_curr_time()
+    global glob_started_time
+    glob_started_time = started_time
+    global total_base_lemmas
+    finish_cnt = 0
+
+    # Since the adverbs are represented as a flat list, iterating over it is fairly easy
+    total_synsets = len(list(wn.all_synsets("r")))
+    for syn in list(wn.all_synsets("r")):
+        syn_hits = 0
+        syn_not_found = 0
+        syn_found = 0
+
+        mongo.store_synset_with_relatives_adverb(syn, parent="root")
+
+        for syn_lemma in syn.lemma_names():
+            total_base_lemmas += 1
+            lemma_hits, lemma_not_found, lemma_found = permutations_for_lemma_adverb(
+                syn_lemma, syn.min_depth(), syn.name())
+            syn_hits += lemma_hits
+            syn_not_found += lemma_not_found
+            syn_found += lemma_found
+
+        mongo.update_synset_with_stats_adverb(
+            syn, 0, 0, 0, syn_hits, syn_found, syn_not_found)
+
+        # Progress indicator
+        finish_cnt += 1
+        log_ok("[%d/%d]Finished: %s,\tHits: %d, Found: %d, Not Found: %d" % (
+            finish_cnt, total_synsets, syn.name(), syn_hits, syn_found, syn_not_found))
+    log_ok("Finished!")
 
 
 def permutations_for_lemma(lemma, depth, source):
@@ -578,13 +672,14 @@ def permutations_for_lemma(lemma, depth, source):
                         "occurrences": trans_hits,
                         "synset": source,
                         "word_base": lemma,
+                        "permutator": p["permutator"],
                         "tag": ILL_TAG
                     }
 
                     # all_permutations.append(
                     #     mongo.new_permutation_for_lemma(p["name"], trans_hits))
                     all_permutations.append(o)
-                    
+
                 if args.from_lists:
                     mongo.store_tested_pass_lists(
                         p["name"], trans_hits, source, lemma, p["permutator"])
@@ -603,6 +698,7 @@ def permutations_for_lemma(lemma, depth, source):
                     "occurrences": trans_hits,
                     "synset": source,
                     "word_base": lemma,
+                    "permutator": permutations["permutator"],
                     "tag": ILL_TAG
                 }
                 # all_permutations.append(
@@ -664,12 +760,13 @@ def permutations_for_lemma_verb(lemma, depth, source):
                 # Store each permutations under this lemma object in the database
                 # new_permutation_for_lemma() returns a new JSON object with the fields permutation, occurrences and tag
                 # All permutations of a lemma will be stored for each lemma
-                
+
                 o = {
                     "name": p["name"],
                     "occurrences": trans_hits,
                     "synset": source,
                     "word_base": lemma,
+                    "permutator": p["permutator"],
                     "tag": ILL_TAG
                 }
 
@@ -685,12 +782,13 @@ def permutations_for_lemma_verb(lemma, depth, source):
             if args.verbose:
                 log_status("Looking up [%s]" % permutations["name"])
             trans_hits = lookup(permutations["name"], depth, source, lemma)
-            
+
             o = {
                 "name": permutations["name"],
                 "occurrences": trans_hits,
                 "synset": source,
                 "word_base": lemma,
+                "permutator": permutations["permutator"],
                 "tag": ILL_TAG
             }
 
@@ -717,6 +815,188 @@ def permutations_for_lemma_verb(lemma, depth, source):
     # 1. Store the JSON object in wn_lemma_permutations_verb (lemma and each of its permutations, total hits and corresponding synset)
     # 2. Store each permutation in passwords_wn_verb (permutation name, hits, word base, corresponding synset)
     mongo.store_permutations_for_lemma_verb(permutations_for_lemma)
+
+    return total_hits, not_found_cnt, found_cnt
+
+
+def permutations_for_lemma_adjective(lemma, depth, source):
+    """
+    Applies a set of permutators to a given lemma (string) to generate possible password combinations.
+    Return:
+    - total_hits: The sum of all hits for all generated passwords from this lemma. Hits for a password is the number after the colon (:) in the HIBP password file, else 0.
+    - not_found_cnt: The number of generated passwords that were not found in the HIBP password file (i.e. the passwords with 0 hits)
+    - found_cnt: The number of generated passwords that were found in the HIBP password file (i.e. the passwords with > 0 hits)
+    """
+
+    total_hits = 0
+    not_found_cnt = 0
+    found_cnt = 0
+    all_permutations = []
+
+    for combination_handler in combinator.all:
+        # Generate all permutations
+        permutations = combination_handler(lemma, permutator.all)
+        if args.verbose:
+            log_status("Permutations for [%s]: %d" %
+                       (lemma, len(permutations)))
+        if permutations == None:
+            continue
+        # Combinators always return a list of permutations
+        # Unwrap all permutations and append to all_permutations
+        if type(permutations) == list:
+            for p in permutations:
+                if args.verbose:
+                    log_status("Looking up [%s]" % p["name"])
+                trans_hits = lookup(p["name"], depth, source, lemma)
+                # Store each permutations under this lemma object in the database
+                # new_permutation_for_lemma() returns a new JSON object with the fields permutation, occurrences and tag
+                # All permutations of a lemma will be stored for each lemma
+
+                o = {
+                    "name": p["name"],
+                    "occurrences": trans_hits,
+                    "synset": source,
+                    "word_base": lemma,
+                    "permutator": p["permutator"],
+                    "tag": ILL_TAG
+                }
+
+                # all_permutations.append(
+                #     mongo.new_permutation_for_lemma(p["name"], trans_hits))
+                all_permutations.append(o)
+                total_hits += trans_hits
+                if trans_hits == 0:
+                    not_found_cnt += 1
+                else:
+                    found_cnt += 1
+        else:
+            if args.verbose:
+                log_status("Looking up [%s]" % permutations["name"])
+            trans_hits = lookup(permutations["name"], depth, source, lemma)
+
+            o = {
+                "name": permutations["name"],
+                "occurrences": trans_hits,
+                "synset": source,
+                "word_base": lemma,
+                "permutator": permutations["permutator"],
+                "tag": ILL_TAG
+            }
+
+            # all_permutations.append(
+            #     mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
+            all_permutations.append(o)
+
+            if trans_hits == 0:
+                not_found_cnt += 1
+            else:
+                found_cnt += 1
+            total_hits += trans_hits
+
+    # Assemble JSON object that is going to be stored in the database
+    permutations_for_lemma = {
+        "word_base": lemma,
+        "permutations": all_permutations,
+        "total_permutations": len(all_permutations),
+        "total_hits": total_hits,
+        "synset": source
+    }
+
+    # store_permutations_for_lemma_verb() has 2 main functions:
+    # 1. Store the JSON object in wn_lemma_permutations_verb (lemma and each of its permutations, total hits and corresponding synset)
+    # 2. Store each permutation in passwords_wn_verb (permutation name, hits, word base, corresponding synset)
+    mongo.store_permutations_for_lemma_adjective(permutations_for_lemma)
+
+    return total_hits, not_found_cnt, found_cnt
+
+
+def permutations_for_lemma_adverb(lemma, depth, source):
+    """
+    Applies a set of permutators to a given lemma (string) to generate possible password combinations.
+    Return:
+    - total_hits: The sum of all hits for all generated passwords from this lemma. Hits for a password is the number after the colon (:) in the HIBP password file, else 0.
+    - not_found_cnt: The number of generated passwords that were not found in the HIBP password file (i.e. the passwords with 0 hits)
+    - found_cnt: The number of generated passwords that were found in the HIBP password file (i.e. the passwords with > 0 hits)
+    """
+
+    total_hits = 0
+    not_found_cnt = 0
+    found_cnt = 0
+    all_permutations = []
+
+    for combination_handler in combinator.all:
+        # Generate all permutations
+        permutations = combination_handler(lemma, permutator.all)
+        if args.verbose:
+            log_status("Permutations for [%s]: %d" %
+                       (lemma, len(permutations)))
+        if permutations == None:
+            continue
+        # Combinators always return a list of permutations
+        # Unwrap all permutations and append to all_permutations
+        if type(permutations) == list:
+            for p in permutations:
+                if args.verbose:
+                    log_status("Looking up [%s]" % p["name"])
+                trans_hits = lookup(p["name"], depth, source, lemma)
+                # Store each permutations under this lemma object in the database
+                # new_permutation_for_lemma() returns a new JSON object with the fields permutation, occurrences and tag
+                # All permutations of a lemma will be stored for each lemma
+
+                o = {
+                    "name": p["name"],
+                    "occurrences": trans_hits,
+                    "synset": source,
+                    "word_base": lemma,
+                    "permutator": p["permutator"],
+                    "tag": ILL_TAG
+                }
+
+                # all_permutations.append(
+                #     mongo.new_permutation_for_lemma(p["name"], trans_hits))
+                all_permutations.append(o)
+                total_hits += trans_hits
+                if trans_hits == 0:
+                    not_found_cnt += 1
+                else:
+                    found_cnt += 1
+        else:
+            if args.verbose:
+                log_status("Looking up [%s]" % permutations["name"])
+            trans_hits = lookup(permutations["name"], depth, source, lemma)
+
+            o = {
+                "name": permutations["name"],
+                "occurrences": trans_hits,
+                "synset": source,
+                "word_base": lemma,
+                "permutator": permutations["permutator"],
+                "tag": ILL_TAG
+            }
+
+            # all_permutations.append(
+            #     mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
+            all_permutations.append(o)
+
+            if trans_hits == 0:
+                not_found_cnt += 1
+            else:
+                found_cnt += 1
+            total_hits += trans_hits
+
+    # Assemble JSON object that is going to be stored in the database
+    permutations_for_lemma = {
+        "word_base": lemma,
+        "permutations": all_permutations,
+        "total_permutations": len(all_permutations),
+        "total_hits": total_hits,
+        "synset": source
+    }
+
+    # store_permutations_for_lemma_verb() has 2 main functions:
+    # 1. Store the JSON object in wn_lemma_permutations_verb (lemma and each of its permutations, total hits and corresponding synset)
+    # 2. Store each permutation in passwords_wn_verb (permutation name, hits, word base, corresponding synset)
+    mongo.store_permutations_for_lemma_adverb(permutations_for_lemma)
 
     return total_hits, not_found_cnt, found_cnt
 
@@ -1500,6 +1780,10 @@ def plot_data():
     elif args.plot == "dict_dict_top_n_pass_comp_bar":
         plots.dict_dict_top_n_pass_comp_bar(opts)
 
+    # Bar chart comparing the different WordNet parts of speech (noun, verb, adjective, adverb)
+    elif args.plot == "wn_comp_all_pos":
+        plots.wn_comp_all_pos(opts)
+
     # Compare the total hits of everything. WordNet, Ref Lists, Misc Lists, Alt. Dicts etc.
     elif args.plot == "comp_all":
         plots.comp_all(opts)
@@ -1784,6 +2068,10 @@ if __name__ == "__main__":
     elif args.wn_pos:
         if args.wn_pos == "v":
             option_verb_wordnet()
+        elif args.wn_pos == "a":
+            option_adjective_wordnet()
+        elif args.wn_pos == "r":
+            option_adverb_wordnet()
     else:
         # Evaluate command line parameters
         if args.wn:

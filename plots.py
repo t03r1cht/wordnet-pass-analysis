@@ -48,13 +48,13 @@ def wn_top_passwords_bar(opts):
     for password in mongo.db_pws_wn.find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
-    
+
     # Remove doubles
     target_len = opts["top"]
     l = []
     o = []
 
-    for k,v in enumerate(labels):
+    for k, v in enumerate(labels):
         # If all doubles were removed and the new list is the target length
         if len(l) == target_len:
             break
@@ -68,9 +68,10 @@ def wn_top_passwords_bar(opts):
             else:
                 l.append(v)
                 o.append(occurrences[k])
-    
+
     if len(l) != target_len:
-        log_err("Could not fill target list after removing doubles. Increase 'limit' and try again.")
+        log_err(
+            "Could not fill target list after removing doubles. Increase 'limit' and try again.")
         return
     log_ok("For manual labelling:\n")
     for k, v in enumerate(l):
@@ -101,14 +102,14 @@ def lists_top_passwords_bar(opts):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
         origin_list.append(password["source"])
-    
+
     # Remove doubles
     target_len = opts["top"]
     l = []
     o = []
     orig = []
 
-    for k,v in enumerate(labels):
+    for k, v in enumerate(labels):
         # If all doubles were removed and the new list is the target length
         if len(l) == target_len:
             break
@@ -123,16 +124,16 @@ def lists_top_passwords_bar(opts):
                 l.append(v)
                 o.append(occurrences[k])
                 orig.append(origin_list[k])
-    
+
     if len(l) != target_len:
-        log_err("Could not fill target list after removing doubles. Increase 'limit' and try again.")
+        log_err(
+            "Could not fill target list after removing doubles. Increase 'limit' and try again.")
         log_ok(l)
         return
     log_ok("For manual labelling:\n")
     for k, v in enumerate(l):
         log_ok("(%s)\t%s: %d %s" % (k+1, v, o[k], orig[k]))
-    
-    
+
     index = np.arange(len(l))
     ax.bar(index, o, color="black")
     ax.set_yscale("log", basey=10)
@@ -141,6 +142,7 @@ def lists_top_passwords_bar(opts):
     plt.xticks(index, l, fontsize=7, rotation=30)
     plt.title('Top %d Word List Passwords' % opts["top"])
     plt.show(f)
+
 
 def list_top_n_passwords_bar(opts):
     f, ax = plt.subplots(1)
@@ -158,13 +160,13 @@ def list_top_n_passwords_bar(opts):
     for password in mongo.db_pws_lists.find({"source": ref_list, "occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
-    
+
     # Remove doubles
     target_len = opts["top"]
     l = []
     o = []
 
-    for k,v in enumerate(labels):
+    for k, v in enumerate(labels):
         # If all doubles were removed and the new list is the target length
         if len(l) == target_len:
             break
@@ -178,17 +180,17 @@ def list_top_n_passwords_bar(opts):
             else:
                 l.append(v)
                 o.append(occurrences[k])
-    
+
     if len(l) != target_len:
-        log_err("Could not fill target list after removing doubles. Increase 'limit' and try again.")
+        log_err(
+            "Could not fill target list after removing doubles. Increase 'limit' and try again.")
         log_ok(l)
         return
 
     log_ok("For manual labelling:\n")
     for k, v in enumerate(l):
         log_ok("(%s)\t%s: %d" % (k+1, v, o[k]))
-    
-    
+
     index = np.arange(len(l))
     ax.bar(index, o, color="black", label=ref_list)
     ax.set_yscale("log", basey=10)
@@ -198,6 +200,7 @@ def list_top_n_passwords_bar(opts):
     plt.title('Top %d Word List Passwords' % opts["top"])
     plt.legend(loc="best")
     plt.show(f)
+
 
 def lists_top_password_origin_bar(opts):
     f, ax = plt.subplots(1)
@@ -209,7 +212,7 @@ def lists_top_password_origin_bar(opts):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
         origin_list.append(password["source"])
-    
+
     # Remove doubles
     target_len = opts["top"]
     l = []
@@ -217,7 +220,7 @@ def lists_top_password_origin_bar(opts):
     orig = []
     double_cnt = 0
     policy_violation_cnt = 0
-    for k,v in enumerate(labels):
+    for k, v in enumerate(labels):
         # If all doubles were removed and the new list is the target length
         if len(l) == target_len:
             break
@@ -234,7 +237,7 @@ def lists_top_password_origin_bar(opts):
                 l.append(v)
                 o.append(occurrences[k])
                 orig.append(origin_list[k])
-    
+
     if len(l) != target_len:
         log_err("Could not fill target list after removing doubles. Increase 'limit' or decrease the '$gt' filter value and try again.")
         log_err("Total passwords checked: %d" % limit)
@@ -258,18 +261,17 @@ def lists_top_password_origin_bar(opts):
         if not exists:
             o = {"source": item, "count": 1}
             orig_lists_counts.append(o)
-    
-    sorted_origs = sorted(orig_lists_counts, key=lambda k: k["count"], reverse=True)
-    
+
+    sorted_origs = sorted(
+        orig_lists_counts, key=lambda k: k["count"], reverse=True)
+
     sorted_l = [x["source"] for x in sorted_origs]
     sorted_o = [x["count"] for x in sorted_origs]
-
-
 
     log_ok("For manual labelling:\n")
     for k, v in enumerate(sorted_l):
         log_ok("(%s)\t%s: %d" % (k+1, v, sorted_o[k]))
-    
+
     index = np.arange(len(sorted_l))
     ax.bar(index, sorted_o, color="black")
     # ax.set_yscale("log", basey=10)
@@ -278,6 +280,7 @@ def lists_top_password_origin_bar(opts):
     plt.xticks(index, sorted_l, fontsize=7, rotation=30)
     plt.title('Top %d Word List Passwords List Distribution' % opts["top"])
     plt.show(f)
+
 
 def wn_top_passwords_line(opts):
     labels = []
@@ -1824,13 +1827,13 @@ def misc_lists_top_n_passwords_bar(opts):
     for password in mongo.db_pws_misc_lists.find({"source": ref_list, "occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
-    
+
     # Remove doubles
     target_len = opts["top"]
     l = []
     o = []
 
-    for k,v in enumerate(labels):
+    for k, v in enumerate(labels):
         # If all doubles were removed and the new list is the target length
         if len(l) == target_len:
             break
@@ -1844,17 +1847,17 @@ def misc_lists_top_n_passwords_bar(opts):
             else:
                 l.append(v)
                 o.append(occurrences[k])
-    
+
     if len(l) != target_len:
-        log_err("Could not fill target list after removing doubles. Increase 'limit' and try again.")
+        log_err(
+            "Could not fill target list after removing doubles. Increase 'limit' and try again.")
         log_ok(l)
         return
 
     log_ok("For manual labelling:\n")
     for k, v in enumerate(l):
         log_ok("(%s)\t%s: %d" % (k+1, v, o[k]))
-    
-    
+
     index = np.arange(len(l))
     ax.bar(index, o, color="black", label=ref_list)
     ax.set_yscale("log", basey=10)
@@ -1864,6 +1867,7 @@ def misc_lists_top_n_passwords_bar(opts):
     plt.title('Top %d Word List Passwords' % opts["top"])
     plt.legend(loc="best")
     plt.show(f)
+
 
 def wn_ref_list_top_n_pass_comp_bar(opts):
     # Read the top wn_limit passwords generated from the WordNet
@@ -2455,12 +2459,13 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
     plt.ylabel("Password Occurrences")
     plt.xlabel("Top %d Passwords of Each Source" % limit_val)
     plt.title(
-        "Password Hit Rate Comparison Misc. Password List/Misc. Password List", fontdict = {'fontsize' : 10})
+        "Password Hit Rate Comparison Misc. Password List/Misc. Password List", fontdict={'fontsize': 10})
 
     plt.xticks(ind + width, range(1, limit_val+1))
     plt.legend(loc="best")
 
     plt.show()
+
 
 def ref_misc_list_top_n_pass_comp_bar(opts):
     # Read the top wn_limit passwords generated from the WordNet
@@ -2580,7 +2585,7 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
     plt.ylabel("Password Occurrences")
     plt.xlabel("Top %d Passwords of Each Source" % limit_val)
     plt.title(
-        "Password Hit Rate Comparison Ref. Word List/Misc. Password List", fontdict = {'fontsize' : 10})
+        "Password Hit Rate Comparison Ref. Word List/Misc. Password List", fontdict={'fontsize': 10})
 
     plt.xticks(ind + width, range(1, limit_val+1))
     plt.legend(loc="best")
@@ -2590,7 +2595,7 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
 
 def dict_wn_top_n_pass_comp_bar(opts):
 
-    # Sort with a lot of docs: 
+    # Sort with a lot of docs:
     # db.getCollection('passwords_dicts_cracklib-small').find({"occurrences": {"$gt": 1}}).sort({"occurrences": -1})
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
@@ -2721,7 +2726,7 @@ def dict_ref_list_top_n_pass_comp_bar(opts):
         limit_val = opts["top"]
     else:
         limit_val = 10
-    
+
     ref_list = None
     if opts["ref_list"] == None:
         log_err(
@@ -2845,7 +2850,7 @@ def dict_misc_list_top_n_pass_comp_bar(opts):
         limit_val = opts["top"]
     else:
         limit_val = 10
-    
+
     ref_list = None
     if opts["ref_list"] == None:
         log_err(
@@ -2953,6 +2958,7 @@ def dict_misc_list_top_n_pass_comp_bar(opts):
     plt.legend(loc="best")
 
     plt.show()
+
 
 def dict_dict_top_n_pass_comp_bar(opts):
     # Read the top wn_limit passwords generated from the WordNet
@@ -3074,12 +3080,13 @@ def dict_dict_top_n_pass_comp_bar(opts):
     plt.ylabel("Password Occurrences")
     plt.xlabel("Top %d Passwords of Each Source" % limit_val)
     plt.title(
-        "Password Hit Rate Comparison Dictionary/Dictionary", fontdict = {'fontsize' : 10})
+        "Password Hit Rate Comparison Dictionary/Dictionary", fontdict={'fontsize': 10})
 
     plt.xticks(ind + width, range(1, limit_val+1))
     plt.legend(loc="best")
 
     plt.show()
+
 
 def comp_all(opts):
     # Read the top wn_limit passwords generated from the WordNet
@@ -3097,14 +3104,15 @@ def comp_all(opts):
         limit_val = 10
 
     # Contains all sum results. Will be used to create the bar plot in the end
-    # Structure: 
-    #   type: misc,ref,etc 
+    # Structure:
+    #   type: misc,ref,etc
     #   name: source_name
     #   sum: sum
     total_sum = []
 
     # Get the sum for all ref lists
-    query_result = db_pws_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
+    query_result = db_pws_lists.aggregate(
+        [{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
     for item in query_result:
         o = {
             "type": "ref_list",
@@ -3112,9 +3120,10 @@ def comp_all(opts):
             "sum": item["sum"]
         }
         total_sum.append(o)
-    
+
     # Get the sum for all misc lists
-    query_result2 = db_pws_misc_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
+    query_result2 = db_pws_misc_lists.aggregate(
+        [{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
     for item in query_result:
         log_ok("%s %d" % (item["_id"], item["sum"]))
     for item in query_result2:
@@ -3147,7 +3156,8 @@ def comp_all(opts):
 
     # Query the collections
     for collection_name in dict_collection_names:
-        query_resultn = mongo.db[collection_name].aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
+        query_resultn = mongo.db[collection_name].aggregate(
+            [{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
         for item in query_resultn:
             o = {
                 "type": "dict",
@@ -3156,14 +3166,13 @@ def comp_all(opts):
             }
             total_sum.append(o)
 
-
-
     log_ok("Printing values for manual labelling:")
     log_ok("")
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
-    for k,v in enumerate(sorted_sums):
-        log_ok("(%d)\t%s\t%s\t%s" % (k, v["type"], v["name"], format_number(v["sum"])))
-    
+    for k, v in enumerate(sorted_sums):
+        log_ok("(%d)\t%s\t%s\t%s" %
+               (k, v["type"], v["name"], format_number(v["sum"])))
+
     sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_o = [x["sum"] for x in sorted_sums]
 
@@ -3180,9 +3189,113 @@ def comp_all(opts):
     plt.ylabel("Total Hits")
     plt.xlabel("Password Source")
     plt.title(
-        "Total Hits Count for Each Password Source", fontdict = {'fontsize' : 10})
+        "Total Hits Count for Each Password Source", fontdict={'fontsize': 10})
 
     plt.xticks(ind, sorted_l, rotation=90, fontsize=7)
+    plt.legend(loc="best")
+
+    plt.show()
+
+
+def wn_comp_all_pos(opts):
+    # Read the top wn_limit passwords generated from the WordNet
+    wn_limit = 1000
+    f, ax = plt.subplots(1)
+
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 10000:
+            log_err("--top value too high. Select Value between 5 and 10000")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+
+    # Contains all sum results. Will be used to create the bar plot in the end
+    # Structure:
+    #   type: misc,ref,etc
+    #   name: source_name
+    #   sum: sum
+    total_sum = []
+
+    # Get the sum for the wordnet nouns
+    # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
+    query_result3 = mongo.db_wn.find({"parent": "root"})
+    for item in query_result3:
+        o = {
+            "type": "wordnet",
+            # "name": item["id"],
+            "name": "WordNet Nouns",
+            "sum": item["total_hits"] + item["this_hits"]
+        }
+        total_sum.append(o)
+
+    # Get the sum for the wordnet verbs
+    # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
+    query_result3 = mongo.db_wn_verb.aggregate([{"$match": {"parent": "root"}}, {
+                                               "$group": {"_id": "null", "sum": {"$sum": {"$sum": ["$total_hits", "$this_hits"]}}}}])
+    for item in query_result3:
+        o = {
+            "type": "wordnet",
+            # "name": item["id"],
+            "name": "WordNet Verbs",
+            "sum": item["sum"]
+        }
+        total_sum.append(o)
+
+    # Get the sum for the wordnet adjectives
+    # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
+    query_result3 = mongo.db_wn_adjective.aggregate([{"$match": {"parent": "root"}}, {
+                                               "$group": {"_id": "null", "sum": {"$sum": {"$sum": ["$total_hits", "$this_hits"]}}}}])
+    for item in query_result3:
+        o = {
+            "type": "wordnet",
+            # "name": item["id"],
+            "name": "WordNet Adjectives",
+            "sum": item["sum"]
+        }
+        total_sum.append(o)
+
+    # Get the sum for the wordnet adverbs
+    # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
+    query_result3 = mongo.db_wn_adverb.aggregate([{"$match": {"parent": "root"}}, {
+                                               "$group": {"_id": "null", "sum": {"$sum": {"$sum": ["$total_hits", "$this_hits"]}}}}])
+    for item in query_result3:
+        o = {
+            "type": "wordnet",
+            # "name": item["id"],
+            "name": "WordNet Adverbs",
+            "sum": item["sum"]
+        }
+        total_sum.append(o)
+
+    log_ok("Printing values for manual labelling:")
+    log_ok("")
+    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
+    for k, v in enumerate(sorted_sums):
+        log_ok("(%d)\t%s\t%s\t%s" %
+               (k, v["type"], v["name"], format_number(v["sum"])))
+
+    sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    sorted_o = [x["sum"] for x in sorted_sums]
+
+    # Plot as bar
+    N = len(sorted_l)
+    ind = np.arange(N)
+    width = 0.35
+
+    plt.bar(ind, sorted_o, width,
+            label="Password Collections", color="black")
+
+    plt.yscale("log", basey=10)
+
+    plt.ylabel("Total Hits")
+    plt.xlabel("Password Source")
+    plt.title(
+        "Total Hits Count for Each WordNet Part Of Speech", fontdict={'fontsize': 10})
+
+    plt.xticks(ind, sorted_l, rotation=45, fontsize=7)
     plt.legend(loc="best")
 
     plt.show()
