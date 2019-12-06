@@ -402,6 +402,104 @@ def recurse_verbs_from_root(root_syn):
     return total_hits_for_current_synset, not_found_for_current_synset, found_for_current_synset
 
 
+def option_lookup_passwords():
+    """"
+    Lookup the passwords in the pwned passwords list.
+    """
+    init()
+    signal.signal(signal.SIGINT, sigint_handler)
+    clear_terminal()
+    if args.purge_db:
+        mongo.clear_mongo()
+        log_ok("Database was cleared!")
+    print()
+    started_time = get_curr_time()
+    global glob_started_time
+    glob_started_time = started_time
+
+    root_synsets = wn.synsets(args.root_syn_name, "n")
+    if len(root_synsets) == 0:
+        print("  No synset found for: %s" % args.root_syn_name)
+        sys.exit(0)
+
+    # If multiple synsets were found, prompt the user to choose which one to use.
+    if len(root_synsets) > 1:
+        choice_root_syn = prompt_synset_choice(root_synsets)
+    else:
+        choice_root_syn = root_synsets[0]
+
+    # Initiate the file handles for the result and summary file
+    _init_file_handles(get_curr_time_str())
+    global total_base_lemmas
+    log_ok("Processing user-specified WordNet root level...")
+    first_level_hits = 0
+    first_level_not_found = 0
+    first_level_found = 0
+    for root_lemma in choice_root_syn.lemma_names():
+        total_base_lemmas += 1
+        hits, not_found, found = permutations_for_lemma(
+            root_lemma, choice_root_syn.min_depth(), choice_root_syn.name())
+        first_level_hits += hits
+        first_level_not_found += not_found
+        first_level_found += found
+
+    log_ok("Processing WordNet subtrees...")
+    # Store this synset including all of its hyponyms.
+    # By emitting the parent parameter, we declare this synset the root
+    # We will only declare entity.n.01 as root since it is the actual root object of the wordnet tree
+    if choice_root_syn.name() == "entity.n.01":
+        mongo.store_synset_with_relatives(choice_root_syn, parent="root")
+    else:
+        # If we run the script starting from somewhere within the wordnet,
+        # we still need to find its parent (hypernym). Therefore, we call hypernyms()
+        # on the synset and check if one of the returned hypernyms already exists
+        # in our database. If it does, we connect it by setting this synset's parent
+        # to the found parent. Note that the first occurence of the hypernym
+        # will be specified its parent (even if there might be more valid hypernyms existing in
+        # the database)
+        root_hypernyms = choice_root_syn.hypernyms()
+        root_hypernym = None
+        for hypernym in root_hypernyms:
+            if mongo.db_wn.count_documents({"id": hypernym.name()}) == 0:
+                continue
+            else:
+                root_hypernym = hypernym
+        if root_hypernym is None:
+            log_err(
+                "Could not find a single hypernym of [%s] in the database to link to" % choice_root_syn.name())
+            log_err("\t Hypernyms for [%s]: %s" % (
+                choice_root_syn.name(), choice_root_syn.hypernyms()))
+            sys.exit(0)
+        mongo.store_synset_with_relatives(
+            choice_root_syn, parent=root_hypernym.name())
+    hits_below, not_found_below, found_below = recurse_nouns_from_root(
+        root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
+
+    # Update this root synset with its respective stats
+    mongo.update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
+                                   found_below, first_level_hits, first_level_found, first_level_not_found)
+    # mongo.update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
+    #                                found_below, hits, found, not_found)
+    # we processed the subtrees, since we are going to reverse
+    # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
+    # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
+    if args.subsume_for_classes:
+        append_with_hits(choice_root_syn, first_level_hits,
+                         hits_below, first_level_not_found, not_found_below, first_level_found, found_below)
+
+    # Writing results to result file
+    # Using a options dictionary to pass option information to the function
+    opts = {}
+    opts["root_syn"] = choice_root_syn
+    opts["started_time"] = started_time
+
+    opts["hits_below_root"] = hits_below
+    opts["start_depth"] = choice_root_syn.min_depth()
+    cleanup()
+
+    # Append the dict with the root synset after
+
+
 def option_verb_wordnet():
     init()
     signal.signal(signal.SIGINT, sigint_handler)
@@ -434,12 +532,14 @@ def option_verb_wordnet():
     log_ok("Synsets starting at Level 0: %d" % len(lvl_0_synsets))
 
     global total_base_lemmas
+    global synset_cnt
     log_ok("Processing level 0 verb synsets...")
     # Before starting the actual recursion, we need to process all synsets on level 0 (recursion method always looks up the passed synsets hyponyms and not the synset itself)
     finish_cnt = 0
     lvl_0_len = len(lvl_0_synsets)
     lvl_0_perm_values = {}
     for syn in lvl_0_synsets:
+        synset_cnt += 1
         # Contains the sum of the lemmas in case a synset consists of more than one lemma
         first_level_hits = 0
         first_level_not_found = 0
@@ -1032,127 +1132,6 @@ def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below, 
         hits_for_lemmas[lemma.name()] = res_set
 
 
-def _write_result_to_passwords_file(lemma_name, lemma_depth, occurrences):
-    """
-    Writes a properly indented result to the result file.
-    """
-    _write_to_passwords_file("%s%s %d" % (
-        lemma_depth * "  ", lemma_name, occurrences))
-
-
-def _write_summary_to_result_file(opts):
-    """
-    Writes the bottom lines containing the summary to the result file.
-    """
-    log_ok("Writing summary to result file...")
-    # If we set the -c flag, instead of logging the single passwords that were searched,
-    # we print only their respective classes to the result file
-    if args.subsume_for_classes:
-        _write_to_summary_file("")
-        _write_to_summary_file(40 * "=")
-        _write_to_summary_file("")
-        _write_to_summary_file("    *** Synset Distribution ***")
-        _write_to_summary_file("")
-
-        # Reverse the list to restore the "natural" tree order.
-        # Due to the nature of a recursion, thing, physical entity and abstraction get added before entity, however when we print this dict,
-        # we want entity to be before its childs
-        global hits_for_lemmas
-        reversed_dict = collections.OrderedDict(
-            reversed(list(hits_for_lemmas.items())))
-
-        # The hits_for_lemmas dictionary contains all synset names (name.pos.nn) and their sum of hits
-        for k, v in reversed_dict.items():
-            synset_id = v[0].name()
-            this_hits = v[1]
-            below_hits = v[2]
-            total_hits = v[1] + v[2]
-            this_not_found = v[3]
-            below_not_found = v[4]
-            total_not_found_loc = v[3] + v[4]
-            this_found = v[5]
-            below_found = v[6]
-            total_found_loc = v[5] + v[6]
-            pct_total_of_total = (total_found_loc / total_found) * 100
-            pct_this_of_total = (this_found / total_found) * 100
-            _write_to_summary_file("{0}{1}  pct_total={2:.2f}|pct_this={12:.2f}|total_hits={3}|this_hits={4}|below_hits={5}|total_found={6}|this_found={7}|below_found={8}|total_not_found={9}|this_not_found={10}|below_not_found={11}".format(
-                (v[0].min_depth() - opts["start_depth"]) *
-                "  ",  # indendation
-                synset_id,  # synset id
-                pct_total_of_total,
-                total_hits,  # hits of each synset
-                this_hits,
-                below_hits,
-                total_found_loc,
-                this_found,
-                below_found,
-                total_not_found_loc,
-                this_not_found,
-                below_not_found,
-                pct_this_of_total))
-
-        _write_to_summary_file("")
-        _write_to_summary_file(40 * "=")
-        _write_to_summary_file("")
-        _write_to_summary_file("    *** Searched Lemma ***")
-        _write_to_summary_file("")
-        _write_to_summary_file("Identifier: %s" % opts["root_syn"].name())
-        _write_to_summary_file("Synonyms: %s" %
-                               opts["root_syn"].lemma_names())
-        _write_to_summary_file("Definition: %s" %
-                               opts["root_syn"].definition())
-        _write_to_summary_file("Examples: %s" %
-                               opts["root_syn"].examples())
-        _write_to_summary_file("")
-        _write_to_summary_file("    *** Stats ***")
-        _write_to_summary_file("")
-        _write_to_summary_file(
-            "Total Passwords Searched: {0} ({1:.2f}%)".format(total_processed,
-                                                              (total_processed / total_processed * 100)))
-        _write_to_summary_file(
-            "Total Passwords (Success): {0} ({1:.2f}%)".format(total_found,
-                                                               (total_found / total_processed * 100)))
-        _write_to_summary_file(
-            "Total Passwords (Failure): {0} ({1:.2f}%)".format(total_not_found,
-                                                               (total_not_found / total_processed * 100)))
-        _write_to_summary_file(
-            "Total hits for password searches: {0} ({1:.2f} hits per password)".format(
-                total_hits_sum, total_hits_sum / total_processed))
-        _write_to_summary_file("")
-        _write_to_summary_file("Pct Found Passwords (Total): {0:.5f}%".format(
-                               (total_hits_sum / pwned_pw_amount * 100)))
-        _write_to_summary_file("Pct Not Found Passwords (Total): {0:.5f}%".format(
-                               ((1 - (total_hits_sum / pwned_pw_amount)) * 100)))
-        _write_to_summary_file("")
-        _write_to_summary_file("Base Lemmas (Total): {0} ({1:.2f} permutations per base lemma)".format(
-            total_base_lemmas, total_processed / total_base_lemmas))
-        _write_to_summary_file("")
-        _write_to_summary_file("")
-        started_time = opts["started_time"]
-        finished_time = get_curr_time()
-        time_delta = finished_time - started_time
-        _write_to_summary_file(
-            "Average Time per Base Lemma: {0:.3f} s".format(time_delta.seconds / total_base_lemmas))
-        _write_to_summary_file("Starting Time: %s" % started_time)
-        _write_to_summary_file("Finishing Time: %s" % finished_time)
-        log_ok("Writing summary to %s" % outfile_summary.name)
-        log_ok("Writing tested passwords to %s" % outfile_passwords.name)
-
-
-def _write_to_summary_file(s):
-    """
-    Writes generic data to the result file.
-    """
-    outfile_summary.write("%s\n" % s)
-
-
-def _write_to_passwords_file(s):
-    """
-    Writes generic data to the result file.
-    """
-    outfile_passwords.write("%s\n" % s)
-
-
 def prompt_synset_choice(root_synsets):
     print("  Multiple synset were found. Please choose: ")
     for elem in range(len(root_synsets)):
@@ -1189,107 +1168,6 @@ def option_draw_graph():
     """
     from wn_graph import draw_graph
     draw_graph(args.root_syn_name, args.dag_depth)
-
-
-def option_lookup_passwords():
-    """"
-    Lookup the passwords in the pwned passwords list.
-    """
-    init()
-    signal.signal(signal.SIGINT, sigint_handler)
-    clear_terminal()
-    if args.purge_db:
-        mongo.clear_mongo()
-        log_ok("Database was cleared!")
-    print()
-    started_time = get_curr_time()
-    global glob_started_time
-    glob_started_time = started_time
-
-    root_synsets = wn.synsets(args.root_syn_name, "n")
-    if len(root_synsets) == 0:
-        print("  No synset found for: %s" % args.root_syn_name)
-        sys.exit(0)
-
-    # If multiple synsets were found, prompt the user to choose which one to use.
-    if len(root_synsets) > 1:
-        choice_root_syn = prompt_synset_choice(root_synsets)
-    else:
-        choice_root_syn = root_synsets[0]
-
-    # Initiate the file handles for the result and summary file
-    _init_file_handles(get_curr_time_str())
-    global total_base_lemmas
-    log_ok("Processing user-specified WordNet root level...")
-    first_level_hits = 0
-    first_level_not_found = 0
-    first_level_found = 0
-    for root_lemma in choice_root_syn.lemma_names():
-        total_base_lemmas += 1
-        hits, not_found, found = permutations_for_lemma(
-            root_lemma, choice_root_syn.min_depth(), choice_root_syn.name())
-        first_level_hits += hits
-        first_level_not_found += not_found
-        first_level_found += found
-
-    log_ok("Processing WordNet subtrees...")
-    # Store this synset including all of its hyponyms.
-    # By emitting the parent parameter, we declare this synset the root
-    # We will only declare entity.n.01 as root since it is the actual root object of the wordnet tree
-    if choice_root_syn.name() == "entity.n.01":
-        mongo.store_synset_with_relatives(choice_root_syn, parent="root")
-    else:
-        # If we run the script starting from somewhere within the wordnet,
-        # we still need to find its parent (hypernym). Therefore, we call hypernyms()
-        # on the synset and check if one of the returned hypernyms already exists
-        # in our database. If it does, we connect it by setting this synset's parent
-        # to the found parent. Note that the first occurence of the hypernym
-        # will be specified its parent (even if there might be more valid hypernyms existing in
-        # the database)
-        root_hypernyms = choice_root_syn.hypernyms()
-        root_hypernym = None
-        for hypernym in root_hypernyms:
-            if mongo.db_wn.count_documents({"id": hypernym.name()}) == 0:
-                continue
-            else:
-                root_hypernym = hypernym
-        if root_hypernym is None:
-            log_err(
-                "Could not find a single hypernym of [%s] in the database to link to" % choice_root_syn.name())
-            log_err("\t Hypernyms for [%s]: %s" % (
-                choice_root_syn.name(), choice_root_syn.hypernyms()))
-            sys.exit(0)
-        _write_to_passwords_file("found root_hypernym for %s is %s" % (
-            choice_root_syn.name(), root_hypernym))
-        mongo.store_synset_with_relatives(
-            choice_root_syn, parent=root_hypernym.name())
-    hits_below, not_found_below, found_below = recurse_nouns_from_root(
-        root_syn=choice_root_syn, start_depth=choice_root_syn.min_depth(), rel_depth=args.dag_depth)
-
-    # Update this root synset with its respective stats
-    mongo.update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
-                                   found_below, first_level_hits, first_level_found, first_level_not_found)
-    # mongo.update_synset_with_stats(choice_root_syn, hits_below, not_found_below,
-    #                                found_below, hits, found, not_found)
-    # we processed the subtrees, since we are going to reverse
-    # the entire OrderedDict. Because of the recursion, the synsets are going to be added from hierarchical
-    # bottom to top to the OrderedDict. If we just reverse it, we have the top to bottom order back.
-    if args.subsume_for_classes:
-        append_with_hits(choice_root_syn, first_level_hits,
-                         hits_below, first_level_not_found, not_found_below, first_level_found, found_below)
-
-    # Writing results to result file
-    # Using a options dictionary to pass option information to the function
-    opts = {}
-    opts["root_syn"] = choice_root_syn
-    opts["started_time"] = started_time
-
-    opts["hits_below_root"] = hits_below
-    opts["start_depth"] = choice_root_syn.min_depth()
-    _write_summary_to_result_file(opts)
-    cleanup()
-
-    # Append the dict with the root synset after
 
 
 def option_permutate_from_lists():
@@ -1580,6 +1458,11 @@ def plot_data():
     else:
         opts["dict_id"] = args.dict_id
 
+    if not args.pass_db_path:
+        opts["pass_db_path"] = "null"
+    else:
+        opts["pass_db_path"] = args.pass_db_path
+
     # Bar diagram of the top N passwords of the WordNet
     # Y axis displayed as logartihmic scale with base 10
     if args.plot == "wn_passwords_bar":
@@ -1791,6 +1674,10 @@ def plot_data():
     # Plot the stats for the WordNet, especially thee hits per password. The expected output is going to be a value
     elif args.plot == "wn_stats":
         pass
+
+    # Plot the coverage for all WordNet PoS
+    elif args.plot == "wn_coverage":
+        plots.wn_coverage(opts)
 
     else:
         log_err("Unrecognized plotting option option [%s]" % args.plot)
@@ -2072,6 +1959,8 @@ if __name__ == "__main__":
             option_adjective_wordnet()
         elif args.wn_pos == "r":
             option_adverb_wordnet()
+        elif args.wn_pos == "n":
+            option_lookup_passwords()
     else:
         # Evaluate command line parameters
         if args.wn:

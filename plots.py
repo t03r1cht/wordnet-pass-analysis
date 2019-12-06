@@ -14,6 +14,8 @@ from textwrap import wrap
 
 plt.style.use('ggplot')
 
+HIBP_LINE_COUNT = 551509767
+
 # https://github.com/klieret/pyplot-hierarchical-pie
 # As this project is still in development, you have to first have to clone the repository before installing the package with pip3:
 
@@ -26,17 +28,6 @@ plt.style.use('ggplot')
 # To install, run
 
 # sudo pip3 install .
-
-########################################################################################
-# TODO
-#
-# * Sortierte Top N WN Passwörter -> RAM
-# * Sortierte Top N Passwort Listen Passwörter -> RAM
-# * Sortierte Top N Misc. Passwort Listen Passwörter
-# * Rechtfertigt der WN-Aufwand (Dauer) die Ausbeute der Passwörter?
-# * WordNet Dictionary Alternativen finden und verwenden
-#
-########################################################################################
 
 
 def wn_top_passwords_bar(opts):
@@ -3247,7 +3238,7 @@ def wn_comp_all_pos(opts):
     # Get the sum for the wordnet adjectives
     # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
     query_result3 = mongo.db_wn_adjective.aggregate([{"$match": {"parent": "root"}}, {
-                                               "$group": {"_id": "null", "sum": {"$sum": {"$sum": ["$total_hits", "$this_hits"]}}}}])
+        "$group": {"_id": "null", "sum": {"$sum": {"$sum": ["$total_hits", "$this_hits"]}}}}])
     for item in query_result3:
         o = {
             "type": "wordnet",
@@ -3260,7 +3251,7 @@ def wn_comp_all_pos(opts):
     # Get the sum for the wordnet adverbs
     # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
     query_result3 = mongo.db_wn_adverb.aggregate([{"$match": {"parent": "root"}}, {
-                                               "$group": {"_id": "null", "sum": {"$sum": {"$sum": ["$total_hits", "$this_hits"]}}}}])
+        "$group": {"_id": "null", "sum": {"$sum": {"$sum": ["$total_hits", "$this_hits"]}}}}])
     for item in query_result3:
         o = {
             "type": "wordnet",
@@ -3294,6 +3285,96 @@ def wn_comp_all_pos(opts):
     plt.xlabel("Password Source")
     plt.title(
         "Total Hits Count for Each WordNet Part Of Speech", fontdict={'fontsize': 10})
+
+    plt.xticks(ind, sorted_l, rotation=45, fontsize=7)
+    plt.legend(loc="best")
+
+    plt.show()
+
+
+def wn_coverage(opts):
+    # https://weknowinc.com/blog/how-remove-duplicates-mongodb
+    f, ax = plt.subplots(1)
+
+    limit_val = 20
+    # We can set the number of top passwords with the --top flag
+    if opts["top"]:
+        if opts["top"] > 10000:
+            log_err("--top value too high. Select Value between 5 and 10000")
+            return
+        limit_val = opts["top"]
+    else:
+        limit_val = 10
+
+    # hibp_path = ""
+    # if opts["pass_db_path"]:
+    #     hibp_path = opts["pass_db_path"]
+    # else:
+    #     log_err("No HIBP file path (-p) specified.")
+    #     return
+
+    # Contains all sum results. Will be used to create the bar plot in the end
+    # Structure:
+    #   type: misc,ref,etc
+    #   name: source_name
+    #   sum: sum
+    total_sum = []
+
+    # Get coverage for
+    query_result_n = mongo.db_pws_wn.find({"occurrences": {"$gt": 0}}).count()
+    total_sum.append({
+        "type": "wordnet",
+        "name": "WordNet Nouns",
+        "sum": query_result_n
+    })
+
+
+    query_result_v = mongo.db_pws_wn_verb.find({"occurrences": {"$gt": 0}}).count()
+    total_sum.append({
+        "type": "wordnet",
+        "name": "WordNet Verbs",
+        "sum": query_result_v
+    })
+
+    query_result_adj = mongo.db_pws_wn_adjective.find({"occurrences": {"$gt": 0}}).count()
+    total_sum.append({
+        "type": "wordnet",
+        "name": "WordNet Adjectives",
+        "sum": query_result_adj
+    })
+
+    query_result_adv = mongo.db_pws_wn_adverb.find({"occurrences": {"$gt": 0}}).count()
+    total_sum.append({
+        "type": "wordnet",
+        "name": "WordNet Adverbs",
+        "sum": query_result_adv
+    })
+
+    # query_result = db_pws_wn_adjective.find({"occurrences": {"$gt": 0}}).count()
+    # query_result = db_pws_wn.find({"occurrences": {"$gt": 0}}).count()
+
+    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
+    for k, v in enumerate(sorted_sums):
+        log_ok("(%d)\t%s\t%s\t%s" %
+               (k, v["type"], v["name"], format_number(v["sum"])))
+
+    sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    sorted_o = [x["sum"] for x in sorted_sums]
+
+    # Plot as bar
+    N = len(sorted_l)
+    ind = np.arange(N)
+    width = 0.35
+
+    plt.bar(ind, sorted_o, width,
+            label="Password Collections", color="black")
+
+    plt.yscale("log", basey=10)
+
+    plt.ylabel("Total Hits")
+    plt.xlabel("Password Source")
+    plt.title(
+        "Coverage of Each Data Source for the HIBP Password Hash File", fontdict={'fontsize': 10})
 
     plt.xticks(ind, sorted_l, rotation=45, fontsize=7)
     plt.legend(loc="best")

@@ -1,7 +1,8 @@
 from pymongo import MongoClient
 from helper import get_curr_time, get_curr_time_str
 
-MONGO_ADDR = "192.168.56.102"
+# MONGO_ADDR = "192.168.56.102"
+MONGO_ADDR = "192.168.171.3"
 # MONGO_ADDR = "localhost"
 mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 
@@ -17,15 +18,15 @@ db_pws_wn = db["passwords_wn_noun"]
 db_pws_wn_verb = db["passwords_wn_verb"]
 db_pws_wn_adjective = db["passwords_wn_adjective"]
 db_pws_wn_adverb = db["passwords_wn_adverb"]
+db_pws_lists = db["passwords_lists"]
+db_pws_misc_lists = db["passwords_misc_lists"]
+db_pws_dicts = db["passwords_dicts"]
 
 db_wn_lemma_permutations = db["wn_lemma_permutations_noun"]
 db_wn_lemma_permutations_verb = db["wn_lemma_permutations_verb"]
 db_wn_lemma_permutations_adjective = db["wn_lemma_permutations_adjective"]
 db_wn_lemma_permutations_adverb = db["wn_lemma_permutations_adverb"]
 
-db_pws_lists = db["passwords_lists"]
-db_pws_misc_lists = db["passwords_misc_lists"]
-db_pws_dicts = db["passwords_dicts"]
 
 TAG = get_curr_time_str()
 
