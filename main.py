@@ -498,8 +498,11 @@ def option_lookup_passwords():
 
     # Append the dict with the root synset after
 
+def init():
+    pass
 
 def option_verb_wordnet():
+    init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
 
