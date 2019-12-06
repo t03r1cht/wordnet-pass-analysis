@@ -408,10 +408,10 @@ def option_lookup_passwords():
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
-    if args.purge_db:
-        mongo.clear_mongo()
-        log_ok("Database was cleared!")
-    print()
+
+    mongo.purge_noun()
+    log_ok("Deleted old MongoDB noun collections...")
+
     started_time = get_curr_time()
     global glob_started_time
     glob_started_time = started_time
@@ -498,8 +498,10 @@ def option_lookup_passwords():
 
     # Append the dict with the root synset after
 
+
 def init():
     pass
+
 
 def option_verb_wordnet():
     init()
@@ -774,6 +776,7 @@ def permutations_for_lemma(lemma, depth, source):
                         "synset": source,
                         "word_base": lemma,
                         "permutator": p["permutator"],
+                        "depth": depth,
                         "tag": ILL_TAG
                     }
 
@@ -800,6 +803,7 @@ def permutations_for_lemma(lemma, depth, source):
                     "synset": source,
                     "word_base": lemma,
                     "permutator": permutations["permutator"],
+                    "depth": depth,
                     "tag": ILL_TAG
                 }
                 # all_permutations.append(
@@ -868,6 +872,7 @@ def permutations_for_lemma_verb(lemma, depth, source):
                     "synset": source,
                     "word_base": lemma,
                     "permutator": p["permutator"],
+                    "depth": depth,
                     "tag": ILL_TAG
                 }
 
@@ -890,6 +895,7 @@ def permutations_for_lemma_verb(lemma, depth, source):
                 "synset": source,
                 "word_base": lemma,
                 "permutator": permutations["permutator"],
+                "depth": depth,
                 "tag": ILL_TAG
             }
 

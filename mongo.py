@@ -167,6 +167,12 @@ def purge_adverb():
     db_wn_lemma_permutations_adverb.remove({})
 
 
+def purge_noun():
+    db_wn.remove({})
+    db_pws_wn.remove({})
+    db_wn_lemma_permutations.remove({})
+
+
 def store_permutations_for_lemma(permutations):
     # In case it already exists
     if db_wn_lemma_permutations.count_documents({"word_base": permutations["word_base"]}) > 0:
