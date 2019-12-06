@@ -20,7 +20,6 @@ import operator
 import stats
 
 import nltk
-from colorama import Back, Fore, Style, init
 
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
