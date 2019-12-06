@@ -1,3 +1,4 @@
+matplotlib==3.1.1
 pymongo==3.9.0
 #apturl==0.5.2
 asn1crypto==0.24.0
@@ -23,7 +24,6 @@ lazr.uri==1.0.3
 #louis==3.5.0
 Mako==1.0.7
 MarkupSafe==1.0
-matplotlib==3.1.1
 netifaces==0.10.4
 nltk==3.4.5
 numpy==1.17.3
