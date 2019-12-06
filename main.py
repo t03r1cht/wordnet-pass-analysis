@@ -500,7 +500,6 @@ def option_lookup_passwords():
 
 
 def option_verb_wordnet():
-    init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
 
