@@ -28,6 +28,9 @@ import mongo
 from helper import log_ok, log_err, log_status, remove_control_characters, get_curr_time, get_curr_time_str, get_shell_width, clear_terminal, get_txt_files_from_dir, format_number
 
 # ADJ, ADJ_SAT, ADV, NOUN, VERB = 'a', 's', 'r', 'n', 'v'
+"""
+Find duplicates: db.getCollection('passwords_wn_noun').aggregate([{"$group": {_id: "$name", sum: {"$sum": 1}}}, {"$sort": {"sum": -1}}])
+"""
 
 parser = argparse.ArgumentParser(
     description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
