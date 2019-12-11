@@ -10,7 +10,10 @@ def main():
     # init_first_occurrences_dups() must be called before init_ignore_dups(), since init_ignore_dups() creates the "inverse" list to init_first_occurrences_dups()
     init_first_occurrences_dups()
     init_ignore_dups()
-    # For each password, check if this password is in the list of keys of the above dict. If it is, we know our password permutation is a duplicate
+    for i in ignore_dups:
+        print(i)
+    return
+        # For each password, check if this password is in the list of keys of the above dict. If it is, we know our password permutation is a duplicate
     # We then check if the password we are looking is the lowest duplicate in the wordnet
     # if password.synset == map[password_perm]["synset"]: add the occurrences of this password to the total sum, else: continue (dont add, because we already have it added somewhere below)
 
@@ -18,12 +21,17 @@ def main():
     # We will start at the bottom and work our way up to the root synset
     all_levels = mongo.db_wn.distinct("level")
     lowest_level = max(all_levels)
+    for i in range(lowest_level, -1, -1):
+        sum_without_dups(i)
+
+
+def sum_without_dups(sum_level):
     # Return all synsets of the specified level but grouped by their parents. For each parent group, we store the total hits sum of this parent synsets children as well as the IDs of the children
     # text _id: Parent
     # int sum: Hits sum of all child synsets of parent
     # list childs: ID of the child synsets
     lowest_level_grps = mongo.db_wn.aggregate([
-        {"$match": {"level": lowest_level}},  # filter by lowest level
+        {"$match": {"level": sum_level}},  # filter by lowest level
         {"$group": {
             "_id": "$parent",  # group by the parent synsets
             "sum": {
@@ -37,52 +45,35 @@ def main():
             }
         }}
     ])
+
     for item in lowest_level_grps:
         total_hits = item["sum"]
+        orig_sum = total_hits
         for synset in item["childs"]:
             synset_id = synset["synset"]
             # This synset contains duplicates, however these duplicates are the first occuring ones in the Wordnet, so we add them to the total_hits
             if synset_id in first_occurrence_dups:
                 pass
-            # This synset contains duplicates and these duplicates are not the first occuring ones. This means we need to subtract the hits for the 
+            # This synset contains duplicates and these duplicates are not the first occuring ones. This means we need to subtract the hits for the
             # duplicate passwords from total_hits (they already occurred somewhen earlier, in that case the above case evaluated to true)
             elif synset_id in ignore_dups.keys():
                 subtracts = ignore_dups[synset_id]
-                for sub in subtracts: # [(pw, 100), (pw2, 200)]
+                for sub in subtracts:  # [(pw, 100), (pw2, 200)]
                     total_hits -= sub[1]
-                    print("Subtracted %d from total hits of %s/%s [%s] (%d): %d"%(sub[1], item["_id"], synset_id, sub[0], total_hits+sub[1], total_hits))
+                    print("Subtracted from parent %s: %d due to password %s (perm. from %s)" % (
+                        item["_id"],
+                        sub[1], 
+                        sub[0],
+                        synset_id
+                    ))
             else:
-                print("No duplicates for %s/%s" % (item["_id"], synset_id))
+                pass
         # If we finished identifying the duplicates, we need to update the parent synset with the according numbers
         # hits_below = this.total_hits
         # total_hits = hits_below + this.total_hits
-        # TODO How to debug? Rollback collections after test run
-        # TODO Test run
-        mongo.update_synset_noun_add_hits(item["_id"], total_hits)
-    return
-
-
-    # Get all synsets for this level
-    # For each synset, check its password permutations for possible duplicates. Found duplicates will be stored in found_dups
-
-    synsets_lowest_lvl = mongo.db_wn.find({"level": lowest_level})
-    for syn in synsets_lowest_lvl:
-        perms_for_syn = mongo.db_pws_wn.find({"synset": syn["id"]})
-
-        total_hits = 0
-        duplicates = 0
-        no_duplicates = 0
-
-        for perm in perms_for_syn:
-            first_dup = isDuplicate(perm["name"], perm["synset"])
-            if first_dup:
-                total_hits += perm["occurrences"]
-                no_duplicates += 1
-            else:
-                duplicates += 1
-        if duplicates > 0:
-            print("%s O: %d ND: %d D: %d" %
-                  (syn["id"], total_hits, no_duplicates, duplicates))
+        # cd ~/dump && mongorestore --drop
+        this_hits, hits_below = mongo.update_synset_noun_add_hits(
+            item["_id"], total_hits)
 
 
 def initDupsMap():
@@ -92,7 +83,8 @@ def initDupsMap():
     # under the root node (other than if we start subsuming from somewhere in the middle of the Wordnet. In that case, we don't care about duplicates possibly occurring in sibling sub-trees),
     # which means we do not allow any duplicates AT ALL.
     # MongoDB Find duplicates: db.getCollection('passwords_wn_noun').aggregate([{"$match": {"occurrences": {"$gt": 0}}}, {"$group": {_id: "$name", sum: {"$sum": 1}}}, {"$match": {"sum": {"$gt": 1}}}, {"$sort": {"sum": -1}}], { allowDiskUse: true })
-    # MongoDB Cound numer of duplicates: db.getCollection('passwords_wn_noun').aggregate([{"$match": {"occurrences": {"$gt": 0}}}, {"$group": {_id: "$name", sum: {"$sum": 1}}}, {"$match": {"sum": {"$gt": 1}}}, {"$sort": {"sum": -1}}, {"$group": {_id: null, count: {"$sum": 1}}}], { allowDiskUse: true })
+    # MongoDB Count number of duplicates: db.getCollection('passwords_wn_noun').aggregate([{"$match": {"occurrences": {"$gt": 0}}}, {"$group": {_id: "$name", sum: {"$sum": 1}}}, {"$match": {"sum": {"$gt": 1}}}, {"$sort": {"sum": -1}}, {"$group": {_id: null, count: {"$sum": 1}}}], { allowDiskUse: true })
+    # MongoDB Show clustered duplicates with synset origin: db.getCollection('passwords_wn_noun').aggregate([ { "$match": { "occurrences": { "$gt": 0 } } }, { "$group": { "_id": "$name", "sum": { "$sum": 1 }, "results": { "$push": { "name": "$name", "occurrences": "$occurrences", "word_base": "$word_base", "synset": "$synset", "level": "$depth" } } } }, { "$match": { "sum": { "$gt": 1 } } }, { "$sort": { "sum": -1 } } ], {"allowDiskUse": true})
     dup_query = mongo.db_pws_wn.aggregate([
         {
             "$match": {
@@ -260,11 +252,12 @@ def init_ignore_dups():
             if synset in first_occurrence_dups:
                 continue
             # Check if there are already duplicates registered to the current synset
-            if synset in ignore_dups.keys(): # We append the current duplicate to the existing list
-                ignore_dups[synset].append((dup_result["name"], dup_result["occurrences"]))
-            else: # Create a new list under the key of the synset of the current duplicate
-                ignore_dups[synset] = [(dup_result["name"], dup_result["occurrences"])]
-
+            if synset in ignore_dups.keys():  # We append the current duplicate to the existing list
+                ignore_dups[synset].append(
+                    (dup_result["name"], dup_result["occurrences"]))
+            else:  # Create a new list under the key of the synset of the current duplicate
+                ignore_dups[synset] = [
+                    (dup_result["name"], dup_result["occurrences"])]
 
     print("Ignore Duplicate list created. Length: %d items" %
           len(ignore_dups.items()))

@@ -402,15 +402,19 @@ def add_values_to_existing_verb(id, total_hits, found, not_found):
         }
     })
 
+
 def update_synset_noun_add_hits(synset_id, hits_below):
     # Get this_hits
-    query_result = db_pws_wn.find({"id": synset_id})
-    this_hits = query_result["this_hits"]
+    query_result = db_wn.find({"id": synset_id})
+    this_hits = 0
+    for i in query_result:
+        this_hits = i["this_hits"]
     # Update
-    db_pws_wn.update(
+    db_wn.update(
         {"id": synset_id},
         {"$set": {
             "hits_below": hits_below,
             "total_hits": this_hits + hits_below
         }}
     )
+    return this_hits, hits_below
