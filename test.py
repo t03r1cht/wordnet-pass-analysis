@@ -10,10 +10,7 @@ def main():
     # init_first_occurrences_dups() must be called before init_ignore_dups(), since init_ignore_dups() creates the "inverse" list to init_first_occurrences_dups()
     init_first_occurrences_dups()
     init_ignore_dups()
-    for i in ignore_dups:
-        print(i)
-    return
-        # For each password, check if this password is in the list of keys of the above dict. If it is, we know our password permutation is a duplicate
+    # For each password, check if this password is in the list of keys of the above dict. If it is, we know our password permutation is a duplicate
     # We then check if the password we are looking is the lowest duplicate in the wordnet
     # if password.synset == map[password_perm]["synset"]: add the occurrences of this password to the total sum, else: continue (dont add, because we already have it added somewhere below)
 
