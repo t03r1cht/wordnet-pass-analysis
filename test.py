@@ -4,6 +4,7 @@ import mongo
 dups_map = {}
 first_occurrence_dups = []
 ignore_dups = {}
+total_subtractions = 0
 
 
 def main():
@@ -18,8 +19,114 @@ def main():
     # We will start at the bottom and work our way up to the root synset
     all_levels = mongo.db_wn.distinct("level")
     lowest_level = max(all_levels)
-    for i in range(lowest_level, -1, -1):
-        sum_without_dups(i)
+
+
+    for i in reversed(range((lowest_level+1))):
+        fix_this_hits(i)
+
+    return
+
+    # total_hits = 0
+    # total_iters = 0
+    # for i in reversed(range((lowest_level+1))):
+    #     hits, iters = sum_all(i)
+    #     total_hits += hits
+    #     total_iters += iters
+    
+    # print("Total hits:", total_hits)
+    # print("Total iters:", total_iters)
+    # return
+    
+
+    # for i in reversed(range((lowest_level+1))):
+    #     sum_with_dups(i)
+    # return
+
+
+    # for i in range(lowest_level, -1, -1):
+    #     sum_without_dups(i)
+    # print("Total subtractions:", total_subtractions)
+
+
+def fix_this_hits(level):
+    # TODO
+    # laufen lassen (setzt neue this_hits werte)
+    # andere funktion (die this_hits werte addiert und zu parent(hits_below) schreibt)
+    # werte erneut überprüfen
+
+    # Iterate over all synsets
+    # For each synset, lookup in wn_lemma_permutations, for all entries get the permutations.occurrences
+    # values and add them together
+
+    # This is the new this_hits value for the the synsets in wn_synsets_noun
+    query_set = mongo.db_wn.find({"level": level})
+    for s in query_set:
+        this_hits_synset = 0
+        lemma_query = mongo.db_wn_lemma_permutations.find({"synset": s["id"]})
+        for l in lemma_query:
+            for perms in l["permutations"]:
+                this_hits_synset += perms["occurrences"]
+        print(s["id"], this_hits_synset)
+        mongo.db_wn.update(
+            {"id": s["id"]},
+            {
+                "$set": {
+                    "this_hits": this_hits_synset
+                }
+            }
+        )
+
+
+
+def sum_all(level):
+    total_hits = 0
+    i = 0
+    query_set = mongo.db_wn.find({"level": level})
+    for s in query_set:
+        total_hits += s["this_hits"]
+        i += 1
+    return total_hits, i
+
+
+def sum_with_dups(sum_level):
+    # Sum all total hits starting from the lowest level up to the root node
+    # Start at level sum_level and group by parents
+    curr_level_synset_parent_groups = mongo.db_wn.aggregate([
+        {"$match": {"level": sum_level}},  # filter by lowest level
+        {"$group": {
+            "_id": "$parent",  # group by the parent synsets
+            "sum_total_hits": {
+                "$sum": "$total_hits"
+            },
+            "sum_this_hits": {
+                "$sum": "$this_hits"
+            },
+            "sum_hits_below": {
+                "$sum": "$hits_below"
+            },
+            "childs": {
+                "$push": {
+                    "synset": "$id",
+                    "this_hits": "$this_hits",
+                    "hits_below": "$hits_below",
+                    "total_hits": "$total_hits"
+                }
+            }
+        }}
+    ])    
+    # For each group, retrieve this_hits and hits_below for each synset and sum
+    for item in curr_level_synset_parent_groups:
+        sum_total_hits = item["sum_total_hits"]
+        sum_this_hits = item["sum_this_hits"]
+        sum_hits_below = item["sum_hits_below"]
+        # Write total_hits to parent(hits_below)
+        mongo.update_synset_noun_set_hits_below(item["_id"], sum_total_hits)
+        print("Updated synset {}: set hits_below={}".format(item["_id"], sum_total_hits))
+        # Update synsets of the current level in case their hits_below values were changed from lower levels in a previous iteration
+        for c in item["childs"]:
+            mongo.update_synset_hits(c["synset"])
+        
+
 
 
 def sum_without_dups(sum_level):
@@ -33,7 +140,8 @@ def sum_without_dups(sum_level):
             "_id": "$parent",  # group by the parent synsets
             "sum": {
                 # sum the hits of only the current synsets (including lemmas), disregarding possible hits below this synset
-                "$sum": "$this_hits"
+                # "$sum": "$this_hits"
+                "$sum": "$total_hits"
             },
             "childs": {
                 "$push": {
@@ -43,6 +151,7 @@ def sum_without_dups(sum_level):
         }}
     ])
 
+    global total_subtractions
     for item in lowest_level_grps:
         total_hits = item["sum"]
         orig_sum = total_hits
@@ -57,9 +166,10 @@ def sum_without_dups(sum_level):
                 subtracts = ignore_dups[synset_id]
                 for sub in subtracts:  # [(pw, 100), (pw2, 200)]
                     total_hits -= sub[1]
-                    print("Subtracted from parent %s: %d due to password %s (perm. from %s)" % (
+                    total_subtractions += sub[1]
+                    print("Updated synset {}: sub -{} -> reason: duplicate {} (origin: {})".format(
                         item["_id"],
-                        sub[1], 
+                        sub[1],
                         sub[0],
                         synset_id
                     ))

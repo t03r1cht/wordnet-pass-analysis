@@ -418,3 +418,30 @@ def update_synset_noun_add_hits(synset_id, hits_below):
         }}
     )
     return this_hits, hits_below
+
+def update_synset_noun_set_hits_below(synset_id, total_hits):
+    db_wn.update(
+        {"id": synset_id},
+        {"$set": {
+            "hits_below": total_hits,
+        }}
+    )
+
+def update_synset_hits(synset_id):
+    # Get this_hits
+    doc = db_wn.find_one({"id": synset_id})
+    this_hits = doc["this_hits"]
+    hits_below = doc["hits_below"]
+    total_hits_old = doc["total_hits"]
+    total_hits = this_hits + hits_below
+    db_wn.update(
+        {"id": synset_id},
+       {"$set": {
+            "total_hits": total_hits,
+        }}
+    )
+    print("\tUpdating hits for current level synset {}: set total_hits:{} -> {}".format(
+        synset_id,
+        total_hits_old,
+        total_hits
+    ))
