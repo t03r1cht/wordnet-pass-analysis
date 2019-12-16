@@ -19,11 +19,23 @@ def main():
     # We will start at the bottom and work our way up to the root synset
     all_levels = mongo.db_wn.distinct("level")
     lowest_level = max(all_levels)
+    """
+    Problem
+    die summen von unten nach oben stimmen noch nicht. wenn man die summen der total_hits der schichten
+    n-1 addiert ergeben diese eine andere summe als der wert hits_below der schicht n
+    """
+    # 1.
+    # for i in reversed(range(lowest_level+1)):
+    #     fix_this_hits(i)
 
+    # 2.
+    # for i in reversed(range(lowest_level+1)):
+    #     update_hits(i)
 
+    # 3.
     for i in reversed(range((lowest_level+1))):
-        fix_this_hits(i)
-
+        sum_with_dups(i)
+    
     return
 
     # total_hits = 0
@@ -32,18 +44,15 @@ def main():
     #     hits, iters = sum_all(i)
     #     total_hits += hits
     #     total_iters += iters
-    
+    #     print("Hits for level {}: {} (with {} synsets)".format(i, hits, iters))
+
+    # print()
+    # print()
     # print("Total hits:", total_hits)
     # print("Total iters:", total_iters)
-    # return
-    
+
 
     # for i in reversed(range((lowest_level+1))):
-    #     sum_with_dups(i)
-    # return
-
-
-    # for i in range(lowest_level, -1, -1):
     #     sum_without_dups(i)
     # print("Total subtractions:", total_subtractions)
 
@@ -58,7 +67,7 @@ def fix_this_hits(level):
     # For each synset, lookup in wn_lemma_permutations, for all entries get the permutations.occurrences
     # values and add them together
 
-    # This is the new this_hits value for the the synsets in wn_synsets_noun
+    # This is the new this_hits value for the synsets in wn_synsets_noun
     query_set = mongo.db_wn.find({"level": level})
     for s in query_set:
         this_hits_synset = 0
@@ -76,6 +85,10 @@ def fix_this_hits(level):
             }
         )
 
+def update_hits(level):
+    query_set = mongo.db_wn.find({"level": level})
+    for s in query_set:
+        mongo.update_synset_hits(s["id"])
 
 
 def sum_all(level):
@@ -113,7 +126,7 @@ def sum_with_dups(sum_level):
                 }
             }
         }}
-    ])    
+    ])
     # For each group, retrieve this_hits and hits_below for each synset and sum
     for item in curr_level_synset_parent_groups:
         sum_total_hits = item["sum_total_hits"]
@@ -121,12 +134,11 @@ def sum_with_dups(sum_level):
         sum_hits_below = item["sum_hits_below"]
         # Write total_hits to parent(hits_below)
         mongo.update_synset_noun_set_hits_below(item["_id"], sum_total_hits)
-        print("Updated synset {}: set hits_below={}".format(item["_id"], sum_total_hits))
+        print("Updated synset {}: set hits_below={}".format(
+            item["_id"], sum_total_hits))
         # Update synsets of the current level in case their hits_below values were changed from lower levels in a previous iteration
         for c in item["childs"]:
             mongo.update_synset_hits(c["synset"])
-        
-
 
 
 def sum_without_dups(sum_level):
