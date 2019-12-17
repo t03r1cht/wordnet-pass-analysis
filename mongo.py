@@ -405,19 +405,19 @@ def add_values_to_existing_verb(id, total_hits, found, not_found):
 
 def update_synset_noun_add_hits(synset_id, hits_below):
     # Get this_hits
-    query_result = db_wn.find({"id": synset_id})
-    this_hits = 0
-    for i in query_result:
-        this_hits = i["this_hits"]
+    query_result = db_wn.find_one({"id": synset_id})
+    this_hits = query_result["this_hits"]
+    new_hits_below = hits_below
+    new_total_hits = this_hits + new_hits_below
     # Update
     db_wn.update(
         {"id": synset_id},
         {"$set": {
-            "hits_below": hits_below,
-            "total_hits": this_hits + hits_below
+            "hits_below": new_hits_below,
+            "total_hits": new_total_hits
         }}
     )
-    return this_hits, hits_below
+    return this_hits, new_hits_below
 
 
 def update_synset_noun_set_hits_below(synset_id, total_hits):
@@ -442,9 +442,14 @@ def update_synset_hits(synset_id):
             "total_hits": total_hits,
         }}
     )
-    
-    print("\tUpdating hits for current level synset {}: set total_hits:{} -> {}".format(
-        synset_id,
-        total_hits_old,
-        total_hits
-    ))
+    return total_hits, total_hits_old
+
+def subtract_from_hits_below(ssid, value):
+    db_wn.update(
+        {"id": ssid},
+        {
+            "$inc": {
+                "hits_below": -value
+            }
+        }
+    )

@@ -23,6 +23,10 @@ def main():
     Problem
     die summen von unten nach oben stimmen noch nicht. wenn man die summen der total_hits der schichten
     n-1 addiert ergeben diese eine andere summe als der wert hits_below der schicht n
+
+    idee:
+    rekursion ändern? summierung anders machen?
+    BESSERE DEBUG NACHRICHTEN um alles nachvollziehen zu können
     """
     # 1.
     # for i in reversed(range(lowest_level+1)):
@@ -33,10 +37,8 @@ def main():
     #     update_hits(i)
 
     # 3.
-    for i in reversed(range((lowest_level+1))):
-        sum_with_dups(i)
-    
-    return
+    # for i in reversed(range((lowest_level+1))):
+    #     sum_with_dups(i)
 
     # total_hits = 0
     # total_iters = 0
@@ -51,9 +53,8 @@ def main():
     # print("Total hits:", total_hits)
     # print("Total iters:", total_iters)
 
-
-    # for i in reversed(range((lowest_level+1))):
-    #     sum_without_dups(i)
+    for i in reversed(range((lowest_level+1))):
+        sum_without_dups(i)
     # print("Total subtractions:", total_subtractions)
 
 
@@ -84,6 +85,7 @@ def fix_this_hits(level):
                 }
             }
         )
+
 
 def update_hits(level):
     query_set = mongo.db_wn.find({"level": level})
@@ -138,7 +140,8 @@ def sum_with_dups(sum_level):
             item["_id"], sum_total_hits))
         # Update synsets of the current level in case their hits_below values were changed from lower levels in a previous iteration
         for c in item["childs"]:
-            mongo.update_synset_hits(c["synset"])
+            total_hits_new, total_hits_old = mongo.update_synset_hits(
+                c["synset"])
 
 
 def sum_without_dups(sum_level):
@@ -166,7 +169,10 @@ def sum_without_dups(sum_level):
     global total_subtractions
     for item in lowest_level_grps:
         total_hits = item["sum"]
+        total_hits_old = total_hits
         orig_sum = total_hits
+        # print(
+        #     "Checking for child-password-duplicates for parent '{}'".format(item["_id"]))
         for synset in item["childs"]:
             synset_id = synset["synset"]
             # This synset contains duplicates, however these duplicates are the first occuring ones in the Wordnet, so we add them to the total_hits
@@ -176,23 +182,65 @@ def sum_without_dups(sum_level):
             # duplicate passwords from total_hits (they already occurred somewhen earlier, in that case the above case evaluated to true)
             elif synset_id in ignore_dups.keys():
                 subtracts = ignore_dups[synset_id]
-                for sub in subtracts:  # [(pw, 100), (pw2, 200)]
-                    total_hits -= sub[1]
-                    total_subtractions += sub[1]
-                    print("Updated synset {}: sub -{} -> reason: duplicate {} (origin: {})".format(
-                        item["_id"],
-                        sub[1],
-                        sub[0],
-                        synset_id
-                    ))
+                # A synset may contain more than one duplicate
+                # [(pw, 100), (pw2, 200)]
+                sub_sum = 0
+                for sub in subtracts:
+                    # Add the total subtractions
+                    # Propagate total subtractions from this synsets parents up to the root synset and update
+                    # the hit values for each synset we subtracted from
+                    sub_sum += sub[1]
+                    start_parent_synset = item["_id"]
+                    print("Propagating changes to hits to synsets on the parent root path...")
+                    propagate(sub_sum, start_parent_synset)
+                    continue                 
+                    # total_hits -= sub[1]
+                    # total_subtractions += sub[1]
             else:
                 pass
         # If we finished identifying the duplicates, we need to update the parent synset with the according numbers
         # hits_below = this.total_hits
         # total_hits = hits_below + this.total_hits
         # cd ~/dump && mongorestore --drop
-        this_hits, hits_below = mongo.update_synset_noun_add_hits(
-            item["_id"], total_hits)
+        # this_hits, hits_below = mongo.update_synset_noun_add_hits(
+        #     item["_id"], total_hits)
+        # print("Updated synset {}: sub -{} -> reason: duplicate {} (origin: {})".format(
+        #     item["_id"],
+        #     sub[1],
+        #     sub[0],
+        #     synset_id
+        # ))
+
+def propagate(subtractions_total, start_parent):
+    """
+    Subtract subtractions_total from each synset starting at start_parent from its hits_below value
+    Do this until and including the root synset (entity.n.01)
+    """
+    # Get hypernym paths
+    hp = wn.synset(start_parent).hypernym_paths()
+    # Shortest hypernym path sp
+    sp_idx = 0
+    sp = hp[sp_idx]
+    for i,v in enumerate(hp):
+        if len(v) < len(sp):
+            sp_idx = i
+            sp = hp[sp_idx]
+    # Remove the current object from the list (the current synset id is the last item in the list)
+    del(sp[-1])
+    # For each item (synset ID) in sp, do the following
+    print("Root path for {}: {}".format(start_parent, list(reversed([x.name() for x in sp]))))
+    for ssid in reversed(sp):
+    # 1. Subtract subtractions_total from hits_below ($inc -subtractions_total)
+        mongo.subtract_from_hits_below(ssid.name(), subtractions_total)
+    # 2. Update total_hits (total_hits = hits_below + this_hits)
+        total_hits, total_hits_old = mongo.update_synset_hits(ssid.name())
+        print("\tUpdated {} total_hits: {} -> {}".format(ssid, total_hits_old, total_hits))
+    print()
+
+    # TODO Test
+    # WordNet nouns neu durchlaufen lassen, combinators beschränken (vllt auf die ersten 3)
+    # Test propagation with bigger data base
+    # mongorestore --db mydbname --collection mycollection dump/mydbname/mycollection.bson
 
 
 def initDupsMap():
