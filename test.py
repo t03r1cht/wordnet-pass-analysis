@@ -23,18 +23,15 @@ def main():
     Problem
     die summen von unten nach oben stimmen noch nicht. wenn man die summen der total_hits der schichten
     n-1 addiert ergeben diese eine andere summe als der wert hits_below der schicht n
-
-    idee:
-    rekursion ändern? summierung anders machen?
-    BESSERE DEBUG NACHRICHTEN um alles nachvollziehen zu können
     """
     # 1.
     # for i in reversed(range(lowest_level+1)):
     #     fix_this_hits(i)
 
     # 2.
-    # for i in reversed(range(lowest_level+1)):
-    #     update_hits(i)
+    for i in reversed(range(lowest_level+1)):
+        update_hits(i)
+    return
 
     # 3.
     # for i in reversed(range((lowest_level+1))):
@@ -59,11 +56,6 @@ def main():
 
 
 def fix_this_hits(level):
-    # TODO
-    # laufen lassen (setzt neue this_hits werte)
-    # andere funktion (die this_hits werte addiert und zu parent(hits_below) schreibt)
-    # werte erneut überprüfen
-
     # Iterate over all synsets
     # For each synset, lookup in wn_lemma_permutations, for all entries get the permutations.occurrences
     # values and add them together
@@ -191,9 +183,10 @@ def sum_without_dups(sum_level):
                     # the hit values for each synset we subtracted from
                     sub_sum += sub[1]
                     start_parent_synset = item["_id"]
-                    print("Propagating changes to hits to synsets on the parent root path...")
+                    print(
+                        "Propagating changes to hits to synsets on the parent root path...")
                     propagate(sub_sum, start_parent_synset)
-                    continue                 
+                    continue
                     # total_hits -= sub[1]
                     # total_subtractions += sub[1]
             else:
@@ -211,6 +204,7 @@ def sum_without_dups(sum_level):
         #     synset_id
         # ))
 
+
 def propagate(subtractions_total, start_parent):
     """
     Subtract subtractions_total from each synset starting at start_parent from its hits_below value
@@ -221,25 +215,23 @@ def propagate(subtractions_total, start_parent):
     # Shortest hypernym path sp
     sp_idx = 0
     sp = hp[sp_idx]
-    for i,v in enumerate(hp):
+    for i, v in enumerate(hp):
         if len(v) < len(sp):
             sp_idx = i
             sp = hp[sp_idx]
     # Remove the current object from the list (the current synset id is the last item in the list)
     del(sp[-1])
     # For each item (synset ID) in sp, do the following
-    print("Root path for {}: {}".format(start_parent, list(reversed([x.name() for x in sp]))))
+    print("Root path for {}: {}".format(
+        start_parent, list(reversed([x.name() for x in sp]))))
     for ssid in reversed(sp):
-    # 1. Subtract subtractions_total from hits_below ($inc -subtractions_total)
+        # 1. Subtract subtractions_total from hits_below ($inc -subtractions_total)
         mongo.subtract_from_hits_below(ssid.name(), subtractions_total)
     # 2. Update total_hits (total_hits = hits_below + this_hits)
         total_hits, total_hits_old = mongo.update_synset_hits(ssid.name())
-        print("\tUpdated {} total_hits: {} -> {}".format(ssid, total_hits_old, total_hits))
+        print("\tUpdated {} total_hits: {} -> {}".format(ssid,
+                                                         total_hits_old, total_hits))
     print()
-
-    # TODO Test
-    # WordNet nouns neu durchlaufen lassen, combinators beschränken (vllt auf die ersten 3)
-    # Test propagation with bigger data base
     # mongorestore --db mydbname --collection mycollection dump/mydbname/mycollection.bson
 
 
@@ -452,7 +444,7 @@ def isDuplicate(password_perm, synset):
 
 
 def check_dups():
-    # Plan: Suche nach Duplikaten. Wäre zu viel, wenn alles mit allem verglichen werden müsste,
+    # Plan: Suche nach Duplikaten. Waere zu viel, wenn alles mit allem verglichen werden muesste,
     # daher Vorüberlegung: welche Permutatoren können überhaupt Duplikate erzeugen?
     # Anschließend wird jedes Passwort erneut in der DB gesucht. Wenn Hits > 1 gibt es ein Duplikat.
     # Nun müssen wir allerdings prüfen, ob das aktuell geprüfte Passwort mit dem Duplikat auf einem Weg liegt. Wenn das Duplikat
