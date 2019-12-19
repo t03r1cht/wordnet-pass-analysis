@@ -150,27 +150,39 @@ def clear_mongo():
 
 
 def purge_verb():
-    db_wn_verb.remove({})
-    db_pws_wn_verb.remove({})
-    db_wn_lemma_permutations_verb.remove({})
+    # db_wn_verb.remove({})
+    # db_pws_wn_verb.remove({})
+    # db_wn_lemma_permutations_verb.remove({})
+    db_wn_verb.drop()
+    db_pws_wn_verb.drop()
+    db_wn_lemma_permutations_verb.drop()
 
 
 def purge_adjective():
-    db_wn_adjective.remove({})
-    db_pws_wn_adjective.remove({})
-    db_wn_lemma_permutations_adjective.remove({})
+    # db_wn_adjective.remove({})
+    # db_pws_wn_adjective.remove({})
+    # db_wn_lemma_permutations_adjective.remove({})
+    db_wn_adjective.drop()
+    db_pws_wn_adjective.drop()
+    db_wn_lemma_permutations_adjective.drop()
 
 
 def purge_adverb():
-    db_wn_adverb.remove({})
-    db_pws_wn_adverb.remove({})
-    db_wn_lemma_permutations_adverb.remove({})
+    # db_wn_adverb.remove({})
+    # db_pws_wn_adverb.remove({})
+    # db_wn_lemma_permutations_adverb.remove({})
+    db_wn_adverb.drop()
+    db_pws_wn_adverb.drop()
+    db_wn_lemma_permutations_adverb.drop()
 
 
 def purge_noun():
-    db_wn.remove({})
-    db_pws_wn.remove({})
-    db_wn_lemma_permutations.remove({})
+    # db_wn.remove({})
+    # db_pws_wn.remove({})
+    # db_wn_lemma_permutations.remove({})
+    db_wn.drop()
+    db_pws_wn.drop()
+    db_wn_lemma_permutations.drop()
 
 
 def store_permutations_for_lemma(permutations):
@@ -443,6 +455,7 @@ def update_synset_hits(synset_id):
         }}
     )
     return total_hits, total_hits_old
+
 
 def subtract_from_hits_below(ssid, value):
     db_wn.update(
