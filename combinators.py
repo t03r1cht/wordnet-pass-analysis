@@ -52,7 +52,7 @@ def no_combinations(lemma, permutator_registry):
     Run each permutator on its own.
     """
     ret_list = []
-    for permutator in permutator_registry[:2]:
+    for permutator in permutator_registry:
         perm = permutator(lemma)
         if perm == None:
             continue
