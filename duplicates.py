@@ -8,6 +8,7 @@ total_subtractions = 0
 
 
 def main():
+    # nohup nice -n -20 python3 main.py -p $PW_LIST -s "entity" -d 100 -t --wn-type="n" &
     # init_first_occurrences_dups() must be called before init_ignore_dups(), since init_ignore_dups() creates the "inverse" list to init_first_occurrences_dups()
     init_first_occurrences_dups()
     init_ignore_dups()
@@ -136,7 +137,8 @@ def sum_with_dups(sum_level):
                 c["synset"])
 
 
-def sum_without_dups(sum_level):
+def sum_without_dups_noun(sum_level):
+    # Has internal hierarchy
     # Return all synsets of the specified level but grouped by their parents. For each parent group, we store the total hits sum of this parent synsets children as well as the IDs of the children
     # text _id: Parent
     # int sum: Hits sum of all child synsets of parent
@@ -195,14 +197,74 @@ def sum_without_dups(sum_level):
         # hits_below = this.total_hits
         # total_hits = hits_below + this.total_hits
         # cd ~/dump && mongorestore --drop
-        # this_hits, hits_below = mongo.update_synset_noun_add_hits(
-        #     item["_id"], total_hits)
-        # print("Updated synset {}: sub -{} -> reason: duplicate {} (origin: {})".format(
-        #     item["_id"],
-        #     sub[1],
-        #     sub[0],
-        #     synset_id
-        # ))
+
+
+def sum_without_dups_verb():
+    # Has internal hierarchy
+    # Return all synsets of the specified level but grouped by their parents. For each parent group, we store the total hits sum of this parent synsets children as well as the IDs of the children
+    # text _id: Parent
+    # int sum: Hits sum of all child synsets of parent
+    # list childs: ID of the child synsets
+    lowest_level_grps = mongo.db_wn_verb.aggregate([
+        {"$match": {"level": sum_level}},  # filter by lowest level
+        {"$group": {
+            "_id": "$parent",  # group by the parent synsets
+            "sum": {
+                # sum the hits of only the current synsets (including lemmas), disregarding possible hits below this synset
+                # "$sum": "$this_hits"
+                "$sum": "$total_hits"
+            },
+            "childs": {
+                "$push": {
+                    "synset": "$id"
+                }
+            }
+        }}
+    ])
+
+    global total_subtractions
+    for item in lowest_level_grps:
+        total_hits = item["sum"]
+        total_hits_old = total_hits
+        orig_sum = total_hits
+        # print(
+        #     "Checking for child-password-duplicates for parent '{}'".format(item["_id"]))
+        for synset in item["childs"]:
+            synset_id = synset["synset"]
+            # This synset contains duplicates, however these duplicates are the first occuring ones in the Wordnet, so we add them to the total_hits
+            if synset_id in first_occurrence_dups:
+                pass
+            # This synset contains duplicates and these duplicates are not the first occuring ones. This means we need to subtract the hits for the
+            # duplicate passwords from total_hits (they already occurred somewhen earlier, in that case the above case evaluated to true)
+            elif synset_id in ignore_dups.keys():
+                subtracts = ignore_dups[synset_id]
+                # A synset may contain more than one duplicate
+                # [(pw, 100), (pw2, 200)]
+                sub_sum = 0
+                for sub in subtracts:
+                    # Add the total subtractions
+                    # Propagate total subtractions from this synsets parents up to the root synset and update
+                    # the hit values for each synset we subtracted from
+                    sub_sum += sub[1]
+                    start_parent_synset = item["_id"]
+                    print(
+                        "Propagating changes to hits to synsets on the parent root path...")
+                    propagate(sub_sum, start_parent_synset)
+                    continue
+                    # total_hits -= sub[1]
+                    # total_subtractions += sub[1]
+            else:
+                pass
+
+
+def sum_without_dups_adjective():
+    # Has no internal hierarchy
+    pass
+
+
+def sum_without_dups_adverb():
+    # Has no internal hierarchy
+    pass
 
 
 def propagate(subtractions_total, start_parent):
