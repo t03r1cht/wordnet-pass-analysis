@@ -97,7 +97,6 @@ def store_tested_pass_misc_list(collection_suffix, name, occurrences, source):
     }
 
     try:
-        # db_pws_misc_lists.insert_one(o)
         db["passwords_misc_lists_%s" % collection_suffix].insert_one(o)
     except Exception:
         return False
