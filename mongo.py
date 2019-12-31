@@ -1,7 +1,8 @@
 from pymongo import MongoClient
 from helper import get_curr_time, get_curr_time_str
 
-MONGO_ADDR = "192.168.56.102"
+# MONGO_ADDR = "192.168.56.102"
+MONGO_ADDR = "192.168.171.3"
 # MONGO_ADDR = "localhost"
 mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 
@@ -17,15 +18,15 @@ db_pws_wn = db["passwords_wn_noun"]
 db_pws_wn_verb = db["passwords_wn_verb"]
 db_pws_wn_adjective = db["passwords_wn_adjective"]
 db_pws_wn_adverb = db["passwords_wn_adverb"]
+db_pws_lists = db["passwords_lists"]
+db_pws_misc_lists = db["passwords_misc_lists"]
+db_pws_dicts = db["passwords_dicts"]
 
 db_wn_lemma_permutations = db["wn_lemma_permutations_noun"]
 db_wn_lemma_permutations_verb = db["wn_lemma_permutations_verb"]
 db_wn_lemma_permutations_adjective = db["wn_lemma_permutations_adjective"]
 db_wn_lemma_permutations_adverb = db["wn_lemma_permutations_adverb"]
 
-db_pws_lists = db["passwords_lists"]
-db_pws_misc_lists = db["passwords_misc_lists"]
-db_pws_dicts = db["passwords_dicts"]
 
 TAG = get_curr_time_str()
 
@@ -150,21 +151,27 @@ def clear_mongo():
 
 
 def purge_verb():
-    db_wn_verb.remove({})
-    db_pws_wn_verb.remove({})
-    db_wn_lemma_permutations_verb.remove({})
+    db_wn_verb.drop()
+    db_pws_wn_verb.drop()
+    db_wn_lemma_permutations_verb.drop()
 
 
 def purge_adjective():
-    db_wn_adjective.remove({})
-    db_pws_wn_adjective.remove({})
-    db_wn_lemma_permutations_adjective.remove({})
+    db_wn_adjective.drop()
+    db_pws_wn_adjective.drop()
+    db_wn_lemma_permutations_adjective.drop()
 
 
 def purge_adverb():
-    db_wn_adverb.remove({})
-    db_pws_wn_adverb.remove({})
-    db_wn_lemma_permutations_adverb.remove({})
+    db_wn_adverb.drop()
+    db_pws_wn_adverb.drop()
+    db_wn_lemma_permutations_adverb.drop()
+
+
+def purge_noun():
+    db_wn.drop()
+    db_pws_wn.drop()
+    db_wn_lemma_permutations.drop()
 
 
 def store_permutations_for_lemma(permutations):
@@ -395,3 +402,56 @@ def add_values_to_existing_verb(id, total_hits, found, not_found):
             "total_hits": total_hits
         }
     })
+
+
+def update_synset_noun_add_hits(synset_id, hits_below):
+    # Get this_hits
+    query_result = db_wn.find_one({"id": synset_id})
+    this_hits = query_result["this_hits"]
+    new_hits_below = hits_below
+    new_total_hits = this_hits + new_hits_below
+    # Update
+    db_wn.update(
+        {"id": synset_id},
+        {"$set": {
+            "hits_below": new_hits_below,
+            "total_hits": new_total_hits
+        }}
+    )
+    return this_hits, new_hits_below
+
+
+def update_synset_noun_set_hits_below(synset_id, total_hits):
+    db_wn.update(
+        {"id": synset_id},
+        {"$set": {
+            "hits_below": total_hits,
+        }}
+    )
+
+
+def update_synset_hits(synset_id):
+    # Get this_hits
+    doc = db_wn.find_one({"id": synset_id})
+    total_hits_old = doc["total_hits"]
+    this_hits = doc["this_hits"]
+    hits_below = doc["hits_below"]
+    total_hits = this_hits + hits_below
+    db_wn.update(
+        {"id": synset_id},
+        {"$set": {
+            "total_hits": total_hits,
+        }}
+    )
+    return total_hits, total_hits_old
+
+
+def subtract_from_hits_below(ssid, value):
+    db_wn.update(
+        {"id": ssid},
+        {
+            "$inc": {
+                "hits_below": -value
+            }
+        }
+    )
