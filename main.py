@@ -1763,6 +1763,8 @@ def option_lookup_ref_lists():
     wl_name = args.misc_list.lower()
     # Remove .txt (4 chars)
     wl_name = wl_name[:-4]
+    # Strip path prefix
+    wl_name = wl_name.split("/")[-1]
 
     for word in words:
         if list_read_limit:
