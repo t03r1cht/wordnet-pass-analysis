@@ -1860,6 +1860,13 @@ def option_lookup_ref_lists():
         word_list_name = args.misc_list.split(os.sep)[-1]
     else:
         word_list_name = args.misc_list
+    # Generate collection suffix from misc list name
+    # We imply that the collection does not exists yet
+    # Make it lowercase
+    wl_name = args.misc_list.lower()
+    # Remove .txt (4 chars)
+    wl_name = wl_name[:-4]
+
     for word in words:
         if list_read_limit:
             if progress_count >= list_read_limit:
@@ -1877,8 +1884,7 @@ def option_lookup_ref_lists():
             result_num = 0
         else:
             result_num = int(result.split(":")[1])
-        success = mongo.store_tested_pass_misc_list(
-            cleaned_word, result_num, word_list_name)
+        success = mongo.store_tested_pass_misc_list(wl_name, cleaned_word, result_num, word_list_name)
         log_status("[%d/%d] %s (%d)" %
                    (progress_count, word_count, cleaned_word, result_num))
     log_ok("Finished. %d actual words, %d non-words (empty lines, comments, etc.)" %

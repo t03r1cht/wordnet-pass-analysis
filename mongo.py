@@ -87,7 +87,7 @@ def store_tested_pass_wn_verb(name, occurrences, source, word_base, permutator="
     return True
 
 
-def store_tested_pass_misc_list(name, occurrences, source):
+def store_tested_pass_misc_list(collection_suffix, name, occurrences, source):
     o = {
         "name": name,
         "occurrences": occurrences,
@@ -96,7 +96,8 @@ def store_tested_pass_misc_list(name, occurrences, source):
     }
 
     try:
-        db_pws_misc_lists.insert_one(o)
+        # db_pws_misc_lists.insert_one(o)
+        db["passwords_misc_lists_%s" % collection_suffix].insert_one(o)
     except Exception:
         return False
     return True
