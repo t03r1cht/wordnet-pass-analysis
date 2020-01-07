@@ -1686,6 +1686,7 @@ def plot_data():
         pass
 
     # Plot the coverage for all WordNet PoS
+    # This means that for each PoS we determine how many passwords were found (occurrences > 0)
     elif args.plot == "wn_coverage":
         plots.wn_coverage(opts)
 
