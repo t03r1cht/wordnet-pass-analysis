@@ -1123,7 +1123,15 @@ def plot_overlay_two_misc_lists(opts):
     ref_list_one = ref_list.split(",")[0]
     ref_list_two = ref_list.split(",")[1]
     # Get passwords for the provided source list 1
-    words_cur_one = mongo.db_pws_misc_lists.find({"source": ref_list_one}).sort(
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list_one = ref_list_one.lower()
+    ref_list_two = ref_list_two.lower()
+    # Trim file extension
+    ref_list_one = ref_list_one.split(".")[0]
+    ref_list_two = ref_list_two.split(".")[0]
+
+    words_cur_one = mongo.db["passwords_misc_lists_%s"%ref_list_one].find({"occurrences": {"$gt":1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_one_occs = []
     ref_list_one_labels = []
@@ -1131,7 +1139,7 @@ def plot_overlay_two_misc_lists(opts):
         ref_list_one_occs.append(word["occurrences"])
         ref_list_one_labels.append(word["name"])
     # Get passwords for the provided source list 2
-    words_cur_two = mongo.db_pws_misc_lists.find({"source": ref_list_two}).sort(
+    words_cur_two = mongo.db["passwords_misc_lists_%s"%ref_list_two].find({"occurrences": {"$gt":1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_two_occs = []
     ref_list_two_labels = []
@@ -1197,7 +1205,12 @@ def plot_overlay_wn_misc_list(opts):
         wn_occurrences.append(password["total_hits"])
 
     # Get passwords for the provided source list
-    misc_list_cur = mongo.db_pws_misc_lists.find({"source": ref_list}).sort(
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list = ref_list.lower()
+    # Trim file extension
+    ref_list = ref_list.split(".")[0]
+    misc_list_cur = mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt":10000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_occs = []
     ref_list_labels = []
@@ -1688,6 +1701,12 @@ def misc_list_bar_top_n(opts):
     # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
     top_n_labels = []
     top_n_hits = []
+
+    for name in mongo.db.list_collection_names():
+        if not name.startswith("passwords_misc_lists"):
+            continue
+        
+            
     for item in mongo.db_pws_misc_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}, {"$sort": {"sum": -1}}, {"$limit": top_flag}]):
         log_ok("{} {}".format(item["_id"], format_number(item["sum"])))
         top_n_labels.append(item["_id"])
@@ -1757,18 +1776,18 @@ def ref_list_words_top_n(opts):
 
 def misc_list_words_top_n(opts):
     top_flag = 10
-    ref_list_flag = ""
+    ref_list = ""
 
     if opts["top"]:
-        if opts["top"] > 40:
-            log_err("--top value too high. Select Value between 1 and 40")
+        if opts["top"] > 1000:
+            log_err("--top value too high. Select Value between 1 and 1000")
             return
         top_flag = opts["top"]
     else:
         top_flag = 10
 
     if opts["ref_list"]:
-        ref_list_flag = opts["ref_list"]
+        ref_list = opts["ref_list"]
     else:
         log_err("No reference (-l) specified.")
         return
@@ -1784,7 +1803,14 @@ def misc_list_words_top_n(opts):
     #   2. For each word_base bucket, sum the occurrences of the containing documents (so sum the occurrences of the permutations for each word_base)
     #   3. Sort the buckets based on their occurrences sum from the previous step
     #   4. Limit the sorted top results
-    for item in mongo.db_pws_misc_lists.find({"$and": [{"source": ref_list_flag}, {"name": {"$nin": exclude_filter}}]}).sort("occurrences", pymongo.DESCENDING).limit(top_flag):
+
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list = ref_list.lower()
+    # Trim file extension
+    ref_list = ref_list.split(".")[0]
+
+    for item in mongo.db["passwords_misc_lists_%s"%ref_list].find({"name": {"$nin": exclude_filter}}).sort("occurrences", pymongo.DESCENDING).limit(top_flag):
         log_ok("{} {}".format(item["name"],
                               format_number(item["occurrences"])))
         top_n_labels.append(item["name"])
@@ -1815,7 +1841,12 @@ def misc_lists_top_n_passwords_bar(opts):
     labels = []
     occurrences = []
     limit = opts["top"] * 3
-    for password in mongo.db_pws_misc_lists.find({"source": ref_list, "occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list = ref_list.lower()
+    # Trim file extension
+    ref_list = ref_list.split(".")[0]
+    for password in mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
 
@@ -2032,7 +2063,14 @@ def wn_misc_list_top_n_pass_comp_bar(opts):
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
     buf_len_ref_list = limit_val * 10
-    top_n_ref_list = db_pws_lists.find({"source": ref_list}).sort(
+
+
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list = ref_list.lower()
+    # Trim file extension
+    ref_list = ref_list.split(".")[0]
+    top_n_ref_list = mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt":1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
     log_ok("Retrieved items for ref list (with additional buffer): %d" %
            buf_len_ref_list)

@@ -1616,6 +1616,7 @@ def plot_data():
     #
     # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
     # =================================================================================================================================================================================================
+    # NOT WORKING SINCE MISC_LIST CHANGE
     elif args.plot == "misc_list_bar_top_n":
         plots.misc_list_bar_top_n(opts)
 
@@ -1648,7 +1649,14 @@ def plot_data():
     # Bar chart with multiple X's comparing the top N passwords of two different word lists.
     elif args.plot == "ref_ref_list_top_n_pass_comp_bar":
         plots.ref_ref_list_top_n_pass_comp_bar(opts)
-
+    # TODO
+    # TODO
+    # TODO
+    # TODO
+    # TODO
+    # TODO
+    # TODO
+    # TODO
     # Bar chart with multiple X's comparing the top N passwords of two misc lists.
     elif args.plot == "misc_misc_list_top_n_pass_comp_bar":
         plots.misc_misc_list_top_n_pass_comp_bar(opts)
