@@ -1633,6 +1633,7 @@ def plot_data():
         plots.ref_list_words_top_n(opts)
 
     # Bar plot the top N misc list word_bases based on its group buckets total hits
+    # NOT REWORKED
     elif args.plot == "misc_list_words_bar_top_n":
         plots.misc_list_words_top_n(opts)
 
@@ -1649,14 +1650,7 @@ def plot_data():
     # Bar chart with multiple X's comparing the top N passwords of two different word lists.
     elif args.plot == "ref_ref_list_top_n_pass_comp_bar":
         plots.ref_ref_list_top_n_pass_comp_bar(opts)
-    # TODO
-    # TODO
-    # TODO
-    # TODO
-    # TODO
-    # TODO
-    # TODO
-    # TODO
+ 
     # Bar chart with multiple X's comparing the top N passwords of two misc lists.
     elif args.plot == "misc_misc_list_top_n_pass_comp_bar":
         plots.misc_misc_list_top_n_pass_comp_bar(opts)

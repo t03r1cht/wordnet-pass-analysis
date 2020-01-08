@@ -2400,14 +2400,21 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
             "Argument requires two list names separated by a comma, e.g. misc_list1.txt,misc_list2.txt")
         return
 
-    # Get the top N ref list passwords
+    # Get the top N misc list 1 passwords
     # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
-    buf_len_ref_list = limit_val * 2
-    top_n_ref_list = db_pws_misc_lists.find({"source": ref_list_src_1}).sort(
+    buf_len_ref_list = limit_val * 10
+
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list_src_1 = ref_list_src_1.lower()
+    # Trim file extension
+    ref_list_src_1 = ref_list_src_1.split(".")[0]
+
+    top_n_ref_list = mongo.db["passwords_misc_lists_%s"%ref_list_src_1].find({"occurrences": {"$gt":1}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
-    log_ok("Retrieved items for ref list (with additional buffer): %d" %
+    log_ok("Retrieved items for misc list 1 (with additional buffer): %d" %
            buf_len_ref_list)
     top_n_ref_list_labels = []
     top_n_ref_list_occs = []
@@ -2427,16 +2434,22 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
             top_n_ref_list_labels.append(item["name"])
             top_n_ref_list_occs.append(item["occurrences"])
 
-    # Get the top N WordNet passwords
+    # Get the top N misc list 2 passwords
     # Since there are duplicates (originating from different word bases) we limit at the original limit plus a third of its value for some buffer
     # The definitive limiting happens when we eliminated the duplicates
     # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
     buf_len_ref_list_2 = limit_val * 10
-    top_n_ref_list_2 = db_pws_misc_lists.find({"source": ref_list_src_2}).sort(
-        "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list_2)
-    log_ok("Retrieved items for WordNet (with additional buffer): %d" %
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list_src_2 = ref_list_src_2.lower()
+    # Trim file extension
+    ref_list_src_2 = ref_list_src_2.split(".")[0]
+
+    top_n_ref_list_2 = mongo.db["passwords_misc_lists_%s"%ref_list_src_2].find({"occurrences": {"$gt":1}}).sort(
+        "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
+    log_ok("Retrieved items for misc list 2 (with additional buffer): %d" %
            buf_len_ref_list_2)
     top_n_ref_list_2_labels = []
     top_n_ref_list_2_occs = []
@@ -2530,7 +2543,7 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
     # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
-    buf_len_ref_list = limit_val * 2
+    buf_len_ref_list = limit_val * 10
     top_n_ref_list = db_pws_lists.find({"source": ref_list_src_1}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
     log_ok("Retrieved items for ref list (with additional buffer): %d" %
@@ -2560,8 +2573,15 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
     buf_len_misc_list = limit_val * 10
-    top_n_misc_list = db_pws_misc_lists.find({"source": misc_list_src}).sort(
-        "occurrences", pymongo.DESCENDING).limit(buf_len_misc_list)
+
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    misc_list_src = misc_list_src.lower()
+    # Trim file extension
+    misc_list_src = misc_list_src.split(".")[0]
+    top_n_misc_list = mongo.db["passwords_misc_lists_%s"%misc_list_src].find({"occurrences": {"$gt":1000}}).sort(
+        "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
+
     log_ok("Retrieved items for WordNet (with additional buffer): %d" %
            buf_len_misc_list)
     top_n_misc_list_labels = []
@@ -2928,10 +2948,17 @@ def dict_misc_list_top_n_pass_comp_bar(opts):
     # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
-    buf_len_misc_list = limit_val * 10
-    top_n_misc_list = db_pws_misc_lists.find({"source": ref_list}).sort(
+    buf_len_misc_list = limit_val * 5
+
+    # Search in named collection (passwords_misc_list_<name>)
+    # Lower case
+    ref_list = ref_list.lower()
+    # Trim file extension
+    ref_list = ref_list.split(".")[0]
+
+    top_n_misc_list = mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt":1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_misc_list)
-    log_ok("Retrieved items for WordNet (with additional buffer): %d" %
+    log_ok("Retrieved items for misc list (with additional buffer): %d" %
            buf_len_misc_list)
     top_n_misc_list_labels = []
     top_n_misc_list_occs = []
@@ -3149,31 +3176,79 @@ def comp_all(opts):
             "sum": item["sum"]
         }
         total_sum.append(o)
+        log_ok("Done: %s" % (item["_id"]))
 
     # Get the sum for all misc lists
-    query_result2 = db_pws_misc_lists.aggregate(
-        [{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
-    for item in query_result:
-        log_ok("%s %d" % (item["_id"], item["sum"]))
-    for item in query_result2:
-        o = {
-            "type": "misc_list",
-            "name": item["_id"],
-            "sum": item["sum"]
-        }
-        total_sum.append(o)
+    for name in mongo.db.list_collection_names():
+        if not name.startswith("passwords_misc_lists_"):
+            continue
+        query_result2 = mongo.db[name].aggregate([{"$group": {"_id": "$tag", "sum": {"$sum": "$occurrences"}}}])
+        trimmed_name = name.replace("passwords_misc_lists_","")
+        for item in query_result2:
+            o = {
+                "type": "misc_list",
+                "name": trimmed_name,
+                "sum": item["sum"]
+            }
+            total_sum.append(o)
+            log_ok("Done: %s" % (trimmed_name))
 
-    # Get the sum for the wordnet
+    # Get the sum for the wordnet nouns
     # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
     query_result3 = mongo.db_wn.find({"parent": "root"})
     for item in query_result3:
         o = {
             "type": "wordnet",
             # "name": item["id"],
-            "name": "WordNet",
+            "name": "WordNet Nouns",
             "sum": item["total_hits"] + item["this_hits"]
         }
+        log_ok("Done: %s" % (o["name"]))
         total_sum.append(o)
+
+    # Get the sum for the wordnet verbs
+    # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
+    query_result_v = mongo.db_wn_verb.find({"parent": "root"})
+    total_hits = 0
+    for item in query_result_v:
+        root_hits = item["total_hits"] + item["this_hits"]
+        total_hits += root_hits
+
+    o = {
+        "type": "wordnet",
+        # "name": item["id"],
+        "name": "WordNet Verbs",
+        "sum": total_hits
+    }
+    total_sum.append(o)
+    log_ok("Done: %s" % (o["name"]))
+
+    # Get the sum for the wordnet adjectives
+    # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
+    query_result_adj = mongo.db_wn_adjective.aggregate([{"$group": {"_id": "$tag", "sum_this_hits": {"$sum": "$this_hits"}}}])
+    for item in query_result_adj:
+        o = {
+            "type": "wordnet",
+            # "name": item["id"],
+            "name": "WordNet Adjectives",
+            "sum": item["sum_this_hits"]
+        }
+        total_sum.append(o)
+        log_ok("Done: %s" % (o["name"]))
+
+    # Get the sum for the wordnet adverbs
+    # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
+    query_result_adv = mongo.db_wn_adverb.aggregate([{"$group": {"_id": "$tag", "sum_this_hits": {"$sum": "$this_hits"}}}])
+    for item in query_result_adv:
+        o = {
+            "type": "wordnet",
+            # "name": item["id"],
+            "name": "WordNet Adverbs",
+            "sum": item["sum_this_hits"]
+        }
+        total_sum.append(o)
+        log_ok("Done: %s" % (o["name"]))
+
 
     # Get the sum for all dicts
     # First get the dict collection names starting with passwords_dicts_
@@ -3188,22 +3263,24 @@ def comp_all(opts):
         query_resultn = mongo.db[collection_name].aggregate(
             [{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}])
         for item in query_resultn:
+            # Trim dict name
+            dict_name = item["_id"].split("/")[-1]
             o = {
                 "type": "dict",
-                "name": item["_id"],
+                "name": dict_name,
                 "sum": item["sum"]
             }
             total_sum.append(o)
 
-    log_ok("Printing values for manual labelling:")
-    log_ok("")
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
-    for k, v in enumerate(sorted_sums):
-        log_ok("(%d)\t%s\t%s\t%s" %
-               (k, v["type"], v["name"], format_number(v["sum"])))
-
     sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_o = [x["sum"] for x in sorted_sums]
+
+    print()
+    print()
+    print()
+    for k,v in enumerate(sorted_sums):
+        log_ok("%d: %s\t%s" % (k, format_number(v["sum"]), v["name"]))
 
     # Plot as bar
     N = len(sorted_l)
