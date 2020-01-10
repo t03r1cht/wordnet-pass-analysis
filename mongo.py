@@ -445,9 +445,34 @@ def update_synset_hits(synset_id):
     )
     return total_hits, total_hits_old
 
+def update_synset_hits_verb(synset_id):
+    # Get this_hits
+    doc = db_wn_verb.find_one({"id": synset_id})
+    total_hits_old = doc["total_hits"]
+    this_hits = doc["this_hits"]
+    hits_below = doc["hits_below"]
+    total_hits = this_hits + hits_below
+    db_wn_verb.update(
+        {"id": synset_id},
+        {"$set": {
+            "total_hits": total_hits,
+        }}
+    )
+    return total_hits, total_hits_old
+
 
 def subtract_from_hits_below(ssid, value):
     db_wn.update(
+        {"id": ssid},
+        {
+            "$inc": {
+                "hits_below": -value
+            }
+        }
+    )
+
+def subtract_from_hits_below_verb(ssid, value):
+    db_wn_verb.update(
         {"id": ssid},
         {
             "$inc": {
