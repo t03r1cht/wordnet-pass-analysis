@@ -306,11 +306,9 @@ def sum_without_dups_noun(sum_level):
                     sub_sum += sub[1]
                     start_parent_synset = item["_id"]
                     print(
-                        "Propagating changes to hits to synsets on the parent root path...")
+                        "Propagating changes to hits to synsets on the parent root path... (-%s)" % (format_number(sub_sum)))
                     propagate_noun(sub_sum, start_parent_synset)
                     continue
-                    # total_hits -= sub[1]
-                    # total_subtractions += sub[1]
             else:
                 pass
         # If we finished identifying the duplicates, we need to update the parent synset with the according numbers
@@ -344,11 +342,38 @@ def sum_without_dups_verb(sum_level):
 
     global total_subtractions
     for item in lowest_level_grps:
+        if not item["_id"] == "root":
+            pass
+        else:
+            # If we reached the end (tree top), we branch into this code
+            print("Reached the top (level 0), will now subtract from the root nodes...")
+            for c in item["childs"]:
+                sid = c["synset"]
+                # If the synset ID is found in the dictionary, we subtract the duplicate hits from the current
+                # synset. Since we are at the top, we don't need to propagate the changes
+                if sid in ignore_dups.keys():
+                    print("Not first occurrence. Subtracting from current synset:", sid)
+                    # Sum all the values, so we can save some database accesses and increase performance, even if
+                    # by just a little
+                    total_dups = 0
+                    for d in ignore_dups[sid]:
+                        print("\t", d)
+                        total_dups += d[1]
+                    print("\ttotal:", total_dups)
+                    # Subtract
+                    mongo.subtract_from_this_hits_verb(sid, total_dups)
+                    # We need to update total_hits since we have modified this_hits
+                    total_hits_c, total_hits_old_c = mongo.update_synset_hits_verb(
+                        sid)
+                    print("\t\tUpdate:", total_hits_old_c, " -> ", total_hits_c)
+                else:
+                    continue
+            print("Finished!")
+            return
+
         total_hits = item["sum"]
         total_hits_old = total_hits
         orig_sum = total_hits
-        # print(
-        #     "Checking for child-password-duplicates for parent '{}'".format(item["_id"]))
         for synset in item["childs"]:
             synset_id = synset["synset"]
             # This synset contains duplicates, however these duplicates are the first occuring ones in the Wordnet, so we add them to the total_hits
@@ -368,11 +393,11 @@ def sum_without_dups_verb(sum_level):
                     sub_sum += sub[1]
                     start_parent_synset = item["_id"]
                     print(
-                        "Propagating changes to hits to synsets on the parent root path... (-%s)"%(format_number(sub_sum)))
+                        "Propagating changes to hits to synsets on the parent root path... (-%s)" % (format_number(sub_sum)))
+                    print(start_parent_synset)
+                    continue
                     propagate_verb(sub_sum, start_parent_synset)
                     continue
-                    # total_hits -= sub[1]
-                    # total_subtractions += sub[1]
             else:  # Synset contains no duplicates, hence, no action
                 pass
 
@@ -413,8 +438,11 @@ def propagate_verb(subtractions_total, start_parent):
     Do this until and including the root synset (entity.n.01)
     """
     # Get hypernym paths
+    # If our parent is "root" that means we are a synset on level 0. In this case, there is no path
+    # we can propagate the changes to. Hence we only need to subtract the duplicate hits from ourself
     if start_parent == "root":
-        print("Reached root - nothing to propagate further. Finished...")
+        print("Reached root - nothing to propagate further. Subtracting from myself...")
+        mongo.subtract_from_hits_below_verb()
         return
     hp = wn.synset(start_parent).hypernym_paths()
     # Shortest hypernym path sp
@@ -434,8 +462,6 @@ def propagate_verb(subtractions_total, start_parent):
         mongo.subtract_from_hits_below_verb(ssid.name(), subtractions_total)
         # 2. Update total_hits (total_hits = hits_below + this_hits)
         total_hits, total_hits_old = mongo.update_synset_hits_verb(ssid.name())
-        total_hits_old = 0
-        total_hits = 0
         print("\tUpdated {} total_hits: {} -> {}".format(ssid,
                                                          total_hits_old, total_hits))
     print()
@@ -571,10 +597,10 @@ def init_ignore_dups(mode):
             # Check if there are already duplicates registered to the current synset (one synset might produce multiple duplicates)
             if synset in ignore_dups.keys():  # We append the current duplicate to the existing list
                 ignore_dups[synset].append(
-                    (dup_result["name"], dup_result["occurrences"]))
+                    (dup_result["name"], dup_result["occurrences"], dup_result["synset"]))
             else:  # Create a new list under the key of the synset of the current duplicate
                 ignore_dups[synset] = [
-                    (dup_result["name"], dup_result["occurrences"])]
+                    (dup_result["name"], dup_result["occurrences"], dup_result["synset"])]
 
     print("Ignore Duplicate list created. Length: %d items" %
           len(ignore_dups.items()))
