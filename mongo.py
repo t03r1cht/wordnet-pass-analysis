@@ -151,38 +151,49 @@ def clear_mongo():
 
 
 def purge_verb():
+    """
+    Drop all wordnet verb collections.
+    """
     db_wn_verb.drop()
     db_pws_wn_verb.drop()
     db_wn_lemma_permutations_verb.drop()
 
 
 def purge_adjective():
+    """
+    Drop all wordnet adjective collections.
+    """
     db_wn_adjective.drop()
     db_pws_wn_adjective.drop()
     db_wn_lemma_permutations_adjective.drop()
 
 
 def purge_adverb():
+    """
+    Drop all wordnet adverb collections.
+    """
     db_wn_adverb.drop()
     db_pws_wn_adverb.drop()
     db_wn_lemma_permutations_adverb.drop()
 
 
 def purge_noun():
+    """
+    Drop all wordnet noun collections.
+    """
     db_wn.drop()
     db_pws_wn.drop()
     db_wn_lemma_permutations.drop()
 
 
 def store_permutations_for_lemma(permutations):
+    """
+    For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_noun collection.
+    """
     # In case it already exists
     if db_wn_lemma_permutations.count_documents({"word_base": permutations["word_base"]}) > 0:
         return
     db_wn_lemma_permutations.insert_one(permutations)
-    # Also store each separate permutation so we can search for the most popular permutations
-    # for p in permutations["permutations"]:
-    #     store_tested_pass_wn(p["permutation"], p["occurrences"],
-    #                          permutations["synset"], permutations["word_base"])
     # Replace with bulk insert. Should generally increase performance
     try:
         db_pws_wn.insert_many(permutations["permutations"])
@@ -192,14 +203,13 @@ def store_permutations_for_lemma(permutations):
 
 
 def store_permutations_for_lemma_verb(permutations):
-    # In case it already exists
+    """
+    For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_verb collection.
+    """
+   # In case it already exists
     if db_wn_lemma_permutations_verb.count_documents({"word_base": permutations["word_base"]}) > 0:
         return
     db_wn_lemma_permutations_verb.insert_one(permutations)
-    # Also store each separate permutation so we can search for the most popular permutations
-    # for p in permutations["permutations"]:
-    #     store_tested_pass_wn_verb(p["permutation"], p["occurrences"],
-    #                               permutations["synset"], permutations["word_base"])
     # Replace with bulk insert. Should generally increase performance
     try:
         db_pws_wn_verb.insert_many(permutations["permutations"])
@@ -209,14 +219,13 @@ def store_permutations_for_lemma_verb(permutations):
 
 
 def store_permutations_for_lemma_adjective(permutations):
+    """
+    For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_adjective collection.
+    """
     # In case it already exists
     if db_wn_lemma_permutations_adjective.count_documents({"word_base": permutations["word_base"]}) > 0:
         return
     db_wn_lemma_permutations_adjective.insert_one(permutations)
-    # Also store each separate permutation so we can search for the most popular permutations
-    # for p in permutations["permutations"]:
-    #     store_tested_pass_wn_verb(p["permutation"], p["occurrences"],
-    #                               permutations["synset"], permutations["word_base"])
     # Replace with bulk insert. Should generally increase performance
     try:
         db_pws_wn_adjective.insert_many(permutations["permutations"])
@@ -226,6 +235,9 @@ def store_permutations_for_lemma_adjective(permutations):
 
 
 def store_permutations_for_lemma_adverb(permutations):
+    """
+    For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_adverb collection.
+    """
     # In case it already exists
     if db_wn_lemma_permutations_adverb.count_documents({"word_base": permutations["word_base"]}) > 0:
         return
@@ -242,16 +254,10 @@ def store_permutations_for_lemma_adverb(permutations):
     return True
 
 
-def new_permutation_for_lemma(permutation, occurrences):
-    o = {
-        "permutation": permutation,
-        "occurrences": occurrences,
-        "tag": TAG
-    }
-    return o
-
-
 def store_synset_with_relatives(synset, parent="root"):
+    """
+    Stores a frame in wn_synsets_noun and determines this synsets children and immediate parent.
+    """
     # Check if this synset already exists.
     if db_wn.count_documents({"id": synset.name()}) > 0:
         return
@@ -270,6 +276,9 @@ def store_synset_with_relatives(synset, parent="root"):
 
 
 def store_synset_with_relatives_verb(synset, parent="root"):
+    """
+    Stores a frame in wn_synsets_verb and determines this synsets children and immediate parent.
+    """
     # Check if this synset already exists.
     if db_wn_verb.count_documents({"id": synset.name()}) > 0:
         return
@@ -288,6 +297,9 @@ def store_synset_with_relatives_verb(synset, parent="root"):
 
 
 def store_synset_with_relatives_adjective(synset, parent="root"):
+    """
+    Stores a frame in wn_synsets_adjective and determines this synsets children and immediate parent.
+    """
     # Check if this synset already exists.
     if db_wn_adjective.count_documents({"id": synset.name()}) > 0:
         return
@@ -306,6 +318,9 @@ def store_synset_with_relatives_adjective(synset, parent="root"):
 
 
 def store_synset_with_relatives_adverb(synset, parent="root"):
+    """
+    Stores a frame in wn_synsets_adverb and determines this synsets children and immediate parent.
+    """
     # Check if this synset already exists.
     if db_wn_adverb.count_documents({"id": synset.name()}) > 0:
         return
@@ -324,6 +339,9 @@ def store_synset_with_relatives_adverb(synset, parent="root"):
 
 
 def update_synset_with_stats(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
+    """
+    Update a synset in wn_synsets_noun with new values.
+    """
     o = {
         "total_hits": this_hits + hits_below,
         "hits_below": hits_below,
@@ -340,6 +358,9 @@ def update_synset_with_stats(synset, hits_below, not_found_below, found_below, t
 
 
 def update_synset_with_stats_verb(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
+    """
+    Update a synset in wn_synsets_verb with new values.
+    """
     o = {
         "total_hits": this_hits + hits_below,
         "hits_below": hits_below,
@@ -356,6 +377,9 @@ def update_synset_with_stats_verb(synset, hits_below, not_found_below, found_bel
 
 
 def update_synset_with_stats_adjective(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
+    """
+    Update a synset in wn_synsets_adjective with new values.
+    """
     o = {
         "total_hits": this_hits + hits_below,
         "hits_below": hits_below,
@@ -372,6 +396,9 @@ def update_synset_with_stats_adjective(synset, hits_below, not_found_below, foun
 
 
 def update_synset_with_stats_adverb(synset, hits_below, not_found_below, found_below, this_hits, this_found, this_not_found):
+    """
+    Update a synset in wn_synsets_adverb with new values.
+    """
     o = {
         "total_hits": this_hits + hits_below,
         "hits_below": hits_below,
@@ -387,12 +414,10 @@ def update_synset_with_stats_adverb(synset, hits_below, not_found_below, found_b
     db_wn_adverb.update_one({"id": synset.name()}, {"$set": o})
 
 
-def get_wn_permutations(top=0):
-    res = db_pws_wn.find().sort("occurrences").limit(top)
-    return res
-
-
 def add_values_to_existing_verb(id, total_hits, found, not_found):
+    """
+    Add/increment a verb with specific values.
+    """
     db_wn_verb.update({"id": id}, {
         "$inc": {
             "hits_below": total_hits,
@@ -405,6 +430,9 @@ def add_values_to_existing_verb(id, total_hits, found, not_found):
 
 
 def update_synset_noun_add_hits(synset_id, hits_below):
+    """
+    Update hits_below and total_hits of a noun.
+    """
     # Get this_hits
     query_result = db_wn.find_one({"id": synset_id})
     this_hits = query_result["this_hits"]
@@ -422,6 +450,9 @@ def update_synset_noun_add_hits(synset_id, hits_below):
 
 
 def update_synset_noun_set_hits_below(synset_id, total_hits):
+    """
+    Update hits_below of a noun.
+    """
     db_wn.update(
         {"id": synset_id},
         {"$set": {
@@ -431,6 +462,9 @@ def update_synset_noun_set_hits_below(synset_id, total_hits):
 
 
 def update_synset_hits(synset_id):
+    """
+    Update total_hits of a noun by its current this_hits and hits_below values.
+    """
     # Get this_hits
     doc = db_wn.find_one({"id": synset_id})
     total_hits_old = doc["total_hits"]
@@ -444,6 +478,7 @@ def update_synset_hits(synset_id):
         }}
     )
     return total_hits, total_hits_old
+
 
 def update_synset_hits_verb(synset_id):
     # Get this_hits
@@ -471,6 +506,7 @@ def subtract_from_hits_below(ssid, value):
         }
     )
 
+
 def subtract_from_this_hits_verb(ssid, value):
     db_wn_verb.update(
         {"id": ssid},
@@ -480,6 +516,7 @@ def subtract_from_this_hits_verb(ssid, value):
             }
         }
     )
+
 
 def subtract_from_hits_below_verb(ssid, value):
     db_wn_verb.update(
