@@ -1,6 +1,7 @@
 from nltk.corpus import wordnet as wn
 import mongo
 import sys
+from helper import format_number
 
 dups_map = {}
 first_occurrence_dups = []
@@ -367,7 +368,7 @@ def sum_without_dups_verb(sum_level):
                     sub_sum += sub[1]
                     start_parent_synset = item["_id"]
                     print(
-                        "Propagating changes to hits to synsets on the parent root path...")
+                        "Propagating changes to hits to synsets on the parent root path... (-%s)"%(format_number(sub_sum)))
                     propagate_verb(sub_sum, start_parent_synset)
                     continue
                     # total_hits -= sub[1]
@@ -430,9 +431,9 @@ def propagate_verb(subtractions_total, start_parent):
         start_parent, list(reversed([x.name() for x in sp]))))
     for ssid in reversed(sp):
         # 1. Subtract subtractions_total from hits_below ($inc -subtractions_total)
-        # mongo.subtract_from_hits_below_verb(ssid.name(), subtractions_total)
+        mongo.subtract_from_hits_below_verb(ssid.name(), subtractions_total)
         # 2. Update total_hits (total_hits = hits_below + this_hits)
-        # total_hits, total_hits_old = mongo.update_synset_hits_verb(ssid.name())
+        total_hits, total_hits_old = mongo.update_synset_hits_verb(ssid.name())
         total_hits_old = 0
         total_hits = 0
         print("\tUpdated {} total_hits: {} -> {}".format(ssid,
