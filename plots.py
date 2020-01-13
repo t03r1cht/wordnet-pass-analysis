@@ -31,12 +31,15 @@ HIBP_LINE_COUNT = 551509767
 
 
 def wn_top_passwords_bar(opts):
+    """
+    Bar diagram of the top N passwords of the WordNet Y axis displayed as logartihmic scale with base 10
+    """
     f, ax = plt.subplots(1)
     labels = []
     occurrences = []
     # Get double the amount of passwords because we still need to remove doubles and need some buffer
-    limit = opts["top"] * 2
-    for password in mongo.db_pws_wn.find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
+    limit = opts["top"] * 3
+    for password in mongo.db_pws_wn.find({"occurrences": {"$gt": 100000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
 
@@ -84,12 +87,15 @@ def wn_top_passwords_bar(opts):
 
 
 def lists_top_passwords_bar(opts):
+    """
+    Bar diagram of the top N passwords of all ref lists
+    """
     f, ax = plt.subplots(1)
     labels = []
     occurrences = []
     origin_list = []
-    limit = opts["top"] * 10
-    for password in mongo.db_pws_lists.find({"occurrences": {"$gt": 100000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
+    limit = opts["top"] * 20
+    for password in mongo.db_pws_lists.find({"occurrences": {"$gt": 10000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
         origin_list.append(password["source"])
@@ -131,11 +137,14 @@ def lists_top_passwords_bar(opts):
     plt.xlabel('Password', fontsize=10)
     plt.ylabel('Occurrences', fontsize=10)
     plt.xticks(index, l, fontsize=7, rotation=30)
-    plt.title('Top %d Word List Passwords' % opts["top"])
+    plt.title('Top %d Category List Passwords' % opts["top"])
     plt.show(f)
 
 
 def list_top_n_passwords_bar(opts):
+    """
+    Bar diagram of the top N passwords of a given ref list
+    """
     f, ax = plt.subplots(1)
 
     ref_list = None
@@ -147,7 +156,7 @@ def list_top_n_passwords_bar(opts):
 
     labels = []
     occurrences = []
-    limit = opts["top"] * 2
+    limit = opts["top"] * 10
     for password in mongo.db_pws_lists.find({"source": ref_list, "occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
@@ -194,11 +203,18 @@ def list_top_n_passwords_bar(opts):
 
 
 def lists_top_password_origin_bar(opts):
+    """
+    Bar diagram of the origin lists of the top N passwords of all ref lists
+    Take the top N passwords, group by their origin lists, sort by descending number of list origins
+    and plot
+
+    Interesting comparisons: --top: 10/100/1000 with vastly different results
+    """
     f, ax = plt.subplots(1)
     labels = []
     occurrences = []
     origin_list = []
-    limit = opts["top"] * 2
+    limit = opts["top"] * 50
     for password in mongo.db_pws_lists.find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
@@ -269,11 +285,15 @@ def lists_top_password_origin_bar(opts):
     plt.xlabel('Password', fontsize=10)
     plt.ylabel('Occurrences', fontsize=10)
     plt.xticks(index, sorted_l, fontsize=7, rotation=30)
-    plt.title('Top %d Word List Passwords List Distribution' % opts["top"])
+    plt.title('Top %d Passwords Origin Distribution (Cat. Lists)' %
+              opts["top"])
     plt.show(f)
 
 
 def wn_top_passwords_line(opts):
+    """
+    Deprecated.
+    """
     labels = []
     occurrences = []
     for password in mongo.db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
@@ -309,6 +329,9 @@ def wn_top_passwords_line(opts):
 
 
 def lists_top_passwords_line(opts):
+    """
+    Deprecated.
+    """
     labels = []
     occurrences = []
     for password in mongo.db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
@@ -344,6 +367,10 @@ def lists_top_passwords_line(opts):
 
 
 def wn_top_1k(opts):
+    """
+    Marked the top 1 and top 1000 password of the WordNet as well as some
+    words in between
+    """
     labels = []
     occurrences = []
     i = 0
@@ -423,7 +450,9 @@ def wn_top_1k(opts):
 
 
 def wn_top_1k_bar(opts):
-
+    """
+    Ugly.
+    """
     labels = []
     occurrences = []
     i = 0
@@ -475,7 +504,8 @@ def wn_top_1k_bar(opts):
 
     # create labels for xticks
     xticks_labels = []
-    xticks_labels.append(labels[0, labels[999]])
+    xticks_labels.append(labels[0])
+    xticks_labels.append(labels[999])
     # starting at index 1 since index 0 and 20 are set by the WN top 1 and 1000
     for i in range(20)[1:]:
         xticks_labels.append(ref_labels[i])
@@ -498,154 +528,10 @@ def wn_top_1k_bar(opts):
     return
 
 
-def wn_top_1k_bar_test(opts):
-    limit_val = 20
-    # We can set the number of top passwords with the --top flag
-    if opts["top"]:
-        if opts["top"] > 100:
-            log_err("--top value too high. Select Value between 5 and 100")
-            return
-        limit_val = opts["top"]
-
-    ref_list = None
-    if opts["ref_list"] == None:
-        log_err(
-            "No ref list specified. Use the -l flag to specify a list to use for passwords")
-        return
-    # ref_list == "alL" looks at all lists and not a specific one
-    ref_list = opts["ref_list"]
-
-    labels = []
-    occurrences = []
-    i = 0
-    for password in mongo.db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(1000):
-        labels.append("%s" % (password["name"]))
-        occurrences.append(password["occurrences"])
-        i += 1
-
-    # Get top 10 from some list
-    ref_labels = []
-    ref_occs = []
-    if ref_list == "all":
-        pw_list = mongo.db_pws_lists.find({}).sort(
-            "occurrences", pymongo.DESCENDING).limit(limit_val)
-    else:
-        pw_list = mongo.db_pws_lists.find({"source": ref_list}).sort(
-            "occurrences", pymongo.DESCENDING).limit(limit_val)
-
-    for password in pw_list:
-        ref_labels.append("%s" % (password["name"]))
-        ref_occs.append(password["occurrences"])
-
-    f, ax = plt.subplots(1)
-    index = np.arange(len(labels))
-
-    # Create the data lists
-    indices = []
-    # x coord 0 and 20 to show the first and last element of the WN top 1000
-    indices.append(0)
-    indices.append(limit_val)
-    # x coords for the values in between (1..19)
-    # Split the list so it starts at the 1. index which is 1, since this is the first number we need instead of 0
-    indices.extend(range(limit_val)[1:])
-
-    # Fill the data lists with data
-    indices[0] = occurrences[0]
-    indices[limit_val] = occurrences[999]
-
-    for i in range(limit_val-1):
-        # When i == 0 then ctr == 1. This way we never hit the first (0) and last (20) element
-        # By incrementing ctr before actually using it, the last iteration will be 18+1 = 19 so the last
-        # data element that is not alreay set by indices[20] = ...
-        ctr = i + 1
-        # We still use i to access the first 19 top elements of the ref list
-        indices[ctr] = ref_occs[i]
-
-    bar_colors = []
-    for i in range(limit_val):
-        if i == 0 or i == limit_val:
-            bar_colors.append("black")
-        else:
-            bar_colors.append("blue")
-
-    xcoords = np.arange(len(indices))
-    rect1 = ax.bar(xcoords, indices, color=bar_colors)
-
-    # create labels for xticks
-    xticks_labels = []
-    xticks_labels.append(labels[0])
-    # starting at index 1 since index 0 and 20 are set by the WN top 1 and 1000
-    for i in range(limit_val)[1:]:
-        xticks_labels.append(ref_labels[i])
-    xticks_labels.append(labels[999])
-    plt.xticks(np.arange(limit_val+1), xticks_labels, rotation=45)
-    autolabel(rect1, ax)
-
-    # create patches to display in the legend for the graph
-    black_patch = mpatches.Patch(
-        color="black", label="WordNet #1 and #1000 of Top 1000 Passwords")
-    blue_patch = mpatches.Patch(
-        color="blue", label="Top %d Passwords of %s" % (limit_val, ref_list))
-    plt.legend(handles=[black_patch, blue_patch], loc="best")
-
-    plt.ylabel("Occurrences")
-    plt.xlabel("Password")
-    plt.title("Word List Passwords")
-    plt.show()
-    return
-
-
-def test_plot(opts):
-    wn_labels = []
-    wn_occurrences = []
-    for password in mongo.db_pws_wn.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
-        wn_labels.append(password["name"])
-        wn_occurrences.append(password["occurrences"])
-    list_labels = []
-    list_occurrences = []
-    for password in mongo.db_pws_lists.find().sort("occurrences", pymongo.DESCENDING).limit(opts["top"]):
-        list_labels.append(password["name"])
-        list_occurrences.append(password["occurrences"])
-    # plt.vlines(x=wn_labels, ymin=0, ymax=100000, color="r")
-    # plt.axvline(x=1, color="c", linestyle="-")
-    f, ax = plt.subplots(1)
-    ax.plot(wn_labels, wn_occurrences, "b.-")
-
-    xticks = [0, 1, round(len(wn_labels)/2) - 1,
-              round(len(wn_labels)/2) + 1, len(wn_labels)-1]
-    plt.xticks(xticks, wn_labels, fontsize=7, rotation=30)
-    # plt.xticks(rotation=70)
-    ax.set_ylim(bottom=0)
-    # https://stackoverflow.com/questions/38172903/plot-vertical-lines-from-datapoints-to-zero-axis-in-python?rq=1
-    # Give the y axis a fourth more space based off the highest wn_occurrences value so we can still properly display the occurences with the vertical lines
-    ax.set_ylim([0, wn_occurrences[0] + wn_occurrences[0] / 4])
-    # Plot the WordNet passwords
-    for index in xticks:
-        ax.plot([index, index], [index, wn_occurrences[index]], color="blue")
-        ax.annotate(wn_occurrences[index],
-                    xy=(index, wn_occurrences[index]),
-                    xytext=(0, 30),
-                    # with offset pixels, we can specify that the values from xytext are handles as pixels and not as plot points
-                    textcoords="offset pixels",
-                    rotation=90)
-    # Plot some word list passwords
-    # xticks_lists = [2, 3, 4]
-    # for index in xticks_lists:
-    #     ax.plot([index, index], [index, list_occurrences[index]], color="blue")
-    #     ax.annotate(list_occurrences[index],
-    #                 xy=(index, list_occurrences[index]),
-    #                 xytext=(0, 30),
-    #                 # with offset pixels, we can specify that the values from xytext are handles as pixels and not as plot points
-    #                 textcoords="offset pixels",
-    #                 rotation=90)
-
-    plt.xlabel("Passwords")
-    plt.ylabel("Occurrences")
-    plt.title("Top %d WordNet Passwords" % opts["top"])
-    plt.show(f)
-
-
 def autolabel(rects, ax, xpos="center"):
+    """
+    Automatically label the plot.
+    """
     ha = {'center': 'center', 'right': 'left', 'left': 'right'}
     offset = {'center': 0, 'right': 1, 'left': -1}
 
@@ -656,57 +542,12 @@ def autolabel(rects, ax, xpos="center"):
                     xytext=(offset[xpos]*3, 3),  # use 3 points offset
                     textcoords="offset points",  # in both directions
                     ha=ha[xpos], va='bottom')
-
-
-def autolabel_custom(rects, ax, xpos="center"):
-    ha = {'center': 'center', 'right': 'left', 'left': 'right'}
-    offset = {'center': 0, 'right': 1, 'left': -1}
-
-    for rect in rects:
-        height = rect.get_height()
-        ax.annotate('{}'.format(height),
-                    xy=(rect.get_x() + rect.get_width() / 2, height),
-                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
-                    textcoords="offset points",  # in both directions
-                    ha=ha[xpos], va='bottom')
-
-
-def wn_line_plot_noteable_pws(opts):
-    labels = []
-    occurrences = []
-    exclude_terms = {
-        "word_base": {"$nin": [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "0",
-        ]}
-    }
-
-    for password in mongo.db_wn_lemma_permutations.find(exclude_terms).sort("total_hits", pymongo.DESCENDING).limit(39):
-        labels.append("%s" % (password["word_base"]))
-        occurrences.append(password["total_hits"])
-
-    f, ax = plt.subplots(1)
-    ax.plot(np.arange(len(labels)), occurrences, "-")
-    plt.xticks([0, 38], [labels[0], labels[38]])
-
-    ax.set_ylim(bottom=0)
-    ax.set_xlim(left=0)
-    plt.ticklabel_format(style='plain', axis='y')
-    plt.xlabel("Passwords (including all of its permutations)")
-    plt.ylabel("Occurrences")
-    plt.title("Top %d WordNet Passwords" % opts["top"])
-    plt.show(f)
 
 
 def wn_line_plot_categories(opts):
+    """
+    
+    """
     wn_limit = 1000
     f, ax = plt.subplots(1)
 
@@ -1131,7 +972,7 @@ def plot_overlay_two_misc_lists(opts):
     ref_list_one = ref_list_one.split(".")[0]
     ref_list_two = ref_list_two.split(".")[0]
 
-    words_cur_one = mongo.db["passwords_misc_lists_%s"%ref_list_one].find({"occurrences": {"$gt":1000}}).sort(
+    words_cur_one = mongo.db["passwords_misc_lists_%s" % ref_list_one].find({"occurrences": {"$gt": 1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_one_occs = []
     ref_list_one_labels = []
@@ -1139,7 +980,7 @@ def plot_overlay_two_misc_lists(opts):
         ref_list_one_occs.append(word["occurrences"])
         ref_list_one_labels.append(word["name"])
     # Get passwords for the provided source list 2
-    words_cur_two = mongo.db["passwords_misc_lists_%s"%ref_list_two].find({"occurrences": {"$gt":1000}}).sort(
+    words_cur_two = mongo.db["passwords_misc_lists_%s" % ref_list_two].find({"occurrences": {"$gt": 1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_two_occs = []
     ref_list_two_labels = []
@@ -1210,7 +1051,7 @@ def plot_overlay_wn_misc_list(opts):
     ref_list = ref_list.lower()
     # Trim file extension
     ref_list = ref_list.split(".")[0]
-    misc_list_cur = mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt":10000}}).sort(
+    misc_list_cur = mongo.db["passwords_misc_lists_%s" % ref_list].find({"occurrences": {"$gt": 10000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(limit_val)
     ref_list_occs = []
     ref_list_labels = []
@@ -1705,8 +1546,7 @@ def misc_list_bar_top_n(opts):
     for name in mongo.db.list_collection_names():
         if not name.startswith("passwords_misc_lists"):
             continue
-        
-            
+
     for item in mongo.db_pws_misc_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}, {"$sort": {"sum": -1}}, {"$limit": top_flag}]):
         log_ok("{} {}".format(item["_id"], format_number(item["sum"])))
         top_n_labels.append(item["_id"])
@@ -1810,7 +1650,7 @@ def misc_list_words_top_n(opts):
     # Trim file extension
     ref_list = ref_list.split(".")[0]
 
-    for item in mongo.db["passwords_misc_lists_%s"%ref_list].find({"name": {"$nin": exclude_filter}}).sort("occurrences", pymongo.DESCENDING).limit(top_flag):
+    for item in mongo.db["passwords_misc_lists_%s" % ref_list].find({"name": {"$nin": exclude_filter}}).sort("occurrences", pymongo.DESCENDING).limit(top_flag):
         log_ok("{} {}".format(item["name"],
                               format_number(item["occurrences"])))
         top_n_labels.append(item["name"])
@@ -1846,7 +1686,7 @@ def misc_lists_top_n_passwords_bar(opts):
     ref_list = ref_list.lower()
     # Trim file extension
     ref_list = ref_list.split(".")[0]
-    for password in mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
+    for password in mongo.db["passwords_misc_lists_%s" % ref_list].find({"occurrences": {"$gt": 1000}}).sort("occurrences", pymongo.DESCENDING).limit(limit):
         labels.append(password["name"])
         occurrences.append(password["occurrences"])
 
@@ -2064,13 +1904,12 @@ def wn_misc_list_top_n_pass_comp_bar(opts):
     # (i.e. pulling way more top passwords preemptively)
     buf_len_ref_list = limit_val * 10
 
-
     # Search in named collection (passwords_misc_list_<name>)
     # Lower case
     ref_list = ref_list.lower()
     # Trim file extension
     ref_list = ref_list.split(".")[0]
-    top_n_ref_list = mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt":1000}}).sort(
+    top_n_ref_list = mongo.db["passwords_misc_lists_%s" % ref_list].find({"occurrences": {"$gt": 1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
     log_ok("Retrieved items for ref list (with additional buffer): %d" %
            buf_len_ref_list)
@@ -2412,7 +2251,7 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
     # Trim file extension
     ref_list_src_1 = ref_list_src_1.split(".")[0]
 
-    top_n_ref_list = mongo.db["passwords_misc_lists_%s"%ref_list_src_1].find({"occurrences": {"$gt":1}}).sort(
+    top_n_ref_list = mongo.db["passwords_misc_lists_%s" % ref_list_src_1].find({"occurrences": {"$gt": 1}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
     log_ok("Retrieved items for misc list 1 (with additional buffer): %d" %
            buf_len_ref_list)
@@ -2447,7 +2286,7 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
     # Trim file extension
     ref_list_src_2 = ref_list_src_2.split(".")[0]
 
-    top_n_ref_list_2 = mongo.db["passwords_misc_lists_%s"%ref_list_src_2].find({"occurrences": {"$gt":1}}).sort(
+    top_n_ref_list_2 = mongo.db["passwords_misc_lists_%s" % ref_list_src_2].find({"occurrences": {"$gt": 1}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
     log_ok("Retrieved items for misc list 2 (with additional buffer): %d" %
            buf_len_ref_list_2)
@@ -2579,7 +2418,7 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
     misc_list_src = misc_list_src.lower()
     # Trim file extension
     misc_list_src = misc_list_src.split(".")[0]
-    top_n_misc_list = mongo.db["passwords_misc_lists_%s"%misc_list_src].find({"occurrences": {"$gt":1000}}).sort(
+    top_n_misc_list = mongo.db["passwords_misc_lists_%s" % misc_list_src].find({"occurrences": {"$gt": 1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
 
     log_ok("Retrieved items for WordNet (with additional buffer): %d" %
@@ -2956,7 +2795,7 @@ def dict_misc_list_top_n_pass_comp_bar(opts):
     # Trim file extension
     ref_list = ref_list.split(".")[0]
 
-    top_n_misc_list = mongo.db["passwords_misc_lists_%s"%ref_list].find({"occurrences": {"$gt":1000}}).sort(
+    top_n_misc_list = mongo.db["passwords_misc_lists_%s" % ref_list].find({"occurrences": {"$gt": 1000}}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_misc_list)
     log_ok("Retrieved items for misc list (with additional buffer): %d" %
            buf_len_misc_list)
@@ -3182,8 +3021,9 @@ def comp_all(opts):
     for name in mongo.db.list_collection_names():
         if not name.startswith("passwords_misc_lists_"):
             continue
-        query_result2 = mongo.db[name].aggregate([{"$group": {"_id": "$tag", "sum": {"$sum": "$occurrences"}}}])
-        trimmed_name = name.replace("passwords_misc_lists_","")
+        query_result2 = mongo.db[name].aggregate(
+            [{"$group": {"_id": "$tag", "sum": {"$sum": "$occurrences"}}}])
+        trimmed_name = name.replace("passwords_misc_lists_", "")
         for item in query_result2:
             o = {
                 "type": "misc_list",
@@ -3225,7 +3065,8 @@ def comp_all(opts):
 
     # Get the sum for the wordnet adjectives
     # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
-    query_result_adj = mongo.db_wn_adjective.aggregate([{"$group": {"_id": "$tag", "sum_this_hits": {"$sum": "$this_hits"}}}])
+    query_result_adj = mongo.db_wn_adjective.aggregate(
+        [{"$group": {"_id": "$tag", "sum_this_hits": {"$sum": "$this_hits"}}}])
     for item in query_result_adj:
         o = {
             "type": "wordnet",
@@ -3238,7 +3079,8 @@ def comp_all(opts):
 
     # Get the sum for the wordnet adverbs
     # Due to the nature of wordnet we can use the total_hits value of the entity synset plus its current hits (this_hits)
-    query_result_adv = mongo.db_wn_adverb.aggregate([{"$group": {"_id": "$tag", "sum_this_hits": {"$sum": "$this_hits"}}}])
+    query_result_adv = mongo.db_wn_adverb.aggregate(
+        [{"$group": {"_id": "$tag", "sum_this_hits": {"$sum": "$this_hits"}}}])
     for item in query_result_adv:
         o = {
             "type": "wordnet",
@@ -3248,7 +3090,6 @@ def comp_all(opts):
         }
         total_sum.append(o)
         log_ok("Done: %s" % (o["name"]))
-
 
     # Get the sum for all dicts
     # First get the dict collection names starting with passwords_dicts_
@@ -3279,7 +3120,7 @@ def comp_all(opts):
     print()
     print()
     print()
-    for k,v in enumerate(sorted_sums):
+    for k, v in enumerate(sorted_sums):
         log_ok("%d: %s\t%s" % (k, format_number(v["sum"]), v["name"]))
 
     # Plot as bar
@@ -3443,22 +3284,24 @@ def wn_coverage(opts):
         "sum": query_result_n
     })
 
-
-    query_result_v = mongo.db_pws_wn_verb.find({"occurrences": {"$gt": 0}}).count()
+    query_result_v = mongo.db_pws_wn_verb.find(
+        {"occurrences": {"$gt": 0}}).count()
     total_sum.append({
         "type": "wordnet",
         "name": "WordNet Verbs",
         "sum": query_result_v
     })
 
-    query_result_adj = mongo.db_pws_wn_adjective.find({"occurrences": {"$gt": 0}}).count()
+    query_result_adj = mongo.db_pws_wn_adjective.find(
+        {"occurrences": {"$gt": 0}}).count()
     total_sum.append({
         "type": "wordnet",
         "name": "WordNet Adjectives",
         "sum": query_result_adj
     })
 
-    query_result_adv = mongo.db_pws_wn_adverb.find({"occurrences": {"$gt": 0}}).count()
+    query_result_adv = mongo.db_pws_wn_adverb.find(
+        {"occurrences": {"$gt": 0}}).count()
     total_sum.append({
         "type": "wordnet",
         "name": "WordNet Adverbs",

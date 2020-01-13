@@ -136,6 +136,9 @@ def cleanup():
 
 
 def _init_file_handles(started_time, of_summary=None):
+    """
+    Deprecated. Open log file handlers.
+    """
     # disabled
     return
     # Open the file handler for a file with the starting time
@@ -502,11 +505,10 @@ def option_lookup_passwords():
     # Append the dict with the root synset after
 
 
-def init():
-    pass
-
-
 def option_verb_wordnet():
+    """
+    Args handler to lookup verbs from the wordnet.
+    """
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
@@ -661,7 +663,9 @@ def option_verb_wordnet():
 
 
 def option_adjective_wordnet():
-    # Problem: Adjectives in the WordNet are not hierarchically structured. All adjective synsets are on level 0 (flat list)
+    """
+    Args handler to lookup adjectives from the wordnet.
+    """
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
@@ -703,7 +707,9 @@ def option_adjective_wordnet():
 
 
 def option_adverb_wordnet():
-    # Problem: Adverbs in the WordNet are not hierarchically structured. All adjective synsets are on level 0 (flat list)
+    """
+    Args handler to lookup adverbs from the wordnet.
+    """
     init()
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
@@ -1133,6 +1139,9 @@ def lookup(permutation, depth, source, word_base):
 
 
 def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below, found, found_below):
+    """
+    Deprecated.
+    """
     global hits_for_lemmas
     res_set = [lemma, total_hits, below_hits,
                not_found, not_found_below, found, found_below]
@@ -1143,6 +1152,9 @@ def append_with_hits(lemma, total_hits, below_hits, not_found, not_found_below, 
 
 
 def prompt_synset_choice(root_synsets):
+    """
+    If a start synset (-s) name returns more than one possible synset, prompt the user for a choice.
+    """
     print("  Multiple synset were found. Please choose: ")
     for elem in range(len(root_synsets)):
         print("    [{0}] Name: {1}, Synonyms: {2}".format(
@@ -1181,11 +1193,11 @@ def option_draw_graph():
 
 
 def option_permutate_from_lists():
+    """
+    Iterate over a list containing base words. Apply permutators on each word to create different variants. Then look them up.
+    """
     signal.signal(signal.SIGINT, sigint_handler)
     clear_terminal()
-    if args.purge_db:
-        mongo.clear_mongo()
-        log_ok("Database was cleared!")
     # Initialize the file handles to write to
     _init_file_handles(get_curr_time_str())
     # Check if the specified directory is valid
@@ -1415,6 +1427,9 @@ def create_complete_classification_for_wn():
 
 
 def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_found_count):
+    """
+    Deprecated.
+    """
     global hits_for_list_lemmas
     content = [total_hits, found_count, not_found_count]
     if not list_name in hits_for_list_lemmas:
@@ -1440,8 +1455,11 @@ def append_list_lemma_to_list(list_name, lemma, total_hits, found_count, not_fou
 
 
 def plot_data():
+    """
+    Create plots with the previously generated data.
+    """
     import plots
-    # evaluate the arguments
+    # evaluate the arguments and pack them into a dictionary
     opts = {}
     if not args.top:
         opts["top"] = None
@@ -1487,35 +1505,37 @@ def plot_data():
         plots.list_top_n_passwords_bar(opts)
 
     # Bar diagram of the origin lists of the top N passwords of all ref lists
+    # NOTE Interesting comparisons: --top: 10/100/1000 with vastly different results
     elif args.plot == "lists_passwords_origin_bar":
         plots.lists_top_password_origin_bar(opts)
 
-    # !! Not working as intended
+    # NOTE Not working as intended
     # Line diagram of the top N passwords of the WordNet
     elif args.plot == "wn_passwords_line":
         plots.wn_top_passwords_line(opts)
 
-    # !! Not working as intended
+    # NOTE Not working as intended
     elif args.plot == "lists_passwords_line":
         plots.lists_top_passwords_line(opts)
 
     # Marked the top 1 and top 1000 password of the WordNet as well as some
     # words in between
+    # NOTE Ugly
     elif args.plot == "top_1k_wn":
         plots.wn_top_1k(opts)
 
-    # Not working
+    # NOTE Ugly
     elif args.plot == "top_1k_wn_bar":
         plots.wn_top_1k_bar(opts)
-
-    # Line graph of the top N WordNet passwords with the first and last marked
-    elif args.plot == "wn_line_noteable_pws":
-        plots.wn_line_plot_noteable_pws(opts)
 
     # Mix of a bar and line graph.
     # The line graph displays the top 1000 WordNet passwords.
     # The bar graph displays the top N (--top) lemmas of the specified reference word list (-l)
     # "all" value for the -l parameter will determine the top passwords for all lists, not just one specific list
+    # TODO
+    # TODO
+    # TODO
+    # TODO
     elif args.plot == "wn_line_list_categories":
         plots.wn_line_plot_categories(opts)
 
@@ -1650,7 +1670,7 @@ def plot_data():
     # Bar chart with multiple X's comparing the top N passwords of two different word lists.
     elif args.plot == "ref_ref_list_top_n_pass_comp_bar":
         plots.ref_ref_list_top_n_pass_comp_bar(opts)
- 
+
     # Bar chart with multiple X's comparing the top N passwords of two misc lists.
     elif args.plot == "misc_misc_list_top_n_pass_comp_bar":
         plots.misc_misc_list_top_n_pass_comp_bar(opts)
@@ -1697,7 +1717,9 @@ def plot_data():
 
 
 def get_stats():
-
+    """
+    Print some stats about the data.
+    """
     opts = {}
     if not args.top:
         opts["top"] = None
@@ -1721,6 +1743,10 @@ def get_stats():
 
 
 def option_lookup_ref_lists():
+    """
+    Iterate over a passwords list containing passwords. No further permutators applied. We use the passwords as is and simply look them up
+    and store them in the database.
+    """
     signal.signal(signal.SIGINT, sigint_handler)
     if args.top == None:
         list_read_limit = None
@@ -1786,7 +1812,8 @@ def option_lookup_ref_lists():
             result_num = 0
         else:
             result_num = int(result.split(":")[1])
-        success = mongo.store_tested_pass_misc_list(wl_name, cleaned_word, result_num, word_list_name)
+        success = mongo.store_tested_pass_misc_list(
+            wl_name, cleaned_word, result_num, word_list_name)
         log_status("[%d/%d] %s (%d)" %
                    (progress_count, word_count, cleaned_word, result_num))
     log_ok("Finished. %d actual words, %d non-words (empty lines, comments, etc.)" %
@@ -1794,6 +1821,10 @@ def option_lookup_ref_lists():
 
 
 def option_lookup_new_dict():
+    """
+    Iterate over a dictionary. Dictionary are basically treated the same as word lists. However, we still logically seperate them from each other. 
+    Apply permutators on each word to create different variants. Then look them up.
+    """
     signal.signal(signal.SIGINT, sigint_handler)
     if not os.path.isfile(args.dict_source):
         log_err("%s is not a file" % args.dict_source)
@@ -1928,7 +1959,6 @@ def option_lookup_new_dict():
 
 
 if __name__ == "__main__":
-
     if args.dl_wordnet:
         _download_wordnet()
 

@@ -1,10 +1,10 @@
 from pymongo import MongoClient
 from helper import get_curr_time, get_curr_time_str
 
-MONGO_ADDR = "192.168.56.102"
+# MONGO_ADDR = "192.168.56.102"
 # MONGO_ADDR = "192.168.171.3"
 # MONGO_ADDR = "localhost"
-# MONGO_ADDR = "141.87.21.180"
+MONGO_ADDR = "141.87.21.180"
 mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 
 db = mongo["passwords"]
@@ -90,6 +90,9 @@ def store_tested_pass_wn_verb(name, occurrences, source, word_base, permutator="
 
 
 def store_tested_pass_misc_list(collection_suffix, name, occurrences, source):
+    """
+    Store a misc list passwords.
+    """
     o = {
         "name": name,
         "occurrences": occurrences,
@@ -140,14 +143,6 @@ def append_lemma_to_wl(lemma, occurrences, found_cnt, not_found_count, wl, tag="
     # Also increment the lists total hits by the number of occurrences of this lemma
     db_lists.update_one({"filename": wl}, {
                         "$inc": {"total_hits": occurrences}})
-
-
-def clear_mongo():
-    db_lists.remove({})
-    db_pws_wn.remove({})
-    db_pws_lists.remove({})
-    db_wn.remove({})
-    db_wn_lemma_permutations.remove({})
 
 
 def purge_verb():
@@ -480,7 +475,43 @@ def update_synset_hits(synset_id):
     return total_hits, total_hits_old
 
 
+def update_synset_this_hits(synset_id):
+    """
+    Update this_hits and hits_below based on total_hits of this synsets childs.
+    """
+    # Get this_hits
+    doc = db_wn.find_one({"id": synset_id})
+    hits_below_parent = 0
+    for c in doc["childs"]:
+        c_ss = db_wn.find_one({"id": c})
+        hits_below_parent += c_ss["total_hits"]
+    this_hits_old = doc["this_hits"]
+    total_hits = doc["total_hits"]
+    hits_below = doc["hits_below"]
+    this_hits_new = total_hits - hits_below_parent
+    db_wn.update(
+        {"id": synset_id},
+        {"$set": {
+            "this_hits": this_hits_new,
+            "hits_below": hits_below_parent,
+            "total_hits": this_hits_new + hits_below_parent,
+        }}
+    )
+    ret = {
+        "this_hits_old": this_hits_old,
+        "this_hits_new": this_hits_new,
+        "hits_below_old": hits_below,
+        "hits_below_new": hits_below_parent,
+        "total_hits_old": total_hits,
+        "total_hits_new": this_hits_new + hits_below_parent,
+    }
+    return ret
+
+
 def update_synset_hits_verb(synset_id):
+    """
+    Update the total_hits of a verb based on its this_hits and total_hits values.
+    """
     # Get this_hits
     doc = db_wn_verb.find_one({"id": synset_id})
     total_hits_old = doc["total_hits"]
@@ -497,6 +528,9 @@ def update_synset_hits_verb(synset_id):
 
 
 def subtract_from_hits_below(ssid, value):
+    """
+    Subtract value from hits_below of a noun.
+    """
     db_wn.update(
         {"id": ssid},
         {
@@ -508,6 +542,9 @@ def subtract_from_hits_below(ssid, value):
 
 
 def subtract_from_this_hits_verb(ssid, value):
+    """
+    Subtract value from this_hits of a verb.
+    """
     db_wn_verb.update(
         {"id": ssid},
         {
@@ -519,6 +556,9 @@ def subtract_from_this_hits_verb(ssid, value):
 
 
 def subtract_from_hits_below_verb(ssid, value):
+    """
+    Subtract value from hits_below of a verb.
+    """
     db_wn_verb.update(
         {"id": ssid},
         {

@@ -16,6 +16,8 @@ def main():
                 update_by_lemmas_noun()
             elif eval_arg(sys.argv[3], "by_hits"):
                 update_by_hits_noun()
+            elif eval_arg(sys.argv[3], "root_ss"):
+                update_by_root_ss()
             else:
                 print("Unknown argument for <update> <noun>")
         elif eval_arg(sys.argv[2], "verb"):
@@ -82,10 +84,17 @@ def main():
 
 
 def eval_arg(arg, s):
+    """
+    Argument evaluation. Only for visual separation. Nothing special here.
+    """
     return arg == s
 
 
 def get_lowest_level_wn(mode):
+    """
+    Get the current lowest level in the wordnet tree.
+    "mode" defines from which part of speech the lowest level should be returned from.
+    """
     if mode not in ["noun", "verb"]:
         print("init_first_occurrences_dups(): invalid mode:", mode)
         return
@@ -101,25 +110,52 @@ def get_lowest_level_wn(mode):
 
 
 def update_by_lemmas_noun():
-    lowest_level = get_lowest_level_wn_noun()
+    """
+    Wrapper
+    """
+    lowest_level = get_lowest_level_wn("noun")
     for i in reversed(range(lowest_level+1)):
         fix_this_hits_noun(i)
 
 
+def update_by_root_ss():
+    """
+    Due to the nature of the duplicate removal code, the this_hits value for the root synset
+    never gets update. Therefore, we have to manually call it. It computes the this_hits
+    value based on its hits_below and total_hits value.
+    """
+    res = mongo.update_synset_this_hits("entity.n.01")
+    print("Updated: %s -> %s" %
+          (format_number(res["this_hits_old"]), format_number(res["this_hits_new"])))
+    print("Updated: %s -> %s" %
+          (format_number(res["hits_below_old"]), format_number(res["hits_below_new"])))
+    print("Updated: %s -> %s" %
+          (format_number(res["total_hits_old"]), format_number(res["total_hits_new"])))
+
+
 def update_by_lemmas_verb():
-    lowest_level = get_lowest_level_wn_verb()
+    """
+    Wrapper
+    """
+    lowest_level = get_lowest_level_wn("verb")
     for i in reversed(range(lowest_level+1)):
         fix_this_hits_verb(i)
 
 
 def update_by_hits_noun():
-    lowest_level = get_lowest_level_wn_noun()
+    """
+    Wrapper
+    """
+    lowest_level = get_lowest_level_wn("noun")
     for i in reversed(range(lowest_level+1)):
         update_hits_noun(i)
 
 
 def update_by_hits_verb():
-    lowest_level = get_lowest_level_wn_verb()
+    """
+    Wrapper
+    """
+    lowest_level = get_lowest_level_wn("verb")
     for i in reversed(range(lowest_level+1)):
         update_hits_verb(i)
 
@@ -190,6 +226,9 @@ def update_hits_verb(level):
 
 
 def sum_all(level):
+    """
+    Sum the this_hits values for nouns per level.
+    """
     total_hits = 0
     i = 0
     query_set = mongo.db_wn.find({"level": level})
@@ -200,7 +239,10 @@ def sum_all(level):
 
 
 def sum_with_dups(sum_level):
-    # Sum all total hits starting from the lowest level up to the root node
+    """
+    Sum total_hits starting from the lowest level up to the root node
+    Note: Duplicates are not removed.
+    """
     # Start at level sum_level and group by parents
     curr_level_synset_parent_groups = mongo.db_wn.aggregate([
         {"$match": {"level": sum_level}},  # filter by lowest level
@@ -241,10 +283,12 @@ def sum_with_dups(sum_level):
 
 
 def sum_without_dups(mode):
+    """
+    Wrapper
+    """
     lowest_level = get_lowest_level_wn(mode)
     init_first_occurrences_dups(mode)
     init_ignore_dups(mode)
-    # TODO
     for i in reversed(range((lowest_level+1))):
         if mode == "noun":
             sum_without_dups_noun(i)
@@ -256,13 +300,22 @@ def sum_without_dups(mode):
 
 
 def sum_without_dups_noun(sum_level):
+    """
+    Sum the total_hits for the noun wordnet tree bottom-up. Duplicates are ignore in the way that only
+    the first occurrence of a duplicate is included in the total sum. All further duplicates (so at a lower level, since we are working bottom-up),
+    will be ignored in the sum.
+    
+    We approach some kind of inverted method here. The sums have already been computed when we looked the passwords up. However, duplicates were not considered in that process.
+    So what we are supposed to do now is identify duplicates (and the synsets that generated them) and subtract the duplicate's hits that were erroneously added the value of the total sum.
+    Important note: It is not enough to only subtract the hits values from the directly attached parent synset (hypernym). The subtractions propagate from a level all the way to the top.
+    Suppose we have to subtract the value 25 at level 5. This means we have to subtract the same value not only on level 5 but all the way to level 0, since a synset on level N always contains
+    a hits_below value, which subsumes the hit values from all of its (in)directly attached children nodes.
+    """
     # Has internal hierarchy
     # Return all synsets of the specified level but grouped by their parents. For each parent group, we store the total hits sum of this parent synsets children as well as the IDs of the children
     # text _id: Parent
     # int sum: Hits sum of all child synsets of parent
     # list childs: ID of the child synsets
-    return
-
     lowest_level_grps = mongo.db_wn.aggregate([
         {"$match": {"level": sum_level}},  # filter by lowest level
         {"$group": {
@@ -318,6 +371,17 @@ def sum_without_dups_noun(sum_level):
 
 
 def sum_without_dups_verb(sum_level):
+    """
+    Sum the total_hits for the noun wordnet tree bottom-up. Duplicates are ignore in the way that only
+    the first occurrence of a duplicate is included in the total sum. All further duplicates (so at a lower level, since we are working bottom-up),
+    will be ignored in the sum.
+    
+    We approach some kind of inverted method here. The sums have already been computed when we looked the passwords up. However, duplicates were not considered in that process.
+    So what we are supposed to do now is identify duplicates (and the synsets that generated them) and subtract the duplicate's hits that were erroneously added the value of the total sum.
+    Important note: It is not enough to only subtract the hits values from the directly attached parent synset (hypernym). The subtractions propagate from a level all the way to the top.
+    Suppose we have to subtract the value 25 at level 5. This means we have to subtract the same value not only on level 5 but all the way to level 0, since a synset on level N always contains
+    a hits_below value, which subsumes the hit values from all of its (in)directly attached children nodes.
+    """
     # Has internal hierarchy
     # Return all synsets of the specified level but grouped by their parents. For each parent group, we store the total hits sum of this parent synsets children as well as the IDs of the children
     # text _id: Parent

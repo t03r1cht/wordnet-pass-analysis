@@ -1,6 +1,9 @@
 
 def digit_singlechar():
-    # TODO Write generators
+    """
+    Returns a dictionary that is used as a filter for mongo queries to 
+    exclude entries whose passwords consist of either only digits or are single characters.
+    """
     f = []
     chars = "abcdefghijklmnopqrstuvwxyz"
     nums = [str(i) for i in list(range(101))]
@@ -10,7 +13,10 @@ def digit_singlechar():
     return f
 
 def digits():
-    # TODO Write generators
+    """
+    Returns a dictionary that is used as a filter for mongo queries to 
+    exclude entries whose passwords consist of known number sequences.
+    """
     f = []
     nums = [str(i) for i in list(range(101))]
     f.extend(nums)

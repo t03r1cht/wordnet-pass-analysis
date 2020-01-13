@@ -8,18 +8,30 @@ import re
 
 
 def log_ok(s):
+    """
+    Print a success log message with timestamp.
+    """
     print("[  {0}][+] {1}".format(get_curr_time_str(), s))
 
 
 def log_err(s):
+    """
+    Print a error log message with timestamp.
+    """
     print("[  {0}][-] {1}".format(get_curr_time_str(), s))
 
 
 def log_status(s):
+    """
+    Print a status log message with timestamp.
+    """
     print("[  {0}][*] {1}".format(get_curr_time_str(), s))
 
 
 def remove_control_characters(s):
+    """
+    Remove control characters from a string. Return the sanitized string.
+    """
     return "".join(ch for ch in s if unicodedata.category(ch)[0] != "C")
 
 
@@ -66,4 +78,7 @@ def get_txt_files_from_dir(path):
 
 
 def format_number(n):
+    """
+    Transform big numbers into dotted numbers for better readability. Returns a string.
+    """
     return re.sub(r'(?<!^)(?=(\d{3})+$)', r'.', str(n))
