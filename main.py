@@ -87,6 +87,8 @@ parser.add_argument("--dict-id", type=str,
                     help="Specify dict ID for the database. Please use only characters.", dest="dict_id")
 parser.add_argument("--wn-type", type=str,
                     help="Specify the part of speech of the WordNet you want to recurse.", dest="wn_pos")
+parser.add_argument("--pw-type", type=str,
+                    help="Password class. WN Noun, List, Dict etc.", dest="pw_type")
 args = parser.parse_args()
 
 started = ""
@@ -1491,6 +1493,11 @@ def plot_data():
     else:
         opts["pass_db_path"] = args.pass_db_path
 
+    if not args.pw_type:
+        opts["pw_type"] = "null"
+    else:
+        opts["pw_type"] = args.pw_type
+
     # Bar diagram of the top N passwords of the WordNet
     # Y axis displayed as logartihmic scale with base 10
     if args.plot == "wn_passwords_bar":
@@ -1528,14 +1535,11 @@ def plot_data():
     elif args.plot == "top_1k_wn_bar":
         plots.wn_top_1k_bar(opts)
 
+    # Deprecated.
     # Mix of a bar and line graph.
     # The line graph displays the top 1000 WordNet passwords.
     # The bar graph displays the top N (--top) lemmas of the specified reference word list (-l)
     # "all" value for the -l parameter will determine the top passwords for all lists, not just one specific list
-    # TODO
-    # TODO
-    # TODO
-    # TODO
     elif args.plot == "wn_line_list_categories":
         plots.wn_line_plot_categories(opts)
 
@@ -1543,10 +1547,11 @@ def plot_data():
     elif args.plot == "wn_display":
         plots.wn_display(opts)
 
-    # Display the distribution of all permutations of the WordNet as a pie chart
+    # Display the distribution of all permutations of a password "class" as a pie chart
     elif args.plot == "perm_dist":
         plots.lists_plot_permutations(opts)
 
+    # Deprecated
     # Display the top N (--top) passwords of a misc list as a line graph
     # The list must have been indexed/looked up in the password liste beforehand (--misc_list <name>).
     # The lookup will not create perform any permutations. It is implied, that each respective list already contains the necessary permutations
@@ -1567,6 +1572,7 @@ def plot_data():
     elif args.plot == "wn_misc_lists_overlay":
         plots.plot_overlay_wn_misc_list(opts)
 
+    # Deprecated
     # Draw the the top 1000 passwords of the WordNet as a line graph. The top 1k will
     # be determined based on the occurrences of the lemmas including all their permutations
     # Then draw a bar graph showing where in the line graph the reference list top N passwords are
@@ -1574,6 +1580,7 @@ def plot_data():
     elif args.plot == "wn_list_comp_perm":
         plots.wn_line_plot_categories(opts)
 
+    # Deprecated
     # Draw the the top 1000 passwords of the WordNet as a line graph. The top 1k will
     # be determined by the single password mutations of the WordNet
     # Then draw a bar graph showing where in the line graph the reference list top N passwords are
@@ -1581,81 +1588,30 @@ def plot_data():
     elif args.plot == "wn_list_comp_no_perm":
         plots.wn_ref_list_comparison(opts)
 
-    # Do the same as above instead of no WN perms display no ref list perms
-    elif args.plot == "wn_list_comp_no_ref_perm":
-        pass
-
     # Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations with the
     # ability to specify a start level
     # TODO Print out some examples for the level d+1 so they can be manually added to the graph
     elif args.plot == "wn_display_occurrences":
         plots.wn_display_occurrences(opts)
 
-    # Sorted bar graph of each synset starting at a specific level.
-    # The bars are sorted based on their sum of occurrences. The sum is calculated by determining
-    # the top 100 passwords of each synset and adding them together.
-    elif args.plot == "wn_bar":
-        pass
-
-    # WordNet pie chart hierarchy with some example synsets on the deeper levels
-    elif args.plot == "pie_examples":
-        pass
-
     # Bar plot the top N synsets (with its permutations) based on their total hits.
-    #
-    # =================================================================================================================================================================================================
-    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
-    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
-    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
-    #
-    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
-    # =================================================================================================================================================================================================
     elif args.plot == "wn_bar_top_n":
         plots.wn_bar_top_n(opts)
 
     # Bar plot the top N password lists (with its permutations) based on their total hits.
     # The ref lists are specified as self-crafted lists not downloaded from the internet.
-    #
-    # =================================================================================================================================================================================================
-    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
-    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
-    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
-    #
-    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
-    # =================================================================================================================================================================================================
     elif args.plot == "ref_list_bar_top_n":
         plots.ref_list_bar_top_n(opts)
 
     # Bar plot the top N misc password lists (no permutations, since we assume these lists already contain certain permutations) based on their total hits.
     # The misc lists are specified as lists freely available on the internet.
-    #
-    # =================================================================================================================================================================================================
-    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
-    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
-    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
-    #
-    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
-    # =================================================================================================================================================================================================
-    # NOT WORKING SINCE MISC_LIST CHANGE
     elif args.plot == "misc_list_bar_top_n":
         plots.misc_list_bar_top_n(opts)
 
     # Bar plot the top N ref list word_bases based on its group buckets total hits (including its permutations)
-    #
-    # =================================================================================================================================================================================================
-    # Note regarding duplicates: Due to the way the permutator/combinator modules are created, duplicates do in fact exist for given lemmas. However, these duplicates only exist for non-alphanumeric
-    # lemmas such as 1, 123, 123456 etc. Due to the fact that we apply certain rules on the database query such as requiring lemmas to be at least alphabetical, we automatically eliminate
-    # the possibility to retrieve lemmas (word bases) that might contain duplicates.
-    #
-    # If the output graph still displays some lemmas/synsets that may or may not contain duplicates, we have to extend the indivdual filters.
-    # =================================================================================================================================================================================================
+    # NOT WORKING AS INTENDED
     elif args.plot == "ref_list_words_bar_top_n":
         plots.ref_list_words_top_n(opts)
-
-    # Bar plot the top N misc list word_bases based on its group buckets total hits
-    # NOT REWORKED
-    elif args.plot == "misc_list_words_bar_top_n":
-        plots.misc_list_words_top_n(opts)
 
     # Bar chart with multiple X's comparing the top N passwords of the WordNet and a
     # given ref word list
@@ -1684,6 +1640,7 @@ def plot_data():
         plots.dict_wn_top_n_pass_comp_bar(opts)
 
     # Bar chart with multiple X's comparing a different dictionary with a ref list.
+    # TODO
     elif args.plot == "dict_ref_list_top_n_pass_comp_bar":
         plots.dict_ref_list_top_n_pass_comp_bar(opts)
 

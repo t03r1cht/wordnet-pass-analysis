@@ -546,7 +546,7 @@ def autolabel(rects, ax, xpos="center"):
 
 def wn_line_plot_categories(opts):
     """
-    
+    Deprecated.
     """
     wn_limit = 1000
     f, ax = plt.subplots(1)
@@ -793,6 +793,9 @@ def wn_line_plot_categories(opts):
 
 
 def wn_display(opts):
+    """
+    Display the top N levels (starting at 0) of the WordNet as a pie chart
+    """
     limit_ss = 5
     limit_synsets_flag = 20
     limit_depth_flag = 20
@@ -822,11 +825,10 @@ def wn_display(opts):
     data_map = {}
 
     # fill the data map
-
     for ss_obj in ss_for_level:
         ss = wn.synset(ss_obj["id"])
         path_list = [x.lemma_names()[0] for x in ss.hypernym_paths()[0]]
-
+        print(path_list)
         # create each patch, e.g. [a,b,c] => a, a/b, a/b/c
         for x in range(len(path_list)):
             sub_path_list = path_list[:x+1]
@@ -878,15 +880,57 @@ def wn_display(opts):
 
 def lists_plot_permutations(opts):
     """
-    Plot permutator distribution as pie chart
+    Plot permutator distribution as pie chart for wordnet nouns.
     """
+    if opts["pw_type"] == "null":
+        log_err("No type given")
+        return
+    pw_type = opts["pw_type"]
+
+    ref_list = opts["ref_list"]
+
+    if pw_type == "list" and not ref_list:
+        log_err("Need a list for list. Use -l")
+        return
+    elif pw_type == "dict" and not ref_list:
+        log_err("Need a list for dict. Use -l")
+        return
 
     fix, ax = plt.subplots()
-
+    # NOTE Can't plot for misc lists since we never permutated misc lists and don't
+    # know what permutators they used
     # Query, group and sum by permutators
-    # db.getCollection('passwords_lists').aggregate([{$group: {_id: "$permutator", sum: {$sum: "$occurrences"}}}])
-    perm_dist = db_pws_lists.aggregate(
-        [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    if pw_type == "list_all":
+        label = "All Lists"
+        perm_dist = db_pws_lists.aggregate(
+            [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    elif pw_type == "wn_noun":
+        label = "WordNet Nouns"
+        perm_dist = db_pws_wn.aggregate(
+            [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    elif pw_type == "wn_verb":
+        label = "WordNet Verbs"
+        perm_dist = mongo.db_pws_wn_verb.aggregate(
+            [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    elif pw_type == "wn_adjective":
+        label = "WordNet Adjectives"
+        perm_dist = mongo.db_pws_wn_adjective.aggregate(
+            [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    elif pw_type == "wn_adverb":
+        label = "WordNet Adverbs"
+        perm_dist = mongo.db_pws_wn_adverb.aggregate(
+            [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    elif pw_type == "list":
+        label = "List: %s" % ref_list
+        perm_dist = mongo.db_pws_lists.aggregate(
+            [{"$match": {"source": ref_list}}, {"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    elif pw_type == "dict":
+        label = "Dictionary: %s" % ref_list
+        perm_dist = mongo.db["passwords_dicts_%s" % ref_list].aggregate(
+            [{"$group": {"_id": "$permutator", "sum": {"$sum": "$occurrences"}}}])
+    else:
+        log_err("Unknown type: %s" % pw_type)
+        return
 
     data_map = {}
     for x in perm_dist:
@@ -905,13 +949,16 @@ def lists_plot_permutations(opts):
 
     # set plot attributes
     hp.plot(setup_axes=True)
-    ax.set_title('Distribution of Permutators')
+    ax.set_title('Distribution of Permutators for %s' % label)
 
     # save/show plot
     plt.show()
 
 
 def plot_misc_lists(opts):
+    """
+    Deprecated.
+    """
     f, ax = plt.subplots(1)
     # We can set the number of top passwords with the --top flag
     if opts["top"]:
@@ -945,6 +992,11 @@ def plot_misc_lists(opts):
 
 
 def plot_overlay_two_misc_lists(opts):
+    """
+    # Overlay two misc lists as a line graph (dotted and bold).
+    # The two lists to be overlayed must be looked up beforehand and will be specified with the -l param:
+    # -l <list1>,<list2>
+    """
     f, ax = plt.subplots(1)
     # We can set the number of top passwords with the --top flag
     if opts["top"]:
@@ -987,18 +1039,31 @@ def plot_overlay_two_misc_lists(opts):
     for word in words_cur_two:
         ref_list_two_occs.append(word["occurrences"])
         ref_list_two_labels.append(word["name"])
+    # Plot as line
+    # ax.plot(np.arange(len(ref_list_one_occs)),
+    #         ref_list_one_occs, "-", color="grey")
+    # ax.plot(np.arange(len(ref_list_two_occs)),
+    #         ref_list_two_occs, "--", color="grey")
+    # normal_line = mlines.Line2D(
+    #     [], [], color="black", label=ref_list_one, linestyle="-")
+    # dotted_line = mlines.Line2D(
+    #     [], [], color="black", label=ref_list_two, linestyle="--")
+    # plt.legend(handles=[normal_line, dotted_line], loc="best")
 
-    #plt.xticks([0, len(ref_list_one_occs)-1, 100, 500], [ref_list_one_labels[0], ref_list_one_labels[len(ref_list_one_occs)-1], ref_list_two_labels[0], ref_list_two_labels[len(ref_list_two_occs)-1]])
-    ax.plot(np.arange(len(ref_list_one_occs)),
-            ref_list_one_occs, "-", color="grey")
-    ax.plot(np.arange(len(ref_list_two_occs)),
-            ref_list_two_occs, "--", color="grey")
+    # Plot as bar
+    N = limit_val
+    ind = np.arange(N)
+    width = 0.35
+    plt.bar(ind, ref_list_one_occs, width, label=ref_list_one, color="black")
+    plt.bar(ind + width, ref_list_two_occs,
+            width, label=ref_list_two, color="grey")
+
+    black_patch = mpatches.Patch(
+        color="black", label=ref_list_one)
+    grey_patch = mpatches.Patch(color="grey", label=ref_list_two)
+    plt.legend(handles=[black_patch, grey_patch], loc="best")
+
     ax.set_yscale("log", basey=10)
-    normal_line = mlines.Line2D(
-        [], [], color="black", label=ref_list_one, linestyle="-")
-    dotted_line = mlines.Line2D(
-        [], [], color="black", label=ref_list_two, linestyle="--")
-    plt.legend(handles=[normal_line, dotted_line], loc="best")
     plt.title("Direct Comparison of %s and %s" % (ref_list_one, ref_list_two))
     plt.xlabel("Top %d Passwords of Each Respective List" %
                (len(ref_list_one_occs)))
@@ -1074,6 +1139,9 @@ def plot_overlay_wn_misc_list(opts):
 
 
 def wn_ref_list_comparison(opts):
+    """
+    Deprecated
+    """
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
     f, ax = plt.subplots(1)
@@ -1305,6 +1373,11 @@ def wn_ref_list_comparison(opts):
 
 
 def wn_display_occurrences(opts):
+    """
+    Draw a pie chart of the WordNet hierarchy and determine the width of the slices by the occurrences of the synset resp. lemmas and permutations with the
+    ability to specify a start level
+    TODO Print out some examples for the level d+1 so they can be manually added to the graph
+    """
     limit_ss = 5
     limit_synsets_flag = 20
     limit_depth_flag = 20
@@ -1445,18 +1518,10 @@ def wn_display_occurrences(opts):
     plt.show()
 
 
-def top_100_classes_by_top_100_pass(opts):
-    # Aggregation goal: Group by synsets, then add the the top 100 passwords for each synset. Filter by the top 100 synsets
-    # db.getCollection('passwords_lists').aggregate([{$group: {_id: "$permutator", sum: {$sum: "$occurrences"}}}])
-    # db.getCollection("passwords_wn").aggregate([{$group: {_id: "$synset"}}])
-    # group, sort, limit, sum
-    # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}}], {allowDiskUse:true})
-    # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}}, {$count: "totalCount"}], {allowDiskUse:true})
-    # db.getCollection('passwords_wn').aggregate([{$sort: {"occurrences": -1}}, {$group: {_id: "$synset", "occs": {$push: "$occurrences"}}, $slice: ["$occs", 0, 99]}], {allowDiskUse:true})
-    pass
-
-
 def wn_bar_top_n(opts):
+    """
+    Bar plot the top N synsets (with its permutations) based on their total hits.
+    """
     top_flag = 10
 
     # control how deep you want to go in the wordnet hierarchy
@@ -1494,6 +1559,10 @@ def wn_bar_top_n(opts):
 
 
 def ref_list_bar_top_n(opts):
+    """
+    Bar plot the top N password lists (with its permutations) based on their total hits.
+    The ref lists are specified as self-crafted lists not downloaded from the internet.
+    """
     top_flag = 10
 
     # control how deep you want to go in the wordnet hierarchy
@@ -1527,6 +1596,10 @@ def ref_list_bar_top_n(opts):
 
 
 def misc_list_bar_top_n(opts):
+    """
+    Bar plot the top N misc password lists (no permutations, since we assume these lists already contain certain permutations) based on their total hits.
+    The misc lists are specified as lists freely available on the internet.
+    """
     top_flag = 10
 
     # control how deep you want to go in the wordnet hierarchy
@@ -1543,19 +1616,29 @@ def misc_list_bar_top_n(opts):
     top_n_labels = []
     top_n_hits = []
 
+    total_sum = []
+    # Get the sum for all misc lists
     for name in mongo.db.list_collection_names():
-        if not name.startswith("passwords_misc_lists"):
+        if not name.startswith("passwords_misc_lists_"):
             continue
+        query_result2 = mongo.db[name].aggregate(
+            [{"$group": {"_id": "$tag", "sum": {"$sum": "$occurrences"}}}])
+        trimmed_name = name.replace("passwords_misc_lists_", "")
+        for item in query_result2:
+            o = {
+                "name": trimmed_name,
+                "sum": item["sum"]
+            }
+            total_sum.append(o)
 
-    for item in mongo.db_pws_misc_lists.aggregate([{"$group": {"_id": "$source", "sum": {"$sum": "$occurrences"}}}, {"$sort": {"sum": -1}}, {"$limit": top_flag}]):
-        log_ok("{} {}".format(item["_id"], format_number(item["sum"])))
-        top_n_labels.append(item["_id"])
-        top_n_hits.append(item["sum"])
+    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
+    sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    sorted_o = [x["sum"] for x in sorted_sums]
 
     f, ax = plt.subplots(1)
-    xcoords = np.arange(len(top_n_labels))
-    ax.bar(xcoords, top_n_hits, color="black")
-    plt.xticks(xcoords, top_n_labels, rotation=45)
+    xcoords = np.arange(len(sorted_o))
+    ax.bar(xcoords, sorted_o, color="black")
+    plt.xticks(xcoords, sorted_l, rotation=45)
     plt.ylabel("Total Hits")
     plt.xlabel("List")
     plt.title("Top %d Password Generating Misc. Password Lists" % top_flag)
@@ -1565,6 +1648,9 @@ def misc_list_bar_top_n(opts):
 
 
 def ref_list_words_top_n(opts):
+    """
+    Bar plot the top N ref list word_bases based on its group buckets total hits (including its permutations)
+    NOT WORKING AS INTENDED    """
     top_flag = 10
     ref_list_flag = ""
 
@@ -1614,61 +1700,10 @@ def ref_list_words_top_n(opts):
     return
 
 
-def misc_list_words_top_n(opts):
-    top_flag = 10
-    ref_list = ""
-
-    if opts["top"]:
-        if opts["top"] > 1000:
-            log_err("--top value too high. Select Value between 1 and 1000")
-            return
-        top_flag = opts["top"]
-    else:
-        top_flag = 10
-
-    if opts["ref_list"]:
-        ref_list = opts["ref_list"]
-    else:
-        log_err("No reference (-l) specified.")
-        return
-
-    # Get the top N misc password lists after filtering
-    # We enforce a custom policy that returning synsets have to follow in order to be added to the top list:
-    #   1. word_base is alphanumeric
-    exclude_filter = mongo_filter.digits()
-    top_n_labels = []
-    top_n_hits = []
-    # What this query does:
-    #   1. Group the result documents based on their word_base value (create buckets for each distinct ref list base word)
-    #   2. For each word_base bucket, sum the occurrences of the containing documents (so sum the occurrences of the permutations for each word_base)
-    #   3. Sort the buckets based on their occurrences sum from the previous step
-    #   4. Limit the sorted top results
-
-    # Search in named collection (passwords_misc_list_<name>)
-    # Lower case
-    ref_list = ref_list.lower()
-    # Trim file extension
-    ref_list = ref_list.split(".")[0]
-
-    for item in mongo.db["passwords_misc_lists_%s" % ref_list].find({"name": {"$nin": exclude_filter}}).sort("occurrences", pymongo.DESCENDING).limit(top_flag):
-        log_ok("{} {}".format(item["name"],
-                              format_number(item["occurrences"])))
-        top_n_labels.append(item["name"])
-        top_n_hits.append(item["occurrences"])
-
-    f, ax = plt.subplots(1)
-    xcoords = np.arange(len(top_n_labels))
-    ax.bar(xcoords, top_n_hits, color="black")
-    plt.xticks(xcoords, top_n_labels, rotation=45)
-    plt.ylabel("Total Hits")
-    plt.xlabel("List")
-    plt.title("Top %d Password Generating Misc. Password Lists" % top_flag)
-    ax.set_yscale("log", basey=10)
-    plt.show()
-    return
-
-
 def misc_lists_top_n_passwords_bar(opts):
+    """
+    Bar diagram of the top N passwords of a given ref list
+    """
     f, ax = plt.subplots(1)
 
     ref_list = None
@@ -1732,6 +1767,10 @@ def misc_lists_top_n_passwords_bar(opts):
 
 
 def wn_ref_list_top_n_pass_comp_bar(opts):
+    """
+    Bar chart with multiple X's comparing the top N passwords of the WordNet and a
+    given ref word list
+    """
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
     f, ax = plt.subplots(1)
@@ -1761,7 +1800,7 @@ def wn_ref_list_top_n_pass_comp_bar(opts):
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
 
-    buf_len_wn = limit_val + (limit_val // 1)
+    buf_len_wn = limit_val * 5
     top_n_wn = db_pws_wn.find({}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_wn)
     log_ok("Retrieved items for WordNet (with additional buffer): %d" % buf_len_wn)
@@ -1848,6 +1887,10 @@ def wn_ref_list_top_n_pass_comp_bar(opts):
 
 
 def wn_misc_list_top_n_pass_comp_bar(opts):
+    """
+    Bar chart with multiple X's comparing the top N passwords of the WordNet and a
+    given misc word list
+    """
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
     f, ax = plt.subplots(1)
@@ -1877,7 +1920,7 @@ def wn_misc_list_top_n_pass_comp_bar(opts):
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
 
-    buf_len_wn = limit_val + (limit_val // 1)
+    buf_len_wn = limit_val * 4
     top_n_wn = db_pws_wn.find({}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_wn)
     log_ok("Retrieved items for WordNet (with additional buffer): %d" % buf_len_wn)
@@ -1968,122 +2011,11 @@ def wn_misc_list_top_n_pass_comp_bar(opts):
 
     plt.show()
 
-    # Read the top wn_limit passwords generated from the WordNet
-    wn_limit = 1000
-    f, ax = plt.subplots(1)
-
-    limit_val = 20
-    # We can set the number of top passwords with the --top flag
-    if opts["top"]:
-        if opts["top"] > 100:
-            log_err("--top value too high. Select Value between 5 and 100")
-            return
-        limit_val = opts["top"]
-    else:
-        limit_val = 10
-
-    ref_list = None
-    if opts["ref_list"] == None:
-        log_err(
-            "No ref list specified. Use the -l flag to specify a list to use for passwords")
-        return
-    # ref_list == "alL" looks at all lists and not a specific one
-    ref_list = opts["ref_list"]
-
-    # Get the top N WordNet passwords
-    # Since there are duplicates (originating from different word bases) we limit at the original limit plus a third of its value for some buffer
-    # The definitive limiting happens when we eliminated the duplicates
-    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
-    # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
-    # (i.e. pulling way more top passwords preemptively)
-
-    buf_len_wn = limit_val + (limit_val // 1)
-    top_n_wn = db_pws_wn.find({}).sort(
-        "occurrences", pymongo.DESCENDING).limit(buf_len_wn)
-    log_ok("Retrieved items for WordNet (with additional buffer): %d" % buf_len_wn)
-    top_n_wn_labels = []
-    top_n_wn_occs = []
-
-    # We extract labels/occs from the result list until the original target limit of limit_val is reached
-    target_len = limit_val
-    for item in top_n_wn:
-        if len(top_n_wn_labels) == target_len:
-            break
-        if item["name"] in top_n_wn_labels:
-            continue
-        # Enfore password requirements
-        elif len(item["name"]) < 3 or item["name"].isdigit():
-            continue
-        else:
-            top_n_wn_labels.append(item["name"])
-            top_n_wn_occs.append(item["occurrences"])
-
-    # Get the top N ref list passwords
-    # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
-    # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
-    # (i.e. pulling way more top passwords preemptively)
-    buf_len_misc_list = limit_val * 10
-    top_n_misc_list = db_pws_misc_lists.find({"source": ref_list}).sort(
-        "occurrences", pymongo.DESCENDING).limit(buf_len_misc_list)
-    log_ok("Retrieved items for misc list (with additional buffer): %d" %
-           buf_len_misc_list)
-    top_n_misc_list_labels = []
-    top_n_misc_list_occs = []
-
-    # We extract labels/occs from the result list until the original target limit of limit_val is reached
-    for item in top_n_misc_list:
-        if len(top_n_misc_list_labels) == target_len:
-            break
-        if item["name"] in top_n_misc_list_labels:
-            continue
-        # Enfore password requirements
-        elif len(item["name"]) < 3 or item["name"].isdigit():
-            continue
-        else:
-            top_n_misc_list_labels.append(item["name"])
-            top_n_misc_list_occs.append(item["occurrences"])
-
-    if len(top_n_wn_occs) != len(top_n_misc_list_occs):
-        log_err("The result list for the WordNet and Misc List lists are of different length. This is caused in case the buffer for the WordNet (or sometimes the misc_list) was not big enough. This happens if the query to the database returns too many duplicates. After sending the query to the database, we retrieve a list of results for this query. Usually, the query contains multiple duplicate results (same passwords for different word bases). To eliminate the duplicates, we pull more results than the user asked for (default: 1/3). Then we remove the duplicates and cut the result list to the original list length specified by the user.")
-        log_err("WordNet results: %d" % len(top_n_wn_occs))
-        log_err("Misc list results: %d" % len(top_n_misc_list_occs))
-        return
-
-    log_ok("Printing bar pairs and values for manual labelling:")
-    log_ok("")
-
-    for i in range(1, limit_val+1):
-        log_ok("%d: " % i)
-        # i-1 because we need the index and not not the label index (starting at 1)
-        log_ok("\tWordNet: %s %s" %
-               (top_n_wn_labels[i-1], format_number(top_n_wn_occs[i-1])))
-        log_ok("\t   List: %s %s" %
-               (top_n_misc_list_labels[i-1], format_number(top_n_misc_list_occs[i-1])))
-        log_ok("")
-
-    # Plot as bar
-    N = limit_val
-    ind = np.arange(N)
-    width = 0.35
-
-    plt.bar(ind, top_n_wn_occs, width, label="WordNet", color="black")
-    plt.bar(ind + width, top_n_misc_list_occs,
-            width, label=ref_list, color="grey")
-
-    plt.yscale("log", basey=10)
-
-    plt.ylabel("Password Occurrences")
-    plt.xlabel("Top %d Passwords of Each Source" % limit_val)
-    plt.title(
-        "Password Hit Rate Comparison WordNet/Misc. Word List")
-
-    plt.xticks(ind + width, range(1, limit_val+1))
-    plt.legend(loc="best")
-
-    plt.show()
-
 
 def ref_ref_list_top_n_pass_comp_bar(opts):
+    """
+    Bar chart with multiple X's comparing the top N passwords of two different word lists.
+    """
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
     f, ax = plt.subplots(1)
@@ -2117,7 +2049,7 @@ def ref_ref_list_top_n_pass_comp_bar(opts):
     # Sometimes, the top passwords of a list are only numbers or single characters which don't comply with a given password policy.
     # In order to still be able to process that list, just increase the buf_len_ref_list value (by a lot), so there is enough buffer
     # (i.e. pulling way more top passwords preemptively)
-    buf_len_ref_list = limit_val * 2
+    buf_len_ref_list = limit_val * 10
     top_n_ref_list = db_pws_lists.find({"source": ref_list_src_1}).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len_ref_list)
     log_ok("Retrieved items for ref list (with additional buffer): %d" %
@@ -2210,6 +2142,9 @@ def ref_ref_list_top_n_pass_comp_bar(opts):
 
 
 def misc_misc_list_top_n_pass_comp_bar(opts):
+    """
+    Bar chart with multiple X's comparing the top N passwords of two misc lists.
+    """
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
     f, ax = plt.subplots(1)
@@ -2349,6 +2284,9 @@ def misc_misc_list_top_n_pass_comp_bar(opts):
 
 
 def ref_misc_list_top_n_pass_comp_bar(opts):
+    """
+    Bar chart with multiple X's comparing the top N passwords of a ref list and a misc list.
+    """
     # Read the top wn_limit passwords generated from the WordNet
     wn_limit = 1000
     f, ax = plt.subplots(1)
@@ -2482,7 +2420,9 @@ def ref_misc_list_top_n_pass_comp_bar(opts):
 
 
 def dict_wn_top_n_pass_comp_bar(opts):
-
+    """
+    Bar chart with multiple X's comparing a different dictionary with WordNet.
+    """
     # Sort with a lot of docs:
     # db.getCollection('passwords_dicts_cracklib-small').find({"occurrences": {"$gt": 1}}).sort({"occurrences": -1})
     # Read the top wn_limit passwords generated from the WordNet
