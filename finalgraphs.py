@@ -10,6 +10,7 @@ import sys
 from os import path
 import pymongo
 from nltk.corpus import wordnet as wn
+import duplicates
 
 
 # amount of passwords in the password database
@@ -483,6 +484,31 @@ def interesting_classes():
     Sport (general): db.getCollection('wn_synsets_noun').find({"parent": "sport.n.01"}).sort({"total_hits": -1})
     """
     pass
+
+def top_classes_per_level(mode, top):
+    """
+    Return the top n classes per level.
+    """
+    lowest_level = duplicates.get_lowest_level_wn(mode)
+    for i in range((lowest_level+1)):
+        query = {
+            "level": i
+        }
+        coll_name = ""
+        if mode == "noun":
+            coll_name = "wn_synsets_noun"
+        elif mode == "verb":
+            coll_name = "wn_synsets_verb"
+        else:
+            log_ok("Invalid mode")
+            return
+        query_result = mongo.db[coll_name].find(query).sort("total_hits", pymongo.DESCENDING).limit(top)
+        log_ok("Top %d synset for level %d" % (top, i))
+        for k, v in enumerate(query_result):
+            log_ok("%d - %s: %s" % (k+1, v["id"], helper.format_number(v["total_hits"])))
+        log_ok("")
+
+        
 
 
 if __name__ == "__main__":
