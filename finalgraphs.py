@@ -9,6 +9,7 @@ from textwrap import wrap
 import sys
 from os import path
 import pymongo
+from nltk.corpus import wordnet as wn
 
 
 # amount of passwords in the password database
@@ -210,9 +211,9 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
             ]
         }
     for item in mongo.db_pws_lists.find(query).sort("occurrences", pymongo.DESCENDING).limit(top):
-        o = {"name": item["name"], 
-            "occurrences": item["occurrences"],
-            "permutator": item["permutator"]}
+        o = {"name": item["name"],
+             "occurrences": item["occurrences"],
+             "permutator": item["permutator"]}
         pw_list.append(o)
 
     # get the top n passwords from the sorted HIBP list
@@ -242,43 +243,43 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
     xcoords_bar = []
 
     for item in pw_list:
-            occs = item["occurrences"]
-            # Determine first if this elements occs are lower than the last wn element. If thats the case, append it behind the last wn element
-            if occs < hibp_occs[-1]:
+        occs = item["occurrences"]
+        # Determine first if this elements occs are lower than the last wn element. If thats the case, append it behind the last wn element
+        if occs < hibp_occs[-1]:
                 # If the current item occurrences was lower than the last wordnet element, append it with the index last_wn + 1 and increment this counter
                 # xcoords_bar.append(idx_behind_last_wn)
-                new_occs_inserted.append({"orig": -1, "list": occs})
-                new_labels_inserted.append({"orig": "", "list": item["name"]})
-                idx_behind_last_wn += 1
-            else:
-                # At this point we know the current elements occs are not lower than the last wn element
-                # Now we just need to find out where (within the first and last wn element frame) it will be drawn
-                for idx, wn_occs in enumerate(hibp_occs):
-                    # Run until occs is NOT lower than wn_occs
-                    if occs < wn_occs:
-                        pass
-                    elif occs >= wn_occs:
+            new_occs_inserted.append({"orig": -1, "list": occs})
+            new_labels_inserted.append({"orig": "", "list": item["name"]})
+            idx_behind_last_wn += 1
+        else:
+            # At this point we know the current elements occs are not lower than the last wn element
+            # Now we just need to find out where (within the first and last wn element frame) it will be drawn
+            for idx, wn_occs in enumerate(hibp_occs):
+                # Run until occs is NOT lower than wn_occs
+                if occs < wn_occs:
+                    pass
+                elif occs >= wn_occs:
 
-                        # cut_wn_occs is stored from most to least occurrences, so if val a is bigger than the current value from cut_wn_occs it must automatically
-                        # be bigger than the rest of the list (since it is ordererd in a decending order)
-                        # Before we insert, there may already be an element that was previously compared against the same element, so we need to determine if we insert before or
-                        # after this index
-                        if new_occs_inserted[idx]["list"] < occs:
-                            # The current occs value is bigger than what is already in there
-                            new_occs_inserted.insert(
-                                idx, {"orig": -1, "list": occs})
-                            new_labels_inserted.insert(
-                                idx, {"orig": "", "list": item["name"]})
-                        else:
-                            # If the value is bigger, we insert occs after this index
-                            new_occs_inserted.insert(
-                                idx+1, {"orig": -1, "list": occs})
-                            new_labels_inserted.insert(
-                                idx+1, {"orig": "", "list": item["name"]})
-
-                        break
+                    # cut_wn_occs is stored from most to least occurrences, so if val a is bigger than the current value from cut_wn_occs it must automatically
+                    # be bigger than the rest of the list (since it is ordererd in a decending order)
+                    # Before we insert, there may already be an element that was previously compared against the same element, so we need to determine if we insert before or
+                    # after this index
+                    if new_occs_inserted[idx]["list"] < occs:
+                        # The current occs value is bigger than what is already in there
+                        new_occs_inserted.insert(
+                            idx, {"orig": -1, "list": occs})
+                        new_labels_inserted.insert(
+                            idx, {"orig": "", "list": item["name"]})
                     else:
-                        pass
+                        # If the value is bigger, we insert occs after this index
+                        new_occs_inserted.insert(
+                            idx+1, {"orig": -1, "list": occs})
+                        new_labels_inserted.insert(
+                            idx+1, {"orig": "", "list": item["name"]})
+
+                    break
+                else:
+                    pass
 
     # Transform the dict to a flat list. List dict items with orig = -1 are going to be 0 in the flattened list, else the "list" value
     flat_occs_inserted = []
@@ -342,7 +343,6 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
                     fontsize="x-small",
                     ha="center", va='bottom')
         i += 1
-    
 
     # Create the xticks for the wn 1 and 1000 labels
     # plt.xticks([0, hibp_limit-1], [hibp_labels[0],
@@ -363,6 +363,7 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
         color="gray", label=list_name)
     plt.legend(handles=[blue_patch, red_patch], loc="best")
     plt.show(f)
+
 
 def print_top_lemmas(pos, top, include_perms=False):
     """
@@ -392,12 +393,13 @@ def print_top_lemmas(pos, top, include_perms=False):
     else:
         log_err("Invalid PoS: %s" % pos)
         return
-    
+
     # query a bit more, because we need to eliminate the duplicates
     top_with_buf = top * 2
     res_list = []
     known_names = []
-    query_res = mongo.db[coll_name].find(query).sort("occurrences", pymongo.DESCENDING).limit(top_with_buf)
+    query_res = mongo.db[coll_name].find(query).sort(
+        "occurrences", pymongo.DESCENDING).limit(top_with_buf)
     for item in query_res:
         if item["name"] in known_names:
             continue
@@ -411,7 +413,9 @@ def print_top_lemmas(pos, top, include_perms=False):
     for k, v in enumerate(res_list):
         if k == top:
             break
-        log_ok("(%d)     %s: %s" % (k+1, v["name"], helper.format_number(v["occurrences"])))
+        log_ok("(%d)     %s: %s" %
+               (k+1, v["name"], helper.format_number(v["occurrences"])))
+
 
 def calculate_efficiency(base, include_perms=False):
     """
@@ -462,6 +466,21 @@ def calculate_performance(base):
 def topn_passwords_hibp(n):
     """
     Return the top N passwords of the HIBP hash list (list must be sorted by prevalence).
+    """
+    pass
+
+
+def interesting_classes():
+    """
+    Ab Level 6, Total Hits > 5 Mio: db.getCollection('wn_synsets_noun').find({"$and": [{"level": {"$gt":6}}, {"total_hits": {"$gt": 5000000}}]}).sort({"total_hits": -1})
+
+    Animal: db.getCollection('wn_synsets_noun').find({"id": "animal.n.01"})
+
+    Fruit: db.getCollection('wn_synsets_noun').find({"id": "edible_fruit.n.01"})
+
+    Field Sports: db.getCollection('wn_synsets_noun').find({"parent": "field_game.n.01"}).sort({"total_hits": -1})
+
+    Sport (general): db.getCollection('wn_synsets_noun').find({"parent": "sport.n.01"}).sort({"total_hits": -1})
     """
     pass
 
