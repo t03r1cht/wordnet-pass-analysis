@@ -106,25 +106,39 @@ def lookup_and_insert_missing_nouns():
 
     mongo.db["wn_lemma_permutations_noun_test"].drop()
     mongo.db["passwords_wn_noun_test"].drop()
+    mongo.db["wn_synsets_noun_test"].drop()
 
     i = 1
     cnt = 10
-    missing_synsets =  mongo.db["wn_synsets_noun_missing"].find()
+    missing_synsets = mongo.db["wn_synsets_noun_missing"].find()
     for ss in missing_synsets:
+        syn = wn.synset(ss["name"])
         if i == cnt:
             break
         # iterate over each lemma and permutate
         print(i, ss["name"])
+        syn_total_hits = 0
+        syn_not_found = 0
+        syn_found = 0
         for lemma in ss["lemmas"]:
             lemma = lemma.lower()
+            # will be stored in passwords_wn_noun
             total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
                 lemma, ss["depth"], ss["name"], "n")
+            syn_total_hits += total_hits
+            syn_not_found += not_found_cnt
+            syn_found += found_cnt
             print("\t", lemma, "Total hits:", total_hits,
                   "Not found:", not_found_cnt, "Found:", found_cnt)
+        # store frame for synsets in wn_synsets_noun
+        mongo.store_synset_without_relatives_noun_test(
+            ss["name"], ss["depth"], syn_total_hits, syn_not_found, syn_found)
         i += 1
 
-    # after we have permutated and inserted, iterate over the missing ones again, determine their parents/children and insert them. some children are inserted before their parents,
-    # so we would get an error if we tried to link a children to a yet non-existent parent
+    # after we have permutated and inserted, iterate over the missing ones again,
+    # determine their parents/children and insert them. some children are inserted
+    # before their parents, so we would get an error if we tried to link a
+    # children to a yet non-existent parent
 
 
 def permutations_for_lemma(lemma, depth, source, mode):
