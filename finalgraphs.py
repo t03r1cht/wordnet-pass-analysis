@@ -93,9 +93,26 @@ def lookup_and_insert_missing_nouns():
     """
     For each noun in wn_synsets_noun_missing permutate and lookup the lemmas. Store in the respective collections. Insert missing synsets in wn_synsets_noun
     """
+    # i = 1
+    # cnt = 10
+    # for ss in mongo.db["wn_synsets_noun_missing"].find():
+    #     if i == cnt:
+    #         break
+    #     syn = wn.synset(ss["name"])
+    #     print(syn.name())
+    #     print("\t", syn.hypernym_paths()[0])
+    #     i += 1
+    # return
+
+    mongo.db["wn_lemma_permutations_noun_test"].drop()
+    mongo.db["passwords_wn_noun_test"].drop()
+
     i = 1
-    cnt = 100
-    for ss in mongo.db["wn_synsets_noun_missing"].find():
+    cnt = 10
+    missing_synsets =  mongo.db["wn_synsets_noun_missing"].find()
+    for ss in missing_synsets:
+        if i == cnt:
+            break
         # iterate over each lemma and permutate
         print(i, ss["name"])
         for lemma in ss["lemmas"]:
