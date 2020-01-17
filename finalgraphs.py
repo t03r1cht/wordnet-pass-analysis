@@ -18,7 +18,8 @@ from helper import get_curr_time, get_curr_time_str
 import argparse
 import hashlib
 
-
+parser = argparse.ArgumentParser(
+    description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
 parser.add_argument("-p", "--pass-database", type=str,
                     help="Path to the HIBP password database.", dest="pass_db_path")
 parser.add_argument("-t", "--lookup-utility", action="store_true",
