@@ -18,6 +18,8 @@ from helper import get_curr_time, get_curr_time_str
 import argparse
 import hashlib
 from subprocess import CalledProcessError
+import subprocess
+
 
 parser = argparse.ArgumentParser(
     description="Password hash anaylsis using WordNet and the HaveIBeenPwned database.")
