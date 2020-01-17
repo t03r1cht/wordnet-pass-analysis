@@ -196,6 +196,21 @@ def store_permutations_for_lemma(permutations):
         return False
     return True
 
+def store_permutations_for_lemma_noun_test(permutations):
+    """
+    For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_noun collection.
+    """
+    # In case it already exists
+    if db["wn_lemma_permutations_noun_test"].count_documents({"word_base": permutations["word_base"]}) > 0:
+        return
+    db["wn_lemma_permutations_noun_test"].insert_one(permutations)
+    # Replace with bulk insert. Should generally increase performance
+    try:
+        db["passwords_wn_noun_test"].insert_many(permutations["permutations"])
+    except Exception:
+        return False
+    return True
+
 
 def store_permutations_for_lemma_verb(permutations):
     """

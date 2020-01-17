@@ -12,6 +12,10 @@ import pymongo
 from nltk.corpus import wordnet as wn
 import duplicates
 from tabulate import tabulate
+from combinators import combinator, combinator_registrar
+from permutators import permutator, permutator_registrar
+from main import lookup
+from helper import get_curr_time, get_curr_time_str
 
 # Rausfiltern von arabischen Zahlen (0-99)
 # db.getCollection('passwords_wn_noun').find({"$and": [{"permutator": "no_permutator"},{"word_base": {"$nin": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "11"]}}, {"occurrences": {"$gt":0}}]}).count()
@@ -21,9 +25,158 @@ from tabulate import tabulate
 # py.exe -Wignore::DeprecationWarning .\finalgraphs.py
 
 pwned_pw_amount = 551509767
+TAG = get_curr_time_str()
+
+
+# Nouns
+# Found: 74374
+# Not found: 7741
+# Total: 82115
+# Total (supposed): 82115
+# Not found len: 7741
+
+def identify_and_store_missing_nouns():
+    """
+    Identify all missing nouns and store them in wn_synsets_noun_missing
+    """
+    # NOTE Important: create indexes! db.coll.createIndex({"id":1})
+    mongo.db["wn_synsets_noun_missing"].drop()
+    not_found_ss = []
+    cnt = 0
+    cnt_missing = 0
+    for i in list(wn.all_synsets("n")):
+        res = mongo.db["wn_synsets_noun"].find({"id": i.name()}).limit(1)
+        cnt += 1
+        l = len(list(res))
+        if l == 0:
+            cnt_missing += 1
+            print(cnt, l, i.name())
+            o = {
+                "name": i.name(),
+                "depth": i.min_depth(),
+                "lemmas": i.lemma_names(),
+            }
+            not_found_ss.append(o)
+            print(o)
+        else:
+            print(cnt, l)
+
+    print()
+    print()
+    print()
+    print()
+    res = mongo.db["wn_synsets_noun_missing"].insert_many(not_found_ss)
+    actual_nouns = 74374
+    found_missing_nouns = len(not_found_ss)
+    total_nouns_supposed = 82115
+    total_nouns_actual = actual_nouns + found_missing_nouns
+    print("Count missing:", cnt_missing)
+    print("Count missing (list len):", found_missing_nouns)
+    print("Should be:", total_nouns_supposed)  # Diff found: 7741
+    print("Is:", total_nouns_actual)
+
+
+def lookup_and_insert_missing_nouns():
+    """
+    For each noun in wn_synsets_noun_missing permutate and lookup the lemmas. Store in the respective collections. Insert missing synsets in wn_synsets_noun
+    """
+    i = 1
+    cnt = 100
+    for ss in mongo.db["wn_synsets_noun_missing"].find():
+        # iterate over each lemma and permutate
+        print(i, ss["name"])
+        for lemma in ss["lemmas"]:
+            lemma = lemma.lower()
+            total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+                lemma, ss["depth"], ss["name"], "n")
+            print("\t", lemma, "Total hits:", total_hits,
+                  "Not found:", not_found_cnt, "Found:", found_cnt)
+        i += 1
+
+    # after we have permutated and inserted, iterate over the missing ones again, determine their parents/children and insert them. some children are inserted before their parents,
+    # so we would get an error if we tried to link a children to a yet non-existent parent
+
+
+def permutations_for_lemma(lemma, depth, source, mode):
+    """
+    Permutate a lemma.
+    Mode: n, v, adj, adv. Controls where everything is stored
+    """
+    modes = [
+        "n",
+        "v",
+        "adj",
+        "adv"
+    ]
+    if mode not in modes:
+        log_err("Invalid mode %s" % mode)
+        return
+
+    total_hits = 0
+    not_found_cnt = 0
+    found_cnt = 0
+    all_permutations = []
+    for combination_handler in combinator.all:
+        # Generate all permutations
+        permutations = combination_handler(lemma, permutator.all)
+        if permutations == None:
+            continue
+        # Combinators always return a list of permutations
+        if type(permutations) == list:
+            for p in permutations:
+                trans_hits = lookup(p["name"], depth, source, lemma)
+                # Store each permutations under this lemma object in the database
+                o = {
+                    "name": p["name"],
+                    "occurrences": trans_hits,
+                    "synset": source,
+                    "word_base": lemma,
+                    "permutator": p["permutator"],
+                    "depth": depth,
+                    "tag": ILL_TAG
+                }
+                all_permutations.append(o)
+
+                total_hits += trans_hits
+                if trans_hits == 0:
+                    not_found_cnt += 1
+                else:
+                    found_cnt += 1
+        else:
+            trans_hits = lookup(permutations["name"], depth, source, lemma)
+            o = {
+                "name": permutations["name"],
+                "occurrences": trans_hits,
+                "synset": source,
+                "word_base": lemma,
+                "permutator": permutations["permutator"],
+                "depth": depth,
+                "tag": ILL_TAG
+            }
+            all_permutations.append(o)
+
+            if trans_hits == 0:
+                not_found_cnt += 1
+            else:
+                found_cnt += 1
+            total_hits += trans_hits
+
+    permutations_for_lemma = {
+        "word_base": lemma,
+        "permutations": all_permutations,
+        "total_permutations": len(all_permutations),
+        "total_hits": total_hits,
+        "synset": source
+    }
+
+    if mode == "n":
+        mongo.store_permutations_for_lemma_noun_test(permutations_for_lemma)
+
+    return total_hits, not_found_cnt, found_cnt
 
 
 def main():
+
     # =============================================================================================================================================
     #
     #  Calculate average permutations per lemma
@@ -901,19 +1054,23 @@ def overview_wn():
         vals["adv"]["occs_no_perms"] = item["sum"]
 
     # Total occurrences w/ permutations
-    res = mongo.db["passwords_wn_noun"].aggregate([{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
+    res = mongo.db["passwords_wn_noun"].aggregate(
+        [{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
     for item in res:
         vals["n"]["occs_with_perms"] = item["sum"]
 
-    res = mongo.db["passwords_wn_verb"].aggregate([{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
+    res = mongo.db["passwords_wn_verb"].aggregate(
+        [{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
     for item in res:
         vals["v"]["occs_with_perms"] = item["sum"]
 
-    res = mongo.db["passwords_wn_adjective"].aggregate([{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
+    res = mongo.db["passwords_wn_adjective"].aggregate(
+        [{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
     for item in res:
         vals["adj"]["occs_with_perms"] = item["sum"]
 
-    res = mongo.db["passwords_wn_adverb"].aggregate([{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
+    res = mongo.db["passwords_wn_adverb"].aggregate(
+        [{"$group": {"_id": "tag", "sum": {"$sum": "$occurrences"}}}])
     for item in res:
         vals["adv"]["occs_with_perms"] = item["sum"]
 
@@ -949,4 +1106,7 @@ def overview_wn():
 
 
 if __name__ == "__main__":
-    main()
+    lookup_and_insert_missing_nouns()
+    # identify_and_store_missing_nouns()
+    # main()
+    pass
