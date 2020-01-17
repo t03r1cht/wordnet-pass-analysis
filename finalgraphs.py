@@ -38,7 +38,7 @@ args = parser.parse_args()
 # py.exe -Wignore::DeprecationWarning .\finalgraphs.py
 
 pwned_pw_amount = 551509767
-TAG = get_curr_time_str()
+ILL_TAG = get_curr_time_str()
 
 
 # Nouns
