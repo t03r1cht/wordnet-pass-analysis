@@ -14,8 +14,17 @@ import duplicates
 from tabulate import tabulate
 from combinators import combinator, combinator_registrar
 from permutators import permutator, permutator_registrar
-from main import lookup
 from helper import get_curr_time, get_curr_time_str
+import argparse
+import hashlib
+
+
+parser.add_argument("-p", "--pass-database", type=str,
+                    help="Path to the HIBP password database.", dest="pass_db_path")
+parser.add_argument("-t", "--lookup-utility", action="store_true",
+                    help="If set, use sgrep instead of the look utility.", dest="lookup_utility")
+args = parser.parse_args()
+
 
 # Rausfiltern von arabischen Zahlen (0-99)
 # db.getCollection('passwords_wn_noun').find({"$and": [{"permutator": "no_permutator"},{"word_base": {"$nin": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "11"]}}, {"occurrences": {"$gt":0}}]}).count()
@@ -1103,6 +1112,54 @@ def overview_wn():
     print(tabulate(rows, headers=headers))
     print()
     print()
+
+
+def lookup(permutation, depth, source, word_base):
+    """
+    Hashes the (translated) lemma and looks it up in  the HIBP password file.
+    """
+    # Hash and lookup translated lemma
+    hashed_lemma = hash_sha1(permutation)
+    occurrences = lookup_pass(hashed_lemma)
+    return occurrences
+
+
+def hash_sha1(s):
+    """
+    Hash the password.
+    """
+    return hashlib.sha1(s.encode("utf-8")).hexdigest()
+
+
+def lookup_pass(hash):
+    """
+    Wrapper for _lookup_in_hash_file. Returns the occurrences of the
+    searched hash/password in the HIBP password file.
+    """
+    occurrences = _lookup_in_hash_file(hash)
+    if occurrences is None:
+        return 0
+    else:
+        return int(occurrences.split(":")[1])
+
+
+def _lookup_in_hash_file(hash):
+    """
+    Implements actual file access.
+    """
+    try:
+        if args.lookup_utility:
+            # Use sgrep with -i and -b parameter to look for the searched hash.
+            # The raw output of this method is something like A283BCD8899:18287 where the first part in front of the colon is the produced hash and the last part
+            # is the number of occurrences of the hash in the HaveIBeenPwned hash file.
+            result = subprocess.check_output(
+                ["sgrep", "-i", "-b", hash, args.pass_db_path])
+        else:
+            result = subprocess.check_output(
+                ["look", "-f", hash, args.pass_db_path])
+    except CalledProcessError as e:
+        return None
+    return result.decode("utf-8").strip("\n").strip("\r")
 
 
 if __name__ == "__main__":
