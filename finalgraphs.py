@@ -93,53 +93,209 @@ def lookup_and_insert_missing_nouns():
     """
     For each noun in wn_synsets_noun_missing permutate and lookup the lemmas. Store in the respective collections. Insert missing synsets in wn_synsets_noun
     """
-    # i = 1
-    # cnt = 10
-    # for ss in mongo.db["wn_synsets_noun_missing"].find():
+    # TODO RUN
+    # mongo.db["wn_lemma_permutations_noun_test"].drop()
+    # mongo.db["passwords_wn_noun_test"].drop()
+    # mongo.db["wn_synsets_noun_test"].drop()
+    # mongo.db["wn_synsets_noun_staging_test"].drop()
+
+    # i = 0
+    # cnt = i + 500  # target delta
+    # # synsets that have either a parent or childs
+    # hyp_or_hyper = [1110, 1616, 1620, 1698, 1699, 1700, 2320, 2332, 2426, 2436, 3494, 3530,
+    #                 3532, 3539, 3749, 3896, 3897, 3898, 3899, 4065, 4066, 4072, 4180, 4198, 4346, 4347]
+
+    # missing_synsets = mongo.db["wn_synsets_noun_missing"].find()
+    # for ss in missing_synsets:
+    #     # if not commented out, iterate only over those synsets that have either parents or childs
+    #     if i not in hyp_or_hyper:
+    #         i += 1
+    #         continue
+
+    #     # if i == cnt:
+    #         # break
+    #     syn = wn.synset(ss["name"])
+    #     # hypers = syn.hypernyms()
+    #     # hypos = syn.hyponyms()
+    #     # print(i, syn.name())
+    #     # if len(hypers) > 0 or len(hypos) > 0:
+    #     #     print(i, syn.name())
+    #     #     hyp_or_hyper.append(i)
+    #     # print("\t", hypers)
+    #     # print("\t", hypos)
+    #     # i += 1
+    #     # continue
+
+    #     # iterate over each lemma and permutate
     #     if i == cnt:
     #         break
-    #     syn = wn.synset(ss["name"])
-    #     print(syn.name())
-    #     print("\t", syn.hypernym_paths()[0])
+    #     print(i, ss["name"])
+    #     syn_total_hits = 0
+    #     syn_not_found = 0
+    #     syn_found = 0
+    #     for lemma in ss["lemmas"]:
+    #         lemma = lemma.lower()
+    #         # will be stored in passwords_wn_noun
+    #         total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+    #             lemma, ss["depth"], ss["name"], "n")
+    #         syn_total_hits += total_hits
+    #         syn_not_found += not_found_cnt
+    #         syn_found += found_cnt
+    #         print("\t", lemma, "Total hits:", total_hits,
+    #               "Not found:", not_found_cnt, "Found:", found_cnt)
+    #     # store frame for synsets in wn_synsets_noun
+    #     mongo.store_synset_without_relatives_noun_test(
+    #         syn, ss["depth"], syn_total_hits, syn_not_found, syn_found)
     #     i += 1
+
     # return
 
-    mongo.db["wn_lemma_permutations_noun_test"].drop()
-    mongo.db["passwords_wn_noun_test"].drop()
-    mongo.db["wn_synsets_noun_test"].drop()
-
+    # first, we must copy all missing synsets to wn_synsets_noun
+    # one of the missing synsets might be the parent of another missing synset,
+    # so when the child of a missing synset gets iterated before its parent (and the parent was
+    # not copied to wn_synsets_noun yet), there will be no link.
+    # hence, we copy all missing synsets first, then create the links between them
+    missing_synsets_staging = mongo.db["wn_synsets_noun_staging_test"].find()
+    copy_cnt = 0
     i = 1
-    cnt = 10
-    missing_synsets = mongo.db["wn_synsets_noun_missing"].find()
-    for ss in missing_synsets:
-        syn = wn.synset(ss["name"])
-        if i == cnt:
-            break
-        # iterate over each lemma and permutate
-        print(i, ss["name"])
-        syn_total_hits = 0
-        syn_not_found = 0
-        syn_found = 0
-        for lemma in ss["lemmas"]:
-            lemma = lemma.lower()
-            # will be stored in passwords_wn_noun
-            total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
-                lemma, ss["depth"], ss["name"], "n")
-            syn_total_hits += total_hits
-            syn_not_found += not_found_cnt
-            syn_found += found_cnt
-            print("\t", lemma, "Total hits:", total_hits,
-                  "Not found:", not_found_cnt, "Found:", found_cnt)
-        # store frame for synsets in wn_synsets_noun
-        mongo.store_synset_without_relatives_noun_test(
-            ss["name"], ss["depth"], syn_total_hits, syn_not_found, syn_found)
+    for ss in missing_synsets_staging:
+        my_id = ss["id"]
+        print(i, my_id)
+        # change staging_to_prod to 1
+        # copy us to wn_synsets_noun
+        ss["staging_to_prod"] = 1
+        res = mongo.db["wn_synsets_noun"].insert_one(ss)
+        # res = mongo.db["wn_synsets_noun"].update_one(
+        #     {"id": my_id},
+        #     ss,
+        #     upsert=True
+        # )
+        # print("\tInsert to wn_synsets_noun", res.modified_count)
+        print("\tInsert to wn_synsets_noun", res.inserted_id)
+        # update in wn_synsets_noun_staging_test
+        # mark that we have been linked to our parent and copied to wn_synsets_noun
+        res = mongo.db["wn_synsets_noun_staging_test"].update_one(
+            {"id": my_id},
+            {"$set": {"staging_to_prod": 1}}
+        )
+        print("\tUpdate to wn_synsets_noun_staging_test", res.modified_count)
+        copy_cnt += 1
         i += 1
+
+
+    print("Copied %d synsets to wn_synsets_noun" % copy_cnt)
+    print()
+    print()
+    print()
 
     # after we have permutated and inserted, iterate over the missing ones again,
     # determine their parents/children and insert them. some children are inserted
     # before their parents, so we would get an error if we tried to link a
     # children to a yet non-existent parent
+    
+    # count how many missing synsets have parents and need to be linked to them (in the sense of appending the missing synset to the parents childs list)
+    required_links_cnt = mongo.db["wn_synsets_noun_staging_test"].count_documents({"parent": {"$nin": ["no_parent"]}})
 
+    i = 1
+    update_cnt = 0
+    update_stats_cnt = 0
+    # we keep track of a total sum of all stats of our missing synsets, so in the end we can create a second entity.n.01 synset
+    # that also includes the values of our missing synsets (the synsets that are neither directly or indirectly connected to the actual entity.n.01 but we still
+    # want to consider in our statistics, so we add the missing synset values to a second entity.n.01 object)
+    total_this_hits = 0
+    total_this_found_cnt = 0
+    total_this_not_found_cnt = 0
+    total_this_permutations = 0
+
+    missing_synsets_staging = mongo.db["wn_synsets_noun_staging_test"].find()
+    for ss in missing_synsets_staging:
+        parent_id = ss["parent"]
+        my_id = ss["id"]
+        if parent_id != "no_parent":
+            print(i, my_id)
+            # append this synset to the children list of the parent synset
+            # childs arrays get built here. no need to determine childs from the nltk package.
+            # if you have a parent, you will be appended to your parents childs array
+            result = mongo.db["wn_synsets_noun"].update_one(
+                {"id": parent_id},
+                {"$push": {"childs": my_id}})
+            update_cnt += 1
+            print("\tAppended {} to {} (matched={}, modified={})".format(
+                my_id, parent_id, result.matched_count, result.modified_count))
+            # The other thing we do is add our total_hits, this_found_cnt, this_not_found_cnt, this_permutations, 
+            # below_permutations, hits_below, not_found_below and found_below to the stats of our parent to
+            # upkeep the stats from below
+            my_total_hits = ss["total_hits"]
+            my_this_hits = ss["this_hits"]
+            my_this_found_cnt = ss["this_found_cnt"]
+            my_this_not_found_cnt = ss["this_not_found_cnt"]
+            my_this_permutations = ss["this_permutations"]
+            my_below_permutations = ss["below_permutations"]
+            my_total_permutations = my_this_permutations + my_below_permutations
+            my_hits_below = ss["hits_below"]
+            my_not_found_below = ss["not_found_below"]
+            my_found_below = ss["found_below"]
+            my_total_found = my_this_found_cnt + my_found_below
+            my_total_not_found = my_this_not_found_cnt + my_not_found_below
+
+            # keep track of total_* stats for entity.n.01 #2
+            total_this_hits += my_this_hits
+            total_this_found_cnt += my_this_found_cnt
+            total_this_not_found_cnt += my_this_not_found_cnt
+            total_this_permutations += my_this_permutations
+
+            result = mongo.db["wn_synsets_noun"].update_one(
+                {"id": parent_id},
+                {"$inc": {
+                    "total_hits": my_total_hits,
+                    "hits_below": my_total_hits,
+                    "found_below": my_total_found,
+                    "not_found_below": my_total_not_found,
+                    "below_permutations": my_total_permutations,
+                }})
+            print("\tUpdated hits of parent {}: {}".format(parent_id, result.modified_count))
+            update_stats_cnt += 1
+
+        i += 1
+    print("Updated the childs/links of %d parent synsets (%d missing synsets required were required to be linked)" % (
+        update_cnt, required_links_cnt))
+
+    # create entity.n.01_2
+    # we sum the hits of the missing synsets directly onto entity.n.01 because the missing synsets have no direct or indirect association with entity.n.01
+    # therefore, we imply a hypothetical connection in order to include the missing synsets hits with the other synsets and use them for our statistics
+    entity_orig = mongo.db["wn_synsets_noun"].find_one({"id": "entity.n.01"})
+    # create a new dict that is going to be entity.n.01_2
+    new_entity = {}
+    new_entity["childs"] = entity_orig["childs"]
+    new_entity["level"] = entity_orig["level"]
+    new_entity["parent"] = entity_orig["parent"]
+    new_entity["this_permutations"] = entity_orig["this_permutations"]
+    new_entity["this_hits"] = entity_orig["this_hits"]
+    new_entity["this_not_found_cnt"] = entity_orig["this_not_found_cnt"]
+    new_entity["this_found_cnt"] = entity_orig["this_found_cnt"]
+    new_entity["total_hits"] = entity_orig["total_hits"] + total_this_hits
+    new_entity["id"] = "entity.n.01_2"
+    new_entity["tag"] = entity_orig["tag"]
+    new_entity["found_below"] = entity_orig["found_below"] + total_this_found_cnt
+    new_entity["below_permutations"] = entity_orig["below_permutations"] + total_this_permutations
+    new_entity["not_found_below"] = entity_orig["not_found_below"] + total_this_not_found_cnt
+    new_entity["hits_below"] = entity_orig["hits_below"] + total_this_hits
+
+    res = mongo.db["wn_synsets_noun"].insert_one(new_entity)
+    print()
+    print()
+    print("Inserted new entity.n.01_2: {}".format(res.inserted_id))
+
+    # print overview
+    print()
+    print()
+    print()
+    print()
+    print("Sum counts for missing synsets:")
+    print("\ttotal_this_hits", total_this_hits)
+    print("\ttotal_this_found_cnt", total_this_found_cnt)
+    print("\ttotal_this_not_found_cnt", total_this_not_found_cnt)
+    print("\ttotal_this_permutations", total_this_permutations)
 
 def permutations_for_lemma(lemma, depth, source, mode):
     """

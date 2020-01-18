@@ -589,20 +589,40 @@ def store_permutations_for_lemma_noun_test(permutations):
     return True
 
 
-def store_synset_without_relatives_noun_test(synset_name, depth, this_total_hits, this_not_found_cnt, this_found_cnt):
+def store_synset_without_relatives_noun_test(synset, depth, this_total_hits, this_not_found_cnt, this_found_cnt):
     """
     Stores a frame in wn_synsets_noun and determines this synsets children and immediate parent.
     """
     # Check if this synset already exists.
-    if db["wn_synsets_noun_test"].count_documents({"id": synset_name}) > 0:
+    if db["wn_synsets_noun_staging_test"].count_documents({"id": synset.name()}) > 0:
         return
+    # get parent
+    parents = synset.hypernyms()
+    if synset.hypernyms() == []:
+        parent = "no_parent"
+    else:
+        parent = parents[0].name()
     o = {
-        "id": synset_name,
+        "id": synset.name(),
+        # we need to initialize total_hits with this_hits at first so when we come to the stage 
+        # where we update our parents, it requires that we have our total_hits already set, so we can
+        # set the hits_below value of our parents
+        "total_hits": this_total_hits,
+        "hits_below": 0,
+        "not_found_below": 0,
+        "found_below": 0,
+        "below_permutations": 0,
         "this_hits": this_total_hits,
         "this_not_found_cnt": this_not_found_cnt,
         "this_found_cnt": this_found_cnt,
         "this_permutations": this_not_found_cnt + this_found_cnt,
         "level": depth,
+        "parent": parent,
+        # "childs": childs,
+        "childs": [],
+        # is set to 1 once copied from staging to prod collection 
+        # (after parent/child linking was successful)
+        "staging_to_prod": 0,
         "tag": TAG
     }
-    db["wn_synsets_noun_test"].insert_one(o)
+    db["wn_synsets_noun_staging_test"].insert_one(o)
