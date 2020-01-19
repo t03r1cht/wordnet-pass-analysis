@@ -573,28 +573,28 @@ def subtract_from_hits_below_verb(ssid, value):
 
 # ================ TEST AREA ================
 
-def store_permutations_for_lemma_noun_test(permutations):
+def store_permutations_for_lemma_noun(permutations):
     """
     For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_noun collection.
     """
     # In case it already exists
-    if db["wn_lemma_permutations_noun_test"].count_documents({"word_base": permutations["word_base"]}) > 0:
+    if db["wn_lemma_permutations_noun"].count_documents({"word_base": permutations["word_base"]}) > 0:
         return
-    db["wn_lemma_permutations_noun_test"].insert_one(permutations)
+    db["wn_lemma_permutations_noun"].insert_one(permutations)
     # Replace with bulk insert. Should generally increase performance
     try:
-        db["passwords_wn_noun_test"].insert_many(permutations["permutations"])
+        db["passwords_wn_noun"].insert_many(permutations["permutations"])
     except Exception:
         return False
     return True
 
 
-def store_synset_without_relatives_noun_test(synset, depth, this_total_hits, this_not_found_cnt, this_found_cnt):
+def store_synset_without_relatives_noun(synset, depth, this_total_hits, this_not_found_cnt, this_found_cnt):
     """
     Stores a frame in wn_synsets_noun and determines this synsets children and immediate parent.
     """
     # Check if this synset already exists.
-    if db["wn_synsets_noun_staging_test"].count_documents({"id": synset.name()}) > 0:
+    if db["wn_synsets_noun_staging"].count_documents({"id": synset.name()}) > 0:
         return
     # get parent
     parents = synset.hypernyms()
@@ -625,4 +625,4 @@ def store_synset_without_relatives_noun_test(synset, depth, this_total_hits, thi
         "staging_to_prod": 0,
         "tag": TAG
     }
-    db["wn_synsets_noun_staging_test"].insert_one(o)
+    db["wn_synsets_noun_staging"].insert_one(o)

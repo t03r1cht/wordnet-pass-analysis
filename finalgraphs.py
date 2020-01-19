@@ -48,12 +48,70 @@ ILL_TAG = get_curr_time_str()
 # Total (supposed): 82115
 # Not found len: 7741
 
+def identify_and_store_missing_verbs():
+    """
+    Identify all missing verbs and store them in wn_synsets_verbs_missing
+    """
+    # NOTE Important: create indexes! db.coll.createIndex({"id":1})
+    # total synsets should: 13767
+    # total synsets in passwords: 7422
+    # total synsets in synsets: 13767
+    # diff synsets - passwords: 13767 - 7422 = 6345
+
+
+    password_synset = []
+    synsets_in_pws = mongo.db["passwords_wn_verb"].distinct("synset")
+    i = 0
+    for ss in synsets_in_pws:
+        password_synset.append(ss)
+        i += 1
+
+    not_found = []
+    for ss in wn.all_synsets("v"):
+        # if ss.min_depth() == 0 and ss.name() not in password_synset:
+        if ss.name() not in password_synset:
+            not_found.append(ss.name())
+    
+    # TODO we need to look up all synsets from not_found again and put them in passwords_wn_verb and wn_lemma_permutations_verb
+    # links already exists (no need to store again in wn_synsets_verb)
+    for ss in not_found:
+        # create permutations
+        
+        # store all permutations in passwords_wn_verb
+
+        # bundle all permutations in wn_lemma_permutations_verb
+        pass
+
+
+    print(not_found)
+    print(len(not_found))
+    return
+
+    # check which synsets from wn_synsets_verb are not in passwords_wn_verb
+    not_found_in_passwords = 0
+    not_found_in_passwords_list = []
+    synsets_in_synset = mongo.db["wn_synsets_verb"].find()
+    for ss in synsets_in_synset:
+        if ss["id"] not in password_synset:
+            o = {
+                "name": ss["id"],
+                "level": ss["level"],
+                "parent": ss["parent"]
+            }
+            not_found_in_passwords_list.append(o)
+            not_found_in_passwords += 1
+    for k,v in enumerate(not_found_in_passwords_list):
+        print(k, v)
+    print("Synsets in passwords", len(password_synset))
+    print("Synsets from wn_synsets_verb not found in passwords", not_found_in_passwords)
+
+
 def identify_and_store_missing_nouns():
     """
     Identify all missing nouns and store them in wn_synsets_noun_missing
     """
     # NOTE Important: create indexes! db.coll.createIndex({"id":1})
-    mongo.db["wn_synsets_noun_missing"].drop()
+    # mongo.db["wn_synsets_noun_missing"].drop()
     not_found_ss = []
     cnt = 0
     cnt_missing = 0
@@ -98,64 +156,63 @@ def lookup_and_insert_missing_nouns():
     # mongo.db["passwords_wn_noun_test"].drop()
     # mongo.db["wn_synsets_noun_test"].drop()
     # mongo.db["wn_synsets_noun_staging_test"].drop()
+    # mongo.db["wn_synsets_noun_staging"].drop()
 
-    # i = 0
-    # cnt = i + 500  # target delta
-    # # synsets that have either a parent or childs
-    # hyp_or_hyper = [1110, 1616, 1620, 1698, 1699, 1700, 2320, 2332, 2426, 2436, 3494, 3530,
-    #                 3532, 3539, 3749, 3896, 3897, 3898, 3899, 4065, 4066, 4072, 4180, 4198, 4346, 4347]
+    i = 0
+    cnt = i + 500  # target delta
+    # synsets that have either a parent or childs
+    hyp_or_hyper = [1110, 1616, 1620, 1698, 1699, 1700, 2320, 2332, 2426, 2436, 3494, 3530,
+                    3532, 3539, 3749, 3896, 3897, 3898, 3899, 4065, 4066, 4072, 4180, 4198, 4346, 4347]
+    # begin stage 1
+    missing_synsets = mongo.db["wn_synsets_noun_missing"].find()
+    for ss in missing_synsets:
+        # if not commented out, iterate only over those synsets that have either parents or childs
+        # if i not in hyp_or_hyper:
+        #     i += 1
+        #     continue
 
-    # missing_synsets = mongo.db["wn_synsets_noun_missing"].find()
-    # for ss in missing_synsets:
-    #     # if not commented out, iterate only over those synsets that have either parents or childs
-    #     if i not in hyp_or_hyper:
-    #         i += 1
-    #         continue
+        # if i == cnt:
+            # break
+        syn = wn.synset(ss["name"])
+        # hypers = syn.hypernyms()
+        # hypos = syn.hyponyms()
+        # print(i, syn.name())
+        # if len(hypers) > 0 or len(hypos) > 0:
+        #     print(i, syn.name())
+        #     hyp_or_hyper.append(i)
+        # print("\t", hypers)
+        # print("\t", hypos)
+        # i += 1
+        # continue
 
-    #     # if i == cnt:
-    #         # break
-    #     syn = wn.synset(ss["name"])
-    #     # hypers = syn.hypernyms()
-    #     # hypos = syn.hyponyms()
-    #     # print(i, syn.name())
-    #     # if len(hypers) > 0 or len(hypos) > 0:
-    #     #     print(i, syn.name())
-    #     #     hyp_or_hyper.append(i)
-    #     # print("\t", hypers)
-    #     # print("\t", hypos)
-    #     # i += 1
-    #     # continue
-
-    #     # iterate over each lemma and permutate
-    #     if i == cnt:
-    #         break
-    #     print(i, ss["name"])
-    #     syn_total_hits = 0
-    #     syn_not_found = 0
-    #     syn_found = 0
-    #     for lemma in ss["lemmas"]:
-    #         lemma = lemma.lower()
-    #         # will be stored in passwords_wn_noun
-    #         total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
-    #             lemma, ss["depth"], ss["name"], "n")
-    #         syn_total_hits += total_hits
-    #         syn_not_found += not_found_cnt
-    #         syn_found += found_cnt
-    #         print("\t", lemma, "Total hits:", total_hits,
-    #               "Not found:", not_found_cnt, "Found:", found_cnt)
-    #     # store frame for synsets in wn_synsets_noun
-    #     mongo.store_synset_without_relatives_noun_test(
-    #         syn, ss["depth"], syn_total_hits, syn_not_found, syn_found)
-    #     i += 1
-
-    # return
+        # iterate over each lemma and permutate
+        print(i, ss["name"])
+        syn_total_hits = 0
+        syn_not_found = 0
+        syn_found = 0
+        for lemma in ss["lemmas"]:
+            lemma = lemma.lower()
+            # will be stored in passwords_wn_noun
+            total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+                lemma, ss["depth"], ss["name"], "n")
+            syn_total_hits += total_hits
+            syn_not_found += not_found_cnt
+            syn_found += found_cnt
+            print("\t", lemma, "Total hits:", total_hits,
+                  "Not found:", not_found_cnt, "Found:", found_cnt)
+        # store frame for synsets in wn_synsets_noun
+        mongo.store_synset_without_relatives_noun(
+            syn, ss["depth"], syn_total_hits, syn_not_found, syn_found)
+        i += 1
+    print("Looked up %d noun synsets" % i)
+    return  # end stage 1
 
     # first, we must copy all missing synsets to wn_synsets_noun
     # one of the missing synsets might be the parent of another missing synset,
     # so when the child of a missing synset gets iterated before its parent (and the parent was
     # not copied to wn_synsets_noun yet), there will be no link.
     # hence, we copy all missing synsets first, then create the links between them
-    missing_synsets_staging = mongo.db["wn_synsets_noun_staging_test"].find()
+    missing_synsets_staging = mongo.db["wn_synsets_noun_staging"].find()
     copy_cnt = 0
     i = 1
     for ss in missing_synsets_staging:
@@ -165,23 +222,16 @@ def lookup_and_insert_missing_nouns():
         # copy us to wn_synsets_noun
         ss["staging_to_prod"] = 1
         res = mongo.db["wn_synsets_noun"].insert_one(ss)
-        # res = mongo.db["wn_synsets_noun"].update_one(
-        #     {"id": my_id},
-        #     ss,
-        #     upsert=True
-        # )
-        # print("\tInsert to wn_synsets_noun", res.modified_count)
         print("\tInsert to wn_synsets_noun", res.inserted_id)
-        # update in wn_synsets_noun_staging_test
+        # update in wn_synsets_noun_staging
         # mark that we have been linked to our parent and copied to wn_synsets_noun
-        res = mongo.db["wn_synsets_noun_staging_test"].update_one(
+        res = mongo.db["wn_synsets_noun_staging"].update_one(
             {"id": my_id},
             {"$set": {"staging_to_prod": 1}}
         )
-        print("\tUpdate to wn_synsets_noun_staging_test", res.modified_count)
+        print("\tUpdate to wn_synsets_noun_staging", res.modified_count)
         copy_cnt += 1
         i += 1
-
 
     print("Copied %d synsets to wn_synsets_noun" % copy_cnt)
     print()
@@ -192,9 +242,10 @@ def lookup_and_insert_missing_nouns():
     # determine their parents/children and insert them. some children are inserted
     # before their parents, so we would get an error if we tried to link a
     # children to a yet non-existent parent
-    
+
     # count how many missing synsets have parents and need to be linked to them (in the sense of appending the missing synset to the parents childs list)
-    required_links_cnt = mongo.db["wn_synsets_noun_staging_test"].count_documents({"parent": {"$nin": ["no_parent"]}})
+    required_links_cnt = mongo.db["wn_synsets_noun_staging"].count_documents(
+        {"parent": {"$nin": ["no_parent"]}})
 
     i = 1
     update_cnt = 0
@@ -207,7 +258,7 @@ def lookup_and_insert_missing_nouns():
     total_this_not_found_cnt = 0
     total_this_permutations = 0
 
-    missing_synsets_staging = mongo.db["wn_synsets_noun_staging_test"].find()
+    missing_synsets_staging = mongo.db["wn_synsets_noun_staging"].find()
     for ss in missing_synsets_staging:
         parent_id = ss["parent"]
         my_id = ss["id"]
@@ -222,7 +273,7 @@ def lookup_and_insert_missing_nouns():
             update_cnt += 1
             print("\tAppended {} to {} (matched={}, modified={})".format(
                 my_id, parent_id, result.matched_count, result.modified_count))
-            # The other thing we do is add our total_hits, this_found_cnt, this_not_found_cnt, this_permutations, 
+            # The other thing we do is add our total_hits, this_found_cnt, this_not_found_cnt, this_permutations,
             # below_permutations, hits_below, not_found_below and found_below to the stats of our parent to
             # upkeep the stats from below
             my_total_hits = ss["total_hits"]
@@ -253,7 +304,8 @@ def lookup_and_insert_missing_nouns():
                     "not_found_below": my_total_not_found,
                     "below_permutations": my_total_permutations,
                 }})
-            print("\tUpdated hits of parent {}: {}".format(parent_id, result.modified_count))
+            print("\tUpdated hits of parent {}: {}".format(
+                parent_id, result.modified_count))
             update_stats_cnt += 1
 
         i += 1
@@ -276,9 +328,12 @@ def lookup_and_insert_missing_nouns():
     new_entity["total_hits"] = entity_orig["total_hits"] + total_this_hits
     new_entity["id"] = "entity.n.01_2"
     new_entity["tag"] = entity_orig["tag"]
-    new_entity["found_below"] = entity_orig["found_below"] + total_this_found_cnt
-    new_entity["below_permutations"] = entity_orig["below_permutations"] + total_this_permutations
-    new_entity["not_found_below"] = entity_orig["not_found_below"] + total_this_not_found_cnt
+    new_entity["found_below"] = entity_orig["found_below"] + \
+        total_this_found_cnt
+    new_entity["below_permutations"] = entity_orig["below_permutations"] + \
+        total_this_permutations
+    new_entity["not_found_below"] = entity_orig["not_found_below"] + \
+        total_this_not_found_cnt
     new_entity["hits_below"] = entity_orig["hits_below"] + total_this_hits
 
     res = mongo.db["wn_synsets_noun"].insert_one(new_entity)
@@ -296,6 +351,7 @@ def lookup_and_insert_missing_nouns():
     print("\ttotal_this_found_cnt", total_this_found_cnt)
     print("\ttotal_this_not_found_cnt", total_this_not_found_cnt)
     print("\ttotal_this_permutations", total_this_permutations)
+
 
 def permutations_for_lemma(lemma, depth, source, mode):
     """
@@ -370,7 +426,7 @@ def permutations_for_lemma(lemma, depth, source, mode):
     }
 
     if mode == "n":
-        mongo.store_permutations_for_lemma_noun_test(permutations_for_lemma)
+        mongo.store_permutations_for_lemma_noun(permutations_for_lemma)
 
     return total_hits, not_found_cnt, found_cnt
 
@@ -1354,7 +1410,8 @@ def _lookup_in_hash_file(hash):
 
 
 if __name__ == "__main__":
-    lookup_and_insert_missing_nouns()
+    identify_and_store_missing_verbs()
+    # lookup_and_insert_missing_nouns()
     # identify_and_store_missing_nouns()
     # main()
     pass

@@ -886,9 +886,6 @@ def permutations_for_lemma_verb(lemma, depth, source):
                     "depth": depth,
                     "tag": ILL_TAG
                 }
-
-                # all_permutations.append(
-                #     mongo.new_permutation_for_lemma(p["name"], trans_hits))
                 all_permutations.append(o)
                 total_hits += trans_hits
                 if trans_hits == 0:
@@ -909,9 +906,7 @@ def permutations_for_lemma_verb(lemma, depth, source):
                 "depth": depth,
                 "tag": ILL_TAG
             }
-
-            # all_permutations.append(
-            #     mongo.new_permutation_for_lemma(permutations["name"], trans_hits))
+            
             all_permutations.append(o)
 
             if trans_hits == 0:
