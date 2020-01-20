@@ -3,8 +3,8 @@ from helper import get_curr_time, get_curr_time_str
 
 # MONGO_ADDR = "192.168.56.102"
 # MONGO_ADDR = "192.168.171.3"
-# MONGO_ADDR = "localhost"
-MONGO_ADDR = "141.87.21.180"
+MONGO_ADDR = "localhost"
+# MONGO_ADDR = "141.87.21.180"
 mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 
 db = mongo["passwords"]
@@ -195,9 +195,6 @@ def store_permutations_for_lemma(permutations):
     except Exception:
         return False
     return True
-
-
-
 
 
 def store_permutations_for_lemma_verb(permutations):
@@ -573,17 +570,36 @@ def subtract_from_hits_below_verb(ssid, value):
 
 # ================ TEST AREA ================
 
+
 def store_permutations_for_lemma_noun(permutations):
     """
     For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_noun collection.
     """
     # In case it already exists
-    if db["wn_lemma_permutations_noun"].count_documents({"word_base": permutations["word_base"]}) > 0:
-        return
+    # if db["wn_lemma_permutations_noun"].count_documents({"word_base": permutations["word_base"]}) > 0:
+    #     return
     db["wn_lemma_permutations_noun"].insert_one(permutations)
     # Replace with bulk insert. Should generally increase performance
     try:
         db["passwords_wn_noun"].insert_many(permutations["permutations"])
+    except Exception:
+        return False
+    return True
+
+def ok():
+    print("OK")
+
+def store_permutations_for_lemma_verb_missing(permutations):
+    """
+    For each lemma, store all of its permutations. The "permutations" key is basically a group of records in the passwords_wn_noun collection.
+    """
+    # In case it already exists
+    # if db["wn_lemma_permutations_verb"].count_documents({"word_base": permutations["word_base"]}) > 0:
+    #     return
+    db["wn_lemma_permutations_verb"].insert_one(permutations)
+    # Replace with bulk insert. Should generally increase performance
+    try:
+        db["passwords_wn_verb"].insert_many(permutations["permutations"])
     except Exception:
         return False
     return True
@@ -604,7 +620,7 @@ def store_synset_without_relatives_noun(synset, depth, this_total_hits, this_not
         parent = parents[0].name()
     o = {
         "id": synset.name(),
-        # we need to initialize total_hits with this_hits at first so when we come to the stage 
+        # we need to initialize total_hits with this_hits at first so when we come to the stage
         # where we update our parents, it requires that we have our total_hits already set, so we can
         # set the hits_below value of our parents
         "total_hits": this_total_hits,
@@ -620,7 +636,7 @@ def store_synset_without_relatives_noun(synset, depth, this_total_hits, this_not
         "parent": parent,
         # "childs": childs,
         "childs": [],
-        # is set to 1 once copied from staging to prod collection 
+        # is set to 1 once copied from staging to prod collection
         # (after parent/child linking was successful)
         "staging_to_prod": 0,
         "tag": TAG

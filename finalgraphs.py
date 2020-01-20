@@ -29,6 +29,8 @@ parser.add_argument("-t", "--lookup-utility", action="store_true",
                     help="If set, use sgrep instead of the look utility.", dest="lookup_utility")
 args = parser.parse_args()
 
+# TODO RUN ENTIRE NOUN PROCESS AGAIN
+
 
 # Rausfiltern von arabischen Zahlen (0-99)
 # db.getCollection('passwords_wn_noun').find({"$and": [{"permutator": "no_permutator"},{"word_base": {"$nin": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "11"]}}, {"occurrences": {"$gt":0}}]}).count()
@@ -58,7 +60,6 @@ def identify_and_store_missing_verbs():
     # total synsets in synsets: 13767
     # diff synsets - passwords: 13767 - 7422 = 6345
 
-
     password_synset = []
     synsets_in_pws = mongo.db["passwords_wn_verb"].distinct("synset")
     i = 0
@@ -66,25 +67,40 @@ def identify_and_store_missing_verbs():
         password_synset.append(ss)
         i += 1
 
+    # contains all synsets that were not in passwords_wn_verb/lemma_permutations
     not_found = []
     for ss in wn.all_synsets("v"):
-        # if ss.min_depth() == 0 and ss.name() not in password_synset:
         if ss.name() not in password_synset:
-            not_found.append(ss.name())
-    
-    # TODO we need to look up all synsets from not_found again and put them in passwords_wn_verb and wn_lemma_permutations_verb
+            o = {
+                "name": ss.name(),
+                "lemmas": ss.lemma_names(),
+                "depth": ss.min_depth()
+            }
+            not_found.append(o)
+
+    # we need to look up all synsets from not_found again and put them in passwords_wn_verb and wn_lemma_permutations_verb
     # links already exists (no need to store again in wn_synsets_verb)
-    for ss in not_found:
+    synset_cnt = 0
+    lemma_cnt = 0
+    for k, ss in enumerate(not_found):
         # create permutations
-        
-        # store all permutations in passwords_wn_verb
-
-        # bundle all permutations in wn_lemma_permutations_verb
-        pass
-
-
-    print(not_found)
-    print(len(not_found))
+        print(k, "Looking up: %s" % ss["name"])
+        synset_cnt += 1
+        for lemma in ss["lemmas"]:
+            lemma_cnt += 1
+            lemma = lemma.lower()
+            # will be stored in passwords_wn_noun
+            # store all permutations in passwords_wn_verb
+            # bundle all permutations in wn_lemma_permutations_verb
+            total_hits, not_found_cnt, found_cnt = permutations_for_lemma(
+                lemma, ss["depth"], ss["name"], "v")
+            print("\tLemma: {}, Total Hits: {}, Not Found: {}, Found: {}".format(
+                lemma, total_hits, not_found_cnt, found_cnt))
+    print()
+    print()
+    print()
+    print("Looked up synsets:", synset_cnt)
+    print("Looked up lemmas:", lemma_cnt)
     return
 
     # check which synsets from wn_synsets_verb are not in passwords_wn_verb
@@ -100,10 +116,11 @@ def identify_and_store_missing_verbs():
             }
             not_found_in_passwords_list.append(o)
             not_found_in_passwords += 1
-    for k,v in enumerate(not_found_in_passwords_list):
+    for k, v in enumerate(not_found_in_passwords_list):
         print(k, v)
     print("Synsets in passwords", len(password_synset))
-    print("Synsets from wn_synsets_verb not found in passwords", not_found_in_passwords)
+    print("Synsets from wn_synsets_verb not found in passwords",
+          not_found_in_passwords)
 
 
 def identify_and_store_missing_nouns():
@@ -151,40 +168,21 @@ def lookup_and_insert_missing_nouns():
     """
     For each noun in wn_synsets_noun_missing permutate and lookup the lemmas. Store in the respective collections. Insert missing synsets in wn_synsets_noun
     """
-    # TODO RUN
     # mongo.db["wn_lemma_permutations_noun_test"].drop()
     # mongo.db["passwords_wn_noun_test"].drop()
     # mongo.db["wn_synsets_noun_test"].drop()
     # mongo.db["wn_synsets_noun_staging_test"].drop()
     # mongo.db["wn_synsets_noun_staging"].drop()
 
-    i = 0
-    cnt = i + 500  # target delta
+    # cnt = i + 500  # target delta
     # synsets that have either a parent or childs
-    hyp_or_hyper = [1110, 1616, 1620, 1698, 1699, 1700, 2320, 2332, 2426, 2436, 3494, 3530,
-                    3532, 3539, 3749, 3896, 3897, 3898, 3899, 4065, 4066, 4072, 4180, 4198, 4346, 4347]
+    # hyp_or_hyper = [1110, 1616, 1620, 1698, 1699, 1700, 2320, 2332, 2426, 2436, 3494, 3530,
+    #                 3532, 3539, 3749, 3896, 3897, 3898, 3899, 4065, 4066, 4072, 4180, 4198, 4346, 4347]
     # begin stage 1
+    i = 0
     missing_synsets = mongo.db["wn_synsets_noun_missing"].find()
     for ss in missing_synsets:
-        # if not commented out, iterate only over those synsets that have either parents or childs
-        # if i not in hyp_or_hyper:
-        #     i += 1
-        #     continue
-
-        # if i == cnt:
-            # break
         syn = wn.synset(ss["name"])
-        # hypers = syn.hypernyms()
-        # hypos = syn.hyponyms()
-        # print(i, syn.name())
-        # if len(hypers) > 0 or len(hypos) > 0:
-        #     print(i, syn.name())
-        #     hyp_or_hyper.append(i)
-        # print("\t", hypers)
-        # print("\t", hypos)
-        # i += 1
-        # continue
-
         # iterate over each lemma and permutate
         print(i, ss["name"])
         syn_total_hits = 0
@@ -427,6 +425,8 @@ def permutations_for_lemma(lemma, depth, source, mode):
 
     if mode == "n":
         mongo.store_permutations_for_lemma_noun(permutations_for_lemma)
+    if mode == "v":
+        mongo.store_permutations_for_lemma_verb_missing(permutations_for_lemma)
 
     return total_hits, not_found_cnt, found_cnt
 
@@ -1410,8 +1410,8 @@ def _lookup_in_hash_file(hash):
 
 
 if __name__ == "__main__":
-    identify_and_store_missing_verbs()
-    # lookup_and_insert_missing_nouns()
+    # identify_and_store_missing_verbs()
+    lookup_and_insert_missing_nouns()
     # identify_and_store_missing_nouns()
     # main()
     pass
