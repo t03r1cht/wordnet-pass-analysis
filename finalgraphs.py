@@ -121,30 +121,30 @@ def main():
     #
     # Print a list with the top n passwords of the wordnet (with and without permutations)
     #
-    # print("Nouns")
-    # print_top_lemmas("n", 20, include_perms=False)
-    # print()
-    # print("Nouns")
-    # print_top_lemmas("n", 20, include_perms=True)
-    # print()
-    # print("Verbs")
-    # print_top_lemmas("v", 20, include_perms=False)
-    # print()
-    # print("Verbs")
-    # print_top_lemmas("v", 20, include_perms=True)
-    # print()
-    # print("Adjectives")
-    # print_top_lemmas("adj", 20, include_perms=False)
-    # print()
-    # print("Adjectives")
-    # print_top_lemmas("adj", 20, include_perms=True)
-    # print()
-    # print("Adverbs")
-    # print_top_lemmas("adv", 20, include_perms=False)
-    # print()
-    # print("Adverbs")
-    # print_top_lemmas("adv", 20, include_perms=True)
-    # print()
+    print("Nouns")
+    print_top_lemmas("n", 20, include_perms=False)
+    print()
+    print("Nouns")
+    print_top_lemmas("n", 20, include_perms=True, no_numbers=True)
+    print()
+    print("Verbs")
+    print_top_lemmas("v", 20, include_perms=False)
+    print()
+    print("Verbs")
+    print_top_lemmas("v", 20, include_perms=True, no_numbers=True)
+    print()
+    print("Adjectives")
+    print_top_lemmas("adj", 20, include_perms=False)
+    print()
+    print("Adjectives")
+    print_top_lemmas("adj", 20, include_perms=True, no_numbers=True)
+    print()
+    print("Adverbs")
+    print_top_lemmas("adv", 20, include_perms=False)
+    print()
+    print("Adverbs")
+    print_top_lemmas("adv", 20, include_perms=True, no_numbers=True)
+    print()
     # # =============================================================================================================================================
     #
     # Print top n synsets for each level
@@ -156,7 +156,7 @@ def main():
     # Locate the top n passwords from a category list on the top n passwords of the Wordnet
     #
     # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=False)
-    locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=True)
+    # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=True)
     # =============================================================================================================================================
     #
     # Print stats for the all parts of speech of the Wordnet
@@ -781,7 +781,7 @@ def locate_topn_list_pws_hibp(list_name, top=10, include_perms=False):
     plt.show(f)
 
 
-def print_top_lemmas(pos, top, include_perms=False):
+def print_top_lemmas(pos, top, include_perms=False, no_numbers=False):
     """
     Print a list with the top n lemmas including their hits
     """
@@ -794,8 +794,28 @@ def print_top_lemmas(pos, top, include_perms=False):
         }
     else:
         query = {
-            "occurrences": {"$gt": 0}
+            "$and": [                
+                {"occurrences": {"$gt": 0}}
+            ]
         }
+    
+    if no_numbers:
+        nums = [str(x) for x in range(101)]
+        # exclude word_bases from 0 - 100
+        no_numbers_in_base_query = {
+            "word_base": {
+                "$nin": nums,
+            },
+        }
+
+        no_numbers_in_name_query = {
+            "name": {
+                "$nin": nums,
+            },
+        }
+
+        query["$and"].append(no_numbers_in_base_query)
+        query["$and"].append(no_numbers_in_name_query)
 
     coll_name = ""
     if pos == "n":
