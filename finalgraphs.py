@@ -29,8 +29,7 @@ parser.add_argument("-t", "--lookup-utility", action="store_true",
                     help="If set, use sgrep instead of the look utility.", dest="lookup_utility")
 args = parser.parse_args()
 
-# TODO RUN ENTIRE NOUN PROCESS AGAIN
-
+# Progress pad: https://pad.riseup.net/p/q5Qvgib36rkzQiWZE3uE
 
 # Rausfiltern von arabischen Zahlen (0-99)
 # db.getCollection('passwords_wn_noun').find({"$and": [{"permutator": "no_permutator"},{"word_base": {"$nin": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "11"]}}, {"occurrences": {"$gt":0}}]}).count()
@@ -513,22 +512,30 @@ def main():
     #
     # Print a list with the top n passwords of the wordnet (with and without permutations)
     #
+    # print("Nouns")
     # print_top_lemmas("n", 20, include_perms=False)
     # print()
-    # print()
+    # print("Nouns")
     # print_top_lemmas("n", 20, include_perms=True)
+    # print()
+    # print("Verbs")
     # print_top_lemmas("v", 20, include_perms=False)
     # print()
-    # print()
+    # print("Verbs")
     # print_top_lemmas("v", 20, include_perms=True)
+    # print()
+    # print("Adjectives")
     # print_top_lemmas("adj", 20, include_perms=False)
     # print()
-    # print()
+    # print("Adjectives")
     # print_top_lemmas("adj", 20, include_perms=True)
-    # # print_top_lemmas("adv", 20, include_perms=False)
     # print()
-    # # print()
+    # print("Adverbs")
+    # print_top_lemmas("adv", 20, include_perms=False)
+    # print()
+    # print("Adverbs")
     # print_top_lemmas("adv", 20, include_perms=True)
+    # print()
     # # =============================================================================================================================================
     #
     # Print top n synsets for each level
@@ -539,13 +546,13 @@ def main():
     #
     # Locate the top n passwords from a category list on the top n passwords of the Wordnet
     #
-    # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=False)
+    locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=False)
     # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=True)
     # =============================================================================================================================================
     #
     # Print stats for the all parts of speech of the Wordnet
     #
-    overview_wn()
+    # overview_wn()
     pass
 
 
@@ -1025,10 +1032,6 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
              "permutator": item["permutator"]}
         pw_list.append(o)
 
-    for i in pw_list:
-        print(i)
-    return
-
     labels = []
     occurrences = []
 
@@ -1056,8 +1059,9 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
             "0",
         ]}
     }
-
-    for password in mongo.db_pws_wn.find(search_filter).sort("occurrences", pymongo.DESCENDING):
+    buf_len = 1000 * 10
+    top_wn_pws = mongo.db_pws_wn.find(search_filter).sort("occurrences", pymongo.DESCENDING).limit(buf_len)
+    for password in top_wn_pws:
         labels.append("%s" % (password["name"]))
         occurrences.append(password["occurrences"])
 
@@ -1074,7 +1078,11 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
         else:
             cleaned_list_labels.append(curr)
             cleaned_list_occs.append(occurrences[i])
-
+    
+    print("LEN")
+    print(len(cleaned_list_labels))
+    print(len(cleaned_list_occs))
+    return
     cut_wn_labels = cleaned_list_labels[:1000]
     cut_wn_occs = cleaned_list_occs[:1000]
 
@@ -1411,7 +1419,7 @@ def _lookup_in_hash_file(hash):
 
 if __name__ == "__main__":
     # identify_and_store_missing_verbs()
-    lookup_and_insert_missing_nouns()
+    # lookup_and_insert_missing_nouns()
     # identify_and_store_missing_nouns()
-    # main()
+    main()
     pass
