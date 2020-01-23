@@ -27,13 +27,11 @@ parser.add_argument("-p", "--pass-database", type=str,
                     help="Path to the HIBP password database.", dest="pass_db_path")
 parser.add_argument("-t", "--lookup-utility", action="store_true",
                     help="If set, use sgrep instead of the look utility.", dest="lookup_utility")
+parser.add_argument("-x", "--hibp", type=str,
+                    help="Path to the HIBP top X sorted file.", dest="hibp")
 args = parser.parse_args()
 
 # Progress pad: https://pad.riseup.net/p/q5Qvgib36rkzQiWZE3uE
-
-# Rausfiltern von arabischen Zahlen (0-99)
-# db.getCollection('passwords_wn_noun').find({"$and": [{"permutator": "no_permutator"},{"word_base": {"$nin": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "11"]}}, {"occurrences": {"$gt":0}}]}).count()
-# amount of passwords in the password database
 
 # Ignore deprecation warnings:
 # py.exe -Wignore::DeprecationWarning .\finalgraphs.py
@@ -42,12 +40,132 @@ pwned_pw_amount = 551509767
 ILL_TAG = get_curr_time_str()
 
 
-# Nouns
-# Found: 74374
-# Not found: 7741
-# Total: 82115
-# Total (supposed): 82115
-# Not found len: 7741
+def main():
+    # =============================================================================================================================================
+    #
+    #  Calculate average permutations per lemma
+    #
+    # avg = avg_permutations_lemma("wordnet_n")
+    # log_ok("Average permutations per lemma for Wordnet nouns: %d" % (avg))  # 225
+    # avg = avg_permutations_lemma("wordnet_v")
+    # log_ok("Average permutations per lemma for Wordnet verbs: %d" % (avg))  # 223
+    # avg = avg_permutations_lemma("wordnet_adj")
+    # log_ok("Average permutations per lemma for Wordnet adjectives: %d" %
+    #        (avg))  # 221
+    # avg = avg_permutations_lemma("wordnet_adv")
+    # log_ok("Average permutations per lemma for Wordnet adverbs: %d" % (avg))  # 222
+    # =============================================================================================================================================
+    #
+    # Calculate the number of hits (efficiency) as well as the percentage of hits (coverage)
+    #
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=False)
+    # log_ok("Wordnet nouns (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=True)
+    # log_ok("Wordnet nouns (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=False)
+    # log_ok("Wordnet verbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=True)
+    # log_ok("Wordnet verbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+
+    # pw_hits, pct_hits = calculate_efficiency(
+    #     "wordnet_adj", include_perms=False)
+    # log_ok("Wordnet adjectives (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_adj", include_perms=True)
+    # log_ok("Wordnet adjectives (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+
+    # pw_hits, pct_hits = calculate_efficiency(
+    #     "wordnet_adv", include_perms=False)
+    # log_ok("Wordnet adverbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_adv", include_perms=True)
+    # log_ok("Wordnet adverbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
+    # =============================================================================================================================================
+    #
+    # Plot the wordnet coverage for all parts of speech (with and without permutations)
+    #
+    # wordnet_coverage(include_perms=False)
+    # wordnet_coverage(include_perms=True)
+    # =============================================================================================================================================
+    #
+    # Locate the top n passwords from a category list on the top n passwords of the HIBP file
+    #
+    # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("03_keyboard_patterns.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("03_keyboard_patterns.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("05_en_financial_brands.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("05_en_financial_brands.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("06_en_cities.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("06_en_cities.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("10_automobile.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("10_automobile.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("11_software_names.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("11_software_names.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("12_tech_brands.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("12_tech_brands.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("13_en_fruit.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("13_en_fruit.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("14_en_drinks.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("14_en_drinks.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("15_en_food.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("15_en_food.txt", top=10, include_perms=True)
+    # =============================================================================================================================================
+    #
+    # Print a list with the top n passwords of the wordnet (with and without permutations)
+    #
+    # print("Nouns")
+    # print_top_lemmas("n", 20, include_perms=False)
+    # print()
+    # print("Nouns")
+    # print_top_lemmas("n", 20, include_perms=True)
+    # print()
+    # print("Verbs")
+    # print_top_lemmas("v", 20, include_perms=False)
+    # print()
+    # print("Verbs")
+    # print_top_lemmas("v", 20, include_perms=True)
+    # print()
+    # print("Adjectives")
+    # print_top_lemmas("adj", 20, include_perms=False)
+    # print()
+    # print("Adjectives")
+    # print_top_lemmas("adj", 20, include_perms=True)
+    # print()
+    # print("Adverbs")
+    # print_top_lemmas("adv", 20, include_perms=False)
+    # print()
+    # print("Adverbs")
+    # print_top_lemmas("adv", 20, include_perms=True)
+    # print()
+    # # =============================================================================================================================================
+    #
+    # Print top n synsets for each level
+    #
+    # top_classes_per_level("noun", 10)
+    # top_classes_per_level("verb", 10)
+    # =============================================================================================================================================
+    #
+    # Locate the top n passwords from a category list on the top n passwords of the Wordnet
+    #
+    # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=False)
+    locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=True)
+    # =============================================================================================================================================
+    #
+    # Print stats for the all parts of speech of the Wordnet
+    #
+    # overview_wn()
+    pass
+
+
+# ====================== Wrappers ======================
 
 def identify_and_store_missing_verbs():
     """
@@ -126,6 +244,12 @@ def identify_and_store_missing_nouns():
     """
     Identify all missing nouns and store them in wn_synsets_noun_missing
     """
+    # Nouns
+    # Found: 74374
+    # Not found: 7741
+    # Total: 82115
+    # Total (supposed): 82115
+    # Not found len: 7741
     # NOTE Important: create indexes! db.coll.createIndex({"id":1})
     # mongo.db["wn_synsets_noun_missing"].drop()
     not_found_ss = []
@@ -350,210 +474,7 @@ def lookup_and_insert_missing_nouns():
     print("\ttotal_this_permutations", total_this_permutations)
 
 
-def permutations_for_lemma(lemma, depth, source, mode):
-    """
-    Permutate a lemma.
-    Mode: n, v, adj, adv. Controls where everything is stored
-    """
-    modes = [
-        "n",
-        "v",
-        "adj",
-        "adv"
-    ]
-    if mode not in modes:
-        log_err("Invalid mode %s" % mode)
-        return
-
-    total_hits = 0
-    not_found_cnt = 0
-    found_cnt = 0
-    all_permutations = []
-    for combination_handler in combinator.all:
-        # Generate all permutations
-        permutations = combination_handler(lemma, permutator.all)
-        if permutations == None:
-            continue
-        # Combinators always return a list of permutations
-        if type(permutations) == list:
-            for p in permutations:
-                trans_hits = lookup(p["name"], depth, source, lemma)
-                # Store each permutations under this lemma object in the database
-                o = {
-                    "name": p["name"],
-                    "occurrences": trans_hits,
-                    "synset": source,
-                    "word_base": lemma,
-                    "permutator": p["permutator"],
-                    "depth": depth,
-                    "tag": ILL_TAG
-                }
-                all_permutations.append(o)
-
-                total_hits += trans_hits
-                if trans_hits == 0:
-                    not_found_cnt += 1
-                else:
-                    found_cnt += 1
-        else:
-            trans_hits = lookup(permutations["name"], depth, source, lemma)
-            o = {
-                "name": permutations["name"],
-                "occurrences": trans_hits,
-                "synset": source,
-                "word_base": lemma,
-                "permutator": permutations["permutator"],
-                "depth": depth,
-                "tag": ILL_TAG
-            }
-            all_permutations.append(o)
-
-            if trans_hits == 0:
-                not_found_cnt += 1
-            else:
-                found_cnt += 1
-            total_hits += trans_hits
-
-    permutations_for_lemma = {
-        "word_base": lemma,
-        "permutations": all_permutations,
-        "total_permutations": len(all_permutations),
-        "total_hits": total_hits,
-        "synset": source
-    }
-
-    if mode == "n":
-        mongo.store_permutations_for_lemma_noun(permutations_for_lemma)
-    if mode == "v":
-        mongo.store_permutations_for_lemma_verb_missing(permutations_for_lemma)
-
-    return total_hits, not_found_cnt, found_cnt
-
-
-def main():
-
-    # =============================================================================================================================================
-    #
-    #  Calculate average permutations per lemma
-    #
-    # avg = avg_permutations_lemma("wordnet_n")
-    # log_ok("Average permutations per lemma for Wordnet nouns: %d" % (avg))  # 225
-    # avg = avg_permutations_lemma("wordnet_v")
-    # log_ok("Average permutations per lemma for Wordnet verbs: %d" % (avg))  # 223
-    # avg = avg_permutations_lemma("wordnet_adj")
-    # log_ok("Average permutations per lemma for Wordnet adjectives: %d" %
-    #        (avg))  # 221
-    # avg = avg_permutations_lemma("wordnet_adv")
-    # log_ok("Average permutations per lemma for Wordnet adverbs: %d" % (avg))  # 222
-    # =============================================================================================================================================
-    #
-    # Calculate the number of hits (efficiency) as well as the percentage of hits (coverage)
-    #
-    # pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=False)
-    # log_ok("Wordnet nouns (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-    # pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=True)
-    # log_ok("Wordnet nouns (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-
-    # pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=False)
-    # log_ok("Wordnet verbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-    # pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=True)
-    # log_ok("Wordnet verbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-
-    # pw_hits, pct_hits = calculate_efficiency(
-    #     "wordnet_adj", include_perms=False)
-    # log_ok("Wordnet adjectives (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-    # pw_hits, pct_hits = calculate_efficiency("wordnet_adj", include_perms=True)
-    # log_ok("Wordnet adjectives (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-
-    # pw_hits, pct_hits = calculate_efficiency(
-    #     "wordnet_adv", include_perms=False)
-    # log_ok("Wordnet adverbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-    # pw_hits, pct_hits = calculate_efficiency("wordnet_adv", include_perms=True)
-    # log_ok("Wordnet adverbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}".format(pw_hits, pct_hits*100))
-    # =============================================================================================================================================
-    #
-    # Plot the wordnet coverage for all parts of speech (with and without permutations)
-    #
-    # wordnet_coverage(include_perms=False)
-    # wordnet_coverage(include_perms=True)
-    # =============================================================================================================================================
-    #
-    # Locate the top n passwords from a category list on the top n passwords of the HIBP file
-    #
-    # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("03_keyboard_patterns.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("03_keyboard_patterns.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("05_en_financial_brands.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("05_en_financial_brands.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("06_en_cities.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("06_en_cities.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("10_automobile.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("10_automobile.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("11_software_names.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("11_software_names.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("12_tech_brands.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("12_tech_brands.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("13_en_fruit.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("13_en_fruit.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("14_en_drinks.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("14_en_drinks.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("15_en_food.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("15_en_food.txt", top=10, include_perms=True)
-    # =============================================================================================================================================
-    #
-    # Print a list with the top n passwords of the wordnet (with and without permutations)
-    #
-    # print("Nouns")
-    # print_top_lemmas("n", 20, include_perms=False)
-    # print()
-    # print("Nouns")
-    # print_top_lemmas("n", 20, include_perms=True)
-    # print()
-    # print("Verbs")
-    # print_top_lemmas("v", 20, include_perms=False)
-    # print()
-    # print("Verbs")
-    # print_top_lemmas("v", 20, include_perms=True)
-    # print()
-    # print("Adjectives")
-    # print_top_lemmas("adj", 20, include_perms=False)
-    # print()
-    # print("Adjectives")
-    # print_top_lemmas("adj", 20, include_perms=True)
-    # print()
-    # print("Adverbs")
-    # print_top_lemmas("adv", 20, include_perms=False)
-    # print()
-    # print("Adverbs")
-    # print_top_lemmas("adv", 20, include_perms=True)
-    # print()
-    # # =============================================================================================================================================
-    #
-    # Print top n synsets for each level
-    #
-    # top_classes_per_level("noun", 10)
-    # top_classes_per_level("verb", 10)
-    # =============================================================================================================================================
-    #
-    # Locate the top n passwords from a category list on the top n passwords of the Wordnet
-    #
-    locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=False)
-    # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=True)
-    # =============================================================================================================================================
-    #
-    # Print stats for the all parts of speech of the Wordnet
-    #
-    # overview_wn()
-    pass
+# ====================== Implementations ======================
 
 
 def avg_permutations_lemma(base):
@@ -710,7 +631,7 @@ def locate_topn_list_pws_hibp(list_name, top=10, include_perms=False):
 
     # get the top n passwords from the sorted HIBP list
     # We use a precompiled text file with the top 2000 passwords
-    fname = sys.argv[1]
+    fname = args.hibp
     if not path.exists(fname):
         log_err("Path %s does not exist" % fname)
         return
@@ -1044,7 +965,7 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
     # find() criteria
     search_filter = {
         "occurrences": {"$gt":
-                        25000
+                        2500
                         },
         "word_base": {"$nin": [
             "1",
@@ -1059,8 +980,9 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
             "0",
         ]}
     }
-    buf_len = 1000 * 10
-    top_wn_pws = mongo.db_pws_wn.find(search_filter).sort("occurrences", pymongo.DESCENDING).limit(buf_len)
+    buf_len = 1000 * 4
+    top_wn_pws = mongo.db_pws_wn.find(search_filter).sort(
+        "occurrences", pymongo.DESCENDING).limit(buf_len)
     for password in top_wn_pws:
         labels.append("%s" % (password["name"]))
         occurrences.append(password["occurrences"])
@@ -1069,22 +991,22 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
     old_len = len(labels)
     cleaned_list_labels = []
     cleaned_list_occs = []
+    known_pws = []
+    cnt = 0
     for i in range(len(labels)):
+        cnt += 1
         curr = labels[i]
-        if curr in labels[i+1:]:  # Remove following duplicates
+        if curr in known_pws:  # Remove following duplicates
             log_err("Removed {}, reason: duplicate entry".format(curr))
         elif len(curr) < 3:  # Remove passwords with less than 3 characters
             log_err("Removed {}, reason: too short".format(curr))
         else:
             cleaned_list_labels.append(curr)
             cleaned_list_occs.append(occurrences[i])
-    
-    print("LEN")
-    print(len(cleaned_list_labels))
-    print(len(cleaned_list_occs))
-    return
-    cut_wn_labels = cleaned_list_labels[:1000]
-    cut_wn_occs = cleaned_list_occs[:1000]
+            known_pws.append(curr)
+
+    cut_wn_labels = cleaned_list_labels[:wn_limit]
+    cut_wn_occs = cleaned_list_occs[:wn_limit]
 
     # Create a list that has the wn values but they are just for orientation/comparison of occurrences. The values of the "original" list are not going to used
     # for bar plotting. Instead, they will be saved under a key, that is ignored when drawing the bar plot.
@@ -1197,23 +1119,29 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
         i += 1
 
     # Create the xticks for the wn 1 and 1000 labels
-    plt.xticks([0, wn_limit-1], [cut_wn_labels[0],
-                                 cut_wn_labels[wn_limit-1]])
+    # plt.xticks([0, wn_limit-1], [cut_wn_labels[0],
+    #                              cut_wn_labels[wn_limit-1]])
     # Draw the line plot
     ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-", color="black")
-
-    ax.set_ylim(bottom=0)
+    # Also print the pw list (for manual labelling)
+    for k, v in enumerate(pw_list):
+        log_ok("{} - {}".format(k, v))
+    ax.set_yscale("log", basey=10)
+    # ax.set_ylim(bottom=0)
+    plt.ylim((pow(10, 0)))
     ax.set_xlim(left=0)
     ax.set_ylim([0, sorted_no_zeros[0] + sorted_no_zeros[0] / 4])
-    ax.set_yscale("log", basey=10)
     # plt.ticklabel_format(style='plain', axis='y')
     plt.xlabel(
-        "WordNet Top 1000 Generated Passwords")
+        "Top %s Wordnet Noun Passwords" % helper.format_number(wn_limit))
     plt.ylabel("Occurrences")
-    plt.title("Top %d Reference List Passwords" % limit_val)
-    blue_patch = mpatches.Patch(color="black", label="WordNet occurrences")
+    if not include_perms:
+        plt.title("Top %d List Passwords (excl. variants)" % top)
+    else:
+        plt.title("Top %d List Passwords (incl. variants)" % top)
+    blue_patch = mpatches.Patch(color="black", label="HIBP Top Passwords")
     red_patch = mpatches.Patch(
-        color="gray", label=ref_list)
+        color="gray", label=list_name)
     plt.legend(handles=[blue_patch, red_patch], loc="best")
     log_ok("Drawing plot...")
     plt.show(f)
@@ -1367,6 +1295,88 @@ def overview_wn():
     print(tabulate(rows, headers=headers))
     print()
     print()
+
+# ====================== Helper Functions ======================
+
+
+def permutations_for_lemma(lemma, depth, source, mode):
+    """
+    Permutate a lemma.
+    Mode: n, v, adj, adv. Controls where everything is stored
+    """
+    modes = [
+        "n",
+        "v",
+        "adj",
+        "adv"
+    ]
+    if mode not in modes:
+        log_err("Invalid mode %s" % mode)
+        return
+
+    total_hits = 0
+    not_found_cnt = 0
+    found_cnt = 0
+    all_permutations = []
+    for combination_handler in combinator.all:
+        # Generate all permutations
+        permutations = combination_handler(lemma, permutator.all)
+        if permutations == None:
+            continue
+        # Combinators always return a list of permutations
+        if type(permutations) == list:
+            for p in permutations:
+                trans_hits = lookup(p["name"], depth, source, lemma)
+                # Store each permutations under this lemma object in the database
+                o = {
+                    "name": p["name"],
+                    "occurrences": trans_hits,
+                    "synset": source,
+                    "word_base": lemma,
+                    "permutator": p["permutator"],
+                    "depth": depth,
+                    "tag": ILL_TAG
+                }
+                all_permutations.append(o)
+
+                total_hits += trans_hits
+                if trans_hits == 0:
+                    not_found_cnt += 1
+                else:
+                    found_cnt += 1
+        else:
+            trans_hits = lookup(permutations["name"], depth, source, lemma)
+            o = {
+                "name": permutations["name"],
+                "occurrences": trans_hits,
+                "synset": source,
+                "word_base": lemma,
+                "permutator": permutations["permutator"],
+                "depth": depth,
+                "tag": ILL_TAG
+            }
+            all_permutations.append(o)
+
+            if trans_hits == 0:
+                not_found_cnt += 1
+            else:
+                found_cnt += 1
+            total_hits += trans_hits
+
+    permutations_for_lemma = {
+        "word_base": lemma,
+        "permutations": all_permutations,
+        "total_permutations": len(all_permutations),
+        "total_hits": total_hits,
+        "synset": source
+    }
+
+    if mode == "n":
+        mongo.store_permutations_for_lemma_noun(permutations_for_lemma)
+    if mode == "v":
+        mongo.store_permutations_for_lemma_verb_missing(permutations_for_lemma)
+
+    return total_hits, not_found_cnt, found_cnt
 
 
 def lookup(permutation, depth, source, word_base):
