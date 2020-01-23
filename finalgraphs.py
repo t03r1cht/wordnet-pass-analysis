@@ -189,7 +189,7 @@ def main():
     #
     # Plot the password list coverage of the HIBP database (with and without permutations)
     #
-    password_list_coverage()
+    # password_list_coverage()
     pass
 
 
@@ -583,8 +583,8 @@ def wordnet_coverage(include_perms=False):
         log_ok("Note: excluding permutations")
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
-        log_ok("(%d)\t%s\t%s\t%s" %
-               (k, v["type"], v["name"], helper.format_number(v["sum"])))
+        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
 
     sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_o = [x["sum"] for x in sorted_sums]
@@ -609,6 +609,242 @@ def wordnet_coverage(include_perms=False):
             "Wordnet Coverage of the HIBP passwords (excluding password variants)", fontdict={'fontsize': 10})
 
     plt.xticks(ind, sorted_l, fontsize=7)
+    plt.legend(loc="best")
+
+    plt.show()
+
+
+def dictionary_coverage(include_perms=False):
+    f, ax = plt.subplots(1)
+    total_sum = []
+
+    if not include_perms:
+        query = {
+            "$and": [
+                {"permutator": "no_permutator"},
+                {"occurrences": {"$gt": 0}}
+            ]
+        }
+    else:
+        query = {
+            "occurrences": {"$gt": 0}
+        }
+
+    # Get coverage for each dictionary
+    query_result_ae = mongo.db["passwords_dicts_american-english"].find(
+        query).count()
+    total_sum.append({
+        "type": "dictionary",
+        "name": "Unix/American English",
+        "sum": query_result_ae
+    })
+
+    query_result_be = mongo.db["passwords_dicts_british-english"].find(
+        query).count()
+    total_sum.append({
+        "type": "dictionary",
+        "name": "Unix/British English",
+        "sum": query_result_be
+    })
+
+    query_result_cs = mongo.db["passwords_dicts_cracklib-small"].find(
+        query).count()
+    total_sum.append({
+        "type": "dictionary",
+        "name": "Unix/Cracklib Small",
+        "sum": query_result_cs
+    })
+
+    if include_perms:
+        log_ok("Note: including permutations")
+    else:
+        log_ok("Note: excluding permutations")
+    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
+    for k, v in enumerate(sorted_sums):
+        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+
+    # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    sorted_l = [x["name"] for x in sorted_sums]
+    sorted_o = [x["sum"] for x in sorted_sums]
+
+    # Plot as bar
+    N = len(sorted_l)
+    ind = np.arange(N)
+    width = 0.35
+
+    plt.bar(ind, sorted_o, width,
+            label="Dictionaries", color="black")
+
+    # plt.yscale("log", basey=10)
+
+    plt.ylabel("Total Hits")
+    plt.xlabel("Password Source")
+    if include_perms:
+        plt.title(
+            "Dictionary Coverage of the HIBP passwords (including password variants)", fontdict={'fontsize': 10})
+    else:
+        plt.title(
+            "Dictionary Coverage of the HIBP passwords (excluding password variants)", fontdict={'fontsize': 10})
+
+    plt.xticks(ind, sorted_l, fontsize=7)
+    plt.legend(loc="best")
+
+    plt.show()
+
+
+def list_coverage(include_perms=False):
+    f, ax = plt.subplots(1)
+    total_sum = []
+
+    labels = {
+        "07_first_names.txt": "First Names",
+        "09_en_countries.txt": "Countries",
+        "01_en_office_supplies.txt": "Office Supplies",
+        "06_en_cities.txt": "Cities",
+        "13_en_fruit.txt": "Fruit",
+        "08_last_names.txt": "Last Name",
+        "10_automobile.txt": "Automobile",
+        "12_tech_brands.txt": "Tech Brands",
+        "03_keyboard_patterns.txt": "Keyboard Patterns",
+        "15_en_food.txt": "Food",
+        "02_en_office_brands.txt": "Office Brands",
+        "14_en_drinks.txt": "Drinks",
+        "05_en_financial_brands.txt": "Financial Brands",
+        "11_software_names.txt": "Software Names",
+    }
+    all_lists = []
+    lists_result = mongo.db["lists"].find()
+    for res in lists_result:
+        all_lists.append(res["filename"])
+    # for each lists get the efficiency as well as the total number of lemmas (with or without permutations)
+    for list_name in all_lists:
+        # skip 99_unsortiert.txt
+        if list_name == "99_unsortiert.txt":
+            continue
+        # query to get the total amount of lemmas
+        if include_perms:
+            query = {
+                "$and": [
+                    {"source": list_name},
+                ]
+            }
+        else:
+            query = {
+                "$and": [
+                    {"source": list_name},
+                    {"permutator": "no_permutator"}
+                ]
+            }
+        total_lemmas = mongo.db["passwords_lists"].count_documents(query)
+        # query to get the passwords with hits > 0 (efficiency)
+        if include_perms:
+            query = {
+                "$and": [
+                    {"source": list_name},
+                    {"occurrences": {"$gt": 0}}
+                ]
+            }
+        else:
+            query = {
+                "$and": [
+                    {"source": list_name},
+                    {"permutator": "no_permutator"},
+                    {"occurrences": {"$gt": 0}}
+                ]
+            }
+        password_hits = mongo.db["passwords_lists"].count_documents(query)
+        o = {
+            "name": labels[list_name],
+            "type": "list",
+            "sum": password_hits
+        }
+        total_sum.append(o)
+
+    if include_perms:
+        log_ok("Note: including permutations")
+    else:
+        log_ok("Note: excluding permutations")
+    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
+    for k, v in enumerate(sorted_sums):
+        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+
+    # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    sorted_l = [x["name"] for x in sorted_sums]
+    sorted_o = [x["sum"] for x in sorted_sums]
+
+    # Plot as bar
+    N = len(sorted_l)
+    ind = np.arange(N)
+    width = 0.35
+
+    plt.bar(ind, sorted_o, width,
+            label="Category List", color="black")
+
+    # plt.yscale("log", basey=10)
+
+    plt.ylabel("Total Hits")
+    plt.xlabel("Password Source")
+    if include_perms:
+        plt.title(
+            "Category List Coverage of the HIBP passwords (including password variants)", fontdict={'fontsize': 10})
+    else:
+        plt.title(
+            "Category List Coverage of the HIBP passwords (excluding password variants)", fontdict={'fontsize': 10})
+
+    plt.xticks(ind, sorted_l, fontsize=7, rotation=90)
+    plt.legend(loc="best")
+
+    plt.show()
+
+
+def password_list_coverage():
+    f, ax = plt.subplots(1)
+    total_sum = []
+    all_lists = []
+    lists_result = mongo.db["lists"].find()
+    for res in mongo.db.collection_names():
+        # for some lists that blow the rest out of proportion, we can exclude them
+        # if res == "passwords_misc_lists_xato-net-10-million-passwords":
+        #     continue
+        if res.startswith("passwords_misc_lists_"):
+            all_lists.append(res)
+    # for each lists get the efficiency as well as the total number of lemmas (with or without permutations)
+    # query to get the total amount of lemmas
+    for list_name in all_lists:
+        total_lemmas = mongo.db[list_name].count_documents({})
+        # query to get the passwords with hits > 0 (efficiency)
+        password_hits = mongo.db[list_name].count_documents(
+            {"occurrences": {"$gt": 0}})
+        o = {
+            "name": list_name.replace("passwords_misc_lists_", ""),
+            "type": "misc_list",
+            "sum": password_hits
+        }
+        total_sum.append(o)
+
+    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
+    for k, v in enumerate(sorted_sums):
+        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+
+    # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    sorted_l = [x["name"] for x in sorted_sums]
+    sorted_o = [x["sum"] for x in sorted_sums]
+    # Plot as bar
+    N = len(sorted_l)
+    ind = np.arange(N)
+    width = 0.35
+    plt.bar(ind, sorted_o, width,
+            label="Password List", color="black")
+    # plt.yscale("log", basey=10)
+    plt.ylabel("Total Hits")
+    plt.xlabel("Password Source")
+    plt.title("Category List Coverage of the HIBP passwords (excluding password variants)",
+              fontdict={'fontsize': 10})
+
+    plt.xticks(ind, sorted_l, fontsize=7, rotation=90)
     plt.legend(loc="best")
 
     plt.show()
@@ -1518,241 +1754,6 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
     plt.legend(loc="best")
     plt.show()
 
-
-def dictionary_coverage(include_perms=False):
-    f, ax = plt.subplots(1)
-    total_sum = []
-
-    if not include_perms:
-        query = {
-            "$and": [
-                {"permutator": "no_permutator"},
-                {"occurrences": {"$gt": 0}}
-            ]
-        }
-    else:
-        query = {
-            "occurrences": {"$gt": 0}
-        }
-
-    # Get coverage for each dictionary
-    query_result_ae = mongo.db["passwords_dicts_american-english"].find(
-        query).count()
-    total_sum.append({
-        "type": "dictionary",
-        "name": "Unix/American English",
-        "sum": query_result_ae
-    })
-
-    query_result_be = mongo.db["passwords_dicts_british-english"].find(
-        query).count()
-    total_sum.append({
-        "type": "dictionary",
-        "name": "Unix/British English",
-        "sum": query_result_be
-    })
-
-    query_result_cs = mongo.db["passwords_dicts_cracklib-small"].find(
-        query).count()
-    total_sum.append({
-        "type": "dictionary",
-        "name": "Unix/Cracklib Small",
-        "sum": query_result_cs
-    })
-
-    if include_perms:
-        log_ok("Note: including permutations")
-    else:
-        log_ok("Note: excluding permutations")
-    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
-    for k, v in enumerate(sorted_sums):
-        log_ok("(%d)\t%s\t%s\t%s" %
-               (k, v["type"], v["name"], helper.format_number(v["sum"])))
-
-    # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
-    sorted_l = [x["name"] for x in sorted_sums]
-    sorted_o = [x["sum"] for x in sorted_sums]
-
-    # Plot as bar
-    N = len(sorted_l)
-    ind = np.arange(N)
-    width = 0.35
-
-    plt.bar(ind, sorted_o, width,
-            label="Dictionaries", color="black")
-
-    # plt.yscale("log", basey=10)
-
-    plt.ylabel("Total Hits")
-    plt.xlabel("Password Source")
-    if include_perms:
-        plt.title(
-            "Dictionary Coverage of the HIBP passwords (including password variants)", fontdict={'fontsize': 10})
-    else:
-        plt.title(
-            "Dictionary Coverage of the HIBP passwords (excluding password variants)", fontdict={'fontsize': 10})
-
-    plt.xticks(ind, sorted_l, fontsize=7)
-    plt.legend(loc="best")
-
-    plt.show()
-
-
-def list_coverage(include_perms=False):
-    f, ax = plt.subplots(1)
-    total_sum = []
-
-    labels = {
-        "07_first_names.txt": "First Names",
-        "09_en_countries.txt": "Countries",
-        "01_en_office_supplies.txt": "Office Supplies",
-        "06_en_cities.txt": "Cities",
-        "13_en_fruit.txt": "Fruit",
-        "08_last_names.txt": "Last Name",
-        "10_automobile.txt": "Automobile",
-        "12_tech_brands.txt": "Tech Brands",
-        "03_keyboard_patterns.txt": "Keyboard Patterns",
-        "15_en_food.txt": "Food",
-        "02_en_office_brands.txt": "Office Brands",
-        "14_en_drinks.txt": "Drinks",
-        "05_en_financial_brands.txt": "Financial Brands",
-        "11_software_names.txt": "Software Names",
-    }
-    all_lists = []
-    lists_result = mongo.db["lists"].find()
-    for res in lists_result:
-        all_lists.append(res["filename"])
-    # for each lists get the efficiency as well as the total number of lemmas (with or without permutations)
-    for list_name in all_lists:
-        # skip 99_unsortiert.txt
-        if list_name == "99_unsortiert.txt":
-            continue
-        # query to get the total amount of lemmas
-        if include_perms:
-            query = {
-                "$and": [
-                    {"source": list_name},
-                ]
-            }
-        else:
-            query = {
-                "$and": [
-                    {"source": list_name},
-                    {"permutator": "no_permutator"}
-                ]
-            }
-        total_lemmas = mongo.db["passwords_lists"].count_documents(query)
-        # query to get the passwords with hits > 0 (efficiency)
-        if include_perms:
-            query = {
-                "$and": [
-                    {"source": list_name},
-                    {"occurrences": {"$gt": 0}}
-                ]
-            }
-        else:
-            query = {
-                "$and": [
-                    {"source": list_name},
-                    {"permutator": "no_permutator"},
-                    {"occurrences": {"$gt": 0}}
-                ]
-            }
-        password_hits = mongo.db["passwords_lists"].count_documents(query)
-        o = {
-            "name": labels[list_name],
-            "type": "list",
-            "sum": password_hits
-        }
-        total_sum.append(o)
-
-    if include_perms:
-        log_ok("Note: including permutations")
-    else:
-        log_ok("Note: excluding permutations")
-    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
-    for k, v in enumerate(sorted_sums):
-        log_ok("(%d)\t%s\t%s\t%s" %
-               (k, v["type"], v["name"], helper.format_number(v["sum"])))
-
-    # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
-    sorted_l = [x["name"] for x in sorted_sums]
-    sorted_o = [x["sum"] for x in sorted_sums]
-
-    # Plot as bar
-    N = len(sorted_l)
-    ind = np.arange(N)
-    width = 0.35
-
-    plt.bar(ind, sorted_o, width,
-            label="Category List", color="black")
-
-    # plt.yscale("log", basey=10)
-
-    plt.ylabel("Total Hits")
-    plt.xlabel("Password Source")
-    if include_perms:
-        plt.title(
-            "Category List Coverage of the HIBP passwords (including password variants)", fontdict={'fontsize': 10})
-    else:
-        plt.title(
-            "Category List Coverage of the HIBP passwords (excluding password variants)", fontdict={'fontsize': 10})
-
-    plt.xticks(ind, sorted_l, fontsize=7, rotation=90)
-    plt.legend(loc="best")
-
-    plt.show()
-
-
-def password_list_coverage():
-    f, ax = plt.subplots(1)
-    total_sum = []
-    all_lists = []
-    lists_result = mongo.db["lists"].find()
-    for res in mongo.db.collection_names():
-        # for some lists that blow the rest out of proportion, we can exclude them
-        # if res == "passwords_misc_lists_xato-net-10-million-passwords":
-        #     continue
-        if res.startswith("passwords_misc_lists_"):
-            all_lists.append(res)
-    # for each lists get the efficiency as well as the total number of lemmas (with or without permutations)
-    # query to get the total amount of lemmas
-    for list_name in all_lists:
-        total_lemmas = mongo.db[list_name].count_documents({})
-        # query to get the passwords with hits > 0 (efficiency)
-        password_hits = mongo.db[list_name].count_documents(
-            {"occurrences": {"$gt": 0}})
-        o = {
-            "name": list_name.replace("passwords_misc_lists_", ""),
-            "type": "misc_list",
-            "sum": password_hits
-        }
-        total_sum.append(o)
-
-    sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
-    for k, v in enumerate(sorted_sums):
-        log_ok("(%d)\t%s\t%s\t%s" %
-               (k, v["type"], v["name"], helper.format_number(v["sum"])))
-
-    # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
-    sorted_l = [x["name"] for x in sorted_sums]
-    sorted_o = [x["sum"] for x in sorted_sums]
-    # Plot as bar
-    N = len(sorted_l)
-    ind = np.arange(N)
-    width = 0.35
-    plt.bar(ind, sorted_o, width,
-            label="Password List", color="black")
-    # plt.yscale("log", basey=10)
-    plt.ylabel("Total Hits")
-    plt.xlabel("Password Source")
-    plt.title("Category List Coverage of the HIBP passwords (excluding password variants)",
-              fontdict={'fontsize': 10})
-
-    plt.xticks(ind, sorted_l, fontsize=7, rotation=90)
-    plt.legend(loc="best")
-
-    plt.show()
 
 # ====================== Helper Functions ======================
 
