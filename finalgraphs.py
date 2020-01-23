@@ -121,30 +121,30 @@ def main():
     #
     # Print a list with the top n passwords of the wordnet (with and without permutations)
     #
-    print("Nouns")
-    print_top_lemmas("n", 20, include_perms=False)
-    print()
-    print("Nouns")
-    print_top_lemmas("n", 20, include_perms=True, no_numbers=True)
-    print()
-    print("Verbs")
-    print_top_lemmas("v", 20, include_perms=False)
-    print()
-    print("Verbs")
-    print_top_lemmas("v", 20, include_perms=True, no_numbers=True)
-    print()
-    print("Adjectives")
-    print_top_lemmas("adj", 20, include_perms=False)
-    print()
-    print("Adjectives")
-    print_top_lemmas("adj", 20, include_perms=True, no_numbers=True)
-    print()
-    print("Adverbs")
-    print_top_lemmas("adv", 20, include_perms=False)
-    print()
-    print("Adverbs")
-    print_top_lemmas("adv", 20, include_perms=True, no_numbers=True)
-    print()
+    # print("Nouns")
+    # print_top_lemmas("n", 20, include_perms=False)
+    # print()
+    # print("Nouns")
+    # print_top_lemmas("n", 20, include_perms=True, no_numbers=True)
+    # print()
+    # print("Verbs")
+    # print_top_lemmas("v", 20, include_perms=False)
+    # print()
+    # print("Verbs")
+    # print_top_lemmas("v", 20, include_perms=True, no_numbers=True)
+    # print()
+    # print("Adjectives")
+    # print_top_lemmas("adj", 20, include_perms=False)
+    # print()
+    # print("Adjectives")
+    # print_top_lemmas("adj", 20, include_perms=True, no_numbers=True)
+    # print()
+    # print("Adverbs")
+    # print_top_lemmas("adv", 20, include_perms=False)
+    # print()
+    # print("Adverbs")
+    # print_top_lemmas("adv", 20, include_perms=True, no_numbers=True)
+    # print()
     # # =============================================================================================================================================
     #
     # Print top n synsets for each level
@@ -161,7 +161,18 @@ def main():
     #
     # Print stats for the all parts of speech of the Wordnet
     #
+    # =============================================================================================================================================
+    #
+    # Double bar diagram to compare the efficiency with the number of lemmas
+    #
     # overview_wn()
+    # compare_hits_to_permutations("list", include_perms=True, sort_by="quota")
+    compare_hits_to_permutations("list", include_perms=True, sort_by="quota", top=3)
+    # compare_hits_to_permutations("list", include_perms=True, sort_by="total_lemmas")
+    # compare_hits_to_permutations("list", include_perms=True, sort_by="password_hits")
+    # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="quota")
+    # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="total_lemmas")
+    # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="password_hits")
     pass
 
 
@@ -794,11 +805,11 @@ def print_top_lemmas(pos, top, include_perms=False, no_numbers=False):
         }
     else:
         query = {
-            "$and": [                
+            "$and": [
                 {"occurrences": {"$gt": 0}}
             ]
         }
-    
+
     if no_numbers:
         nums = [str(x) for x in range(101)]
         # exclude word_bases from 0 - 100
@@ -1315,6 +1326,184 @@ def overview_wn():
     print(tabulate(rows, headers=headers))
     print()
     print()
+
+
+def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", top=0):
+    """
+    Double bar diagram. Left bar: efficiency, right bar: number of lemmas (with and without permutations)
+    """
+    allowed_sources = ["wordnet", "list"]
+    if source not in allowed_sources:
+        log_err("Source %s not recognized" % source)
+        return
+
+    allowed_sort_bys = ["quota", "total_lemmas", "password_hits"]
+    if sort_by not in allowed_sort_bys:
+        log_err("Sort by %s not recognized" % sort_by)
+        return
+
+
+    result_list = []
+
+    if source == "list":
+        labels = {
+            "07_first_names.txt": "First Names",
+            "09_en_countries.txt": "Countries",
+            "01_en_office_supplies.txt": "Office Supplies",
+            "06_en_cities.txt": "Cities",
+            "13_en_fruit.txt": "Fruit",
+            "08_last_names.txt": "Last Name",
+            "10_automobile.txt": "Automobile",
+            "12_tech_brands.txt": "Tech Brands",
+            "03_keyboard_patterns.txt": "Keyboard Patterns",
+            "15_en_food.txt": "Food",
+            "02_en_office_brands.txt": "Office Brands",
+            "14_en_drinks.txt": "Drinks",
+            "05_en_financial_brands.txt": "Financial Brands",
+            "11_software_names.txt": "Software Names",
+        }
+        all_lists = []
+        lists_result = mongo.db["lists"].find()
+        for res in lists_result:
+            all_lists.append(res["filename"])
+        # for each lists get the efficiency as well as the total number of lemmas (with or without permutations)
+        for list_name in all_lists:
+            # skip 99_unsortiert.txt
+            if list_name == "99_unsortiert.txt":
+                continue
+            # query to get the total amount of lemmas
+            if include_perms:
+                query = {
+                    "$and": [
+                        {"source": list_name},
+                    ]
+                }
+            else:
+                query = {
+                    "$and": [
+                        {"source": list_name},
+                        {"permutator": "no_permutator"}
+                    ]
+                }
+            total_lemmas = mongo.db["passwords_lists"].count_documents(query)
+            # query to get the passwords with hits > 0 (efficiency)
+            if include_perms:
+                query = {
+                    "$and": [
+                        {"source": list_name},
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            else:
+                query = {
+                    "$and": [
+                        {"source": list_name},
+                        {"permutator": "no_permutator"},
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            password_hits = mongo.db["passwords_lists"].count_documents(query)
+            o = {
+                "name": labels[list_name],
+                "total_lemmas": total_lemmas,
+                "password_hits": password_hits,
+                "quota": total_lemmas / password_hits
+            }
+            result_list.append(o)
+    elif source =="wordnet":
+        labels = {
+            "passwords_wn_noun": "Wordnet Nouns",
+            "passwords_wn_adverb": "Wordnet Adverbs",
+            "passwords_wn_verb": "Wordnet Verbs",
+            "passwords_wn_adjective": "Wordnet Adjectives",
+        }
+        all_pos = []
+        for res in mongo.db.collection_names():
+            if res.startswith("passwords_wn_"):
+                all_pos.append(res)
+        for pos in all_pos:
+            # query to get the total amount of lemmas
+            if include_perms:
+                query = {}
+            else:
+                query = {
+                    "$and": [
+                        {"permutator": "no_permutator"}
+                    ]
+                }
+            total_lemmas = mongo.db[pos].count_documents(query)
+            # query to get the passwords with hits > 0 (efficiency)
+            if include_perms:
+                query = {
+                    "$and": [
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            else:
+                query = {
+                    "$and": [
+                        {"permutator": "no_permutator"},
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            password_hits = mongo.db[pos].count_documents(query)
+            o = {
+                "name": labels[pos],
+                "total_lemmas": total_lemmas,
+                "password_hits": password_hits,
+                "quota": total_lemmas / password_hits
+            }
+            result_list.append(o)
+
+    else:
+        return
+
+    if sort_by == "quota":
+        # sort from lowest to highest since lower quotas are better than higher ones
+        sorted_sums = sorted(result_list, key=lambda k: k[sort_by], reverse=False)
+    else:
+        sorted_sums = sorted(result_list, key=lambda k: k[sort_by], reverse=True)
+    if top > 0:
+        sorted_sums = sorted_sums[:top]
+    wrapped_labels = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+
+    # print for visibility
+    for k, v in enumerate(sorted_sums):
+        print(k, v)
+
+    list_password_hits = [x["password_hits"] for x in sorted_sums]
+    list_total_lemmas = [x["total_lemmas"] for x in sorted_sums]
+    N = len(sorted_sums)
+    ind = np.arange(N)
+    width = 0.35
+    plt.bar(ind, list_total_lemmas, width, label="Total Lemmas", color="black")
+    plt.bar(ind + width, list_password_hits, width,
+            label="Efficiency", color="grey")
+
+    plt.yscale("log", basey=10)
+
+    plt.ylabel("Password Occurrences")
+    plt.xlabel("Password Sources")
+    if include_perms:
+        label_tag = " (incl. permutations)"
+    else:
+        label_tag = " (excl. permutations)"
+    if source == "list":
+        plt.title(
+            "Total Lemmas/Efficiency Comparison for Lists%s"%label_tag)
+    else:
+        plt.title(
+            "Total Lemmas/Efficiency Comparison for the Wordnet%s"%label_tag)
+    if source == "list":
+        if top == 0:
+            plt.xticks(ind + width / 2, wrapped_labels, fontsize=7, rotation=90)
+        else:
+            # don't rotate so the labels look are not tilted
+            plt.xticks(ind + width / 2, wrapped_labels, fontsize=7)
+    else:
+        plt.xticks(ind + width / 2, wrapped_labels, fontsize=7)
+    plt.legend(loc="best")
+    plt.show()
 
 # ====================== Helper Functions ======================
 
