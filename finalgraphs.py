@@ -19,6 +19,7 @@ import argparse
 import hashlib
 from subprocess import CalledProcessError
 import subprocess
+import duplicates
 
 
 parser = argparse.ArgumentParser(
@@ -190,6 +191,11 @@ def main():
     # Plot the password list coverage of the HIBP database (with and without permutations)
     #
     # password_list_coverage()
+    # =============================================================================================================================================
+    #
+    # Plot the percentage for the top synsets of a level in relationship to the total sum of this_hits of their levels
+    #
+    display_pct_synsets_on_level("n", top=30, level=3)
     pass
 
 
@@ -1754,7 +1760,80 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
     plt.legend(loc="best")
     plt.show()
 
+def display_pct_synsets_on_level(mode, top=5, level=0):
+    """
+    Display and print percentages of the top X synsets per level relative to the total amount of their levels.
+    top: Top X synsets per level
+    level: Draw a diagram with the top X synsets of the specified level. However print all levels
+    """
+    if top > 30:
+        log_err("top max value is 30")
+        return
+    allowed_modes = ["n", "v"]
+    if mode not in allowed_modes:
+        log_err("Unrecognized mode %s" % mode)
+        return
+    if mode == "n":
+        coll_name = "wn_synsets_noun"
+        lowest_level = duplicates.get_lowest_level_wn("noun")
+    elif mode == "v":
+        coll_name = "wn_synsets_verb"
+        lowest_level = duplicates.get_lowest_level_wn("verb")
+    else:
+        return
+    labels = []
+    occs = []
+    # get lowest level and start from the lowest level
+    for i in range((lowest_level+1)):
+        query_total_sum = [
+            {"$match": {
+                "level": i
+            }},
+            {"$group": {
+                "_id": "id",
+                "sum": {
+                    "$sum": "$total_hits"
+                }
+            }}
+        ]
+        # get the total hits
+        res = mongo.db[coll_name].aggregate(query_total_sum)
+        total_occs = list(res)[0]["sum"]
+        # get the top X synsets of this level
+        top_ss = mongo.db[coll_name].find({"$and": [{"level": i}, {"total_hits": {"$gt": 0}}]}).sort("total_hits", -1).limit(top)
+        # calculate their percentage
+        print("Level", i, "100% =", helper.format_number(total_occs))
+        for ss in top_ss:
+            try:
+                total_hits = ss["total_hits"]
+            except KeyError:
+                total_hits = 0
+            pct = round(total_hits / total_occs * 100, 2)
+            if i == level:
+                labels.append(ss["id"])
+                occs.append(pct)
+            print("\t", "{}%".format(pct), ss["id"], helper.format_number(total_hits))
+        print()
 
+    # Plot as bar
+    N = len(labels)
+    ind = np.arange(N)
+    width = 0.35
+    plt.bar(ind, occs, width,
+            label="Percentages", color="black")
+    # plt.yscale("log", basey=10)
+    plt.ylabel("Percentage (total occurrences) of the level [%]")
+    plt.xlabel("Synset")
+    plt.title("Top Synset Percentages for Level %d" % level,
+              fontdict={'fontsize': 10})
+    # at a certain top value, wrap and rotate the labels
+    if top > 5:
+        plt.xticks(ind, labels, fontsize=7, rotation=45)
+    else:
+        plt.xticks(ind, labels, fontsize=7)
+    plt.legend(loc="best")
+
+    plt.show()
 # ====================== Helper Functions ======================
 
 
