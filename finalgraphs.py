@@ -196,6 +196,7 @@ def main():
     # Plot the percentage for the top synsets of a level in relationship to the total sum of this_hits of their levels
     #
     display_pct_synsets_on_level("n", top=30, level=3)
+    display_pct_synsets_on_level("v", top=5, level=6)
     pass
 
 
