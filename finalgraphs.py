@@ -195,8 +195,20 @@ def main():
     #
     # Plot the percentage for the top synsets of a level in relationship to the total sum of this_hits of their levels
     #
-    display_pct_synsets_on_level("n", top=30, level=3)
-    display_pct_synsets_on_level("v", top=5, level=6)
+    # display_pct_synsets_on_level("n", top=30, level=3)
+    # display_pct_synsets_on_level("v", top=5, level=6)
+    # =============================================================================================================================================
+    #
+    # Display the permutators of the top X passwords of a password source
+    #
+    top_passwords_permutators("wn_n", top=10000)
+    top_passwords_permutators("wn_v", top=10000)
+    top_passwords_permutators("wn_adj", top=10000)
+    top_passwords_permutators("wn_adv", top=10000)
+    top_passwords_permutators("list", source_name="07_first_names.txt", top=10000)
+    top_passwords_permutators("list", source_name="13_en_fruit.txt", top=10000)
+    top_passwords_permutators("dict", source_name="cracklib-small", top=10000)
+    top_passwords_permutators("dict", source_name="american-english", top=10000)
     pass
 
 
@@ -591,7 +603,8 @@ def wordnet_coverage(include_perms=False):
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
         pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        log_ok("({}) {}, {}, {} %".format(
+            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
 
     sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_o = [x["sum"] for x in sorted_sums]
@@ -669,7 +682,8 @@ def dictionary_coverage(include_perms=False):
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
         pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        log_ok("({}) {}, {}, {} %".format(
+            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
 
     # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_l = [x["name"] for x in sorted_sums]
@@ -775,7 +789,8 @@ def list_coverage(include_perms=False):
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
         pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        log_ok("({}) {}, {}, {} %".format(
+            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
 
     # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_l = [x["name"] for x in sorted_sums]
@@ -834,7 +849,8 @@ def password_list_coverage():
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
         pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        log_ok("({}) {}, {}, {} %".format(
+            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
 
     # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_l = [x["name"] for x in sorted_sums]
@@ -1761,6 +1777,7 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
     plt.legend(loc="best")
     plt.show()
 
+
 def display_pct_synsets_on_level(mode, top=5, level=0):
     """
     Display and print percentages of the top X synsets per level relative to the total amount of their levels.
@@ -1801,7 +1818,8 @@ def display_pct_synsets_on_level(mode, top=5, level=0):
         res = mongo.db[coll_name].aggregate(query_total_sum)
         total_occs = list(res)[0]["sum"]
         # get the top X synsets of this level
-        top_ss = mongo.db[coll_name].find({"$and": [{"level": i}, {"total_hits": {"$gt": 0}}]}).sort("total_hits", -1).limit(top)
+        top_ss = mongo.db[coll_name].find({"$and": [{"level": i}, {"total_hits": {
+                                          "$gt": 0}}]}).sort("total_hits", -1).limit(top)
         # calculate their percentage
         print("Level", i, "100% =", helper.format_number(total_occs))
         for ss in top_ss:
@@ -1813,7 +1831,8 @@ def display_pct_synsets_on_level(mode, top=5, level=0):
             if i == level:
                 labels.append(ss["id"])
                 occs.append(pct)
-            print("\t", "{}%".format(pct), ss["id"], helper.format_number(total_hits))
+            print("\t", "{}%".format(pct),
+                  ss["id"], helper.format_number(total_hits))
         print()
 
     # Plot as bar
@@ -1835,6 +1854,88 @@ def display_pct_synsets_on_level(mode, top=5, level=0):
     plt.legend(loc="best")
 
     plt.show()
+
+
+def top_passwords_permutators(source, source_name="", top=1000):
+    """
+    Display the permutators of the top X passwords of a password source.
+    Print the percentages.
+    """
+    source_map = {
+        "wn_n": "passwords_wn_noun",
+        "wn_v": "passwords_wn_verb",
+        "wn_adj": "passwords_wn_adjective",
+        "wn_adv": "passwords_wn_adverb",
+        "list": "passwords_lists",
+        "dict": "passwords_dicts_",
+    }
+    label_map = {
+        "wn_n": "Wordnet Nouns",
+        "wn_v": "Wordnet Verbs",
+        "wn_adj": "Wordnet Adjectives",
+        "wn_adv": "Wordnet Adverbs",
+        "list": "Category List ",
+        "dict": "Dictionary ",
+    }
+    requires_source_name = [
+        "list",
+        "dict",
+    ]
+    if source not in source_map.keys():
+        log_err("Unrecognized source %s" % source)
+        return
+    
+    if source in requires_source_name and source_name == "":
+        log_err("Source %s requires additional source_name" % source)
+        return
+    # build the collection name
+    if source_name != "" and source != "list":
+        coll_name = "{}{}".format(source_map[source], source_name)
+        print()
+    else:
+        coll_name = source_map[source]
+    # get the top X passwords
+    if source == "list":
+        aggregate_query = [
+            {"$match": {"occurrences": {"$gt": 1000}, "source": source_name}},
+            {"$limit": top},
+            {"$group": {"_id": "$permutator", "count": {"$sum":1}}},
+            {"$sort": {"count": -1}}
+        ]
+    else:
+        aggregate_query = [
+            {"$match": {"occurrences": {"$gt": 1000}}},
+            {"$limit": top},
+            {"$group": {"_id": "$permutator", "count": {"$sum":1}}},
+            {"$sort": {"count": -1}}
+        ]
+    labels = []
+    count = []
+    res = mongo.db[coll_name].aggregate(aggregate_query)
+    for r in res:
+        permutator = r["_id"]
+        count_permutator = r["count"]
+        labels.append(permutator)
+        count.append(count_permutator)
+        print("Permutator:", permutator, count_permutator)
+    
+    # Plot as bar
+    N = len(labels)
+    ind = np.arange(N)
+    width = 0.35
+    plt.bar(ind, count, width,
+            label="Percentages", color="black")
+    # plt.yscale("log", basey=10)
+    plt.ylabel("# of passwords generated using permutator")
+    plt.xlabel("Permutator")
+    plt.title("Permutators of the Top {} Passwords of {}{}".format(top, label_map[source], source_name),
+              fontdict={'fontsize': 10})
+    plt.xticks(ind, labels, fontsize=7, rotation=45)
+    plt.legend(loc="best")
+
+    plt.show()
+
+
 # ====================== Helper Functions ======================
 
 
