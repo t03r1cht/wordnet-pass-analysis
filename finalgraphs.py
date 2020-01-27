@@ -201,14 +201,19 @@ def main():
     #
     # Display the permutators of the top X passwords of a password source
     #
-    top_passwords_permutators("wn_n", top=10000)
-    top_passwords_permutators("wn_v", top=10000)
-    top_passwords_permutators("wn_adj", top=10000)
-    top_passwords_permutators("wn_adv", top=10000)
-    top_passwords_permutators("list", source_name="07_first_names.txt", top=10000)
-    top_passwords_permutators("list", source_name="13_en_fruit.txt", top=10000)
-    top_passwords_permutators("dict", source_name="cracklib-small", top=10000)
-    top_passwords_permutators("dict", source_name="american-english", top=10000)
+    # top_passwords_permutators("wn_n", top=10000)
+    # top_passwords_permutators("wn_v", top=10000)
+    # top_passwords_permutators("wn_adj", top=10000)
+    # top_passwords_permutators("wn_adv", top=10000)
+    # top_passwords_permutators("list", source_name="07_first_names.txt", top=10000)
+    # top_passwords_permutators("list", source_name="13_en_fruit.txt", top=10000)
+    # top_passwords_permutators("dict", source_name="cracklib-small", top=10000)
+    # top_passwords_permutators("dict", source_name="american-english", top=10000)
+    # =============================================================================================================================================
+    #
+    # Lookup pure numbers as passwords.
+    #
+    lookup_number_sequences()
     pass
 
 
@@ -1219,7 +1224,34 @@ def examples_duplicates():
     Print some examples for duplicates.
     MongoDB Find duplicates: db.getCollection('passwords_wn_noun').aggregate([{"$match": {"occurrences": {"$gt": 0}}}, {"$group": {_id: "$name", sum: {"$sum": 1}}}, {"$match": {"sum": {"$gt": 1}}}, {"$sort": {"sum": -1}}], { allowDiskUse: true })
     MongoDB Count number of duplicates: db.getCollection('passwords_wn_noun').aggregate([{"$match": {"occurrences": {"$gt": 0}}}, {"$group": {_id: "$name", sum: {"$sum": 1}}}, {"$match": {"sum": {"$gt": 1}}}, {"$sort": {"sum": -1}}, {"$group": {_id: null, count: {"$sum": 1}}}], { allowDiskUse: true })
-    MongoDB Show clustered duplicates with synset origin: db.getCollection('passwords_wn_noun').aggregate([ { "$match": { "occurrences": { "$gt": 0 } } }, { "$group": { "_id": "$name", "sum": { "$sum": 1 }, "results": { "$push": { "name": "$name", "occurrences": "$occurrences", "word_base": "$word_base", "synset": "$synset", "level": "$depth", "permutator": "$permutator" } } } }, { "$match": { "sum": { "$gt": 1 } } }, { "$sort": { "sum": -1 } } ], {"allowDiskUse": true})    """
+    MongoDB Show clustered duplicates with synset origin: db.getCollection('passwords_wn_noun').aggregate([ { "$match": { "occurrences": { "$gt": 0 } } }, { "$group": { "_id": "$name", "sum": { "$sum": 1 }, "results": { "$push": { "name": "$name", "occurrences": "$occurrences", "word_base": "$word_base", "synset": "$synset", "level": "$depth", "permutator": "$permutator" } } } }, { "$match": { "sum": { "$gt": 1 } } }, { "$sort": { "sum": -1 } } ], {"allowDiskUse": true})    
+
+    Examples: Duplicate, # of duplicates
+
+    Nouns:
+        C, 187
+        pnt, 52
+        line1970, 31
+        LSD, 31
+
+    Verb:
+        run, 84
+        cut, 82
+        break64, 59
+        make61, 49
+
+    Adjective:
+        dry, 64
+        heavy2000, 27
+        light28, 25
+        open!, 21
+
+    Adverbs:
+        Only, 14
+        w3ll, 13
+        well123456, 13
+        back1234, 6
+    """
     pass
 
 
@@ -1935,7 +1967,58 @@ def top_passwords_permutators(source, source_name="", top=1000):
 
     plt.show()
 
+def lookup_number_sequences():
+    """
+    Generate numbers (from 0 - 9.999.999) and other number sequences and look them up.
+    """
+    # we don't include 1234567 (and every sequence below that) since it is smaller than 9.999.999 and therefore included below
+    num_seq = []
+    num_seq.append(str(12345678))
+    num_seq.append(str(123456789))
+    num_seq.append(str(1234567890))
+    # start with 0
+    num_seq.append("01")
+    num_seq.append("012")
+    num_seq.append("0123")
+    num_seq.append("01234")
+    num_seq.append("012345")
+    num_seq.append("0123456")
+    num_seq.append("012345678")
+    num_seq.append("0123456789")
+    # reverse (other numbers are already included below)
+    num_seq.append("0987654321")
+    num_seq.append(str(987654321))
+    num_seq.append(str(87654321))
+    # ends with zero (other numbers are already included below)
+    num_seq.append(str(9876543210))
+    num_seq.append(str(876543210))
+    num_seq.append(str(76543210))
 
+    # custom sequences
+    for i in num_seq:
+        hits = lookup_pass(hash_sha1(str(i)))
+        print(i, hits)
+        o = {
+            "name": i,
+            "occurrences": hits,
+            "tag": ILL_TAG,
+            "permutator": "custom_seq"
+        }
+        mongo.db_pws_numbers.insert_one(o)
+
+    # 0 - 9.999.999
+    for i in range(10000000):
+        hits = lookup_pass(hash_sha1(str(i)))
+        print(i, hits)
+        o = {
+            "name": i,
+            "occurrences": hits,
+            "tag": ILL_TAG,
+            "permutator": "natural_nums"
+        }
+        mongo.db_pws_numbers.insert_one(o)
+
+    print("Finished!")
 # ====================== Helper Functions ======================
 
 

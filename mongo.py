@@ -3,8 +3,8 @@ from helper import get_curr_time, get_curr_time_str
 
 # MONGO_ADDR = "192.168.56.102"
 # MONGO_ADDR = "192.168.171.3"
-# MONGO_ADDR = "localhost"
-MONGO_ADDR = "141.87.21.180"
+MONGO_ADDR = "localhost"
+# MONGO_ADDR = "141.87.21.180"
 mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 
 db = mongo["passwords"]
@@ -22,6 +22,8 @@ db_pws_wn_adverb = db["passwords_wn_adverb"]
 db_pws_lists = db["passwords_lists"]
 db_pws_misc_lists = db["passwords_misc_lists"]
 db_pws_dicts = db["passwords_dicts"]
+db_pws_numbers = db["passwords_numbers"]
+
 
 db_wn_lemma_permutations = db["wn_lemma_permutations_noun"]
 db_wn_lemma_permutations_verb = db["wn_lemma_permutations_verb"]
