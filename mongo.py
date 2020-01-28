@@ -3,8 +3,8 @@ from helper import get_curr_time, get_curr_time_str
 
 # MONGO_ADDR = "192.168.56.102"
 # MONGO_ADDR = "192.168.171.3"
-MONGO_ADDR = "localhost"
-# MONGO_ADDR = "141.87.21.180"
+# MONGO_ADDR = "localhost"
+MONGO_ADDR = "141.87.21.180"
 mongo = MongoClient("mongodb://{}:27017".format(MONGO_ADDR))
 
 db = mongo["passwords"]
