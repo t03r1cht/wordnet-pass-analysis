@@ -48,9 +48,9 @@ def main():
     #  Calculate average permutations per lemma
     #
     # avg = avg_permutations_lemma("wordnet_n")
-    # log_ok("Average permutations per lemma for Wordnet nouns: %d" % (avg))  # 225
+    # log_ok("Average permutations per lemma for Wordnet nouns: %d" % (avg))  # 224
     # avg = avg_permutations_lemma("wordnet_v")
-    # log_ok("Average permutations per lemma for Wordnet verbs: %d" % (avg))  # 223
+    # log_ok("Average permutations per lemma for Wordnet verbs: %d" % (avg))  # 222
     # avg = avg_permutations_lemma("wordnet_adj")
     # log_ok("Average permutations per lemma for Wordnet adjectives: %d" %
     #        (avg))  # 221
