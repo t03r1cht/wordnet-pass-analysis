@@ -294,34 +294,34 @@ def main():
     #
     # Locate the top n passwords from a category list on the top n passwords of the Wordnet
     #
-    # locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=True)    
+    locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=True, wn_lim=2000)
+    locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=False, wn_lim=2000)
+    locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=True, wn_lim=2000)    
     # =============================================================================================================================================
     #
     # Print stats for the all parts of speech of the Wordnet
@@ -1064,12 +1064,12 @@ def password_list_coverage():
     plt.show()
 
 
-def locate_topn_list_pws_hibp(list_name, top=10, include_perms=False):
+def locate_topn_list_pws_hibp(list_name, top=10, include_perms=False, hipb_lim=1000):
     """
     Mark the top N passwords of a given list within the top N passwords of the wordnet.
     On the X axis, mark each 50th step.
     """
-    hibp_limit = 2000
+    hibp_limit = hipb_lim
     # Get top n from some list
     pw_list = []
     if include_perms:
@@ -1505,13 +1505,13 @@ def examples_duplicates():
     pass
 
 
-def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
+def locate_topn_list_pws_wn(list_name, top=10, include_perms=False, wn_lim=1000):
     """
     Mark the top N passwords of a given list within the top N passwords of the wordnet.
     On the X axis, mark each 50th step.
     """
     # Read the top wn_limit passwords generated from the WordNet
-    wn_limit = 1000
+    wn_limit = wn_lim
     f, ax = plt.subplots(1)
 
     limit_val = top
@@ -1582,7 +1582,7 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
             "0",
         ]}
     }
-    buf_len = 1000 * 4
+    buf_len = wn_limit * 4
     top_wn_pws = mongo.db_pws_wn.find(search_filter).sort(
         "occurrences", pymongo.DESCENDING).limit(buf_len)
     for password in top_wn_pws:
