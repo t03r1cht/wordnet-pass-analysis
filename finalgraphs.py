@@ -62,161 +62,162 @@ def main():
     #
 
     # Spartenlisten
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="01_en_office_supplies.txt", include_perms=False)
-    log_ok("01_en_office_supplies.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="01_en_office_supplies.txt", include_perms=True)
-    log_ok("01_en_office_supplies.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="01_en_office_supplies.txt", include_perms=False)
+    # log_ok("01_en_office_supplies.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="01_en_office_supplies.txt", include_perms=True)
+    # log_ok("01_en_office_supplies.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
     
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="02_en_office_brands.txt", include_perms=False)
-    log_ok("02_en_office_brands.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="02_en_office_brands.txt", include_perms=True)
-    log_ok("02_en_office_brands.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="02_en_office_brands.txt", include_perms=False)
+    # log_ok("02_en_office_brands.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="02_en_office_brands.txt", include_perms=True)
+    # log_ok("02_en_office_brands.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="03_keyboard_patterns.txt", include_perms=False)
-    log_ok("03_keyboard_patterns.txt.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="03_keyboard_patterns.txt", include_perms=True)
-    log_ok("03_keyboard_patterns.txt.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="03_keyboard_patterns.txt", include_perms=False)
+    # log_ok("03_keyboard_patterns.txt.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="03_keyboard_patterns.txt", include_perms=True)
+    # log_ok("03_keyboard_patterns.txt.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="05_en_financial_brands.txt", include_perms=False)
-    log_ok("05_en_financial_brands.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="05_en_financial_brands.txt", include_perms=True)
-    log_ok("05_en_financial_brands.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="05_en_financial_brands.txt", include_perms=False)
+    # log_ok("05_en_financial_brands.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="05_en_financial_brands.txt", include_perms=True)
+    # log_ok("05_en_financial_brands.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="06_en_cities.txt", include_perms=False)
-    log_ok("06_en_cities.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="06_en_cities.txt", include_perms=True)
-    log_ok("06_en_cities.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="06_en_cities.txt", include_perms=False)
+    # log_ok("06_en_cities.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="06_en_cities.txt", include_perms=True)
+    # log_ok("06_en_cities.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="07_first_names.txt", include_perms=False)
-    log_ok("07_first_names.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="07_first_names.txt", include_perms=True)
-    log_ok("07_first_names.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="07_first_names.txt", include_perms=False)
+    # log_ok("07_first_names.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="07_first_names.txt", include_perms=True)
+    # log_ok("07_first_names.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="08_last_names.txt", include_perms=False)
-    log_ok("08_last_names.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="08_last_names.txt", include_perms=True)
-    log_ok("08_last_names.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="08_last_names.txt", include_perms=False)
+    # log_ok("08_last_names.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="08_last_names.txt", include_perms=True)
+    # log_ok("08_last_names.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="09_en_countries.txt", include_perms=False)
-    log_ok("09_en_countries.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="09_en_countries.txt", include_perms=True)
-    log_ok("09_en_countries.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="09_en_countries.txt", include_perms=False)
+    # log_ok("09_en_countries.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="09_en_countries.txt", include_perms=True)
+    # log_ok("09_en_countries.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="10_automobile.txt", include_perms=False)
-    log_ok("10_automobile.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="10_automobile.txt", include_perms=True)
-    log_ok("10_automobile.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="10_automobile.txt", include_perms=False)
+    # log_ok("10_automobile.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="10_automobile.txt", include_perms=True)
+    # log_ok("10_automobile.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="11_software_names.txt", include_perms=False)
-    log_ok("11_software_names.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="11_software_names.txt", include_perms=True)
-    log_ok("11_software_names.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="11_software_names.txt", include_perms=False)
+    # log_ok("11_software_names.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="11_software_names.txt", include_perms=True)
+    # log_ok("11_software_names.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="12_tech_brands.txt", include_perms=False)
-    log_ok("12_tech_brands.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="12_tech_brands.txt", include_perms=True)
-    log_ok("12_tech_brands.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="12_tech_brands.txt", include_perms=False)
+    # log_ok("12_tech_brands.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="12_tech_brands.txt", include_perms=True)
+    # log_ok("12_tech_brands.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="13_en_fruit.txt", include_perms=False)
-    log_ok("13_en_fruit.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="13_en_fruit.txt", include_perms=True)
-    log_ok("13_en_fruit.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="13_en_fruit.txt", include_perms=False)
+    # log_ok("13_en_fruit.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="13_en_fruit.txt", include_perms=True)
+    # log_ok("13_en_fruit.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="14_en_drinks.txt", include_perms=False)
-    log_ok("14_en_drinks.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="14_en_drinks.txt", include_perms=True)
-    log_ok("14_en_drinks.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="14_en_drinks.txt", include_perms=False)
+    # log_ok("14_en_drinks.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="14_en_drinks.txt", include_perms=True)
+    # log_ok("14_en_drinks.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="15_en_food.txt", include_perms=False)
-    log_ok("15_en_food.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="15_en_food.txt", include_perms=True)
-    log_ok("15_en_food.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="15_en_food.txt", include_perms=False)
+    # log_ok("15_en_food.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="15_en_food.txt", include_perms=True)
+    # log_ok("15_en_food.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="99_unsortiert.txt", include_perms=False)
-    log_ok("99_unsortiert.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("list", source_name="99_unsortiert.txt", include_perms=True)
-    log_ok("99_unsortiert.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="99_unsortiert.txt", include_perms=False)
+    # log_ok("99_unsortiert.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("list", source_name="99_unsortiert.txt", include_perms=True)
+    # log_ok("99_unsortiert.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
     # Misc Lists
     
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="10-million-password-list-top-500", include_perms=True)
-    log_ok("10-million-password-list-top-500 (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="10-million-password-list-top-500", include_perms=True)
+    # log_ok("10-million-password-list-top-500 (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="100k-most-used-passwords-ncsc", include_perms=True)
-    log_ok("100k-most-used-passwords-ncsc (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="100k-most-used-passwords-ncsc", include_perms=True)
+    # log_ok("100k-most-used-passwords-ncsc (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="10k-most-common", include_perms=True)
-    log_ok("10k-most-common (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="10k-most-common", include_perms=True)
+    # log_ok("10k-most-common (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="cirt-default-passwords", include_perms=True)
-    log_ok("cirt-default-passwords (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="cirt-default-passwords", include_perms=True)
+    # log_ok("cirt-default-passwords (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="common-passwords-win", include_perms=True)
-    log_ok("common-passwords-win (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="common-passwords-win", include_perms=True)
+    # log_ok("common-passwords-win (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="lizard-squad", include_perms=True)
-    log_ok("lizard-squad (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="lizard-squad", include_perms=True)
+    # log_ok("lizard-squad (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="milw0rm-dictionary", include_perms=True)
-    log_ok("milw0rm-dictionary (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="milw0rm-dictionary", include_perms=True)
+    # log_ok("milw0rm-dictionary (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="top-20-common-ssh-passwords", include_perms=True)
-    log_ok("top-20-common-ssh-passwords (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="top-20-common-ssh-passwords", include_perms=True)
+    # log_ok("top-20-common-ssh-passwords (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="twitter-banned", include_perms=True)
-    log_ok("twitter-banned (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="twitter-banned", include_perms=True)
+    # log_ok("twitter-banned (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="xato-net-10-million-passwords", include_perms=True)
-    log_ok("xato-net-10-million-passwords (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="xato-net-10-million-passwords", include_perms=True)
+    # log_ok("xato-net-10-million-passwords (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="xato-net-10-million-passwords-100000", include_perms=True)
-    log_ok("xato-net-10-million-passwords-100000 (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="xato-net-10-million-passwords-100000", include_perms=True)
+    # log_ok("xato-net-10-million-passwords-100000 (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
     # Dicts
 
-    pw_hits, pct_hits = calculate_efficiency("dict", source_name="american-english", include_perms=False)
-    log_ok("american-english (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("dict", source_name="american-english", include_perms=True)
-    log_ok("american-english (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("dict", source_name="american-english", include_perms=False)
+    # log_ok("american-english (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("dict", source_name="american-english", include_perms=True)
+    # log_ok("american-english (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("dict", source_name="british-english", include_perms=False)
-    log_ok("british-english (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("dict", source_name="british-english", include_perms=True)
-    log_ok("british-english (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("dict", source_name="british-english", include_perms=False)
+    # log_ok("british-english (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("dict", source_name="british-english", include_perms=True)
+    # log_ok("british-english (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("dict", source_name="cracklib-small", include_perms=False)
-    log_ok("cracklib-small (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("dict", source_name="cracklib-small", include_perms=True)
-    log_ok("cracklib-small (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-
+    # pw_hits, pct_hits = calculate_efficiency("dict", source_name="cracklib-small", include_perms=False)
+    # log_ok("cracklib-small (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("dict", source_name="cracklib-small", include_perms=True)
+    # log_ok("cracklib-small (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    
     # Wordnet
-    pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=False)
-    log_ok("Wordnet nouns (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=True)
-    log_ok("Wordnet nouns (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=False)
+    # log_ok("Wordnet nouns (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=True)
+    # log_ok("Wordnet nouns (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=False)
-    log_ok("Wordnet verbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=True)
-    log_ok("Wordnet verbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=False)
+    # log_ok("Wordnet verbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_v", include_perms=True)
+    # log_ok("Wordnet verbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency(
-        "wordnet_adj", include_perms=False)
-    log_ok("Wordnet adjectives (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("wordnet_adj", include_perms=True)
-    log_ok("Wordnet adjectives (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency(
+    #     "wordnet_adj", include_perms=False)
+    # log_ok("Wordnet adjectives (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_adj", include_perms=True)
+    # log_ok("Wordnet adjectives (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
-    pw_hits, pct_hits = calculate_efficiency(
-        "wordnet_adv", include_perms=False)
-    log_ok("Wordnet adverbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    pw_hits, pct_hits = calculate_efficiency("wordnet_adv", include_perms=True)
-    log_ok("Wordnet adverbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency(
+    #     "wordnet_adv", include_perms=False)
+    # log_ok("Wordnet adverbs (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
+    # pw_hits, pct_hits = calculate_efficiency("wordnet_adv", include_perms=True)
+    # log_ok("Wordnet adverbs (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
     # =============================================================================================================================================
     #
     # Plot the wordnet coverage for all parts of speech (with and without permutations)
     #
     # wordnet_coverage(include_perms=False)
-    # wordnet_coverage(include_perms=True)
+    wordnet_coverage(include_perms=True)
     # =============================================================================================================================================
     #
     # Locate the top n passwords from a category list on the top n passwords of the HIBP file
@@ -1912,7 +1913,8 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
                 "name": labels[list_name],
                 "total_lemmas": total_lemmas,
                 "password_hits": password_hits,
-                "quota": total_lemmas / password_hits
+                # "quota": total_lemmas / password_hits
+                "quota": round((password_hits / total_lemmas) * 100, 3)
             }
             result_list.append(o)
     elif source == "wordnet":
@@ -1956,20 +1958,24 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
                 "name": labels[pos],
                 "total_lemmas": total_lemmas,
                 "password_hits": password_hits,
-                "quota": total_lemmas / password_hits
+                # "quota": total_lemmas / password_hits
+                "quota": round((password_hits / total_lemmas) * 100, 3)
             }
             result_list.append(o)
 
     else:
         return
 
-    if sort_by == "quota":
-        # sort from lowest to highest since lower quotas are better than higher ones
-        sorted_sums = sorted(
-            result_list, key=lambda k: k[sort_by], reverse=False)
-    else:
-        sorted_sums = sorted(
-            result_list, key=lambda k: k[sort_by], reverse=True)
+    # if sort_by == "quota":
+    #     # sort from lowest to highest since lower quotas are better than higher ones
+    #     sorted_sums = sorted(
+    #         result_list, key=lambda k: k[sort_by], reverse=False)
+    # else:
+    #     sorted_sums = sorted(
+    #         result_list, key=lambda k: k[sort_by], reverse=True)
+    sorted_sums = sorted(
+        result_list, key=lambda k: k[sort_by], reverse=True)
+
     if top > 0:
         sorted_sums = sorted_sums[:top]
     wrapped_labels = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
