@@ -29,8 +29,21 @@
 1. [Darstellung der Top 10 Synsets pro Level (nach Synsethits)](#top_10_this_synsets)
     * [Nomen](#top_10_this_synsets_nomen)
     * [Verben](#top_10_this_synsets_verben)
-
-
+1. [Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 1000 Passwörtern der Wordnet Nomen](#locate_topn_list_pws_wn)
+    * [01_en_office_supplies.txt](#01_en_office_supplies_wn)
+    * [02_en_office_brands.txt](#02_en_office_brands_wn)
+    * [03_keyboard_patterns.txt](#03_keyboard_patterns_wn)
+    * [05_en_financial_brands.txt](#05_en_financial_brands_wn)
+    * [06_en_cities.txt](#06_en_cities_wn)
+    * [07_first_names.txt](#07_first_names_wn)
+    * [08_last_names.txt](#08_last_names_wn)
+    * [09_en_countries.txt](#09_en_countries_wn)
+    * [10_automobile.txt](#10_automobile_wn)
+    * [11_software_names.txt](#11_software_names_wn)
+    * [12_tech_brands.txt](#12_tech_brands_wn)
+    * [13_en_fruit.txt](#13_en_fruit_wn)
+    * [14_en_drinks.txt](#14_en_drinks_wn)
+    * [15_en_food.txt](#15_en_food_wn)
 
 ## Begriffserklärungen <a name="begriffserklaerungen"></a>
 
@@ -83,11 +96,11 @@ Spartenlisten:
         Password hits: 4584
         Percentage hits: 0.00083%
 
-[  20200131_10.15.07][+] 03_keyboard_patterns.txt.txt (w/o permutations):
+[  20200131_10.15.07][+] 03_keyboard_patterns.txt (w/o permutations):
         Password hits: 121
         Percentage hits: 2e-05%
 
-[  20200131_10.15.09][+] 03_keyboard_patterns.txt.txt (w/ permutations):
+[  20200131_10.15.09][+] 03_keyboard_patterns.txt (w/ permutations):
         Password hits: 10645
         Percentage hits: 0.00193%
 
@@ -1790,7 +1803,511 @@ Top 10 synset for level 12:
         1 - embargo.v.01: 1.428
 ```
 
+## Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 1000 Passwörtern der Wordnet Nomen <a name="locate_topn_list_pws_wn"></a>
 
+#### 01_en_office_supplies.txt <a name="01_en_office_supplies_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'computer', 'occurrences': 486169, 'permutator': 'no_permutator'}
+2 - {'name': 'pencil', 'occurrences': 38539, 'permutator': 'no_permutator'}
+3 - {'name': 'letter', 'occurrences': 33247, 'permutator': 'no_permutator'}
+4 - {'name': 'laptop', 'occurrences': 30300, 'permutator': 'no_permutator'}
+5 - {'name': 'mobile', 'occurrences': 29445, 'permutator': 'no_permutator'}
+6 - {'name': 'monitor', 'occurrences': 26313, 'permutator': 'no_permutator'}
+7 - {'name': 'keyboard', 'occurrences': 24873, 'permutator': 'no_permutator'}
+8 - {'name': 'phone', 'occurrences': 24848, 'permutator': 'no_permutator'}
+9 - {'name': 'mouse', 'occurrences': 24574, 'permutator': 'no_permutator'}
+10 - {'name': 'register', 'occurrences': 20267, 'permutator': 'no_permutator'}
+```
+
+![3_01_en_office_supplies_no_perms_wn.png](res/img/3_01_en_office_supplies_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'computer', 'occurrences': 486169, 'permutator': 'no_permutator'}
+2 - {'name': 'computer1', 'occurrences': 153426, 'permutator': 'number'}
+3 - {'name': 'pencil', 'occurrences': 38539, 'permutator': 'no_permutator'}
+4 - {'name': 'letter', 'occurrences': 33247, 'permutator': 'no_permutator'}
+5 - {'name': 'laptop', 'occurrences': 30300, 'permutator': 'no_permutator'}
+6 - {'name': 'mobile', 'occurrences': 29445, 'permutator': 'no_permutator'}
+7 - {'name': 'mouse1', 'occurrences': 28404, 'permutator': 'number'}
+8 - {'name': 'monitor', 'occurrences': 26313, 'permutator': 'no_permutator'}
+9 - {'name': 'keyboard', 'occurrences': 24873, 'permutator': 'no_permutator'}
+10 - {'name': 'phone', 'occurrences': 24848, 'permutator': 'no_permutator'}
+```
+
+![3_01_en_office_supplies_with_perms_wn.png](res/img/3_01_en_office_supplies_with_perms_wn.png "Title")
+
+#### 02_en_office_brands.txt <a name="02_en_office_brands_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'brother', 'occurrences': 45661, 'permutator': 'no_permutator'}
+2 - {'name': 'universal', 'occurrences': 28772, 'permutator': 'no_permutator'}
+3 - {'name': 'lexmark', 'occurrences': 20947, 'permutator': 'no_permutator'}
+4 - {'name': 'staples', 'occurrences': 8117, 'permutator': 'no_permutator'}
+5 - {'name': 'canon', 'occurrences': 7941, 'permutator': 'no_permutator'}
+6 - {'name': 'sharpie', 'occurrences': 7635, 'permutator': 'no_permutator'}
+7 - {'name': 'pilot', 'occurrences': 6457, 'permutator': 'no_permutator'}
+8 - {'name': 'avery', 'occurrences': 6069, 'permutator': 'no_permutator'}
+9 - {'name': 'primera', 'occurrences': 4584, 'permutator': 'no_permutator'}
+10 - {'name': 'epson', 'occurrences': 4248, 'permutator': 'no_permutator'}
+```
+
+![3_02_en_office_brands_no_perms_wn.png](res/img/3_02_en_office_brands_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'brother', 'occurrences': 45661, 'permutator': 'no_permutator'}
+2 - {'name': 'brother1', 'occurrences': 30874, 'permutator': 'number'}
+3 - {'name': 'universal', 'occurrences': 28772, 'permutator': 'no_permutator'}
+4 - {'name': 'lexmark', 'occurrences': 20947, 'permutator': 'no_permutator'}
+5 - {'name': 'lexmark1', 'occurrences': 13123, 'permutator': 'number'}
+6 - {'name': 'sharpie1', 'occurrences': 11576, 'permutator': 'number'}
+7 - {'name': 'avery1', 'occurrences': 11133, 'permutator': 'number'}
+8 - {'name': 'universal1', 'occurrences': 10451, 'permutator': 'number'}
+9 - {'name': 'staples', 'occurrences': 8117, 'permutator': 'no_permutator'}
+10 - {'name': 'canon', 'occurrences': 7941, 'permutator': 'no_permutator'}
+```
+
+![3_02_en_office_brands_with_perms_wn.png](res/img/3_02_en_office_brands_with_perms_wn.png "Title")
+
+#### 03_keyboard_patterns.txt <a name="03_keyboard_patterns_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': '123456', 'occurrences': 23547453, 'permutator': 'no_permutator'}
+2 - {'name': '123456789', 'occurrences': 7799814, 'permutator': 'no_permutator'}
+3 - {'name': 'qwerty', 'occurrences': 3912816, 'permutator': 'no_permutator'}
+4 - {'name': '12345678', 'occurrences': 2938594, 'permutator': 'no_permutator'}
+5 - {'name': '1234567', 'occurrences': 2512537, 'permutator': 'no_permutator'}
+6 - {'name': '12345', 'occurrences': 2380800, 'permutator': 'no_permutator'}
+7 - {'name': '1234567890', 'occurrences': 2250015, 'permutator': 'no_permutator'}
+8 - {'name': '1234', 'occurrences': 1289385, 'permutator': 'no_permutator'}
+9 - {'name': 'qwertyuiop', 'occurrences': 1098172, 'permutator': 'no_permutator'}
+10 - {'name': '123', 'occurrences': 1038635, 'permutator': 'no_permutator'}
+```
+
+![3_03_keyboard_patterns_no_perms_wn.png](res/img/3_03_keyboard_patterns_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': '123456', 'occurrences': 23547453, 'permutator': 'no_permutator'}
+2 - {'name': '123456789', 'occurrences': 7799814, 'permutator': 'no_permutator'}
+3 - {'name': 'qwerty', 'occurrences': 3912816, 'permutator': 'no_permutator'}
+4 - {'name': '12345678', 'occurrences': 2938594, 'permutator': 'no_permutator'}
+5 - {'name': '1234567', 'occurrences': 2512537, 'permutator': 'no_permutator'}
+6 - {'name': '12345', 'occurrences': 2380800, 'permutator': 'no_permutator'}
+7 - {'name': '1234567890', 'occurrences': 2250015, 'permutator': 'no_permutator'}
+8 - {'name': '123123', 'occurrences': 2230508, 'permutator': 'num_seq_suffix'}
+9 - {'name': '1234', 'occurrences': 1289385, 'permutator': 'no_permutator'}
+10 - {'name': 'qwertyuiop', 'occurrences': 1098172, 'permutator': 'no_permutator'}
+```
+
+![3_03_keyboard_patterns_with_perms_wn.png](res/img/3_03_keyboard_patterns_with_perms_wn.png "Title")
+
+#### 05_en_financial_brands.txt <a name="05_en_financial_brands_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'mastercard', 'occurrences': 4097, 'permutator': 'no_permutator'}
+2 - {'name': 'visa', 'occurrences': 2257, 'permutator': 'no_permutator'}
+3 - {'name': 'lloyds', 'occurrences': 1791, 'permutator': 'no_permutator'}
+4 - {'name': 'comerica', 'occurrences': 368, 'permutator': 'no_permutator'}
+5 - {'name': 'citigroup', 'occurrences': 341, 'permutator': 'no_permutator'}
+6 - {'name': 'amex', 'occurrences': 288, 'permutator': 'no_permutator'}
+7 - {'name': 'americanexpress', 'occurrences': 169, 'permutator': 'no_permutator'}
+8 - {'name': "macy's", 'occurrences': 89, 'permutator': 'no_permutator'}
+9 - {'name': 'stifel', 'occurrences': 85, 'permutator': 'no_permutator'}
+10 - {'name': 'ubs', 'occurrences': 84, 'permutator': 'no_permutator'}
+```
+
+![3_05_en_financial_brands_no_perms_wn.png](res/img/3_05_en_financial_brands_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'mastercard', 'occurrences': 4097, 'permutator': 'no_permutator'}
+2 - {'name': 'visa', 'occurrences': 2257, 'permutator': 'no_permutator'}
+3 - {'name': 'lloyds', 'occurrences': 1791, 'permutator': 'no_permutator'}
+4 - {'name': 'visavisa', 'occurrences': 849, 'permutator': 'duplicate'}
+5 - {'name': 'visa123', 'occurrences': 613, 'permutator': 'num_seq_suffix'}
+6 - {'name': 'lloyds1', 'occurrences': 552, 'permutator': 'number'}
+7 - {'name': 'visa1234', 'occurrences': 506, 'permutator': 'num_seq_suffix'}
+8 - {'name': 'amex123', 'occurrences': 428, 'permutator': 'num_seq_suffix'}
+9 - {'name': 'mastercard1', 'occurrences': 412, 'permutator': 'number'}
+10 - {'name': 'visa14', 'occurrences': 369, 'permutator': 'number'}
+```
+
+![3_05_en_financial_brands_with_perms_wn.png](res/img/3_05_en_financial_brands_with_perms_wn.png "Title")
+
+#### 06_en_cities.txt <a name="06_en_cities_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+2 - {'name': 'elizabeth', 'occurrences': 158090, 'permutator': 'no_permutator'}
+3 - {'name': 'jackson', 'occurrences': 145403, 'permutator': 'no_permutator'}
+4 - {'name': 'austin', 'occurrences': 145321, 'permutator': 'no_permutator'}
+5 - {'name': 'madison', 'occurrences': 143933, 'permutator': 'no_permutator'}
+6 - {'name': 'phoenix', 'occurrences': 111645, 'permutator': 'no_permutator'}
+7 - {'name': 'dallas', 'occurrences': 108146, 'permutator': 'no_permutator'}
+8 - {'name': 'manchester', 'occurrences': 100469, 'permutator': 'no_permutator'}
+9 - {'name': 'charlotte', 'occurrences': 95990, 'permutator': 'no_permutator'}
+10 - {'name': 'chicago', 'occurrences': 77591, 'permutator': 'no_permutator'}
+```
+
+![3_06_en_cities_no_perms_wn.png](res/img/3_06_en_cities_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+2 - {'name': 'elizabeth', 'occurrences': 158090, 'permutator': 'no_permutator'}
+3 - {'name': 'jackson', 'occurrences': 145403, 'permutator': 'no_permutator'}
+4 - {'name': 'austin', 'occurrences': 145321, 'permutator': 'no_permutator'}
+5 - {'name': 'madison', 'occurrences': 143933, 'permutator': 'no_permutator'}
+6 - {'name': 'madison1', 'occurrences': 123467, 'permutator': 'number'}
+7 - {'name': 'elizabeth1', 'occurrences': 122225, 'permutator': 'number'}
+8 - {'name': 'phoenix', 'occurrences': 111645, 'permutator': 'no_permutator'}
+9 - {'name': 'dallas', 'occurrences': 108146, 'permutator': 'no_permutator'}
+10 - {'name': 'manchester', 'occurrences': 100469, 'permutator': 'no_permutator'}
+```
+
+![3_06_en_cities_with_perms_wn.png](res/img/3_06_en_cities_with_perms_wn.png "Title")
+
+#### 07_first_names.txt <a name="07_first_names.txt_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'princess', 'occurrences': 484475, 'permutator': 'no_permutator'}
+2 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+3 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+4 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+5 - {'name': 'jessica', 'occurrences': 328107, 'permutator': 'no_permutator'}
+6 - {'name': 'charlie', 'occurrences': 313155, 'permutator': 'no_permutator'}
+7 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+8 - {'name': 'thomas', 'occurrences': 288418, 'permutator': 'no_permutator'}
+9 - {'name': 'michelle', 'occurrences': 283319, 'permutator': 'no_permutator'}
+10 - {'name': 'nicole', 'occurrences': 282511, 'permutator': 'no_permutator'}
+```
+
+![3_07_first_names_no_perms_wn.png](res/img/3_07_first_names_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'princess', 'occurrences': 484475, 'permutator': 'no_permutator'}
+2 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+3 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+4 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+5 - {'name': 'princess1', 'occurrences': 365068, 'permutator': 'number'}
+6 - {'name': 'jordan23', 'occurrences': 330482, 'permutator': 'number'}
+7 - {'name': 'jessica', 'occurrences': 328107, 'permutator': 'no_permutator'}
+8 - {'name': 'charlie', 'occurrences': 313155, 'permutator': 'no_permutator'}
+9 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+10 - {'name': 'michael1', 'occurrences': 297972, 'permutator': 'number'}
+```
+
+![3_07_first_names_with_perms_wn.png](res/img/3_07_first_names_with_perms_wn.png "Title")
+
+#### 08_last_names.txt <a name="08_last_namestxt_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+2 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+3 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+4 - {'name': 'love', 'occurrences': 347508, 'permutator': 'no_permutator'}
+5 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+6 - {'name': 'thomas', 'occurrences': 288418, 'permutator': 'no_permutator'}
+7 - {'name': 'anthony', 'occurrences': 262492, 'permutator': 'no_permutator'}
+8 - {'name': 'hunter', 'occurrences': 246847, 'permutator': 'no_permutator'}
+9 - {'name': 'george', 'occurrences': 218313, 'permutator': 'no_permutator'}
+10 - {'name': 'alexander', 'occurrences': 198825, 'permutator': 'no_permutator'}
+```
+
+![3_08_last_names_no_perms_wn.png](res/img/3_08_last_names_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+2 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+3 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+4 - {'name': 'love', 'occurrences': 347508, 'permutator': 'no_permutator'}
+5 - {'name': 'love123', 'occurrences': 334811, 'permutator': 'num_seq_suffix'}
+6 - {'name': 'jordan23', 'occurrences': 330482, 'permutator': 'number'}
+7 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+8 - {'name': 'michael1', 'occurrences': 297972, 'permutator': 'number'}
+9 - {'name': 'thomas', 'occurrences': 288418, 'permutator': 'no_permutator'}
+10 - {'name': 'anthony', 'occurrences': 262492, 'permutator': 'no_permutator'}
+```
+
+![3_08_last_names_with_perms_wn.png](res/img/3_08_last_names_with_perms_wn.png "Title")
+
+#### 09_en_countries.txt <a name="09_en_countries_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+2 - {'name': 'pakistan', 'occurrences': 213382, 'permutator': 'no_permutator'}
+3 - {'name': 'canada', 'occurrences': 116776, 'permutator': 'no_permutator'}
+4 - {'name': 'mexico', 'occurrences': 96438, 'permutator': 'no_permutator'}
+5 - {'name': 'portugal', 'occurrences': 78757, 'permutator': 'no_permutator'}
+6 - {'name': 'australia', 'occurrences': 65498, 'permutator': 'no_permutator'}
+7 - {'name': 'france', 'occurrences': 60564, 'permutator': 'no_permutator'}
+8 - {'name': 'jamaica', 'occurrences': 59498, 'permutator': 'no_permutator'}
+9 - {'name': 'georgia', 'occurrences': 58307, 'permutator': 'no_permutator'}
+10 - {'name': 'india', 'occurrences': 52453, 'permutator': 'no_permutator'}
+```
+
+![3_09_en_countries_no_perms_wn.png](res/img/3_09_en_countries_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'jordan23', 'occurrences': 330482, 'permutator': 'number'}
+2 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+3 - {'name': 'pakistan', 'occurrences': 213382, 'permutator': 'no_permutator'}
+4 - {'name': 'jordan1', 'occurrences': 183075, 'permutator': 'number'}
+5 - {'name': 'canada', 'occurrences': 116776, 'permutator': 'no_permutator'}
+6 - {'name': 'mexico1', 'occurrences': 112649, 'permutator': 'number'}
+7 - {'name': 'mexico', 'occurrences': 96438, 'permutator': 'no_permutator'}
+8 - {'name': 'portugal', 'occurrences': 78757, 'permutator': 'no_permutator'}
+9 - {'name': 'australia', 'occurrences': 65498, 'permutator': 'no_permutator'}
+10 - {'name': 'france', 'occurrences': 60564, 'permutator': 'no_permutator'}
+```
+
+![3_09_en_countries_with_perms_wn.png](res/img/3_09_en_countries_with_perms_wn.png "Title")
+
+#### 10_automobile.txt <a name="10_automobile_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'mercedes', 'occurrences': 164063, 'permutator': 'no_permutator'}
+2 - {'name': 'prince', 'occurrences': 158276, 'permutator': 'no_permutator'}
+3 - {'name': 'ferrari', 'occurrences': 139216, 'permutator': 'no_permutator'}
+4 - {'name': 'yamaha', 'occurrences': 126493, 'permutator': 'no_permutator'}
+5 - {'name': 'toyota', 'occurrences': 96526, 'permutator': 'no_permutator'}
+6 - {'name': 'porsche', 'occurrences': 70520, 'permutator': 'no_permutator'}
+7 - {'name': 'nissan', 'occurrences': 69780, 'permutator': 'no_permutator'}
+8 - {'name': 'jaguar', 'occurrences': 63247, 'permutator': 'no_permutator'}
+9 - {'name': 'suzuki', 'occurrences': 57846, 'permutator': 'no_permutator'}
+10 - {'name': 'general', 'occurrences': 44617, 'permutator': 'no_permutator'}
+```
+
+![3_10_automobile_no_perms_wn.png](res/img/3_10_automobile_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'mercedes', 'occurrences': 164063, 'permutator': 'no_permutator'}
+2 - {'name': 'prince', 'occurrences': 158276, 'permutator': 'no_permutator'}
+3 - {'name': 'ferrari', 'occurrences': 139216, 'permutator': 'no_permutator'}
+4 - {'name': 'yamaha', 'occurrences': 126493, 'permutator': 'no_permutator'}
+5 - {'name': 'toyota', 'occurrences': 96526, 'permutator': 'no_permutator'}
+6 - {'name': 'porsche', 'occurrences': 70520, 'permutator': 'no_permutator'}
+7 - {'name': 'nissan', 'occurrences': 69780, 'permutator': 'no_permutator'}
+8 - {'name': 'jaguar', 'occurrences': 63247, 'permutator': 'no_permutator'}
+9 - {'name': 'suzuki', 'occurrences': 57846, 'permutator': 'no_permutator'}
+10 - {'name': 'honda1', 'occurrences': 55011, 'permutator': 'number'}
+```
+
+![3_10_automobile_with_perms_wn.png](res/img/3_10_automobile_with_perms_wn.png "Title")
+
+#### 11_software_names.txt <a name="11_software_names_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'minecraft', 'occurrences': 53281, 'permutator': 'no_permutator'}
+2 - {'name': 'midori', 'occurrences': 6953, 'permutator': 'no_permutator'}
+3 - {'name': 'solitaire', 'occurrences': 5661, 'permutator': 'no_permutator'}
+4 - {'name': 'encarta', 'occurrences': 2096, 'permutator': 'no_permutator'}
+5 - {'name': 'midas', 'occurrences': 1612, 'permutator': 'no_permutator'}
+6 - {'name': 'skype', 'occurrences': 1324, 'permutator': 'no_permutator'}
+7 - {'name': 'havok', 'occurrences': 1077, 'permutator': 'no_permutator'}
+8 - {'name': 'msn', 'occurrences': 939, 'permutator': 'no_permutator'}
+9 - {'name': 'singularity', 'occurrences': 825, 'permutator': 'no_permutator'}
+10 - {'name': 'directx', 'occurrences': 489, 'permutator': 'no_permutator'}
+```
+
+![3_11_software_names_no_perms_wn.png](res/img/3_11_software_names_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'minecraft', 'occurrences': 53281, 'permutator': 'no_permutator'}
+2 - {'name': 'windows7', 'occurrences': 18956, 'permutator': 'sc_cc'}
+3 - {'name': 'windows98', 'occurrences': 9198, 'permutator': 'sc_cc'}
+4 - {'name': 'Minecraft', 'occurrences': 8068, 'permutator': 'uppercase_index_char'}
+5 - {'name': 'midori', 'occurrences': 6953, 'permutator': 'no_permutator'}
+6 - {'name': 'minecraft123', 'occurrences': 6942, 'permutator': 'num_seq_suffix'}
+7 - {'name': 'minecraft1', 'occurrences': 6448, 'permutator': 'number'}
+8 - {'name': 'solitaire', 'occurrences': 5661, 'permutator': 'no_permutator'}
+9 - {'name': 'windows8', 'occurrences': 3152, 'permutator': 'sc_cc'}
+10 - {'name': 'msn123', 'occurrences': 2984, 'permutator': 'num_seq_suffix'}
+```
+
+![3_11_software_names_with_perms_wn.png](res/img/3_11_software_names_with_perms_wn.png "Title")
+
+#### 12_tech_brands.txt <a name="12_tech_brands_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'samsung', 'occurrences': 315721, 'permutator': 'no_permutator'}
+2 - {'name': 'andrew', 'occurrences': 265776, 'permutator': 'no_permutator'}
+3 - {'name': 'apple', 'occurrences': 228761, 'permutator': 'no_permutator'}
+4 - {'name': 'google', 'occurrences': 186782, 'permutator': 'no_permutator'}
+5 - {'name': 'victor', 'occurrences': 126061, 'permutator': 'no_permutator'}
+6 - {'name': 'cherry', 'occurrences': 98069, 'permutator': 'no_permutator'}
+7 - {'name': 'creative', 'occurrences': 95809, 'permutator': 'no_permutator'}
+8 - {'name': 'compaq', 'occurrences': 91203, 'permutator': 'no_permutator'}
+9 - {'name': 'motorola', 'occurrences': 79140, 'permutator': 'no_permutator'}
+10 - {'name': 'gateway', 'occurrences': 69714, 'permutator': 'no_permutator'}
+```
+
+![3_12_tech_brands_no_perms_wn.png](res/img/3_12_tech_brands_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'samsung', 'occurrences': 315721, 'permutator': 'no_permutator'}
+2 - {'name': 'andrew', 'occurrences': 265776, 'permutator': 'no_permutator'}
+3 - {'name': 'apple', 'occurrences': 228761, 'permutator': 'no_permutator'}
+4 - {'name': 'google', 'occurrences': 186782, 'permutator': 'no_permutator'}
+5 - {'name': 'andrew1', 'occurrences': 145597, 'permutator': 'number'}
+6 - {'name': 'victor', 'occurrences': 126061, 'permutator': 'no_permutator'}
+7 - {'name': 'cherry', 'occurrences': 98069, 'permutator': 'no_permutator'}
+8 - {'name': 'apple1', 'occurrences': 97817, 'permutator': 'number'}
+9 - {'name': 'creative', 'occurrences': 95809, 'permutator': 'no_permutator'}
+10 - {'name': 'compaq', 'occurrences': 91203, 'permutator': 'no_permutator'}
+```
+
+![3_12_tech_brands_with_perms_wn.png](res/img/3_12_tech_brands_with_perms_wn.png "Title")
+
+#### 13_en_fruit.txt <a name="13_en_fruit_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'apple', 'occurrences': 228761, 'permutator': 'no_permutator'}
+2 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+3 - {'name': 'banana', 'occurrences': 156612, 'permutator': 'no_permutator'}
+4 - {'name': 'cherry', 'occurrences': 98069, 'permutator': 'no_permutator'}
+5 - {'name': 'pumpkin', 'occurrences': 83257, 'permutator': 'no_permutator'}
+6 - {'name': 'strawberry', 'occurrences': 72365, 'permutator': 'no_permutator'}
+7 - {'name': 'pineapple', 'occurrences': 42220, 'permutator': 'no_permutator'}
+8 - {'name': 'blackberry', 'occurrences': 39699, 'permutator': 'no_permutator'}
+9 - {'name': 'watermelon', 'occurrences': 35271, 'permutator': 'no_permutator'}
+10 - {'name': 'coconut', 'occurrences': 30617, 'permutator': 'no_permutator'}
+```
+
+![3_13_en_fruit_no_perms_wn.png](res/img/3_13_en_fruit_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'apple', 'occurrences': 228761, 'permutator': 'no_permutator'}
+2 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+3 - {'name': 'banana', 'occurrences': 156612, 'permutator': 'no_permutator'}
+4 - {'name': 'cherry', 'occurrences': 98069, 'permutator': 'no_permutator'}
+5 - {'name': 'apple1', 'occurrences': 97817, 'permutator': 'number'}
+6 - {'name': 'orange1', 'occurrences': 89079, 'permutator': 'number'}
+7 - {'name': 'pumpkin', 'occurrences': 83257, 'permutator': 'no_permutator'}
+8 - {'name': 'strawberry', 'occurrences': 72365, 'permutator': 'no_permutator'}
+9 - {'name': 'cherry1', 'occurrences': 61462, 'permutator': 'number'}
+10 - {'name': 'banana1', 'occurrences': 61210, 'permutator': 'number'}
+```
+
+![3_13_en_fruit_with_perms_wn.png](res/img/3_13_en_fruit_with_perms_wn.png "Title")
+
+#### 14_en_drinks.txt <a name="14_en_drinks_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+2 - {'name': 'strawberry', 'occurrences': 72365, 'permutator': 'no_permutator'}
+3 - {'name': 'fantasy', 'occurrences': 50878, 'permutator': 'no_permutator'}
+4 - {'name': 'pineapple', 'occurrences': 42220, 'permutator': 'no_permutator'}
+5 - {'name': 'aquarius', 'occurrences': 38486, 'permutator': 'no_permutator'}
+6 - {'name': 'pepsi', 'occurrences': 26167, 'permutator': 'no_permutator'}
+7 - {'name': 'sprite', 'occurrences': 25822, 'permutator': 'no_permutator'}
+8 - {'name': 'beverly', 'occurrences': 23041, 'permutator': 'no_permutator'}
+9 - {'name': 'shasta', 'occurrences': 20738, 'permutator': 'no_permutator'}
+10 - {'name': 'squirt', 'occurrences': 19961, 'permutator': 'no_permutator'}
+```
+
+![3_14_en_drinks_no_perms_wn.png](res/img/3_14_en_drinks_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+2 - {'name': 'orange1', 'occurrences': 89079, 'permutator': 'number'}
+3 - {'name': 'strawberry', 'occurrences': 72365, 'permutator': 'no_permutator'}
+4 - {'name': 'pepsi1', 'occurrences': 54985, 'permutator': 'number'}
+5 - {'name': 'fantasy', 'occurrences': 50878, 'permutator': 'no_permutator'}
+6 - {'name': 'pineapple', 'occurrences': 42220, 'permutator': 'no_permutator'}
+7 - {'name': 'aquarius', 'occurrences': 38486, 'permutator': 'no_permutator'}
+8 - {'name': 'pepsi', 'occurrences': 26167, 'permutator': 'no_permutator'}
+9 - {'name': 'pineapple1', 'occurrences': 25904, 'permutator': 'number'}
+10 - {'name': 'sprite', 'occurrences': 25822, 'permutator': 'no_permutator'}
+```
+
+![3_14_en_drinks_with_perms_wn.png](res/img/3_14_en_drinks_with_perms_wn.png "Title")
+
+#### 15_en_food.txt <a name="15_en_food_wn"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'snickers', 'occurrences': 85831, 'permutator': 'no_permutator'}
+2 - {'name': 'cupcake', 'occurrences': 56853, 'permutator': 'no_permutator'}
+3 - {'name': 'skittles', 'occurrences': 52466, 'permutator': 'no_permutator'}
+4 - {'name': 'goldfish', 'occurrences': 46657, 'permutator': 'no_permutator'}
+5 - {'name': 'chiquita', 'occurrences': 22720, 'permutator': 'no_permutator'}
+6 - {'name': 'tyson', 'occurrences': 16946, 'permutator': 'no_permutator'}
+7 - {'name': 'pringles', 'occurrences': 13594, 'permutator': 'no_permutator'}
+8 - {'name': 'oreo', 'occurrences': 10785, 'permutator': 'no_permutator'}
+9 - {'name': 'ortega', 'occurrences': 8655, 'permutator': 'no_permutator'}
+10 - {'name': 'nestle', 'occurrences': 8614, 'permutator': 'no_permutator'}
+```
+
+![3_15_en_food_no_perms_wn.png](res/img/3_15_en_food_no_perms_wn.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'snickers', 'occurrences': 85831, 'permutator': 'no_permutator'}
+2 - {'name': 'cupcake', 'occurrences': 56853, 'permutator': 'no_permutator'}
+3 - {'name': 'skittles', 'occurrences': 52466, 'permutator': 'no_permutator'}
+4 - {'name': 'cupcake1', 'occurrences': 51774, 'permutator': 'number'}
+5 - {'name': 'snickers1', 'occurrences': 51581, 'permutator': 'number'}
+6 - {'name': 'goldfish', 'occurrences': 46657, 'permutator': 'no_permutator'}
+7 - {'name': 'skittles1', 'occurrences': 41736, 'permutator': 'number'}
+8 - {'name': 'tyson1', 'occurrences': 28317, 'permutator': 'number'}
+9 - {'name': 'goldfish1', 'occurrences': 23794, 'permutator': 'number'}
+10 - {'name': 'chiquita', 'occurrences': 22720, 'permutator': 'no_permutator'}
+```
+
+![3_15_en_food_with_perms_wn.png](res/img/3_15_en_food_with_perms_wn.png "Title")
 
 
 

@@ -294,8 +294,34 @@ def main():
     #
     # Locate the top n passwords from a category list on the top n passwords of the Wordnet
     #
-    # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=False)
-    # locate_topn_list_pws_wn("12_tech_brands.txt", top=20, include_perms=True)
+    # locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=True)    
     # =============================================================================================================================================
     #
     # Print stats for the all parts of speech of the Wordnet
@@ -1504,11 +1530,30 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
                 {"permutator": "no_permutator"}
             ]
         }
-    for item in mongo.db_pws_lists.find(query).sort("occurrences", pymongo.DESCENDING).limit(top):
+
+    known_names = []
+    for item in mongo.db_pws_lists.find(query).sort("occurrences", pymongo.DESCENDING).limit(top * 10):
+        # since we query a bit more records than we actually need, stop the iteration when our list has the desired length
+        if len(known_names) == top:
+            break
+        # check for duplicate hits (generate by different permutators)
+        if item["name"] in known_names:
+            continue
+        # enforce policy: min. 3 chars
+        if len(item["name"]) < 3:
+            continue
+        known_names.append(item["name"])
         o = {"name": item["name"],
              "occurrences": item["occurrences"],
              "permutator": item["permutator"]}
         pw_list.append(o)
+
+
+    # for item in mongo.db_pws_lists.find(query).sort("occurrences", pymongo.DESCENDING).limit(top):
+    #     o = {"name": item["name"],
+    #          "occurrences": item["occurrences"],
+    #          "permutator": item["permutator"]}
+    #     pw_list.append(o)
 
     labels = []
     occurrences = []
@@ -1683,7 +1728,7 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
     ax.plot(np.arange(len(cut_wn_labels)), cut_wn_occs, "-", color="black")
     # Also print the pw list (for manual labelling)
     for k, v in enumerate(pw_list):
-        log_ok("{} - {}".format(k, v))
+        print("{} - {}".format(k+1, v))
     ax.set_yscale("log", basey=10)
     # ax.set_ylim(bottom=0)
     plt.ylim((pow(10, 0)))
@@ -1697,7 +1742,7 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False):
         plt.title("Top %d List Passwords (excl. variants)" % top)
     else:
         plt.title("Top %d List Passwords (incl. variants)" % top)
-    blue_patch = mpatches.Patch(color="black", label="HIBP Top Passwords")
+    blue_patch = mpatches.Patch(color="black", label="Wordnet Top Passwords")
     red_patch = mpatches.Patch(
         color="gray", label=list_name)
     plt.legend(handles=[blue_patch, red_patch], loc="best")
