@@ -3,7 +3,7 @@
 1. [Durchschnittliche Permutationen pro Wordnet Wortart](#avg_permutations_pos)
 1. [Trefferquoten (Efficiency) der Passwortquellen für Collection 1](#efficiency_hibp)
 1. [Coverage der Wordnet Wortarten für Collection 1](#coverage_wn_hibp)
-1. [Verortung der Top X Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Collection 1](#locate_topn_list_pws_hibp)
+1. [Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Collection 1](#locate_topn_list_pws_hibp)
     * [01_en_office_supplies.txt](#01_en_office_supplies)
 
 
@@ -250,7 +250,7 @@ Mit Permutationen:
 
 ![1_wn_coverage_hibp_with_perms.png](res/img/1_wn_coverage_hibp_with_perms.png "Title")
 
-## Verortung der Top X Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Collection 1 <a name="locate_topn_list_pws_hibp"></a>
+## Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Collection 1 <a name="locate_topn_list_pws_hibp"></a>
 
 #### Vorarbeit
 
@@ -259,3 +259,123 @@ Das Skript erwartet über `-x/--hibp` einen Pfad zu einer Textdatei, in der die 
 Der Aufruf sieht dann wie folgt aus: `py.exe -Wignore::DeprecationWarning .\finalgraphs.py --hibp .\hibp_top2000`.
 
 #### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'computer', 'occurrences': 486169, 'permutator': 'no_permutator'}
+2 - {'name': 'pencil', 'occurrences': 38539, 'permutator': 'no_permutator'}
+3 - {'name': 'letter', 'occurrences': 33247, 'permutator': 'no_permutator'}
+4 - {'name': 'laptop', 'occurrences': 30300, 'permutator': 'no_permutator'}
+5 - {'name': 'mobile', 'occurrences': 29445, 'permutator': 'no_permutator'}
+6 - {'name': 'monitor', 'occurrences': 26313, 'permutator': 'no_permutator'}
+7 - {'name': 'keyboard', 'occurrences': 24873, 'permutator': 'no_permutator'}
+8 - {'name': 'phone', 'occurrences': 24848, 'permutator': 'no_permutator'}
+9 - {'name': 'mouse', 'occurrences': 24574, 'permutator': 'no_permutator'}
+10 - {'name': 'register', 'occurrences': 20267, 'permutator': 'no_permutator'}
+```
+
+![2_01_en_office_supplies_no_perms.png](res/img/2_01_en_office_supplies_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'computer', 'occurrences': 486169, 'permutator': 'no_permutator'}
+2 - {'name': 'computer1', 'occurrences': 153426, 'permutator': 'number'}
+3 - {'name': 'pencil', 'occurrences': 38539, 'permutator': 'no_permutator'}
+4 - {'name': 'letter', 'occurrences': 33247, 'permutator': 'no_permutator'}
+5 - {'name': 'laptop', 'occurrences': 30300, 'permutator': 'no_permutator'}
+6 - {'name': 'mobile', 'occurrences': 29445, 'permutator': 'no_permutator'}
+7 - {'name': 'mouse1', 'occurrences': 28404, 'permutator': 'number'}
+8 - {'name': 'monitor', 'occurrences': 26313, 'permutator': 'no_permutator'}
+9 - {'name': 'keyboard', 'occurrences': 24873, 'permutator': 'no_permutator'}
+10 - {'name': 'phone', 'occurrences': 24848, 'permutator': 'no_permutator'}
+```
+
+![2_01_en_office_supplies_with_perms.png](res/img/2_01_en_office_supplies_with_perms.png "Title")
+
+#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![img.png](res/img/img.png "Title")
