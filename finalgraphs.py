@@ -294,34 +294,34 @@ def main():
     #
     # Locate the top n passwords from a category list on the top n passwords of the Wordnet
     #
-    locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=True, wn_lim=2000)
-    locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=False, wn_lim=2000)
-    locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=True, wn_lim=2000)    
+    # locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("01_en_office_supplies.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("02_en_office_brands.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("03_keyboard_patterns.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("05_en_financial_brands.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("06_en_cities.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("07_first_names.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("08_last_names.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("09_en_countries.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("10_automobile.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("11_software_names.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("12_tech_brands.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("13_en_fruit.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=True, wn_lim=2000)
+    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=False, wn_lim=2000)
+    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=True, wn_lim=2000)    
     # =============================================================================================================================================
     #
     # Print stats for the all parts of speech of the Wordnet
@@ -338,8 +338,10 @@ def main():
     # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="quota")
     # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="total_lemmas")
     # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="password_hits")
+    # compare_hits_to_permutations("dict", include_perms=True, sort_by="quota")
+    compare_hits_to_permutations("misc_list", include_perms=True, sort_by="quota")
     # =============================================================================================================================================
-    #
+    #q
     # Plot the dictionary coverage of the HIBP database (with and without permutations)
     #
     # dictionary_coverage(include_perms=False)
@@ -1919,7 +1921,7 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
     """
     Double bar diagram. Left bar: efficiency, right bar: number of lemmas (with and without permutations)
     """
-    allowed_sources = ["wordnet", "list"]
+    allowed_sources = ["wordnet", "list", "dict", "misc_list"]
     if source not in allowed_sources:
         log_err("Source %s not recognized" % source)
         return
@@ -2043,6 +2045,102 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
             }
             result_list.append(o)
 
+    elif source == "dict":
+        labels = {
+            "passwords_dicts_american-english": "American English",
+            "passwords_dicts_british-english": "British English",
+            "passwords_dicts_cracklib-small": "Cracklib Small",
+        }
+        all_dicts = []
+        for res in mongo.db.collection_names():
+            if res.startswith("passwords_dicts_"):
+                all_dicts.append(res)
+        for dict_name in all_dicts:
+            # query to get the total amount of lemmas
+            if include_perms:
+                query = {}
+            else:
+                query = {
+                    "$and": [
+                        {"permutator": "no_permutator"}
+                    ]
+                }
+            total_lemmas = mongo.db[dict_name].count_documents(query)
+            # query to get the passwords with hits > 0 (efficiency)
+            if include_perms:
+                query = {
+                    "$and": [
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            else:
+                query = {
+                    "$and": [
+                        {"permutator": "no_permutator"},
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            password_hits = mongo.db[dict_name].count_documents(query)
+            o = {
+                "name": labels[dict_name],
+                "total_lemmas": total_lemmas,
+                "password_hits": password_hits,
+                # "quota": total_lemmas / password_hits
+                "quota": round((password_hits / total_lemmas) * 100, 3)
+            }
+            result_list.append(o)    
+    elif source == "misc_list":
+        labels = {
+            "10-million-password-list-top-500": "10-million-password-list-top-500",
+            "100k-most-used-passwords-ncsc": "100k-most-used-passwords-ncsc",
+            "10k-most-common": "10k-most-common",
+            "cirt-default-passwords": "cirt-default-passwords",
+            "common-passwords-win": "common-passwords-win",
+            "lizard-squad": "lizard-squad",
+            "milw0rm-dictionary": "milw0rm-dictionary",
+            "top-20-common-ssh-passwords": "top-20-common-ssh-passwords",
+            "twitter-banned": "twitter-banned",
+            "xato-net-10-million-passwords": "xato-net-10-million-passwords",
+            "xato-net-10-million-passwords-100000": "xato-net-10-million-passwords-100000",
+        }
+        misc_lists = []
+        for res in mongo.db.collection_names():
+            if res.startswith("passwords_misc_lists_"):
+                misc_lists.append(res)
+        for misc_list_name in misc_lists:
+            # query to get the total amount of lemmas
+            if include_perms:
+                query = {}
+            else:
+                query = {
+                    "$and": [
+                        {"permutator": "no_permutator"}
+                    ]
+                }
+            total_lemmas = mongo.db[misc_list_name].count_documents(query)
+            # query to get the passwords with hits > 0 (efficiency)
+            if include_perms:
+                query = {
+                    "$and": [
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            else:
+                query = {
+                    "$and": [
+                        {"permutator": "no_permutator"},
+                        {"occurrences": {"$gt": 0}}
+                    ]
+                }
+            password_hits = mongo.db[misc_list_name].count_documents(query)
+            o = {
+                "name": labels[misc_list_name],
+                "total_lemmas": total_lemmas,
+                "password_hits": password_hits,
+                # "quota": total_lemmas / password_hits
+                "quota": round((password_hits / total_lemmas) * 100, 3)
+            }
+            result_list.append(o)      
     else:
         return
 
@@ -2084,6 +2182,12 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
     if source == "list":
         plt.title(
             "Total Lemmas/Efficiency Comparison for Lists%s" % label_tag)
+    elif source == "dict":
+        plt.title(
+            "Total Lemmas/Efficiency Comparison for Dicts%s" % label_tag)
+    elif source == "misc_list":
+        plt.title(
+            "Total Lemmas/Efficiency Comparison for Misc. Lists%s" % label_tag)
     else:
         plt.title(
             "Total Lemmas/Efficiency Comparison for the Wordnet%s" % label_tag)

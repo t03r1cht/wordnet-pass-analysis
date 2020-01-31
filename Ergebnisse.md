@@ -44,6 +44,10 @@
     * [13_en_fruit.txt](#13_en_fruit_wn)
     * [14_en_drinks.txt](#14_en_drinks_wn)
     * [15_en_food.txt](#15_en_food_wn)
+1. [Übersicht zum Wordnet](#wn_overview)
+1. [Vergleich der Quote von Treffern zur Gesamtanzahl an generierten Passwortvarianten](#compare_hits_efficiency)
+
+
 
 ## Begriffserklärungen <a name="begriffserklaerungen"></a>
 
@@ -2309,5 +2313,23 @@ Mit Permutationen:
 
 ![3_15_en_food_with_perms_wn.png](res/img/3_15_en_food_with_perms_wn.png "Title")
 
+## Übersicht zum Wordnet <a name="wn_overview"></a>
 
+```
+PoS           Synsets    Lemmas    Permutations    Hits no perms    Hits w. perms    Occs. no perms    Occs. w. perms
+----------  ---------  --------  --------------  ---------------  ---------------  ----------------  ----------------
+Nouns           74374    167467        37613456            98119          5603868         308281303        1162482592
+Verbs           13767     25221         5614232            21367          1783023          64304522         262642894
+Adjectives      18156     30004         6641894            26523          1138849          54548494         320404397
+Adverbs          3621      5580         1240465             4815           131478           4592872          17110836
+```
 
+## Vergleich der Quote von Treffern zur Gesamtanzahl an generierten Passwortvarianten <a name="compare_hits_efficiency"></a>
+
+#### Wordnet
+
+#### Spartenlisten
+
+#### Dictionaries
+
+#### Passwortlisten
