@@ -236,8 +236,8 @@ def main():
     # locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=False)
     # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=True)
-    locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=False)
-    locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=False)
+    # locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("10_automobile.txt", top=10, include_perms=False)
     # locate_topn_list_pws_hibp("10_automobile.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("11_software_names.txt", top=10, include_perms=False)
@@ -280,10 +280,16 @@ def main():
     # print()
     # # =============================================================================================================================================
     #
-    # Print top n synsets for each level
+    # Print top n synsets for each level (sorted by total_hits)
     #
     # top_classes_per_level("noun", 10)
     # top_classes_per_level("verb", 10)
+    # # =============================================================================================================================================
+    #
+    # Print top n synsets for each level (sorted by this_hits)
+    #
+    # top_classes_per_level_this("noun", 10)
+    # top_classes_per_level_this("verb", 10)
     # =============================================================================================================================================
     #
     # Locate the top n passwords from a category list on the top n passwords of the Wordnet
@@ -1272,13 +1278,17 @@ def print_top_lemmas(pos, top, include_perms=False, no_numbers=False):
         return
 
     # query a bit more, because we need to eliminate the duplicates
-    top_with_buf = top * 4
+    top_with_buf = top * 10
     res_list = []
     known_names = []
     query_res = mongo.db[coll_name].find(query).sort(
         "occurrences", pymongo.DESCENDING).limit(top_with_buf)
     for item in query_res:
         if item["name"] in known_names:
+            continue
+        elif item["name"].isdigit():
+            continue
+        elif len(item["name"]) < 3:
             continue
         else:
             known_names.append(item["name"])
@@ -1405,6 +1415,31 @@ def top_classes_per_level(mode, top):
         for k, v in enumerate(query_result):
             print("\t%d - %s: %s" %
                   (k+1, v["id"], helper.format_number(v["total_hits"])))
+        print()
+
+def top_classes_per_level_this(mode, top):
+    """
+    Return the top n classes per level.
+    """
+    lowest_level = duplicates.get_lowest_level_wn(mode)
+    for i in range((lowest_level+1)):
+        query = {
+            "level": i
+        }
+        coll_name = ""
+        if mode == "noun":
+            coll_name = "wn_synsets_noun"
+        elif mode == "verb":
+            coll_name = "wn_synsets_verb"
+        else:
+            log_ok("Invalid mode")
+            return
+        query_result = mongo.db[coll_name].find(query).sort(
+            "this_hits", pymongo.DESCENDING).limit(top)
+        print("Top %d synset for level %d:" % (top, i))
+        for k, v in enumerate(query_result):
+            print("\t%d - %s: %s" %
+                  (k+1, v["id"], helper.format_number(v["this_hits"])))
         print()
 
 
