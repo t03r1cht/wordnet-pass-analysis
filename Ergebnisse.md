@@ -72,8 +72,58 @@
 ## This is the introduction <a name="introduction"></a>
 Some introduction text, formatted in heading 2 style
 
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+* test
+
 ## Some paragraph <a name="paragraph1"></a>
 The first paragraph text
+
+
 
 ### Sub paragraph <a name="subparagraph1"></a>
 This is a sub paragraph, formatted in heading 3 style
