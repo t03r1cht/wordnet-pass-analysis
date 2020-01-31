@@ -3,20 +3,23 @@
 1. [Durchschnittliche Permutationen pro Wordnet Wortart](#avg_permutations_pos)
 1. [Trefferquoten (Efficiency) der Passwortquellen für Collection 1](#efficiency_hibp)
 1. [Coverage der Wordnet Wortarten für Collection 1](#coverage_wn_hibp)
+1. [Verortung der Top X Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Collection 1](#locate_topn_list_pws_hibp)
+    * [01_en_office_supplies.txt](#01_en_office_supplies)
+
 
 ## Begriffserklärungen <a name="begriffserklaerungen"></a>
 
-##### Efficiency
+#### Efficiency
 Die Trefferquote einer Passwortquelle zu einer gegebenen Referenz, beispielsweise der Collection 1. Eine Efficiency von 95% der Passwortliste X zur Collection 1 würde bedeuten, dass 95% der Passwörter aus Passwortliste X in der Collection 1 gefunden wurden.
 
 Berechnung: (hits(Passwortliste X, Collection 1) / len(Passwortliste X)) * 100
 
-##### Coverage
+#### Coverage
 Die Abdeckungsquote einer Passwortliste X zu einer Referenz. Eine Coverage von 90% der Passwortliste X zur Collection 1 würde bedeuten, dass die Passwörter aus X, die in Collection 1 wiedergefunden wurden, 90% aller Einträge aus Collection 1 ausmachen.
 
 Berechnung: (hits(Passwortliste X, Collection 1) / len(Collection 1)) * 100
 
-##### Performance
+#### Performance
 Die Performance ist die Anzahl aller Treffer aus einer Passwortliste X zu einer Referenz.
 
 Berechnung: hits(Passwortliste X, Collection 1)
@@ -246,3 +249,13 @@ Mit Permutationen:
 ```
 
 ![1_wn_coverage_hibp_with_perms.png](res/img/1_wn_coverage_hibp_with_perms.png "Title")
+
+## Verortung der Top X Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Collection 1 <a name="locate_topn_list_pws_hibp"></a>
+
+#### Vorarbeit
+
+Das Skript erwartet über `-x/--hibp` einen Pfad zu einer Textdatei, in der die Top X Hashes der Collection 1 absteigend sortiert gespeichert sind. Dafür kann man sich unter [HaveIBeenPwned](https://haveibeenpwned.com/Passwords) unter _ordered by prevalence_ das sortierte Hashfile laden. Anschließen können die ersten X Einträge in ein separates Textfile gespeichert werden mit `tail -n 2000 hibp.txt > hibp_top2000.txt`.
+
+Der Aufruf sieht dann wie folgt aus: `py.exe -Wignore::DeprecationWarning .\finalgraphs.py --hibp .\hibp_top2000`.
+
+#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>

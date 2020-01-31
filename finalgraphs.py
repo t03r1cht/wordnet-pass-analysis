@@ -217,12 +217,12 @@ def main():
     # Plot the wordnet coverage for all parts of speech (with and without permutations)
     #
     # wordnet_coverage(include_perms=False)
-    wordnet_coverage(include_perms=True)
+    # wordnet_coverage(include_perms=True)
     # =============================================================================================================================================
     #
     # Locate the top n passwords from a category list on the top n passwords of the HIBP file
     #
-    # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=False)
+    locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=False)
     # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=False)
     # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=True)
