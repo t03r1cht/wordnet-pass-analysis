@@ -5,7 +5,19 @@
 1. [Coverage der Wordnet Wortarten für Collection 1](#coverage_wn_hibp)
 1. [Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Collection 1](#locate_topn_list_pws_hibp)
     * [01_en_office_supplies.txt](#01_en_office_supplies)
-
+    * [02_en_office_brands.txt](#02_en_office_brands)
+    * [03_keyboard_patterns.txt](#03_keyboard_patterns)
+    * [05_en_financial_brands.txt](#05_en_financial_brands)
+    * [06_en_cities.txt](#06_en_cities)
+    * [07_first_names.txt](#07_first_names)
+    * [08_last_names.txt](#08_last_names)
+    * [09_en_countries.txt](#09_en_countries)
+    * [10_automobile.txt](#10_automobile)
+    * [11_software_names.txt](#11_software_names)
+    * [12_tech_brands.txt](#12_tech_brands)
+    * [13_en_fruit.txt](#13_en_fruit)
+    * [14_en_drinks.txt](#14_en_drinks)
+    * [15_en_food.txt](#15_en_food)
 
 ## Begriffserklärungen <a name="begriffserklaerungen"></a>
 
@@ -479,7 +491,16 @@ Mit Permutationen:
 Ohne Permutationen:
 
 ```
-
+1 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+2 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+3 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+4 - {'name': 'love', 'occurrences': 347508, 'permutator': 'no_permutator'}
+5 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+6 - {'name': 'thomas', 'occurrences': 288418, 'permutator': 'no_permutator'}
+7 - {'name': 'anthony', 'occurrences': 262492, 'permutator': 'no_permutator'}
+8 - {'name': 'hunter', 'occurrences': 246847, 'permutator': 'no_permutator'}
+9 - {'name': 'george', 'occurrences': 218313, 'permutator': 'no_permutator'}
+10 - {'name': 'alexander', 'occurrences': 198825, 'permutator': 'no_permutator'}
 ```
 
 ![2_08_last_names_no_perms.png](res/img/2_08_last_names_no_perms.png "Title")
@@ -487,7 +508,16 @@ Ohne Permutationen:
 Mit Permutationen:
 
 ```
-
+1 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+2 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+3 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+4 - {'name': 'love', 'occurrences': 347508, 'permutator': 'no_permutator'}
+5 - {'name': 'love123', 'occurrences': 334811, 'permutator': 'num_seq_suffix'}
+6 - {'name': 'jordan23', 'occurrences': 330482, 'permutator': 'number'}
+7 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+8 - {'name': 'michael1', 'occurrences': 297972, 'permutator': 'number'}
+9 - {'name': 'thomas', 'occurrences': 288418, 'permutator': 'no_permutator'}
+10 - {'name': 'anthony', 'occurrences': 262492, 'permutator': 'no_permutator'}
 ```
 
 ![2_08_last_names_with_perms.png](res/img/2_08_last_names_with_perms.png "Title")
@@ -497,7 +527,16 @@ Mit Permutationen:
 Ohne Permutationen:
 
 ```
-
+1 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+2 - {'name': 'pakistan', 'occurrences': 213382, 'permutator': 'no_permutator'}
+3 - {'name': 'canada', 'occurrences': 116776, 'permutator': 'no_permutator'}
+4 - {'name': 'mexico', 'occurrences': 96438, 'permutator': 'no_permutator'}
+5 - {'name': 'portugal', 'occurrences': 78757, 'permutator': 'no_permutator'}
+6 - {'name': 'australia', 'occurrences': 65498, 'permutator': 'no_permutator'}
+7 - {'name': 'france', 'occurrences': 60564, 'permutator': 'no_permutator'}
+8 - {'name': 'jamaica', 'occurrences': 59498, 'permutator': 'no_permutator'}
+9 - {'name': 'georgia', 'occurrences': 58307, 'permutator': 'no_permutator'}
+10 - {'name': 'india', 'occurrences': 52453, 'permutator': 'no_permutator'}
 ```
 
 ![2_09_en_countries_no_perms.png](res/img/2_09_en_countries_no_perms.png "Title")
@@ -505,7 +544,16 @@ Ohne Permutationen:
 Mit Permutationen:
 
 ```
-
+1 - {'name': 'jordan23', 'occurrences': 330482, 'permutator': 'number'}
+2 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+3 - {'name': 'pakistan', 'occurrences': 213382, 'permutator': 'no_permutator'}
+4 - {'name': 'jordan1', 'occurrences': 183075, 'permutator': 'number'}
+5 - {'name': 'canada', 'occurrences': 116776, 'permutator': 'no_permutator'}
+6 - {'name': 'mexico1', 'occurrences': 112649, 'permutator': 'number'}
+7 - {'name': 'mexico', 'occurrences': 96438, 'permutator': 'no_permutator'}
+8 - {'name': 'portugal', 'occurrences': 78757, 'permutator': 'no_permutator'}
+9 - {'name': 'australia', 'occurrences': 65498, 'permutator': 'no_permutator'}
+10 - {'name': 'france', 'occurrences': 60564, 'permutator': 'no_permutator'}
 ```
 
 ![2_09_en_countries_with_perms.png](res/img/2_09_en_countries_with_perms.png "Title")
