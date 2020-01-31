@@ -29,7 +29,7 @@
 1. [Darstellung der Top 10 Synsets pro Level (nach Synsethits)](#top_10_this_synsets)
     * [Nomen](#top_10_this_synsets_nomen)
     * [Verben](#top_10_this_synsets_verben)
-1. [Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 1000 Passwörtern der Wordnet Nomen](#locate_topn_list_pws_wn)
+1. [Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Wordnet Nomen](#locate_topn_list_pws_wn)
     * [01_en_office_supplies.txt](#01_en_office_supplies_wn)
     * [02_en_office_brands.txt](#02_en_office_brands_wn)
     * [03_keyboard_patterns.txt](#03_keyboard_patterns_wn)
@@ -1803,7 +1803,7 @@ Top 10 synset for level 12:
         1 - embargo.v.01: 1.428
 ```
 
-## Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 1000 Passwörtern der Wordnet Nomen <a name="locate_topn_list_pws_wn"></a>
+## Verortung der Top 10 Passwörter aus Spartenlisten auf den Top 2000 Passwörtern der Wordnet Nomen <a name="locate_topn_list_pws_wn"></a>
 
 #### 01_en_office_supplies.txt <a name="01_en_office_supplies_wn"></a>
 
