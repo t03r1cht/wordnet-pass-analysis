@@ -294,7 +294,187 @@ Mit Permutationen:
 
 ![2_01_en_office_supplies_with_perms.png](res/img/2_01_en_office_supplies_with_perms.png "Title")
 
-#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+#### 02_en_office_brands.txt <a name="02_en_office_brands"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'brother', 'occurrences': 45661, 'permutator': 'no_permutator'}
+2 - {'name': 'universal', 'occurrences': 28772, 'permutator': 'no_permutator'}
+3 - {'name': 'lexmark', 'occurrences': 20947, 'permutator': 'no_permutator'}
+4 - {'name': 'staples', 'occurrences': 8117, 'permutator': 'no_permutator'}
+5 - {'name': 'canon', 'occurrences': 7941, 'permutator': 'no_permutator'}
+6 - {'name': 'sharpie', 'occurrences': 7635, 'permutator': 'no_permutator'}
+7 - {'name': 'pilot', 'occurrences': 6457, 'permutator': 'no_permutator'}
+8 - {'name': 'avery', 'occurrences': 6069, 'permutator': 'no_permutator'}
+9 - {'name': 'primera', 'occurrences': 4584, 'permutator': 'no_permutator'}
+10 - {'name': 'epson', 'occurrences': 4248, 'permutator': 'no_permutator'}
+```
+
+![2_02_en_office_brands_no_perms.png](res/img/2_02_en_office_brands_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'brother', 'occurrences': 45661, 'permutator': 'no_permutator'}
+2 - {'name': 'brother1', 'occurrences': 30874, 'permutator': 'number'}
+3 - {'name': 'universal', 'occurrences': 28772, 'permutator': 'no_permutator'}
+4 - {'name': 'lexmark', 'occurrences': 20947, 'permutator': 'no_permutator'}
+5 - {'name': 'lexmark1', 'occurrences': 13123, 'permutator': 'number'}
+6 - {'name': 'sharpie1', 'occurrences': 11576, 'permutator': 'number'}
+7 - {'name': 'avery1', 'occurrences': 11133, 'permutator': 'number'}
+8 - {'name': 'universal1', 'occurrences': 10451, 'permutator': 'number'}
+9 - {'name': 'staples', 'occurrences': 8117, 'permutator': 'no_permutator'}
+10 - {'name': 'canon', 'occurrences': 7941, 'permutator': 'no_permutator'}
+```
+
+![2_02_en_office_brands_no_perms.png](res/img/2_02_en_office_brands_with_perms.png "Title")
+
+#### 03_keyboard_patterns.txt <a name="03_keyboard_patterns"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': '123456', 'occurrences': 23547453, 'permutator': 'no_permutator'}
+2 - {'name': '123456789', 'occurrences': 7799814, 'permutator': 'no_permutator'}
+3 - {'name': 'qwerty', 'occurrences': 3912816, 'permutator': 'no_permutator'}
+4 - {'name': '12345678', 'occurrences': 2938594, 'permutator': 'no_permutator'}
+5 - {'name': '1234567', 'occurrences': 2512537, 'permutator': 'no_permutator'}
+6 - {'name': '12345', 'occurrences': 2380800, 'permutator': 'no_permutator'}
+7 - {'name': '1234567890', 'occurrences': 2250015, 'permutator': 'no_permutator'}
+8 - {'name': '1234', 'occurrences': 1289385, 'permutator': 'no_permutator'}
+9 - {'name': 'qwertyuiop', 'occurrences': 1098172, 'permutator': 'no_permutator'}
+10 - {'name': '123', 'occurrences': 1038635, 'permutator': 'no_permutator'}
+```
+
+![2_03_keyboard_patterns_no_perms.png](res/img/2_03_keyboard_patterns_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': '123456', 'occurrences': 23547453, 'permutator': 'no_permutator'}
+2 - {'name': '123456789', 'occurrences': 7799814, 'permutator': 'no_permutator'}
+3 - {'name': 'qwerty', 'occurrences': 3912816, 'permutator': 'no_permutator'}
+4 - {'name': '12345678', 'occurrences': 2938594, 'permutator': 'no_permutator'}
+5 - {'name': '1234567', 'occurrences': 2512537, 'permutator': 'no_permutator'}
+6 - {'name': '12345', 'occurrences': 2380800, 'permutator': 'no_permutator'}
+7 - {'name': '1234567890', 'occurrences': 2250015, 'permutator': 'no_permutator'}
+8 - {'name': '123123', 'occurrences': 2230508, 'permutator': 'num_seq_suffix'}
+9 - {'name': '1234', 'occurrences': 1289385, 'permutator': 'no_permutator'}
+10 - {'name': 'qwertyuiop', 'occurrences': 1098172, 'permutator': 'no_permutator'}
+```
+
+![2_03_keyboard_patterns_with_perms.png](res/img/2_03_keyboard_patterns_with_perms.png "Title")
+
+#### 05_en_financial_brands.txt <a name="05_en_financial_brands"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'mastercard', 'occurrences': 4097, 'permutator': 'no_permutator'}
+2 - {'name': 'visa', 'occurrences': 2257, 'permutator': 'no_permutator'}
+3 - {'name': 'lloyds', 'occurrences': 1791, 'permutator': 'no_permutator'}
+4 - {'name': 'comerica', 'occurrences': 368, 'permutator': 'no_permutator'}
+5 - {'name': 'citigroup', 'occurrences': 341, 'permutator': 'no_permutator'}
+6 - {'name': 'amex', 'occurrences': 288, 'permutator': 'no_permutator'}
+7 - {'name': 'americanexpress', 'occurrences': 169, 'permutator': 'no_permutator'}
+8 - {'name': "macy's", 'occurrences': 89, 'permutator': 'no_permutator'}
+9 - {'name': 'stifel', 'occurrences': 85, 'permutator': 'no_permutator'}
+10 - {'name': 'ubs', 'occurrences': 84, 'permutator': 'no_permutator'}
+```
+
+![2_05_en_financial_brands_no_perms.png](res/img/2_05_en_financial_brands_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'mastercard', 'occurrences': 4097, 'permutator': 'no_permutator'}
+2 - {'name': 'visa', 'occurrences': 2257, 'permutator': 'no_permutator'}
+3 - {'name': 'lloyds', 'occurrences': 1791, 'permutator': 'no_permutator'}
+4 - {'name': 'visavisa', 'occurrences': 849, 'permutator': 'duplicate'}
+5 - {'name': 'visa123', 'occurrences': 613, 'permutator': 'num_seq_suffix'}
+6 - {'name': 'lloyds1', 'occurrences': 552, 'permutator': 'number'}
+7 - {'name': 'visa1234', 'occurrences': 506, 'permutator': 'num_seq_suffix'}
+8 - {'name': 'amex123', 'occurrences': 428, 'permutator': 'num_seq_suffix'}
+9 - {'name': 'mastercard1', 'occurrences': 412, 'permutator': 'number'}
+10 - {'name': 'visa14', 'occurrences': 369, 'permutator': 'number'}
+```
+
+![2_05_en_financial_brands_with_perms.png](res/img/2_05_en_financial_brands_with_perms.png "Title")
+
+#### 06_en_cities.txt <a name="06_en_cities"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+2 - {'name': 'elizabeth', 'occurrences': 158090, 'permutator': 'no_permutator'}
+3 - {'name': 'jackson', 'occurrences': 145403, 'permutator': 'no_permutator'}
+4 - {'name': 'austin', 'occurrences': 145321, 'permutator': 'no_permutator'}
+5 - {'name': 'madison', 'occurrences': 143933, 'permutator': 'no_permutator'}
+6 - {'name': 'phoenix', 'occurrences': 111645, 'permutator': 'no_permutator'}
+7 - {'name': 'dallas', 'occurrences': 108146, 'permutator': 'no_permutator'}
+8 - {'name': 'manchester', 'occurrences': 100469, 'permutator': 'no_permutator'}
+9 - {'name': 'charlotte', 'occurrences': 95990, 'permutator': 'no_permutator'}
+10 - {'name': 'chicago', 'occurrences': 77591, 'permutator': 'no_permutator'}
+```
+
+![2_06_en_cities_no_perms.png](res/img/2_06_en_cities_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'orange', 'occurrences': 192223, 'permutator': 'no_permutator'}
+2 - {'name': 'elizabeth', 'occurrences': 158090, 'permutator': 'no_permutator'}
+3 - {'name': 'jackson', 'occurrences': 145403, 'permutator': 'no_permutator'}
+4 - {'name': 'austin', 'occurrences': 145321, 'permutator': 'no_permutator'}
+5 - {'name': 'madison', 'occurrences': 143933, 'permutator': 'no_permutator'}
+6 - {'name': 'madison1', 'occurrences': 123467, 'permutator': 'number'}
+7 - {'name': 'elizabeth1', 'occurrences': 122225, 'permutator': 'number'}
+8 - {'name': 'phoenix', 'occurrences': 111645, 'permutator': 'no_permutator'}
+9 - {'name': 'dallas', 'occurrences': 108146, 'permutator': 'no_permutator'}
+10 - {'name': 'manchester', 'occurrences': 100469, 'permutator': 'no_permutator'}
+```
+
+![2_06_en_cities_with_perms.png](res/img/2_06_en_cities_with_perms.png "Title")
+
+#### 07_first_names.txt <a name="07_first_names.txt"></a>
+
+Ohne Permutationen:
+
+```
+1 - {'name': 'princess', 'occurrences': 484475, 'permutator': 'no_permutator'}
+2 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+3 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+4 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+5 - {'name': 'jessica', 'occurrences': 328107, 'permutator': 'no_permutator'}
+6 - {'name': 'charlie', 'occurrences': 313155, 'permutator': 'no_permutator'}
+7 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+8 - {'name': 'thomas', 'occurrences': 288418, 'permutator': 'no_permutator'}
+9 - {'name': 'michelle', 'occurrences': 283319, 'permutator': 'no_permutator'}
+10 - {'name': 'nicole', 'occurrences': 282511, 'permutator': 'no_permutator'}
+```
+
+![2_07_first_names_no_perms.png](res/img/2_07_first_names_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+1 - {'name': 'princess', 'occurrences': 484475, 'permutator': 'no_permutator'}
+2 - {'name': 'ashley', 'occurrences': 438401, 'permutator': 'no_permutator'}
+3 - {'name': 'michael', 'occurrences': 431329, 'permutator': 'no_permutator'}
+4 - {'name': 'daniel', 'occurrences': 373779, 'permutator': 'no_permutator'}
+5 - {'name': 'princess1', 'occurrences': 365068, 'permutator': 'number'}
+6 - {'name': 'jordan23', 'occurrences': 330482, 'permutator': 'number'}
+7 - {'name': 'jessica', 'occurrences': 328107, 'permutator': 'no_permutator'}
+8 - {'name': 'charlie', 'occurrences': 313155, 'permutator': 'no_permutator'}
+9 - {'name': 'jordan', 'occurrences': 302131, 'permutator': 'no_permutator'}
+10 - {'name': 'michael1', 'occurrences': 297972, 'permutator': 'number'}
+```
+
+![2_07_first_names_with_perms.png](res/img/2_07_first_names_with_perms.png "Title")
+
+#### 08_last_names.txt <a name="08_last_namestxt"></a>
 
 Ohne Permutationen:
 
@@ -302,7 +482,7 @@ Ohne Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
+![2_08_last_names_no_perms.png](res/img/2_08_last_names_no_perms.png "Title")
 
 Mit Permutationen:
 
@@ -310,8 +490,9 @@ Mit Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
-#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+![2_08_last_names_with_perms.png](res/img/2_08_last_names_with_perms.png "Title")
+
+#### 09_en_countries.txt <a name="09_en_countries"></a>
 
 Ohne Permutationen:
 
@@ -319,7 +500,7 @@ Ohne Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
+![2_09_en_countries_no_perms.png](res/img/2_09_en_countries_no_perms.png "Title")
 
 Mit Permutationen:
 
@@ -327,8 +508,9 @@ Mit Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
-#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+![2_09_en_countries_with_perms.png](res/img/2_09_en_countries_with_perms.png "Title")
+
+#### 10_automobile.txt <a name="10_automobile"></a>
 
 Ohne Permutationen:
 
@@ -336,7 +518,7 @@ Ohne Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
+![2_10_automobile_no_perms.png](res/img/2_10_automobile_no_perms.png "Title")
 
 Mit Permutationen:
 
@@ -344,8 +526,9 @@ Mit Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
-#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+![2_10_automobile_with_perms.png](res/img/2_10_automobile_with_perms.png "Title")
+
+#### 11_software_names.txt <a name="11_software_names"></a>
 
 Ohne Permutationen:
 
@@ -353,7 +536,7 @@ Ohne Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
+![2_11_software_names_no_perms.png](res/img/2_11_software_names_no_perms.png "Title")
 
 Mit Permutationen:
 
@@ -361,8 +544,9 @@ Mit Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
-#### 01_en_office_supplies.txt <a name="01_en_office_supplies"></a>
+![2_11_software_names_with_perms.png](res/img/2_11_software_names_with_perms.png "Title")
+
+#### 12_tech_brands.txt <a name="12_tech_brands"></a>
 
 Ohne Permutationen:
 
@@ -370,7 +554,7 @@ Ohne Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
+![2_12_tech_brands_no_perms.png](res/img/2_12_tech_brands_no_perms.png "Title")
 
 Mit Permutationen:
 
@@ -378,4 +562,64 @@ Mit Permutationen:
 
 ```
 
-![img.png](res/img/img.png "Title")
+![2_12_tech_brands_with_perms.png](res/img/2_12_tech_brands_with_perms.png "Title")
+
+#### 13_en_fruit.txt <a name="13_en_fruit"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![2_13_en_fruit_no_perms.png](res/img/2_13_en_fruit_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![2_13_en_fruit_with_perms.png](res/img/2_13_en_fruit_with_perms.png "Title")
+
+#### 14_en_drinks.txt <a name="14_en_drinks"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![2_14_en_drinks_no_perms.png](res/img/2_14_en_drinks_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![2_14_en_drinks_with_perms.png](res/img/2_14_en_drinks_with_perms.png "Title")
+
+#### 15_en_food.txt <a name="15_en_food"></a>
+
+Ohne Permutationen:
+
+```
+
+```
+
+![2_15_en_food_no_perms.png](res/img/2_15_en_food_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+
+```
+
+![2_15_en_food_with_perms.png](res/img/2_15_en_food_with_perms.png "Title")
+
+
+
+
+
+

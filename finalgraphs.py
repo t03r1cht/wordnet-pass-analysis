@@ -223,7 +223,7 @@ def main():
     # Locate the top n passwords from a category list on the top n passwords of the HIBP file
     #
     # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=False)
-    locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=True)
+    # locate_topn_list_pws_hibp("01_en_office_supplies.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=False)
     # locate_topn_list_pws_hibp("02_en_office_brands.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("03_keyboard_patterns.txt", top=10, include_perms=False)
@@ -232,8 +232,8 @@ def main():
     # locate_topn_list_pws_hibp("05_en_financial_brands.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("06_en_cities.txt", top=10, include_perms=False)
     # locate_topn_list_pws_hibp("06_en_cities.txt", top=10, include_perms=True)
-    # locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=False)
-    # locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=True)
+    locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=False)
+    locate_topn_list_pws_hibp("07_first_names.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=False)
     # locate_topn_list_pws_hibp("08_last_names.txt", top=10, include_perms=True)
     # locate_topn_list_pws_hibp("09_en_countries.txt", top=10, include_perms=False)
