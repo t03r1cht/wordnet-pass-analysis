@@ -233,7 +233,7 @@ Ohne Permutationen:
 [  20200131_10.56.38][+] (2) WordNet Verbs, 21.367, 0.00387 %
 [  20200131_10.56.38][+] (3) WordNet Adverbs, 4.815, 0.00087 %
 ```
-![1_wn_coverage_hibp_no_perms.png](.\res\img\1_wn_coverage_hibp_no_perms.png "Title")
+![1_wn_coverage_hibp_no_perms.png](res/img/1_wn_coverage_hibp_no_perms.png "Title")
 
 Mit Permutationen:
 
@@ -245,4 +245,4 @@ Mit Permutationen:
 [  20200131_10.59.11][+] (3) WordNet Adverbs, 131.478, 0.02384 %
 ```
 
-![1_wn_coverage_hibp_with_perms.png](res\img\1_wn_coverage_hibp_with_perms.png "Title")
+![1_wn_coverage_hibp_with_perms.png](res/img/1_wn_coverage_hibp_with_perms.png "Title")
