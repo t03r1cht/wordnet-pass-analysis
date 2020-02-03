@@ -2326,10 +2326,64 @@ Adverbs          3621      5580         1240465             4815           13147
 
 ## Vergleich der Quote von Treffern zur Gesamtanzahl an generierten Passwortvarianten <a name="compare_hits_efficiency"></a>
 
-#### Wordnet
+Das Doppelbalkendiagramm stellt die Anzahl aller generierten Passwörter als auch die Anzahl an Passwörtern dar, die Treffer generiert haben. Die Doppelbalken sind absteigend nach der Deckung von Treffern zur Anzahl an generierten Passwörtern sortiert (`Quote = (Treffer / Anzahl Passwörter) * 100`). 
 
 #### Spartenlisten
 
+```
+1 {'name': 'First Names', 'total_lemmas': 582556, 'password_hits': 439471, 'quota': 75.438}
+2 {'name': 'Countries', 'total_lemmas': 43405, 'password_hits': 24097, 'quota': 55.517}
+3 {'name': 'Office Supplies', 'total_lemmas': 20332, 'password_hits': 10567, 'quota': 51.972}
+4 {'name': 'Cities', 'total_lemmas': 65042, 'password_hits': 29413, 'quota': 45.222}
+5 {'name': 'Fruit', 'total_lemmas': 24711, 'password_hits': 9738, 'quota': 39.408}
+6 {'name': 'Last Name', 'total_lemmas': 866320, 'password_hits': 335606, 'quota': 38.739}
+7 {'name': 'Automobile', 'total_lemmas': 63033, 'password_hits': 24177, 'quota': 38.356}
+8 {'name': 'Tech Brands', 'total_lemmas': 77350, 'password_hits': 26208, 'quota': 33.882}
+9 {'name': 'Keyboard Patterns', 'total_lemmas': 34769, 'password_hits': 10645, 'quota': 30.616}
+10 {'name': 'Food', 'total_lemmas': 22938, 'password_hits': 6434, 'quota': 28.05}
+11 {'name': 'Office Brands', 'total_lemmas': 17903, 'password_hits': 4584, 'quota': 25.605}
+12 {'name': 'Drinks', 'total_lemmas': 42849, 'password_hits': 7889, 'quota': 18.411}
+13 {'name': 'Financial Brands', 'total_lemmas': 26475, 'password_hits': 1001, 'quota': 3.781}
+14 {'name': 'Software Names', 'total_lemmas': 61943, 'password_hits': 1854, 'quota': 2.993}
+```
+
+![4_comp_passwords_hits_lists.png](res/img/4_comp_passwords_hits_lists.png "Title")
+
+#### Wordnet
+
+```
+1 {'name': 'Wordnet Verbs', 'total_lemmas': 5614232, 'password_hits': 1783023, 'quota': 31.759}
+2 {'name': 'Wordnet Adjectives', 'total_lemmas': 6641894, 'password_hits': 1138849, 'quota': 17.146}
+3 {'name': 'Wordnet Nouns', 'total_lemmas': 37613456, 'password_hits': 5603868, 'quota': 14.899}
+4 {'name': 'Wordnet Adverbs', 'total_lemmas': 1240465, 'password_hits': 131478, 'quota': 10.599}
+```
+
+![4_comp_passwords_hits_wn.png](res/img/4_comp_passwords_hits_wn.png "Title")
+
 #### Dictionaries
 
+```
+1 {'name': 'Cracklib Small', 'total_lemmas': 11685387, 'password_hits': 2674594, 'quota': 22.888}
+2 {'name': 'British English', 'total_lemmas': 22503325, 'password_hits': 2947672, 'quota': 13.099}
+3 {'name': 'American English', 'total_lemmas': 22609405, 'password_hits': 2960943, 'quota': 13.096}
+```
+
+![4_comp_passwords_hits_dicts.png](res/img/4_comp_passwords_hits_dicts.png "Title")
+
 #### Passwortlisten
+
+```
+1 {'name': '10-million-password-list-top-500', 'total_lemmas': 500, 'password_hits': 500, 'quota': 100.0}
+2 {'name': '10k-most-common', 'total_lemmas': 10000, 'password_hits': 10000, 'quota': 100.0}
+3 {'name': 'common-passwords-win', 'total_lemmas': 815, 'password_hits': 815, 'quota': 100.0}
+4 {'name': '100k-most-used-passwords-ncsc', 'total_lemmas': 99979, 'password_hits': 99730, 'quota': 99.751}
+5 {'name': 'twitter-banned', 'total_lemmas': 397, 'password_hits': 396, 'quota': 99.748}
+6 {'name': 'xato-net-10-million-passwords-100000', 'total_lemmas': 99998, 'password_hits': 99574, 'quota': 99.576}
+7 {'name': 'lizard-squad', 'total_lemmas': 11772, 'password_hits': 11341, 'quota': 96.339}
+8 {'name': 'top-20-common-ssh-passwords', 'total_lemmas': 21, 'password_hits': 20, 'quota': 95.238}
+9 {'name': 'milw0rm-dictionary', 'total_lemmas': 84190, 'password_hits': 66150, 'quota': 78.572}
+10 {'name': 'xato-net-10-million-passwords', 'total_lemmas': 5189093, 'password_hits': 4030828, 'quota': 77.679}
+11 {'name': 'cirt-default-passwords', 'total_lemmas': 1031, 'password_hits': 656, 'quota': 63.628}
+```
+
+![4_comp_passwords_hits_misc_lists.png](res/img/4_comp_passwords_hits_misc_lists.png "Title")

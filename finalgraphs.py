@@ -67,7 +67,7 @@ def main():
     # log_ok("01_en_office_supplies.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
     # pw_hits, pct_hits = calculate_efficiency("list", source_name="01_en_office_supplies.txt", include_perms=True)
     # log_ok("01_en_office_supplies.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    
+
     # pw_hits, pct_hits = calculate_efficiency("list", source_name="02_en_office_brands.txt", include_perms=False)
     # log_ok("02_en_office_brands.txt (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
     # pw_hits, pct_hits = calculate_efficiency("list", source_name="02_en_office_brands.txt", include_perms=True)
@@ -139,7 +139,7 @@ def main():
     # log_ok("99_unsortiert.txt (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
     # Misc Lists
-    
+
     # pw_hits, pct_hits = calculate_efficiency("misc_list", source_name="10-million-password-list-top-500", include_perms=True)
     # log_ok("10-million-password-list-top-500 (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
 
@@ -189,7 +189,7 @@ def main():
     # log_ok("cracklib-small (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
     # pw_hits, pct_hits = calculate_efficiency("dict", source_name="cracklib-small", include_perms=True)
     # log_ok("cracklib-small (w/ permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
-    
+
     # Wordnet
     # pw_hits, pct_hits = calculate_efficiency("wordnet_n", include_perms=False)
     # log_ok("Wordnet nouns (w/o permutations):\n\tPassword hits: {}\n\tPercentage hits: {}%".format(pw_hits, round(pct_hits*100, 5)))
@@ -321,7 +321,7 @@ def main():
     # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=False, wn_lim=2000)
     # locate_topn_list_pws_wn("14_en_drinks.txt", top=10, include_perms=True, wn_lim=2000)
     # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=False, wn_lim=2000)
-    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=True, wn_lim=2000)    
+    # locate_topn_list_pws_wn("15_en_food.txt", top=10, include_perms=True, wn_lim=2000)
     # =============================================================================================================================================
     #
     # Print stats for the all parts of speech of the Wordnet
@@ -335,17 +335,19 @@ def main():
     # compare_hits_to_permutations("list", include_perms=True, sort_by="quota", top=3)
     # compare_hits_to_permutations("list", include_perms=True, sort_by="total_lemmas")
     # compare_hits_to_permutations("list", include_perms=True, sort_by="password_hits")
-    # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="quota")
+    # compare_hits_to_permutations(
+    #     "wordnet", include_perms=True, sort_by="quota")
     # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="total_lemmas")
     # compare_hits_to_permutations("wordnet", include_perms=True, sort_by="password_hits")
     # compare_hits_to_permutations("dict", include_perms=True, sort_by="quota")
-    compare_hits_to_permutations("misc_list", include_perms=True, sort_by="quota")
+    # compare_hits_to_permutations(
+    #     "misc_list", include_perms=True, sort_by="quota")
     # =============================================================================================================================================
-    #q
+    # q
     # Plot the dictionary coverage of the HIBP database (with and without permutations)
     #
-    # dictionary_coverage(include_perms=False)
-    # dictionary_coverage(include_perms=True)
+    dictionary_coverage(include_perms=False)
+    dictionary_coverage(include_perms=True)
     # =============================================================================================================================================
     #
     # Plot the list coverage of the HIBP database (with and without permutations)
@@ -1398,7 +1400,6 @@ def calculate_efficiency(base, source_name="", include_perms=False):
                 ]
             }
 
-
     # the number of passwords with hits > 0, meaning they were a hit in the password database
     password_hits = mongo.db[coll_name].find(query).count()
     pct_hits = password_hits / pwned_pw_amount
@@ -1444,6 +1445,7 @@ def top_classes_per_level(mode, top):
             print("\t%d - %s: %s" %
                   (k+1, v["id"], helper.format_number(v["total_hits"])))
         print()
+
 
 def top_classes_per_level_this(mode, top):
     """
@@ -1549,7 +1551,6 @@ def locate_topn_list_pws_wn(list_name, top=10, include_perms=False, wn_lim=1000)
              "occurrences": item["occurrences"],
              "permutator": item["permutator"]}
         pw_list.append(o)
-
 
     # for item in mongo.db_pws_lists.find(query).sort("occurrences", pymongo.DESCENDING).limit(top):
     #     o = {"name": item["name"],
@@ -2088,20 +2089,20 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
                 # "quota": total_lemmas / password_hits
                 "quota": round((password_hits / total_lemmas) * 100, 3)
             }
-            result_list.append(o)    
+            result_list.append(o)
     elif source == "misc_list":
         labels = {
-            "10-million-password-list-top-500": "10-million-password-list-top-500",
-            "100k-most-used-passwords-ncsc": "100k-most-used-passwords-ncsc",
-            "10k-most-common": "10k-most-common",
-            "cirt-default-passwords": "cirt-default-passwords",
-            "common-passwords-win": "common-passwords-win",
-            "lizard-squad": "lizard-squad",
-            "milw0rm-dictionary": "milw0rm-dictionary",
-            "top-20-common-ssh-passwords": "top-20-common-ssh-passwords",
-            "twitter-banned": "twitter-banned",
-            "xato-net-10-million-passwords": "xato-net-10-million-passwords",
-            "xato-net-10-million-passwords-100000": "xato-net-10-million-passwords-100000",
+            "passwords_misc_lists_10-million-password-list-top-500": "10-million-password-list-top-500",
+            "passwords_misc_lists_100k-most-used-passwords-ncsc": "100k-most-used-passwords-ncsc",
+            "passwords_misc_lists_10k-most-common": "10k-most-common",
+            "passwords_misc_lists_cirt-default-passwords": "cirt-default-passwords",
+            "passwords_misc_lists_common-passwords-win": "common-passwords-win",
+            "passwords_misc_lists_lizard-squad": "lizard-squad",
+            "passwords_misc_lists_milw0rm-dictionary": "milw0rm-dictionary",
+            "passwords_misc_lists_top-20-common-ssh-passwords": "top-20-common-ssh-passwords",
+            "passwords_misc_lists_twitter-banned": "twitter-banned",
+            "passwords_misc_lists_xato-net-10-million-passwords": "xato-net-10-million-passwords",
+            "passwords_misc_lists_xato-net-10-million-passwords-100000": "xato-net-10-million-passwords-100000",
         }
         misc_lists = []
         for res in mongo.db.collection_names():
@@ -2140,7 +2141,7 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
                 # "quota": total_lemmas / password_hits
                 "quota": round((password_hits / total_lemmas) * 100, 3)
             }
-            result_list.append(o)      
+            result_list.append(o)
     else:
         return
 
@@ -2160,14 +2161,15 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
 
     # print for visibility
     for k, v in enumerate(sorted_sums):
-        print(k, v)
+        print(k+1, v)
 
     list_password_hits = [x["password_hits"] for x in sorted_sums]
     list_total_lemmas = [x["total_lemmas"] for x in sorted_sums]
     N = len(sorted_sums)
     ind = np.arange(N)
     width = 0.35
-    plt.bar(ind, list_total_lemmas, width, label="Total Lemmas", color="black")
+    plt.bar(ind, list_total_lemmas, width,
+            label="Total Passwords", color="black")
     plt.bar(ind + width, list_password_hits, width,
             label="Efficiency", color="grey")
 
@@ -2181,16 +2183,16 @@ def compare_hits_to_permutations(source, include_perms=False, sort_by="quota", t
         label_tag = " (excl. permutations)"
     if source == "list":
         plt.title(
-            "Total Lemmas/Efficiency Comparison for Lists%s" % label_tag)
+            "Total Passwords/Efficiency Comparison for Lists%s" % label_tag)
     elif source == "dict":
         plt.title(
-            "Total Lemmas/Efficiency Comparison for Dicts%s" % label_tag)
+            "Total Passwords/Efficiency Comparison for Dicts%s" % label_tag)
     elif source == "misc_list":
         plt.title(
-            "Total Lemmas/Efficiency Comparison for Misc. Lists%s" % label_tag)
+            "Total Passwords/Efficiency Comparison for Misc. Lists%s" % label_tag)
     else:
         plt.title(
-            "Total Lemmas/Efficiency Comparison for the Wordnet%s" % label_tag)
+            "Total Passwords/Efficiency Comparison for the Wordnet%s" % label_tag)
     if source == "list":
         if top == 0:
             plt.xticks(ind + width / 2, wrapped_labels,
