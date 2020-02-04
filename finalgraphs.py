@@ -343,11 +343,11 @@ def main():
     # compare_hits_to_permutations(
     #     "misc_list", include_perms=True, sort_by="quota")
     # =============================================================================================================================================
-    # q
+    #
     # Plot the dictionary coverage of the HIBP database (with and without permutations)
     #
-    dictionary_coverage(include_perms=False)
-    dictionary_coverage(include_perms=True)
+    # dictionary_coverage(include_perms=False)
+    # dictionary_coverage(include_perms=True)
     # =============================================================================================================================================
     #
     # Plot the list coverage of the HIBP database (with and without permutations)
@@ -361,10 +361,10 @@ def main():
     # password_list_coverage()
     # =============================================================================================================================================
     #
-    # Plot the percentage for the top synsets of a level in relationship to the total sum of this_hits of their levels
+    # Plot the percentage for the top synsets of a level in relationship to the total sum of total_hits of their levels
     #
-    # display_pct_synsets_on_level("n", top=30, level=3)
-    # display_pct_synsets_on_level("v", top=5, level=6)
+    # display_pct_synsets_on_level("n", top=10, level=13)
+    display_pct_synsets_on_level("v", top=10, level=2)
     # =============================================================================================================================================
     #
     # Display the permutators of the top X passwords of a password source
@@ -748,6 +748,9 @@ def avg_permutations_lemma(base):
 
 
 def wordnet_coverage(include_perms=False):
+    """
+    Plot the wordnet-HIBP coverage. 
+    """
     f, ax = plt.subplots(1)
     total_sum = []
 
@@ -765,31 +768,39 @@ def wordnet_coverage(include_perms=False):
 
     # Get coverage for
     query_result_n = mongo.db_pws_wn.find(query).count()
+    query_result_n_total = mongo.db_pws_wn.find().count()
     total_sum.append({
         "type": "wordnet",
         "name": "WordNet Nouns",
-        "sum": query_result_n
+        "sum": query_result_n,
+        "total": query_result_n_total
     })
 
     query_result_v = mongo.db_pws_wn_verb.find(query).count()
+    query_result_v_total = mongo.db_pws_wn_verb.find().count()
     total_sum.append({
         "type": "wordnet",
         "name": "WordNet Verbs",
-        "sum": query_result_v
+        "sum": query_result_v,
+        "total": query_result_v_total
     })
 
     query_result_adj = mongo.db_pws_wn_adjective.find(query).count()
+    query_result_adj_total = mongo.db_pws_wn_adjective.find().count()
     total_sum.append({
         "type": "wordnet",
         "name": "WordNet Adjectives",
-        "sum": query_result_adj
+        "sum": query_result_adj,
+        "total": query_result_adj_total
     })
 
     query_result_adv = mongo.db_pws_wn_adverb.find(query).count()
+    query_result_adv_total = mongo.db_pws_wn_adverb.find().count()
     total_sum.append({
         "type": "wordnet",
         "name": "WordNet Adverbs",
-        "sum": query_result_adv
+        "sum": query_result_adv,
+        "total": query_result_adv_total
     })
     if include_perms:
         log_ok("Note: including permutations")
@@ -797,9 +808,10 @@ def wordnet_coverage(include_perms=False):
         log_ok("Note: excluding permutations")
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
-        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(
-            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        pct_cvg_hibp = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        pct_of_wn_pos = round((v["sum"] / v["total"]) * 100, 5)
+        log_ok("({}) {}, {}, {} % HIBP Coverage, Hits: {} % of {}".format(
+            k, v["name"], helper.format_number(v["sum"]), pct_cvg_hibp, pct_of_wn_pos, v["name"]))
 
     sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_o = [x["sum"] for x in sorted_sums]
@@ -830,6 +842,9 @@ def wordnet_coverage(include_perms=False):
 
 
 def dictionary_coverage(include_perms=False):
+    """
+    Plot the dict-HIBP coverage. 
+    """
     f, ax = plt.subplots(1)
     total_sum = []
 
@@ -848,26 +863,32 @@ def dictionary_coverage(include_perms=False):
     # Get coverage for each dictionary
     query_result_ae = mongo.db["passwords_dicts_american-english"].find(
         query).count()
+    query_result_ae_total = mongo.db["passwords_dicts_american-english"].find().count()
     total_sum.append({
         "type": "dictionary",
         "name": "Unix/American English",
-        "sum": query_result_ae
+        "sum": query_result_ae,
+        "total": query_result_ae_total
     })
 
     query_result_be = mongo.db["passwords_dicts_british-english"].find(
         query).count()
+    query_result_be_total = mongo.db["passwords_dicts_british-english"].find().count()
     total_sum.append({
         "type": "dictionary",
         "name": "Unix/British English",
-        "sum": query_result_be
+        "sum": query_result_be,
+        "total": query_result_be_total
     })
 
     query_result_cs = mongo.db["passwords_dicts_cracklib-small"].find(
         query).count()
+    query_result_cs_total = mongo.db["passwords_dicts_cracklib-small"].find().count()
     total_sum.append({
         "type": "dictionary",
         "name": "Unix/Cracklib Small",
-        "sum": query_result_cs
+        "sum": query_result_cs,
+        "total": query_result_cs_total
     })
 
     if include_perms:
@@ -876,9 +897,10 @@ def dictionary_coverage(include_perms=False):
         log_ok("Note: excluding permutations")
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
-        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(
-            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        pct_cvg_hibp = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        pct_of_dict = round((v["sum"] / v["total"]) * 100, 5)
+        log_ok("({}) {}, {}, {} % HIBP Coverage, Hits: {} % of {}".format(
+            k, v["name"], helper.format_number(v["sum"]), pct_cvg_hibp, pct_of_dict, v["name"]))
 
     # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_l = [x["name"] for x in sorted_sums]
@@ -938,21 +960,6 @@ def list_coverage(include_perms=False):
         # skip 99_unsortiert.txt
         if list_name == "99_unsortiert.txt":
             continue
-        # query to get the total amount of lemmas
-        if include_perms:
-            query = {
-                "$and": [
-                    {"source": list_name},
-                ]
-            }
-        else:
-            query = {
-                "$and": [
-                    {"source": list_name},
-                    {"permutator": "no_permutator"}
-                ]
-            }
-        total_lemmas = mongo.db["passwords_lists"].count_documents(query)
         # query to get the passwords with hits > 0 (efficiency)
         if include_perms:
             query = {
@@ -970,10 +977,12 @@ def list_coverage(include_perms=False):
                 ]
             }
         password_hits = mongo.db["passwords_lists"].count_documents(query)
+        password_hits_total = mongo.db["passwords_lists"].count_documents({"source": list_name})
         o = {
             "name": labels[list_name],
             "type": "list",
-            "sum": password_hits
+            "sum": password_hits,
+            "total": password_hits_total
         }
         total_sum.append(o)
 
@@ -983,9 +992,10 @@ def list_coverage(include_perms=False):
         log_ok("Note: excluding permutations")
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
-        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(
-            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        pct_cvg_hibp = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        pct_of_list = round((v["sum"] / v["total"]) * 100, 5)
+        log_ok("({}) {}, {}, {} % HIBP Coverage, Hits: {} % of {}".format(
+            k+1, v["name"], helper.format_number(v["sum"]), pct_cvg_hibp, pct_of_list, v["name"]))
 
     # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
     sorted_l = [x["name"] for x in sorted_sums]
@@ -1010,7 +1020,7 @@ def list_coverage(include_perms=False):
         plt.title(
             "Category List Coverage of the HIBP passwords (excluding password variants)", fontdict={'fontsize': 10})
 
-    plt.xticks(ind, sorted_l, fontsize=7, rotation=90)
+    plt.xticks(ind, sorted_l, fontsize=7, rotation=45)
     plt.legend(loc="best")
 
     plt.show()
@@ -1037,18 +1047,20 @@ def password_list_coverage():
         o = {
             "name": list_name.replace("passwords_misc_lists_", ""),
             "type": "misc_list",
-            "sum": password_hits
+            "sum": password_hits,
+            "total": total_lemmas
         }
         total_sum.append(o)
 
     sorted_sums = sorted(total_sum, key=lambda k: k["sum"], reverse=True)
     for k, v in enumerate(sorted_sums):
-        pct_cvg = round((v["sum"] / pwned_pw_amount) * 100, 5)
-        log_ok("({}) {}, {}, {} %".format(
-            k, v["name"], helper.format_number(v["sum"]), pct_cvg))
+        pct_cvg_hibp = round((v["sum"] / pwned_pw_amount) * 100, 5)
+        pct_of_list = round((v["sum"] / v["total"]) * 100, 5)
+        log_ok("({}) {}, {}, {} % HIBP Coverage, Hits: {} % of {}".format(
+            k+1, v["name"], helper.format_number(v["sum"]), pct_cvg_hibp, pct_of_list, v["name"]))
 
-    # sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
-    sorted_l = [x["name"] for x in sorted_sums]
+    sorted_l = ["-\n".join(wrap(x["name"], 10)) for x in sorted_sums]
+    # sorted_l = [x["name"] for x in sorted_sums]
     sorted_o = [x["sum"] for x in sorted_sums]
     # Plot as bar
     N = len(sorted_l)
@@ -1059,10 +1071,10 @@ def password_list_coverage():
     # plt.yscale("log", basey=10)
     plt.ylabel("Total Hits")
     plt.xlabel("Password Source")
-    plt.title("Category List Coverage of the HIBP passwords (excluding password variants)",
+    plt.title("Password List Coverage of the HIBP Passwords",
               fontdict={'fontsize': 10})
 
-    plt.xticks(ind, sorted_l, fontsize=7, rotation=90)
+    plt.xticks(ind, sorted_l, fontsize=7)
     plt.legend(loc="best")
 
     plt.show()
@@ -2275,6 +2287,7 @@ def display_pct_synsets_on_level(mode, top=5, level=0):
     plt.title("Top Synset Percentages for Level %d" % level,
               fontdict={'fontsize': 10})
     # at a certain top value, wrap and rotate the labels
+    labels = ["-\n".join(wrap(x, 10)) for x in labels]
     if top > 5:
         plt.xticks(ind, labels, fontsize=7, rotation=45)
     else:

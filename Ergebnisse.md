@@ -46,8 +46,12 @@
     * [15_en_food.txt](#15_en_food_wn)
 1. [Übersicht zum Wordnet](#wn_overview)
 1. [Vergleich der Quote von Treffern zur Gesamtanzahl an generierten Passwortvarianten](#compare_hits_efficiency)
-
-
+1. [Abdeckung der Wörterbücher auf die PWDB](#dict_hibp_coverage)
+1. [Abdeckung der Spartenlisten auf die PWDB](#list_hibp_coverage)
+1. [Abdeckung der Passwortlisten auf die PWDB](#misclist_hibp_coverage)
+1. [Darstellung der Top Synsets anteilig an der Gesamtsumme des Levels](#pct_synsets_on_level)
+    * [Nomen, Top 10, Level 13](#pct_synsets_on_level_n_t10_l13)
+    * [Verben, Top 10, Level 2](#pct_synsets_on_level_v_t10_l2)
 
 ## Begriffserklärungen <a name="begriffserklaerungen"></a>
 
@@ -324,10 +328,10 @@ Ohne Permutationen:
 
 ```
 Note: excluding permutations
-(0) WordNet Nouns, 98.119, 0.01779 %
-(1) WordNet Adjectives, 26.523, 0.00481 %
-(2) WordNet Verbs, 21.367, 0.00387 %
-(3) WordNet Adverbs, 4.815, 0.00087 %
+(0) WordNet Nouns, 98.119, 0.01779 % HIBP Coverage, Hits: 0.26086 % of WordNet Nouns
+(1) WordNet Adjectives, 26.523, 0.00481 % HIBP Coverage, Hits: 0.39933 % of WordNet Adjectives
+(2) WordNet Verbs, 21.367, 0.00387 % HIBP Coverage, Hits: 0.38059 % of WordNet Verbs
+(3) WordNet Adverbs, 4.815, 0.00087 % HIBP Coverage, Hits: 0.38816 % of WordNet Adverbs
 ```
 ![1_wn_coverage_hibp_no_perms.png](res/img/1_wn_coverage_hibp_no_perms.png "Title")
 
@@ -335,10 +339,10 @@ Mit Permutationen:
 
 ```
 Note: including permutations
-] (0) WordNet Nouns, 5.603.868, 1.0161 %
-] (1) WordNet Verbs, 1.783.023, 0.3233 %
-] (2) WordNet Adjectives, 1.138.849, 0.2065 %
-] (3) WordNet Adverbs, 131.478, 0.02384 %
+(0) WordNet Nouns, 5.603.868, 1.0161 % HIBP Coverage, Hits: 14.89857 % of WordNet Nouns
+(1) WordNet Verbs, 1.783.023, 0.3233 % HIBP Coverage, Hits: 31.75898 % of WordNet Verbs
+(2) WordNet Adjectives, 1.138.849, 0.2065 % HIBP Coverage, Hits: 17.14645 % of WordNet Adjectives
+(3) WordNet Adverbs, 131.478, 0.02384 % HIBP Coverage, Hits: 10.59909 % of WordNet Adverbs
 ```
 
 ![1_wn_coverage_hibp_with_perms.png](res/img/1_wn_coverage_hibp_with_perms.png "Title")
@@ -2387,3 +2391,470 @@ Das Doppelbalkendiagramm stellt die Anzahl aller generierten Passwörter als auc
 ```
 
 ![4_comp_passwords_hits_misc_lists.png](res/img/4_comp_passwords_hits_misc_lists.png "Title")
+
+## Abdeckung der Wörterbücher auf die PWDB <a name="dict_hibp_coverage"></a>
+
+Ohne Permutationen:
+
+```
+Note: excluding permutations
+(0) Unix/American English, 79.536, 0.01442 % HIBP Coverage, Hits: 0.35178 % of Unix/American English
+(1) Unix/British English, 78.609, 0.01425 % HIBP Coverage, Hits: 0.34932 % of Unix/British English
+(2) Unix/Cracklib Small, 52.845, 0.00958 % HIBP Coverage, Hits: 0.45223 % of Unix/Cracklib Small
+```
+
+![5_dict_coverage_hibp_no_perms.png](res/img/5_dict_coverage_hibp_no_perms.png "Title")
+
+Mit Permutationen:
+
+```
+Note: including permutations
+(0) Unix/American English, 2.960.943, 0.53688 % HIBP Coverage, Hits: 13.09607 % of Unix/American English
+(1) Unix/British English, 2.947.672, 0.53447 % HIBP Coverage, Hits: 13.09883 % of Unix/British English
+(2) Unix/Cracklib Small, 2.674.594, 0.48496 % HIBP Coverage, Hits: 22.88836 % of Unix/Cracklib Small
+```
+
+![5_dict_coverage_hibp_with_perms.png](res/img/5_dict_coverage_hibp_with_perms.png "Title")
+
+
+## Abdeckung der Spartenlisten auf die PWDB <a name="list_hibp_coverage"></a>
+
+Ohne Permutationen:
+
+```
+Note: excluding permutations
+(1) Last Name, 3.548, 0.00064 % HIBP Coverage, Hits: 0.40955 % of Last Name
+(2) First Names, 2.633, 0.00048 % HIBP Coverage, Hits: 0.45197 % of First Names
+(3) Tech Brands, 270, 5e-05 % HIBP Coverage, Hits: 0.34906 % of Tech Brands
+(4) Cities, 250, 5e-05 % HIBP Coverage, Hits: 0.38437 % of Cities
+(5) Automobile, 211, 4e-05 % HIBP Coverage, Hits: 0.33475 % of Automobile
+(6) Countries, 171, 3e-05 % HIBP Coverage, Hits: 0.39396 % of Countries
+(7) Keyboard Patterns, 121, 2e-05 % HIBP Coverage, Hits: 0.34801 % of Keyboard Patterns
+(8) Drinks, 98, 2e-05 % HIBP Coverage, Hits: 0.22871 % of Drinks
+(9) Fruit, 93, 2e-05 % HIBP Coverage, Hits: 0.37635 % of Fruit
+(10) Office Supplies, 91, 2e-05 % HIBP Coverage, Hits: 0.44757 % of Office Supplies
+(11) Food, 75, 1e-05 % HIBP Coverage, Hits: 0.32697 % of Food
+(12) Office Brands, 58, 1e-05 % HIBP Coverage, Hits: 0.32397 % of Office Brands
+(13) Software Names, 42, 1e-05 % HIBP Coverage, Hits: 0.0678 % of Software Names
+(14) Financial Brands, 26, 0.0 % HIBP Coverage, Hits: 0.09821 % of Financial Brands
+```
+
+![6_list_coverage_hibp_no_perms.png](res/img/6_list_coverage_hibp_no_perms.png "Title")
+
+
+Mit Permutationen:
+
+```
+Note: including permutations
+(1) First Names, 439.471, 0.07969 % HIBP Coverage, Hits: 75.43841 % of First Names
+(2) Last Name, 335.606, 0.06085 % HIBP Coverage, Hits: 38.73926 % of Last Name
+(3) Cities, 29.413, 0.00533 % HIBP Coverage, Hits: 45.22155 % of Cities
+(4) Tech Brands, 26.208, 0.00475 % HIBP Coverage, Hits: 33.88235 % of Tech Brands
+(5) Automobile, 24.177, 0.00438 % HIBP Coverage, Hits: 38.3561 % of Automobile
+(6) Countries, 24.097, 0.00437 % HIBP Coverage, Hits: 55.51665 % of Countries
+(7) Keyboard Patterns, 10.645, 0.00193 % HIBP Coverage, Hits: 30.61635 % of Keyboard Patterns
+(8) Office Supplies, 10.567, 0.00192 % HIBP Coverage, Hits: 51.97226 % of Office Supplies
+(9) Fruit, 9.738, 0.00177 % HIBP Coverage, Hits: 39.40755 % of Fruit
+(10) Drinks, 7.889, 0.00143 % HIBP Coverage, Hits: 18.41116 % of Drinks
+(11) Food, 6.434, 0.00117 % HIBP Coverage, Hits: 28.04952 % of Food
+(12) Office Brands, 4.584, 0.00083 % HIBP Coverage, Hits: 25.60465 % of Office Brands
+(13) Software Names, 1.854, 0.00034 % HIBP Coverage, Hits: 2.99307 % of Software Names
+(14) Financial Brands, 1.001, 0.00018 % HIBP Coverage, Hits: 3.78093 % of Financial Brands
+```
+
+![6_list_coverage_hibp_with_perms.png](res/img/6_list_coverage_hibp_with_perms.png "Title")
+
+
+## Abdeckung der Passwortlisten auf die PWDB <a name="misclist_hibp_coverage"></a>
+
+```
+(1) xato-net-10-million-passwords, 4.030.828, 0.73087 % HIBP Coverage, Hits: 77.67885 % of xato-net-10-million-passwords
+(2) 100k-most-used-passwords-ncsc, 99.730, 0.01808 % HIBP Coverage, Hits: 99.75095 % of 100k-most-used-passwords-ncsc
+(3) xato-net-10-million-passwords-100000, 99.574, 0.01805 % HIBP Coverage, Hits: 99.57599 % of xato-net-10-million-passwords-100000
+(4) milw0rm-dictionary, 66.150, 0.01199 % HIBP Coverage, Hits: 78.57228 % of milw0rm-dictionary
+(5) lizard-squad, 11.341, 0.00206 % HIBP Coverage, Hits: 96.33877 % of lizard-squad
+(6) 10k-most-common, 10.000, 0.00181 % HIBP Coverage, Hits: 100.0 % of 10k-most-common
+(7) common-passwords-win, 815, 0.00015 % HIBP Coverage, Hits: 100.0 % of common-passwords-win
+(8) cirt-default-passwords, 656, 0.00012 % HIBP Coverage, Hits: 63.62755 % of cirt-default-passwords
+(9) 10-million-password-list-top-500, 500, 9e-05 % HIBP Coverage, Hits: 100.0 % of 10-million-password-list-top-500
+(10) twitter-banned, 396, 7e-05 % HIBP Coverage, Hits: 99.74811 % of twitter-banned
+(11) top-20-common-ssh-passwords, 20, 3.6264e-06 % HIBP Coverage, Hits: 95.2381 % of top-20-common-ssh-passwords
+```
+
+![7_misc_list_coverage_hibp.png](res/img/7_misc_list_coverage_hibp.png "Title")
+
+
+## Darstellung der Top Synsets anteilig an der Gesamtsumme des Levels <a name="pct_synsets_on_level"></a>
+
+Hier wird pro Level die Gesamtsumme über die `total_hits` berechnet, die sich auch `this_hits` und `hits_below` zusammensetzt.
+
+#### Nomen, Top 10, Level 13 <a name="pct_synsets_on_level_n_t10_l13"></a>
+
+```
+Level 0 100% = 1.162.482.592
+         100.0% entity.n.01 1.162.482.592
+
+Level 1 100% = 1.162.480.152
+         57.32% physical_entity.n.01 666.305.156
+         42.66% abstraction.n.06 495.962.131
+         0.02% thing.n.08 212.865
+
+Level 2 100% = 1.162.459.838
+         32.59% object.n.01 378.815.139
+         14.86% causal_agent.n.01 172.790.040
+         12.0% psychological_feature.n.01 139.497.685
+         10.3% measure.n.02 119.727.113
+         7.46% matter.n.03 86.710.926
+         7.07% attribute.n.02 82.191.973
+         6.9% communication.n.02 80.194.624
+         3.58% relation.n.01 41.611.158
+         2.8% group.n.01 32.583.570
+         1.33% process.n.06 15.515.872
+
+Level 3 100% = 1.162.170.294
+         30.45% whole.n.02 353.844.890
+         13.3% person.n.01 154.565.758
+         8.52% definite_quantity.n.01 99.066.817
+         8.23% event.n.01 95.683.594
+         3.72% cognition.n.01 43.260.837
+         3.24% state.n.02 37.677.389
+         3.05% substance.n.07 35.418.352
+         2.75% part.n.01 31.938.060
+         2.59% substance.n.01 30.122.532
+         2.28% signal.n.01 26.510.846
+
+Level 4 100% = 1.109.396.944
+         20.3% living_thing.n.01 225.162.771
+         10.25% artifact.n.01 113.738.345
+         7.57% number.n.02 83.961.682
+         6.62% act.n.02 73.405.364
+         2.18% symbol.n.01 24.166.354
+         1.94% content.n.05 21.489.658
+         1.67% food.n.01 18.544.382
+         1.54% material.n.01 17.091.811
+         1.46% food.n.02 16.150.659
+         1.36% unit_of_measurement.n.01 15.095.967
+
+Level 5 100% = 1.051.890.523
+         21.38% organism.n.01 224.847.406
+         7.42% integer.n.01 78.080.132
+         5.9% instrumentality.n.03 62.052.337
+         4.11% activity.n.01 43.252.435
+         2.07% written_symbol.n.01 21.787.470
+         1.37% action.n.01 14.445.601
+         1.26% structure.n.01 13.273.325
+         0.95% color.n.01 9.945.662
+         0.91% plant_part.n.01 9.614.709
+         0.85% identification.n.02 8.988.847
+
+Level 6 100% = 785.145.161
+         7.07% digit.n.01 55.504.810
+         6.06% animal.n.01 47.547.427
+         3.17% device.n.01 24.895.638
+         2.87% large_integer.n.01 22.560.401
+         2.7% character.n.08 21.160.403
+         2.69% plant.n.02 21.139.769
+         2.02% diversion.n.01 15.841.174
+         1.62% equipment.n.01 12.698.901
+         1.33% change.n.03 10.423.451
+         1.19% game.n.01 9.361.957
+
+Level 7 100% = 593.012.210
+         6.08% chordate.n.01 36.061.337
+         4.06% six.n.01 24.078.168
+         3.5% vascular_plant.n.01 20.770.825
+         3.4% letter.n.02 20.149.335
+         2.21% sport.n.01 13.108.312
+         1.44% reproductive_structure.n.01 8.526.216
+         1.4% nine.n.01 8.290.437
+         1.31% athletic_game.n.01 7.764.025
+         1.2% game_equipment.n.01 7.119.727
+         1.16% vehicle.n.01 6.888.884
+
+Level 8 100% = 346.558.192
+         10.41% vertebrate.n.01 36.060.272
+         2.75% woody_plant.n.01 9.513.468
+         2.14% fruit.n.01 7.405.633
+         1.82% outdoor_game.n.01 6.313.831
+         1.59% herb.n.01 5.506.934
+         1.23% arthropod.n.01 4.264.914
+         1.22% ball.n.01 4.236.741
+         1.2% a.n.06 4.142.817
+         1.19% contact_sport.n.01 4.126.633
+         0.94% recording.n.03 3.259.110
+
+Level 9 100% = 211.108.365
+         9.19% mammal.n.01 19.392.926
+         3.38% bird.n.01 7.128.078
+         2.87% field_game.n.01 6.066.065
+         2.5% tree.n.01 5.277.352
+         2.3% aquatic_vertebrate.n.01 4.855.558
+         1.94% shrub.n.01 4.105.681
+         1.63% insect.n.01 3.440.118
+         1.59% football.n.01 3.349.826
+         1.52% sound_recording.n.01 3.209.463
+         1.5% reptile.n.01 3.176.032
+
+Level 10 100% = 119.445.695
+         15.88% placental.n.01 18.973.945
+         4.06% fish.n.01 4.849.646
+         2.76% angiospermous_tree.n.01 3.299.404
+         2.64% phonograph_record.n.01 3.154.069
+         2.31% diapsid.n.01 2.760.277
+         2.15% passerine.n.01 2.567.362
+         1.98% flower.n.01 2.369.389
+         1.73% light.n.01 2.070.731
+         1.52% lepidopterous_insect.n.01 1.814.934
+         1.45% dragon.n.01 1.735.109
+
+Level 11 100% = 69.810.475
+         11.16% carnivore.n.01 7.789.518
+         6.61% ungulate.n.01 4.617.641
+         5.3% bony_fish.n.01 3.702.059
+         4.47% seventy-eight.n.02 3.118.186
+         4.22% primate.n.02 2.942.929
+         3.36% fruit_tree.n.01 2.349.000
+         3.14% oscine.n.01 2.195.313
+         2.82% saurian.n.01 1.965.386
+         2.43% baseball.n.01 1.696.707
+         2.24% butterfly.n.01 1.566.677
+
+Level 12 100% = 44.203.530
+         8.4% feline.n.01 3.713.473
+         8.37% teleost_fish.n.01 3.700.997
+         6.42% odd-toed_ungulate.n.01 2.839.856
+         6.04% canine.n.02 2.670.197
+         5.24% monkey.n.01 2.317.059
+         4.45% lizard.n.01 1.965.113
+         4.02% even-toed_ungulate.n.01 1.777.714
+         3.03% cetacean.n.01 1.339.365
+         2.1% lycaenid.n.01 930.348
+         1.87% anseriform_bird.n.01 825.091
+
+Level 13 100% = 28.258.892
+         9.93% equine.n.01 2.804.735
+         8.31% spiny-finned_fish.n.01 2.349.172
+         7.9% cat.n.01 2.232.516
+         6.13% agamid.n.01 1.731.126
+         5.47% ruminant.n.01 1.544.655
+         5.18% big_cat.n.01 1.464.306
+         4.73% whale.n.02 1.335.874
+         4.48% soft-finned_fish.n.01 1.265.699
+         3.05% bitch.n.04 860.847
+         2.71% blue.n.07 764.738
+
+Level 14 100% = 15.943.591
+         13.78% percoid_fish.n.01 2.197.121
+         10.83% dragon.n.04 1.727.214
+         9.69% horse.n.01 1.545.313
+         8.21% toothed_whale.n.01 1.309.372
+         7.74% bovid.n.01 1.234.720
+         7.34% ass.n.03 1.169.618
+         4.47% cypriniform_fish.n.01 712.113
+         3.63% wildcat.n.03 577.997
+         3.31% tiger.n.02 527.983
+         2.34% sea_duck.n.01 372.341
+
+Level 15 100% = 9.772.835
+         13.38% dolphin.n.02 1.307.928
+         7.49% pony.n.01 732.280
+         7.45% scombroid.n.01 728.271
+         6.12% jack.n.12 598.471
+         4.65% carangid_fish.n.01 454.568
+         4.33% topminnow.n.01 423.008
+         3.83% cougar.n.01 374.734
+         3.72% scoter.n.01 363.561
+         3.39% goat.n.01 331.606
+         3.27% dolphinfish.n.02 319.787
+
+Level 16 100% = 5.510.426
+         17.71% killer_whale.n.01 976.021
+         12.71% mustang.n.01 700.446
+         8.38% mackerel.n.02 461.759
+         7.98% jack.n.11 439.524
+         7.67% mollie.n.01 422.432
+         4.92% cattle.n.01 271.174
+         4.12% billy.n.02 226.831
+         2.77% swordfish.n.02 152.650
+         2.17% goldfish.n.01 119.685
+         1.78% ram.n.05 98.336
+
+Level 17 100% = 1.228.133
+         18.0% spanish_mackerel.n.02 221.108
+         17.53% chub_mackerel.n.01 215.246
+         8.73% runner.n.10 107.189
+         6.66% beef.n.01 81.851
+         6.11% bronco.n.01 75.067
+         6.04% charger.n.01 74.218
+         4.28% cow.n.01 52.530
+         3.26% bull.n.01 40.070
+         3.03% marlin.n.01 37.222
+         2.43% walleye.n.02 29.869
+
+Level 18 100% = 327.154
+         59.42% sierra.n.02 194.399
+         17.45% longhorn.n.01 57.087
+         8.39% springer.n.02 27.449
+         6.55% cero.n.01 21.428
+         1.79% jersey.n.05 5.851
+         1.61% king_mackerel.n.01 5.281
+         1.12% aberdeen_angus.n.01 3.670
+         1.11% gaur.n.01 3.628
+         0.82% durham.n.02 2.696
+         0.63% hereford.n.01 2.071
+```
+
+![8_pct_synsets_on_level_n_top10_l13.png](res/img/8_pct_synsets_on_level_n_top10_l13.png "Title")
+
+#### Verben, Top 10, Level 2 <a name="pct_synsets_on_level_v_t10_l2"></a>
+
+```
+Level 0 100% = 262.642.894
+         8.51% change.v.01 22.343.915
+         7.81% change.v.02 20.510.769
+         6.57% move.v.02 17.263.020
+         6.33% act.v.01 16.637.510
+         5.71% travel.v.01 14.993.990
+         4.5% make.v.03 11.812.898
+         3.03% think.v.03 7.965.000
+         2.65% connect.v.01 6.955.679
+         2.27% move.v.03 5.970.125
+         2.24% touch.v.01 5.893.531
+
+Level 1 100% = 242.506.901
+         5.0% interact.v.01 12.129.543
+         1.98% evaluate.v.02 4.807.659
+         1.75% discolor.v.03 4.247.522
+         1.71% join.v.04 4.143.918
+         1.64% give.v.03 3.989.001
+         1.5% sound.v.02 3.631.517
+         1.36% put.v.01 3.300.921
+         1.34% change_magnitude.v.01 3.251.531
+         1.31% better.v.02 3.180.122
+         1.27% handle.v.04 3.070.616
+
+Level 2 100% = 169.001.642
+         5.24% communicate.v.02 8.860.608
+         2.29% copulate.v.01 3.866.117
+         1.8% manipulate.v.02 3.045.322
+         1.58% increase.v.01 2.676.310
+         1.56% cut.v.01 2.641.871
+         1.18% treat.v.01 2.002.390
+         0.98% convey.v.03 1.655.759
+         0.95% supply.v.01 1.607.462
+         0.91% hit.v.01 1.536.430
+         0.89% declare.v.01 1.511.541
+
+Level 3 100% = 96.499.090
+         4.11% inform.v.01 3.962.644
+         3.51% sleep_together.v.01 3.383.603
+         2.25% tamper.v.01 2.175.359
+         1.71% communicate.v.01 1.652.791
+         1.61% grow.v.02 1.552.091
+         1.57% talk.v.02 1.513.816
+         1.3% permit.v.01 1.256.227
+         1.13% aim.v.01 1.088.584
+         1.08% record.v.01 1.045.670
+         1.07% talk.v.01 1.037.088
+
+Level 4 100% = 42.308.661
+         5.14% tell.v.02 2.176.063
+         2.87% develop.v.10 1.215.074
+         2.71% request.v.01 1.145.263
+         2.28% refute.v.01 963.651
+         1.93% target.v.01 815.406
+         1.74% authorize.v.01 734.251
+         1.57% victimize.v.01 663.820
+         1.54% chat_up.v.01 653.327
+         1.42% welcome.v.02 600.061
+         1.31% encourage.v.02 555.594
+
+Level 5 100% = 18.375.351
+         5.82% impart.v.01 1.069.697
+         5.06% oppose.v.06 929.745
+         3.67% ask.v.02 674.349
+         3.63% bloom.v.01 667.667
+         2.51% question.v.03 461.015
+         2.46% deceive.v.01 452.583
+         2.36% bespeak.v.01 433.807
+         2.32% legislate.v.01 426.357
+         1.98% unwrap.v.02 363.960
+         1.84% hash_out.v.01 338.265
+
+Level 6 100% = 8.190.630
+         12.97% convey.v.01 1.061.990
+         10.09% protest.v.02 826.559
+         8.06% request.v.02 660.162
+         4.33% mark.v.02 354.873
+         4.2% examine.v.04 344.229
+         3.56% cheat.v.03 291.567
+         2.43% back.v.01 198.649
+         1.68% spring.v.05 137.331
+         1.52% rede.v.02 124.350
+         1.4% marcel.v.01 114.607
+
+Level 7 100% = 4.514.538
+         12.15% express.v.01 548.424
+         9.85% demonstrate.v.04 444.674
+         8.66% order.v.01 391.054
+         7.51% quiz.v.01 339.016
+         6.81% mean.v.01 307.578
+         5.62% invite.v.04 253.896
+         3.99% rebel.v.02 180.015
+         3.97% fudge.v.01 179.363
+         3.26% rebel.v.01 147.307
+         2.98% champion.v.01 134.346
+
+Level 8 100% = 1.618.910
+         18.07% smile.v.02 292.609
+         14.73% challenge.v.02 238.500
+         13.78% command.v.02 223.122
+         6.75% call.v.05 109.277
+         6.74% drive.v.11 109.183
+         5.49% typify.v.02 88.866
+         5.17% aim.v.06 83.669
+         4.75% give_voice.v.01 76.885
+         3.15% stress.v.01 50.944
+         2.53% push.v.02 40.939
+
+Level 9 100% = 777.669
+         21.83% forbid.v.01 169.790
+         15.97% action.v.01 124.190
+         10.89% embody.v.02 84.687
+         6.5% summon.v.02 50.583
+         6.13% provoke.v.03 47.708
+         4.36% bull.v.01 33.899
+         3.3% frame.v.04 25.649
+         3.25% question.v.01 25.299
+         3.16% charge.v.18 24.551
+         3.03% smack.v.02 23.538
+
+Level 10 100% = 293.644
+         38.26% outlaw.v.01 112.355
+         13.84% entice.v.01 40.632
+         11.32% bar.v.01 33.245
+         10.64% buzz.v.04 31.242
+         5.64% page.v.01 16.568
+         5.01% ban.v.02 14.697
+         3.89% foreground.v.01 11.412
+         3.52% body.v.01 10.326
+         1.36% exemplify.v.01 3.983
+         1.24% overwhelm.v.02 3.628
+
+Level 11 100% = 57.561
+         29.33% ban.v.01 16.885
+         28.55% hook.v.11 16.436
+         16.22% call.v.22 9.339
+         7.76% decoy.v.01 4.467
+         4.82% bait.v.02 2.772
+         3.35% tweedle.v.03 1.931
+         2.95% seduce.v.02 1.700
+         2.94% raise.v.21 1.690
+         2.08% stool.v.01 1.196
+         1.98% rumpus.v.01 1.141
+
+Level 12 100% = 1.428
+         100.0% embargo.v.01 1.428
+```
+
+![8_pct_synsets_on_level_v_top10_l2.png](res/img/8_pct_synsets_on_level_v_top10_l2.png "Title")
