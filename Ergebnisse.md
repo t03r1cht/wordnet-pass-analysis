@@ -52,6 +52,14 @@
 1. [Darstellung der Top Synsets anteilig an der Gesamtsumme des Levels](#pct_synsets_on_level)
     * [Nomen, Top 10, Level 13](#pct_synsets_on_level_n_t10_l13)
     * [Verben, Top 10, Level 2](#pct_synsets_on_level_v_t10_l2)
+1. [Darstellung der am häufigsten verwendeten Permutatoren der Top Passwörter](#permutators_top_n_passwords)
+    * [Wordnet Nomen](#permutators_top_n_passwords_wn_n)
+    * [Wordnet Verben](#permutators_top_n_passwords_wn_v)
+    * [Wordnet Adjektive](#permutators_top_n_passwords_wn_adj)
+    * [Wordnet Adverben](#permutators_top_n_passwords_wn_adv)
+    * [Spartenlisten](#permutators_top_n_passwords_list)
+    * [Wörterbücher](#permutators_top_n_passwords_dict)
+1. [Darstellung der Top Passwörter aus Zahlen](#permutators_top_n_passwords)
 
 ## Begriffserklärungen <a name="begriffserklaerungen"></a>
 
@@ -2486,7 +2494,7 @@ Note: including permutations
 
 ## Darstellung der Top Synsets anteilig an der Gesamtsumme des Levels <a name="pct_synsets_on_level"></a>
 
-Hier wird pro Level die Gesamtsumme über die `total_hits` berechnet, die sich auch `this_hits` und `hits_below` zusammensetzt.
+Hier wird pro Level die Gesamtsumme über die `total_hits` berechnet, die sich auch `this_hits` und `hits_below` zusammensetzt. Anschließend wird für jedes Synset pro Level dessen prozentualer Anteil an der Gesamtsumme des Levels berechnet und nach absteigendem Wert sortiert. 
 
 #### Nomen, Top 10, Level 13 <a name="pct_synsets_on_level_n_t10_l13"></a>
 
@@ -2858,3 +2866,540 @@ Level 12 100% = 1.428
 ```
 
 ![8_pct_synsets_on_level_v_top10_l2.png](res/img/8_pct_synsets_on_level_v_top10_l2.png "Title")
+
+## Darstellung der am häufigsten verwendeten Permutatoren der Top Passwörter <a name="permutators_top_n_passwords"></a>
+
+Hier werden die Top X Passwörter gesucht. Anschließend werden die generierenden Permutatoren jedes dieser Passwörter ermittelt und absteigend nach Häufigkeiten sortiert.
+
+#### Wordnet Nomen <a name="permutators_top_n_passwords_wn_n"></a>
+
+```
+Permutator: no_permutator 4010
+Permutator: number 3468
+Permutator: num_seq_suffix 895
+Permutator: strip_vowel 626
+Permutator: duplicate 256
+Permutator: num_seq_prefix 191
+Permutator: leet 140
+Permutator: reverse 134
+Permutator: uppercase_index_char 70
+Permutator: upper_vowels 66
+Permutator: year_long 40
+Permutator: upper_non_vowels 37
+Permutator: casing 37
+Permutator: special_chars_suffix 22
+Permutator: sc_cc 8
+```
+
+![9_permutators_top_n_passwords_wn_n.png](res/img/9_permutators_top_n_passwords_wn_n.png "Title")
+
+#### Wordnet Verben <a name="permutators_top_n_passwords_wn_v"></a>
+
+```
+Permutator: number 4693
+Permutator: no_permutator 2127
+Permutator: num_seq_suffix 1202
+Permutator: strip_vowel 437
+Permutator: year_long 415
+Permutator: duplicate 400
+Permutator: num_seq_prefix 170
+Permutator: reverse 162
+Permutator: uppercase_index_char 118
+Permutator: special_chars_suffix 118
+Permutator: leet 84
+Permutator: casing 65
+Permutator: upper_vowels 6
+Permutator: separator 3
+```
+
+![9_permutators_top_n_passwords_wn_v.png](res/img/9_permutators_top_n_passwords_wn_v.png "Title")
+
+#### Wordnet Adjektive <a name="permutators_top_n_passwords_wn_adj"></a>
+
+```
+Permutator: number 5915
+Permutator: no_permutator 1876
+Permutator: num_seq_suffix 894
+Permutator: year_long 239
+Permutator: duplicate 207
+Permutator: strip_vowel 185
+Permutator: uppercase_index_char 181
+Permutator: special_chars_suffix 174
+Permutator: casing 122
+Permutator: num_seq_prefix 82
+Permutator: leet 62
+Permutator: reverse 56
+Permutator: upper_vowels 5
+Permutator: upper_non_vowels 1
+Permutator: sc_cc 1
+```
+
+![9_permutators_top_n_passwords_wn_adj.png](res/img/9_permutators_top_n_passwords_wn_adj.png "Title")
+
+#### Wordnet Adverben <a name="permutators_top_n_passwords_wn_adv"></a>
+
+```
+Permutator: number 6038
+Permutator: year_long 978
+Permutator: num_seq_suffix 787
+Permutator: no_permutator 708
+Permutator: num_seq_prefix 256
+Permutator: strip_vowel 246
+Permutator: duplicate 240
+Permutator: special_chars_suffix 197
+Permutator: uppercase_index_char 186
+Permutator: casing 148
+Permutator: reverse 109
+Permutator: leet 58
+Permutator: upper_non_vowels 21
+Permutator: upper_vowels 14
+Permutator: sc_cc 8
+Permutator: special_chars_prefix 6
+```
+
+![9_permutators_top_n_passwords_wn_adv.png](res/img/9_permutators_top_n_passwords_wn_adv.png "Title")
+
+#### Spartenlisten <a name="permutators_top_n_passwords_list"></a>
+
+Achtung: Obwohl wir hier nach den Top 10.000 Passwörtern suchen, die einen Treffer erzielt haben, kann es sein, dass manche Listen in der Summe weniger als 10.000 Treffer erzielt haben.
+
+```
+01_en_office_supplies.txt
+Permutator: number 5981
+Permutator: year_long 2353
+Permutator: special_chars_suffix 403
+Permutator: num_seq_suffix 315
+Permutator: num_seq_prefix 174
+Permutator: special_chars_prefix 118
+Permutator: no_permutator 90
+Permutator: uppercase_index_char 78
+Permutator: casing 76
+Permutator: reverse 62
+Permutator: duplicate 60
+Permutator: strip_vowel 54
+Permutator: leet 46
+Permutator: upper_non_vowels 9
+Permutator: upper_vowels 5
+```
+
+![9_permutators_top_n_passwords_list_01_en_office_supplies.png](res/img/9_permutators_top_n_passwords_list_01_en_office_supplies.png "Title")
+
+```
+02_en_office_brands.txt
+Permutator: number 2491
+Permutator: year_long 1037
+Permutator: special_chars_suffix 146
+Permutator: num_seq_suffix 144
+Permutator: num_seq_prefix 73
+Permutator: no_permutator 55
+Permutator: special_chars_prefix 41
+Permutator: uppercase_index_char 41
+Permutator: casing 39
+Permutator: reverse 32
+Permutator: strip_vowel 26
+Permutator: duplicate 24
+Permutator: leet 22
+Permutator: upper_non_vowels 5
+Permutator: upper_vowels 4
+```
+
+![9_permutators_top_n_passwords_list_02_en_office_brands.png](res/img/9_permutators_top_n_passwords_list_02_en_office_brands.png "Title")
+
+```
+03_keyboard_patterns.txt
+Permutator: number 4841
+Permutator: year_long 2559
+Permutator: num_seq_suffix 500
+Permutator: num_seq_prefix 464
+Permutator: special_chars_suffix 460
+Permutator: special_chars_prefix 289
+Permutator: no_permutator 116
+Permutator: reverse 107
+Permutator: uppercase_index_char 102
+Permutator: strip_vowel 98
+Permutator: casing 79
+Permutator: duplicate 77
+Permutator: upper_vowels 74
+Permutator: leet 54
+Permutator: upper_non_vowels 51
+Permutator: sc_cc 34
+```
+
+![9_permutators_top_n_passwords_list_03_keyboard_patterns.png](res/img/9_permutators_top_n_passwords_list_03_keyboard_patterns.png "Title")
+
+```
+05_en_financial_brands.txt
+Permutator: number 475
+Permutator: year_long 243
+Permutator: num_seq_suffix 32
+Permutator: no_permutator 22
+Permutator: uppercase_index_char 17
+Permutator: casing 12
+Permutator: num_seq_prefix 12
+Permutator: sc_cc 10
+Permutator: reverse 10
+Permutator: strip_vowel 9
+Permutator: special_chars_suffix 9
+Permutator: separator 7
+Permutator: leet 6
+Permutator: duplicate 6
+Permutator: upper_non_vowels 2
+Permutator: upper_vowels 2
+```
+
+![9_permutators_top_n_passwords_list_05_en_financial_brands.png](res/img/9_permutators_top_n_passwords_list_05_en_financial_brands.png "Title")
+
+```
+06_en_cities.txt
+Permutator: number 5705
+Permutator: year_long 2802
+Permutator: special_chars_suffix 421
+Permutator: num_seq_suffix 254
+Permutator: special_chars_prefix 193
+Permutator: num_seq_prefix 117
+Permutator: no_permutator 86
+Permutator: casing 69
+Permutator: uppercase_index_char 66
+Permutator: reverse 61
+Permutator: separator 60
+Permutator: leet 48
+Permutator: strip_vowel 41
+Permutator: duplicate 40
+Permutator: sc_cc 28
+Permutator: upper_vowels 5
+Permutator: upper_non_vowels 4
+```
+
+![9_permutators_top_n_passwords_list_06_en_cities.png](res/img/9_permutators_top_n_passwords_list_06_en_cities.png "Title")
+
+```
+07_first_names.txt
+Permutator: number 4800
+Permutator: year_long 3288
+Permutator: special_chars_suffix 527
+Permutator: num_seq_suffix 369
+Permutator: special_chars_prefix 360
+Permutator: num_seq_prefix 299
+Permutator: casing 48
+Permutator: uppercase_index_char 48
+Permutator: no_permutator 48
+Permutator: duplicate 47
+Permutator: reverse 47
+Permutator: strip_vowel 46
+Permutator: leet 45
+Permutator: upper_vowels 16
+Permutator: upper_non_vowels 12
+```
+
+![9_permutators_top_n_passwords_list_07_first_names.png](res/img/9_permutators_top_n_passwords_list_07_first_names.png "Title")
+
+```
+08_last_names.txt
+Permutator: number 5000
+Permutator: year_long 3340
+Permutator: special_chars_suffix 450
+Permutator: num_seq_suffix 343
+Permutator: special_chars_prefix 274
+Permutator: num_seq_prefix 238
+Permutator: casing 51
+Permutator: no_permutator 51
+Permutator: duplicate 50
+Permutator: reverse 50
+Permutator: uppercase_index_char 50
+Permutator: leet 45
+Permutator: strip_vowel 43
+Permutator: upper_non_vowels 9
+Permutator: upper_vowels 6
+```
+
+![9_permutators_top_n_passwords_list_08_last_names.png](res/img/9_permutators_top_n_passwords_list_08_last_names.png "Title")
+
+```
+09_en_countries.txt
+Permutator: number 5335
+Permutator: year_long 3168
+Permutator: special_chars_suffix 382
+Permutator: num_seq_suffix 334
+Permutator: num_seq_prefix 201
+Permutator: special_chars_prefix 158
+Permutator: no_permutator 66
+Permutator: casing 61
+Permutator: uppercase_index_char 61
+Permutator: reverse 56
+Permutator: duplicate 55
+Permutator: strip_vowel 44
+Permutator: leet 36
+Permutator: separator 18
+Permutator: upper_non_vowels 10
+Permutator: sc_cc 9
+Permutator: upper_vowels 6
+```
+
+![9_permutators_top_n_passwords_list_09_en_countries.png](res/img/9_permutators_top_n_passwords_list_09_en_countries.png "Title")
+
+```
+10_automobile.txt
+Permutator: number 5662
+Permutator: year_long 2884
+Permutator: num_seq_suffix 332
+Permutator: special_chars_suffix 308
+Permutator: num_seq_prefix 175
+Permutator: special_chars_prefix 103
+Permutator: no_permutator 96
+Permutator: uppercase_index_char 82
+Permutator: casing 81
+Permutator: strip_vowel 76
+Permutator: reverse 69
+Permutator: duplicate 58
+Permutator: leet 46
+Permutator: upper_non_vowels 15
+Permutator: upper_vowels 10
+Permutator: sc_cc 3
+```
+
+![9_permutators_top_n_passwords_list_10_automobile.png](res/img/9_permutators_top_n_passwords_list_10_automobile.png "Title")
+
+```
+11_software_names.txt
+Permutator: number 947
+Permutator: year_long 385
+Permutator: num_seq_suffix 60
+Permutator: special_chars_suffix 45
+Permutator: no_permutator 41
+Permutator: separator 35
+Permutator: sc_cc 31
+Permutator: num_seq_prefix 25
+Permutator: uppercase_index_char 19
+Permutator: strip_vowel 18
+Permutator: casing 15
+Permutator: reverse 12
+Permutator: special_chars_prefix 11
+Permutator: duplicate 10
+Permutator: leet 9
+Permutator: upper_non_vowels 2
+Permutator: upper_vowels 1
+```
+
+![9_permutators_top_n_passwords_list_11_software_names.png](res/img/9_permutators_top_n_passwords_list_11_software_names.png "Title")
+
+```
+12_tech_brands.txt
+Permutator: number 5300
+Permutator: year_long 3030
+Permutator: num_seq_suffix 409
+Permutator: special_chars_suffix 316
+Permutator: num_seq_prefix 220
+Permutator: no_permutator 106
+Permutator: special_chars_prefix 100
+Permutator: casing 87
+Permutator: uppercase_index_char 86
+Permutator: duplicate 83
+Permutator: reverse 81
+Permutator: strip_vowel 80
+Permutator: leet 48
+Permutator: upper_non_vowels 25
+Permutator: upper_vowels 19
+Permutator: separator 6
+Permutator: sc_cc 4
+```
+
+![9_permutators_top_n_passwords_list_12_tech_brands.png](res/img/9_permutators_top_n_passwords_list_12_tech_brands.png "Title")
+
+```
+13_en_fruit.txt
+Permutator: number 5438
+Permutator: year_long 2081
+Permutator: special_chars_suffix 348
+Permutator: num_seq_suffix 276
+Permutator: special_chars_prefix 140
+Permutator: num_seq_prefix 128
+Permutator: no_permutator 93
+Permutator: uppercase_index_char 81
+Permutator: casing 78
+Permutator: strip_vowel 59
+Permutator: reverse 54
+Permutator: leet 49
+Permutator: duplicate 46
+Permutator: upper_vowels 7
+Permutator: upper_non_vowels 5
+Permutator: sc_cc 5
+Permutator: separator 5
+```
+
+![9_permutators_top_n_passwords_list_13_en_fruit.png](res/img/9_permutators_top_n_passwords_list_13_en_fruit.png "Title")
+
+```
+14_en_drinks.txt
+Permutator: number 4208
+Permutator: year_long 1849
+Permutator: special_chars_suffix 256
+Permutator: num_seq_suffix 236
+Permutator: num_seq_prefix 110
+Permutator: special_chars_prefix 101
+Permutator: no_permutator 93
+Permutator: separator 77
+Permutator: uppercase_index_char 61
+Permutator: casing 58
+Permutator: strip_vowel 49
+Permutator: reverse 48
+Permutator: duplicate 44
+Permutator: sc_cc 37
+Permutator: leet 32
+Permutator: upper_vowels 6
+Permutator: upper_non_vowels 5
+```
+
+![9_permutators_top_n_passwords_list_14_en_drinks.png](res/img/9_permutators_top_n_passwords_list_14_en_drinks.png "Title")
+
+```
+15_en_food.txt
+Permutator: number 3757
+Permutator: year_long 1144
+Permutator: special_chars_suffix 248
+Permutator: num_seq_suffix 174
+Permutator: special_chars_prefix 85
+Permutator: no_permutator 72
+Permutator: num_seq_prefix 67
+Permutator: uppercase_index_char 57
+Permutator: casing 53
+Permutator: separator 45
+Permutator: reverse 37
+Permutator: duplicate 36
+Permutator: strip_vowel 34
+Permutator: leet 28
+Permutator: sc_cc 26
+Permutator: upper_non_vowels 1
+```
+
+![9_permutators_top_n_passwords_list_15_en_food.png](res/img/9_permutators_top_n_passwords_list_15_en_food.png "Title")
+
+
+#### Wörterbücher <a name="permutators_top_n_passwords_dict"></a>
+
+```
+american-english
+Permutator: number 3289
+Permutator: no_permutator 1709
+Permutator: uppercase_index_char 1707
+Permutator: casing 1226
+Permutator: num_seq_suffix 707
+Permutator: year_long 619
+Permutator: strip_vowel 480
+Permutator: leet 86
+Permutator: num_seq_prefix 51
+Permutator: upper_vowels 43
+Permutator: upper_non_vowels 40
+Permutator: duplicate 18
+Permutator: reverse 13
+Permutator: special_chars_suffix 12
+```
+
+![9_permutators_top_n_passwords_dict_american_english.png](res/img/9_permutators_top_n_passwords_dict_american_english.png "Title")
+
+```
+british-english
+Permutator: number 3289
+Permutator: no_permutator 1709
+Permutator: uppercase_index_char 1707
+Permutator: casing 1226
+Permutator: num_seq_suffix 707
+Permutator: year_long 619
+Permutator: strip_vowel 480
+Permutator: leet 86
+Permutator: num_seq_prefix 51
+Permutator: upper_vowels 43
+Permutator: upper_non_vowels 40
+Permutator: duplicate 18
+Permutator: reverse 13
+Permutator: special_chars_suffix 12
+```
+
+![9_permutators_top_n_passwords_dict_british_english.png](res/img/9_permutators_top_n_passwords_dict_british_english.png "Title")
+
+```
+cracklib-small
+Permutator: number 5435
+Permutator: year_long 1745
+Permutator: no_permutator 836
+Permutator: num_seq_suffix 572
+Permutator: strip_vowel 345
+Permutator: uppercase_index_char 211
+Permutator: special_chars_suffix 202
+Permutator: num_seq_prefix 179
+Permutator: casing 169
+Permutator: reverse 136
+Permutator: duplicate 115
+Permutator: leet 26
+Permutator: upper_vowels 22
+Permutator: special_chars_prefix 4
+Permutator: upper_non_vowels 3
+```
+
+![9_permutators_top_n_passwords_dict_cracklib_small.png](res/img/9_permutators_top_n_passwords_dict_cracklib_small.png "Title")
+
+## Darstellung der Top Passwörter aus Zahlen <a name="permutators_top_n_passwords"></a>
+
+#### Top 3
+
+```
+1 123456 23.547.453
+2 123456789 7.799.814
+3 111111 3.120.735
+```
+
+
+![10_top_numbers_3.png](res/img/10_top_numbers_3.png "Title")
+
+#### Top 10
+
+```
+1 123456 23.547.453
+2 123456789 7.799.814
+3 111111 3.120.735
+4 12345678 2.938.594
+5 1234567 2.512.537
+6 12345 2.380.800
+7 1234567890 2.250.015
+8 123123 2.230.508
+9 1234 1.289.385
+10 123 1.038.635
+```
+
+![10_top_numbers_10.png](res/img/10_top_numbers_10.png "Title")
+
+#### Top 30
+
+```
+1 123456 23.547.453
+2 123456789 7.799.814
+3 111111 3.120.735
+4 12345678 2.938.594
+5 1234567 2.512.537
+6 12345 2.380.800
+7 1234567890 2.250.015
+8 123123 2.230.508
+9 1234 1.289.385
+10 123 1.038.635
+11 654321 944.954
+12 123321 925.818
+13 666666 888.171
+14 121212 740.190
+15 7777777 632.530
+16 987654321 594.495
+17 222222 584.160
+18 555555 557.903
+19 112233 542.430
+20 159753 439.030
+21 777777 369.769
+22 123654 368.114
+23 11111 365.379
+24 999999 359.673
+25 888888 347.469
+26 789456 292.428
+27 333333 283.808
+28 131313 274.317
+29 987654 272.109
+30 0123456789 270.684
+```
+
+![10_top_numbers_30.png](res/img/10_top_numbers_30.png "Title")
